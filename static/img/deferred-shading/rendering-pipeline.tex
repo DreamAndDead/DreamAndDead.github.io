@@ -1,0 +1,42 @@
+% refer to: http://www.texample.net/tikz/examples/simple-flow-chart/
+
+\documentclass[border=10pt]{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+\begin{document}
+
+\tikzstyle{block} = [rectangle, draw, node distance=3cm,
+    text width=6em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+    
+\begin{tikzpicture}
+ 
+    % Place nodes
+    \node [block] (local) {Local Space};
+    \node [block, right of=local] (world) {World Space};
+    \node [block, right of=world] (view) {View Space};
+    \node [block, right of=view] (cull) {Backface Culling};
+    
+    \node [block, below of=cull] (light) {Lighting};
+    
+    \node [block, below of=light] (clip) {Clipping};
+    \node [block, left of=clip] (proj) {Projection};
+    \node [block, left of=proj] (viewport) {Viewport Space};
+    \node [block, left of=viewport] (raster) {Rasterization};
+    
+    % Draw edges
+    \path [line] (local) -- (world);
+    \path [line] (world) -- (view);
+    \path [line] (view) -- (cull);
+    \path [line] (cull) -- (light);
+    \path [line] (light) -- (clip);
+    \path [line] (clip) -- (proj);
+    \path [line] (proj) -- (viewport);
+    \path [line] (viewport) -- (raster);
+ 
+\end{tikzpicture}
+\end{document}
+
+    

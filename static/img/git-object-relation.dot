@@ -1,0 +1,38 @@
+digraph G {
+  label="git objects relation";
+  fontname="sans serif";
+  
+  nodesep=.5;
+  
+  node [margin=1, shape=circle, style=filled, width=.9, height=.9, fontname="sans serif", fixedsize=true];
+  edge [fontname="sans serif"];
+
+  tag [label="tag", fillcolor=azure1, color=azure1, group=main_line];
+  refs [label="refs", fillcolor=darksalmon, color=darksalmon];
+  commit [label="commit", fillcolor=beige, color=beige, group=main_line];
+  tree [label="tree", fillcolor=darkseagreen1, color=darkseagreen1, group=main_line];
+  
+  blob_1 [label="blob 1", fillcolor=darkolivegreen1, color=darkolivegreen1];
+  blob_2 [label="blob 2", fillcolor=darkolivegreen1, color=darkolivegreen1];
+  blob_n [label="blob n", fillcolor=darkolivegreen1, color=darkolivegreen1];
+
+  {
+    rank=same;
+    blob_1;
+    blob_2;
+    blob_n;
+}
+  
+
+  tree -> blob_1;
+  tree -> blob_2;
+  tree -> blob_n;
+  blob_2 -> blob_n [style=dotted, dir=none];
+  
+  tree -> tree;
+  
+  commit -> tree;
+
+  tag -> commit;
+  refs -> commit;
+}

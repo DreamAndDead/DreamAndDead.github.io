@@ -1,0 +1,48 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{myblog}
+
+\begin{document}
+\begin{tikzpicture}
+  %\helpline;
+  \axis[x label=$x_i$, y label=$x_j$];
+  
+  % left positive
+  \foreach \n in {(2, 2), (1, 7),  (6, 7),  (7, 5),  (6, 3),  (8, 6)}
+    \node at \n {X};
+  
+  % left negative
+  \foreach \n in {(2, 4), (3, 6), (4, 4), (5, 5)}
+    \node at \n {O};
+    
+    
+  % separate line
+  \draw plot [smooth cycle] coordinates {(3, 3) (4, 2.8) (5, 3.5) (6, 6) (3, 7) (1, 3)};
+  
+  
+  % \phi ->
+  \draw[->] (11, 7) -- (14, 7);
+  \node[above, font=\large] at (12.5, 7)  {$\phi$};
+  
+  % <- \phi^-1
+  \draw[->] (14, 3) -- (11, 3);
+  \node[above, font=\large] at (12.5, 3)  {$\phi^{-1}$};
+  
+  %\helpline[o x=15];
+  \axis[x label=$\phi(x_i)$, y label=$\phi(x_j)$, o x=15];
+
+  % right positive
+  \foreach \n in {(22, 4), (22, 5),  (21, 8),  (21, 5),  (21, 3),  (21, 6)}
+    \node at \n {X};
+  
+  % right negative
+  \foreach \n in {(20, 3), (20, 6), (19, 4), (19, 5)}
+    \node at \n {O};
+  
+  % \phi separate line
+  \draw (20.5, 0) -- (20.5, 10);
+  
+  
+\end{tikzpicture}
+\end{document}
+

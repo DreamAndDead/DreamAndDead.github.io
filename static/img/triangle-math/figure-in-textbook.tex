@@ -1,0 +1,40 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+
+\begin{document}
+\begin{tikzpicture}
+ 
+  \coordinate (O) at (0, 0);
+  \coordinate (A) at (4, 0);
+  \coordinate (B) at (4, {4* sqrt(3)});
+  \coordinate (C) at (2, 0);
+  \coordinate (D) at (2, {2*sqrt(3)});
+  
+  \draw (O) circle [x radius=4, y radius=4];
+  
+  \draw (O) -- (B);
+  \draw (C) -- (A);
+  
+  \draw [blue, thick] (O) -- (C);
+  \draw [red, thick] (C) -- (D);
+  \draw [yellow, thick] (A) -- (B);
+  
+  \node [below left] at (O) {$O$};
+  \node [right] at (A) {$A$};
+  \node [right] at (B) {$B$};
+  \node [below] at (C) {$C$};
+  \node [above, xshift=-0.05cm] at (D) {$D$};
+  
+  
+  \coordinate (sin) at (2, {sqrt(3)});
+  \coordinate (cos) at (1, 0);
+  \coordinate (tan) at (4, {2*sqrt(3)});
+  \coordinate (radius) at (1, {sqrt(3)});
+  
+  \node [right] at (sin) {$sin$};
+  \node [below] at (cos) {$cos$};
+  \node [right] at (tan) {$tan$};
+  \node [above left] at (radius) {$1$};
+ 
+\end{tikzpicture}
+\end{document}

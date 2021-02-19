@@ -1,0 +1,24 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{myblog}
+
+\begin{document}
+\begin{tikzpicture}
+  %\helpline;
+  \axis[x label=$x_1$, y label=$x_2$];
+
+  % negative
+  \foreach \p in {(1, 2), (3, 1), (2, 4), (3, 3), (4, 5)}
+    \node at \p {o};
+
+  \def \a {(5, 8)};
+  \def \b {(1, 8)};
+  % positive
+  \foreach \p in {(6, 3), (4, 6), (6, 6), \a, \b}
+    \node at \p {x};
+    
+  % separate
+  \draw[solid]  (-1, 8) to[out=0, in=90] (6, -1);
+  
+\end{tikzpicture}
+\end{document}

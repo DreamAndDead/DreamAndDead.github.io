@@ -1,0 +1,40 @@
+% refer to: http://www.texample.net/tikz/examples/simple-flow-chart/
+
+\documentclass[border=10pt]{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+\begin{document}
+
+\tikzstyle{block} = [rectangle, draw, node distance=3cm,
+    text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{node} = [circle, dashed, draw, node distance=3cm, minimum height=1.5em]
+\tikzstyle{line} = [draw, -latex']
+    
+\begin{tikzpicture}
+ 
+    % Place nodes
+    \node [block] (local) {local coordinate};
+    \node [node, right of=local] (trans) {};
+    \node [block, right of=trans] (world) {world coordinate};
+    \node [block, right of=world] (camera) {camera coordinate};
+    \node [block, right of=camera] (screen) {screen coordinate};
+    
+    \node [block, below left of=trans, fill=blue!20] (transform) {local transform};
+    \node [block, below right of=trans] (translate) {local translate};
+    
+    % Draw edges
+    \path [line] (local) -- (trans);
+    \path [line] (trans) -- (world);
+    \path [line] (world) -- (camera);
+    \path [line] (camera) -- (screen);
+    
+    \path [line, dashed] (trans) -- (transform);
+    \path [line, dashed] (transform) -- (translate);
+    \path [line, dashed] (translate) -- (trans);
+ 
+\end{tikzpicture}
+\end{document}
+
+    

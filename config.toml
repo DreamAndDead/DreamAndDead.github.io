@@ -1,0 +1,31 @@
+baseURL = "https://dreamanddead.github.io"
+disablePathToLower = true
+languageCode = "en-us"
+title = "Brain=f(X)?"
+theme = "diary"
+
+[params]
+css = ["css/style.css"]
+enableMathJax = true
+enableReadingTime=true
+disableAutoCollapse=true
+
+[taxonomies]
+   tag = "tags"
+   category = "categories"
+
+[[menu.main]]
+url = "/categories"
+name = "Categories"
+weight = 2
+
+[[menu.main]]
+url = "/tags"
+name = "Tags"
+weight = 3
+
+[[menu.main]]
+url = "/index.xml"
+name = "RSS Feed"
+weight = 4
+

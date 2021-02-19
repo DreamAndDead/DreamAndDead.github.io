@@ -1,0 +1,29 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+
+\usepackage{myblog}
+
+\begin{document}
+\begin{tikzpicture}
+  %\helpline;
+  \axis[x label=$x_1$, y label=$x_2$];
+
+  % negative
+  \foreach \p in {(1, 2), (3, 1), (2, 4), (3, 3)}
+    \node at \p {o};
+
+  \def \a {(5, 8)};
+  \def \b {(1, 8)};
+  % positive
+  \foreach \p in {(6, 4), (4, 6), (6, 6), \a, \b}
+    \node at \p {x};
+    
+  \node[above right] at \a {A};
+  \node[above right] at \b {B};
+
+  % solid
+  \draw[solid]  (-1, 9) -- (9, -1);
+  % dashed
+  \draw[dashed] (1, 10) -- (6, -1);
+\end{tikzpicture}
+\end{document}
