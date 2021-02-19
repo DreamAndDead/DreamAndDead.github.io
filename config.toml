@@ -1,18 +1,16 @@
 baseURL = "https://dreamanddead.github.io"
 disablePathToLower = true
-languageCode = "en-us"
+languageCode = "zh-cn"
 title = "Brain=f(X)?"
 theme = "diary"
 
 [params]
-css = ["css/style.css"]
-enableMathJax = true
 enableReadingTime=true
 disableAutoCollapse=true
 
 [taxonomies]
-   tag = "tags"
-   category = "categories"
+tag = "tags"
+category = "categories"
 
 [[menu.main]]
 url = "/categories"

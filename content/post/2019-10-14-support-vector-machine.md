@@ -2,6 +2,7 @@
 date: "2019-10-14T00:00:00Z"
 tags: algorithm machine-learning
 title: 简明 SVM
+enableMathJax: true
 ---
 
 最近研究了 SVM 算法[^1] [^2]，发现它本身的推导过程真是充满了美感！

@@ -3,8 +3,8 @@ title = "A little talk about panorama"
 date = "2020-09-27T14:02:58Z"
 categories = ["Research"]
 tags = ["algorithm"]
-slug = "2020/10/26/spf12-vim.html"
 featured_image = "images/panorama-preface.jpg"
+aliases = ["/2020/09/27/a-little-talk-about-panorama.html"]
 +++
 
 全景图本身并不神秘。
@@ -25,8 +25,7 @@ featured_image = "images/panorama-preface.jpg"
 
 全景图既然记录了所有视角的场景，必然在内容方面和普通图片有所区别，本质区别在于[投影变换][format]。
 
-{{< insertFigure img="images/world-map.png" caption="world map"
-command="Original" align="Center" options="700x" >}}
+{{< figure src="images/world-map.png" title="world map" >}}
 
 上图所有人都不陌生。将地球球体映射到圆柱，再将圆柱展开，成为 2：1 的一张图片，就是常见的世界地图。
 
@@ -53,6 +52,8 @@ command="Original" align="Center" options="700x" >}}
 下面示例使用 js 实现的全景图浏览器 [pannellum][pannellum]。
 
 <iframe width="600" height="400" allowfullscreen style="border-style:none;" src="https://cdn.pannellum.org/2.5/pannellum.htm#panorama=https://pannellum.org/images/alma.jpg&amp;autoLoad=true"></iframe>
+
+{{< iframe "https://cdn.pannellum.org/2.5/pannellum.htm#panorama=https://pannellum.org/images/alma.jpg" "100%" "400px" >}}
 
 其中查看的 equirectangular 全景图是
 
