@@ -1,7 +1,15 @@
 ---
-date: "2017-12-13T00:00:00Z"
-tags: ssh
 title: Understanding ssh port forwarding
+date: "2017-12-13T00:00:00Z"
+categories:
+- SSH
+tags:
+- network
+- ssh
+- linux
+featured_image: images/featured.png
+aliases:
+- /2017/12/13/understanding-ssh-tunnel.html
 ---
 
 这篇文件旨在理好的理解ssh隧道的原理与用法。
@@ -68,7 +76,7 @@ from man page
     
 ## example
 
-{% include image.html url="ssh-tunnel-local-forwarding.png" desc="网络示意图" %}
+{{< figure src="images/ssh-tunnel-local-forwarding.png" caption="网络示意图" >}}
 
 假如，存在Client LAN与Server LAN，
 Client LAN内有两台主机
@@ -166,7 +174,7 @@ GatewayPorts yes
 
 ## example
 
-{% include image.html url="ssh-tunnel-remote-forwarding.png" desc="网络示意图" %}
+{{< figure src="images/ssh-tunnel-remote-forwarding.png" caption="网络示意图" >}}
 
 网络结构同Local Forwarding，区别在于之前在server LAN中的服务，现在运行于client LAN。
 通过Remote Forwarding，可以在外网访问到内网的服务，达到网络穿透的效果。
@@ -220,7 +228,7 @@ Dynamic Forwarding望名生义，动态的端口转发。
 
 举例来看，网络结构同Local Forwarding章节
 
-{% include image.html url="ssh-tunnel-dynamic-local-forwarding.png" desc="网络示意图" %}
+{{< figure src="images/ssh-tunnel-dynamic-local-forwarding.png" caption="网络示意图" >}}
 
 在client_A执行
 ```
@@ -263,7 +271,7 @@ socks协议工作在传输层之上，应用层之下，所以可以转发所有
 ### cross the wall
 
 
-{% include image.html url="ssh-tunnel-dynamic-local-forwarding.png" desc="网络示意图" %}
+{{< figure src="images/ssh-tunnel-dynamic-local-forwarding.png" caption="网络示意图" >}}
 
 在client_A运行一个socks服务器，监听1080端口
 ```
@@ -279,7 +287,7 @@ curl -X GET https://google.com
 
 ### 内网穿透
 
-{% include image.html url="ssh-tunnel-dynamic-remote-forwarding.png" desc="网络示意图" %}
+{{< figure src="images/ssh-tunnel-dynamic-remote-forwarding.png" caption="网络示意图" >}}
 
 在server_A运行一个socks服务器，监听1080端口
 ```

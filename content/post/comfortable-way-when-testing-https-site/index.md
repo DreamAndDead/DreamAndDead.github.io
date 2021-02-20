@@ -1,7 +1,14 @@
 ---
-date: "2018-04-11T00:00:00Z"
-tags: nginx http https
 title: Comfortable way when testing HTTPS site
+date: "2018-04-11T04:10:00Z"
+categories:
+- HTTPS
+tags: 
+- nginx
+- https
+featured_image: images/featured.jpg
+aliases:
+- /2018/04/11/comfortable-way-when-testing-https-site.html
 ---
 
 网站初期一直使用http，近期购买了ssl证书，预期将网站全面升级使用https。
@@ -9,8 +16,6 @@ title: Comfortable way when testing HTTPS site
 当部署https后，居然出现了这种问题...
 
 <!--more-->
-
-从长道来。
 
 # 测试HTTPS
 
@@ -39,13 +44,11 @@ server {
 
 ## 主要问题
 
-
 有人可能会想，理论上，只是变更协议而已，不会引发什么问题，而实际中，有多种限制。
 
-对于刚迁移到https的网站，最可能出现的问题就是 [mixed content][]
+对于刚迁移到https的网站，最可能出现的问题就是 [mixed content][mixed content]
 
-
-> 简单来说，mixed content是一种安全策略，本着http协议是不安全的前提，浏览器https环境下限制对http资源的引用。
+> mixed content是一种安全策略，本着http协议是不安全的前提，浏览器https环境下限制对http资源的引用。
 
 而很多时候，很多静态链接固定写在html中，这样在https环境下加载就会受到限制
 
@@ -69,7 +72,6 @@ server {
 - etc
 
 详细可参考 [MDN][mixed content]
-
 
 对于被动混合内容，浏览器会报warning，但不会阻止加载；
 而主动混合内容，浏览器则直接阻止加载。
@@ -123,12 +125,11 @@ add_header Content-Security-Policy upgrade-insecure-requests;
 本以为两协议不同，单独访问并不相关，
 但是在测试时，加载ajax，出现问题`Response for preflight is invalid (redirect)`
 
-{% include image.html url="response-for-preflight.png" desc="" %}
+{{< figure src="images/response-for-preflight.png" caption="" >}}
 
 再观察数据包情况
 
-{% include image.html url="307-internal-redirect.png" desc="" %}
-
+{{< figure src="images/307-internal-redirect.png" caption="" >}}
 
 http请求自动重定向为https请求，wired。
 
@@ -211,7 +212,7 @@ $ curl -I https://weibo.com
 
 测试时，访问https是这样的
 
-{% include image.html url="upgrade-insecure-requests.png" desc="" %}
+{{< figure src="images/upgrade-insecure-requests.png" caption="" >}}
 
 看到来自服务器设置的HSTS
 

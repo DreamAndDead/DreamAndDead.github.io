@@ -1,7 +1,14 @@
 ---
-date: "2018-04-09T00:00:00Z"
-tags: http curl
 title: Play curl with http
+date: "2018-04-09T10:52:00Z"
+categories:
+- Curl
+tags: 
+- http
+- curl
+featured_image: images/featured.webp
+aliases:
+- /2018/04/09/play-curl-with-http.html
 ---
 
 curl是一款强大的网络传输工具，支持多种协议，在HTTP的支持方面尤其为人称道。
@@ -18,7 +25,7 @@ http是应用层协议，其设计非常简单，灵活。请求与响应是HTTP
 
 通常，一个HTTP请求报文由请求行、请求报头、空行、和请求数据4个部分组成。
 
-{% include image.html url="http-request-format.png" desc="http request format" %}
+{{< figure src="images/http-request-format.png" caption="http request format" >}}
 
 - 请求行
   - Method：请求方法，如GET，POST
@@ -34,7 +41,7 @@ http是应用层协议，其设计非常简单，灵活。请求与响应是HTTP
 HTTP的响应报文由状态行、消息报头、空行、响应正文组成。
 响应正文是服务器返回的资源的内容。
 
-{% include image.html url="http-response-format.png" desc="http response format" %}
+{{< figure src="images/http-response-format.png" caption="http response format" >}}
 
 - 状态行
   - HTTP Version：协议版本

@@ -1,7 +1,14 @@
 ---
-date: "2018-05-12T00:00:00Z"
-tags: thinkpad hardware
-title: “小黑E530c”的升级之路
+title: thinkpad E530c 的升级之路
+date: "2018-05-12T20:10:00Z"
+categories:
+- Hardware
+tags:
+- hardware
+- thinkpad
+featured_image: images/featured.jpg
+aliases:
+- /2018/05/12/upgrade-thinkpad-e530c.html
 ---
 
 不知不觉，自己的[Thinkpad E530c][tp e530c config]入手5年，期间换过数次系统，如今不觉有些老态龙钟，
@@ -20,12 +27,12 @@ title: “小黑E530c”的升级之路
 
 拆机只需要拆背面就可以，可以更换的主要零件都在这里，不必将电脑拆到芯片级别。
 
-{% include image.html url="tp/tp-panel.jpg" desc="" %}
+{{< figure src="images/tp-panel.jpg" caption="" >}}
 
 - 从1,2,拆下电源
 - 从5,6,7,松开螺丝，从8处撬开面板
 
-{% include image.html url="tp/tp-panel-inside.jpg" desc="" %}
+{{< figure src="images/tp-panel-inside.jpg" caption="" >}}
 
 主要零件分布
 - A处风扇
@@ -46,11 +53,11 @@ title: “小黑E530c”的升级之路
 一般来讲，硬盘位更稳定，速度更快，所以决定在更换HDD的时候，
 将SSD安装在原有硬盘位，HDD放到光驱位，光驱将废弃不用。
 
-{% include image.html url="tp/tp-panel-inside.jpg" desc="" %}
+{{< figure src="images/tp-panel-inside.jpg" caption="" >}}
 
 - 从1,2,处，松开螺丝，向外取出硬盘
 
-{% include image.html url="tp/tp-disk.jpg" desc="" %}
+{{< figure src="images/tp-disk.jpg" caption="" >}}
 
 一般硬盘的侧面与背面，都有4个螺丝孔（1,2是侧面，3,4是背面）。
 在取下原有硬盘之后，将原来的硬盘支架取下来（从1,2螺丝及对面的两颗螺丝），
@@ -63,7 +70,7 @@ title: “小黑E530c”的升级之路
 根据平时的使用经验，光驱基本使用不到，决定将旧硬盘放置到光驱处。
 有一种顾虑是，这样内部的散热会不好，因为SSD安装了系统，HDD用于附加存储，使用到的概率很小，平时使用应该不是问题。
 
-{% include image.html url="tp/tp-panel.jpg" desc="" %}
+{{< figure src="images/tp-panel.jpg" caption="" >}}
 
 - 松开3处的螺丝
 - 再从4处将光驱拔出来
@@ -71,15 +78,15 @@ title: “小黑E530c”的升级之路
 因为光驱位的接口与硬盘位的接口不同，虽然都为SATA口，但是有一些区别，所以在将硬盘安装到光驱位
 的时候，需要 光驱硬盘支架。
 
-{% include image.html url="tp/tp-disk-cdrom-interface.jpg" desc="" %}
+{{< figure src="images/tp-disk-cdrom-interface.jpg" caption="" >}}
 
 光驱位接口
 
-{% include image.html url="tp/tp-disk-interface.jpg" desc="" %}
+{{< figure src="images/tp-disk-interface.jpg" caption="" >}}
 
 硬盘位接口
 
-{% include image.html url="tp/tp-disk-cdrom.jpg" desc="" %}
+{{< figure src="images/tp-disk-cdrom.jpg" caption="" >}}
 
 左边是原来的光驱，右边是光驱硬盘支架。
 首先将硬盘安装到 光驱硬盘支架 上，记得将原有光驱位1处的螺丝与2处的外壳，换到新的 光驱硬盘支架 上。
@@ -92,7 +99,7 @@ title: “小黑E530c”的升级之路
 
 新风扇运转流畅，声音小，散热变得更好。
 
-{% include image.html url="tp/tp-panel-inside.jpg" desc="" %}
+{{< figure src="images/tp-panel-inside.jpg" caption="" >}}
 
 - 将17处的插口拔下
 - 从7,8,9处将螺丝松开，取下风扇
@@ -111,13 +118,13 @@ CPU不是随意更换的，要根据主板型号与功耗，选择合适的。
 - 从cpu-upgrade网站，根据主板型号，找到可以适配的所有CPU。E530c的主板型号是[HM77][HM77]，可升级的最高系列是i7-3840QM。
 - 从功耗来讲，原来的CPU是35W，i7-3840QM是45W，功率相同是最好，如果强制为了高配置，而强制换上高功率CPU，可能会散热不足，损坏内部元件，所以一定要保持散热。
 
-{% include image.html url="tp/tp-panel-inside.jpg" desc="" %}
+{{< figure src="images/tp-panel-inside.jpg" caption="" >}}
 
 - CPU在散热片的下面，要先取下风扇，再取下散热片，其次才能取下CPU
 - 取下风扇
 - 松下10,11,12,13,14,15,16的螺丝，取下散热片
 
-{% include image.html url="tp/tp-cpu.jpg" desc="" %}
+{{< figure src="images/tp-cpu.jpg" caption="" >}}
 
 - 将1处的一字螺丝，逆时针180度，再取下CPU
 - 更换新CPU
@@ -169,7 +176,7 @@ Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca 
 
 听说这个型号有内存单条8G的限制，还没有验证过，如果是那样，最多升级到16G内存。
 
-{% include image.html url="tp/tp-panel-inside.jpg" desc="" %}
+{{< figure src="images/tp-panel-inside.jpg" caption="" >}}
 
 - 3,4,5,6是4个卡位，向外掰开，内存就会弹出
 - 安装内存时，对准插槽，再按下即可
@@ -188,12 +195,6 @@ Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca 
 使用电脑的时间这么多年，电池的续航能力也变差了。
 
 直接在网上搜索对应型号，买原装的可以，简单有效。
-
-
-# End
-
-更加愉快的使用小黑 :)
-
 
 [tp e530c config]: http://detail.zol.com.cn/361/360255/param.shtml
 [HM77]: http://www.cpu-upgrade.com/mb-Intel_(chipsets)/HM77_Express.html

@@ -1,7 +1,14 @@
 ---
-date: "2018-01-03T00:00:00Z"
-tags: git
 title: Git Internals
+date: "2018-01-03T08:30:00Z"
+categories:
+- Git
+tags:
+- git
+- vcs
+featured_image: images/featured.jpg
+aliases:
+- /2018/01/03/git-internals.html
 ---
 
 这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。
@@ -510,7 +517,7 @@ $ cat .git/refs/remotes/origin/master
 从之前对git对象的分析（refs不是对象，但是也放在这里讨论），它们之间的关系非常明确。
 由层次的包含关系，从下至上，如图所示：
 
-{% include image.html url="git-object-relation.png" desc="git object relation" %}
+{{< figure src="images/git-object-relation.png" caption="git object relation" >}}
 
 - blob对应单个文件单元
 - tree包含blob与tree，形成层次关系。最上层的tree为工作区目录对应的tree，向下可遍历到所有的子tree与blob
@@ -629,7 +636,7 @@ minor version update
 
 依照输出分析，所有对象间关系如图：
 
-{% include image.html url="git-log-internal.png" desc="relations between git objects" %}
+{{< figure src="images/git-log-internal.png" caption="relations between git objects" >}}
 
 到这里，我们对git已经有比较深刻地理解：
 - 通常情况，tree与blob对用户不可见，commit是理解git的基本单元
@@ -650,8 +657,7 @@ minor version update
 在这段时间内，你并不清楚甲乙进行了什么样的操作。使用git fetch获取服务器仓库内容，
 对你而言，整个仓库的commit结构是这样的：
 
-
-{% include image.html url="git-remote-ref.png" desc="git commits structure" %}
+{{< figure src="images/git-remote-ref.png" caption="git commits structure" >}}
 
 - 本地master指向的最新提交还是B，由parent遍历，只有A B两个提交对自己可见
 - git fetch从服务器取得新的commit/tree/blob对象，更新remote/origin/master引用
@@ -824,7 +830,7 @@ $ hexdump -C .git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx
 
 一图胜千言，借用 [git community book 的插图](http://shafiulazam.com/gitbook/7_the_packfile.html%0A)
 
-{% include image.html url="git-packfile-index-structure.jpg" desc="图解pack index file存储结构" %}
+{{< figure src="images/git-packfile-index-structure.jpg" caption="图解pack index file存储结构" >}}
 
 index file一般都使用version 2，对照上面index file内容，逐字节解析：
 - 4byte：ff 74 4f 63，magic number
@@ -938,7 +944,7 @@ $ hexdump -C .git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pac
 
 packfile的格式非常简单清晰，同样借用 [git community book 插图](http://shafiulazam.com/gitbook/7_the_packfile.html%0A)
 
-{% include image.html url="git-packfile-structure.jpg" desc="图解packfile格式" %}
+{{< figure src="images/git-packfile-structure.jpg" caption="图解packfile格式" >}}
 
 - 4byte： PACK 4个字符
 - 4byte： 版本号
@@ -956,7 +962,7 @@ packfile的格式非常简单清晰，同样借用 [git community book 插图](h
 
 借用图解来解释head部分对象解压缩大小的计算，thanks [git community book](http://shafiulazam.com/gitbook/7_the_packfile.html%0A)
 
-{% include image.html url="git-packfile-object-head-structure.jpg" desc="如何计算对象size" %}
+{{< figure src="images/git-packfile-object-head-structure.jpg" caption="如何计算对象size" >}}
 
 - 第一个byte低4bit，为对象解压缩size的最低4bit
 - 其后每个byte的低7bit，按照移位规则，最终组合成的数字代表对象解压缩的size数值
@@ -1173,5 +1179,5 @@ pigz: <stdin> OK, has trailing junk which was ignored
 不幸的是，虽然按照 [官方文档](https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-format.txt#L112) 的方式解开了OBJ_OFS_DELTA的内容，
 但是我却不知道如何解读，这方面并没有详细的记载，只有找到唯一 [官方又有些诙谐的文档](https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-heuristics.txt) ，可以读一下，very funny。
 
-希望后续有时间深入源码，再来详细的解释delta(dark corner of git)部分 :)
+希望后续有时间深入源码，再来详细的解释delta(dark corner of git)部分。
 
