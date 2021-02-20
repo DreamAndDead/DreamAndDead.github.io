@@ -7,13 +7,6 @@ theme = "diary"
 [params]
 enableReadingTime=true
 disableAutoCollapse=true
-enableGitalk=true
-
-[params.gitalk]
-owner="DreamAndDead"
-repo="blog"
-client_id="a62107312fece4c4dcb1"
-client_secret="d7dbf28c47e28300664972e82b89b244c40e40c3"
 
 [taxonomies]
 tag = "tags"
