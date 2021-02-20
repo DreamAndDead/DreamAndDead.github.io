@@ -1,7 +1,14 @@
 ---
-date: "2020-03-04T00:00:00Z"
-tags: keras machine-learning deep-learning
 title: keras 如何从中断处继续训练
+date: "2020-03-04T19:32:00Z"
+categories:
+- Keras
+tags:
+- machine-learning
+- deep-learning
+featured_image: images/featured.jpg
+aliases:
+- /2020/03/25/compose-deep-learning-machine.html
 ---
 
 深度学习的网络模型层次很深，训练模型的时间也很长，没有强大的算力，调试模型的周期就会

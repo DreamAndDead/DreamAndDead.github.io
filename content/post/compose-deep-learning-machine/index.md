@@ -1,7 +1,14 @@
 ---
-date: "2020-03-25T00:00:00Z"
-tags: hardware deep-learning
 title: 深度学习攒机总结
+date: "2020-03-25T09:02:00Z"
+categories:
+- Hardware
+tags:
+- hardware
+- deep-learning
+featured_image: images/featured.jpg
+aliases:
+- /2020/03/25/compose-deep-learning-machine.html
 ---
 
 深度学习需要强大的算力做支撑，无奈手边没有这样的机器，租赁和云服务器的方式又略显昂贵，

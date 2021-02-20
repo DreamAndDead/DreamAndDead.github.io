@@ -17,7 +17,7 @@ aliases:
 
 # 残局模式
 
-{% include image.html url="joker/10.png" desc="专家模式第 10 关" %}
+{{< figure src="images/10.png" title="" >}}
 
 残局模式的设定很简单。
 
@@ -44,7 +44,7 @@ aliases:
 
 通常将 minmax 对抗搜索归为 AI 算法（游戏里的 AI），用于给游戏中的电脑角色增加“智能”，为游戏添加些许趣味。
 
-{% include image.html url="joker/minmax.png" desc="minmax 搜索图解" %}
+{{< figure src="images/minmax.png" title="" >}}
 
 对抗搜索的思想很简单，以上图为例。
 

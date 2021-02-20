@@ -1,9 +1,15 @@
 ---
-date: "2020-02-20T00:00:00Z"
-tags: algorithm brain memory
 title: 斗地主中的记牌策略
+date: "2020-02-20T10:20:00Z"
+categories:
+- Poker
+tags:
+- brain
+- memory
+featured_image: images/featured.jpg
+aliases:
+- /2020/02/20/how-to-remember-cards.html
 ---
-
 
 斗地主是一种规则简单的扑克游戏，虽然每个玩家手牌数量不多（3 人斗地主，一副牌 54 张，农民每人 17 张，地主 20 张），
 但是要精通其中合作，对抗，决策的过程却不易。
@@ -84,7 +90,7 @@ title: 斗地主中的记牌策略
 
 如以下的编码表，就是我个人在用的编码表。
 
-{% include image.html url="remember-card/poker.jpg" desc="扑克编码表" %}
+{{< figure src="images/poker.jpg" title="" >}}
 
 编码表只要适合自己就是最好的，可以根据自己的需求去更改个别码点。
 

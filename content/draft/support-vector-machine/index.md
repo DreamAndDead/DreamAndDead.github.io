@@ -1,8 +1,16 @@
 ---
-date: "2019-10-14T00:00:00Z"
-tags: algorithm machine-learning
 title: 简明 SVM
+date: "2019-10-14T14:03:00Z"
+categories:
+- Algorithm
+tags: 
+- algorithm
+- machine-learning
+featured_image: images/intuition.png
 enableMathJax: true
+aliases:
+- /2019/10/14/support-vector-machine.html
+draft: true
 ---
 
 最近研究了 SVM 算法[^1] [^2]，发现它本身的推导过程真是充满了美感！
@@ -18,8 +26,7 @@ enableMathJax: true
 
 假如所有实例**完全线性可分**（存在超平面将正反实例完全分开），
 
-
-{% include image.html url="SVM/intuition.png" desc="x 代表正例，o 代表反例" %}
+{{< figure src="images/intuition.png" caption="x 代表正例，o 代表反例" >}}
 
 上图实线直线（在高维度也称超平面 hyper plane，后面统一简称平面）就是一种可能的分类方法。
 
@@ -46,22 +53,21 @@ $$ w ^T x + b = 0 $$
 
 $w, b$ 是分类平面的参数，$w \in \mathbb{R}^2, b \in \mathbb{R}$。
 
-{% include image.html url="SVM/classify.png" desc="" %}
+{{< figure src="images/classify.png" caption="" >}}
 
 可以计算，对于所有正例，$ w ^T x + b > 0 $，对于反例，$ w ^T x + b < 0 $，正反例有明显的符号区别。
 
 根据符号的不同，就可以构建一个简单的分类假设，
 
 $$
-h(x) = g(w ^T x + b) \\
-g(z) = 
-\begin{cases}
-+1, \text{ when $z > 0$ } \\
+h(x) = g(w ^T x + b) \\\\\\
+g(z) = \begin{cases}
++1, \text{ when $z > 0$ } \\\\\\
 -1, \text{ when $z < 0$ }
 \end{cases}
 $$
 
-{% include image.html url="SVM/gz.png" desc="" %}
+{{< figure src="images/gz.png" caption="" >}}
 
 在具体公式的基础上，应用最先关于“远近”的直觉，如果一个正例， $w ^T x ^{(i)} + b \gg 0$，则可以认为间隔很大，当前分类正确的可能性更高。
 
@@ -83,7 +89,7 @@ $$
 
 推导过程主要应用了，向量 $PA$ 长度为单位向量 $\dfrac{w}{\|\|w\|\|}$ 的 $\gamma$ 倍。
 
-{% include image.html url="SVM/geometry-distance.png" desc="" %}
+{{< figure src="images/geometry-distance.png" caption="" >}}
 
 $$
 w ^T (A - \gamma \frac{w}{||w||} ) + b = 0 \\
@@ -275,7 +281,7 @@ $$
 
 对于 $\alpha_i = 0$ 的部分，都可以在分类计算中省略，只有 $\alpha_i > 0$ 才参与计算，大大减少了计算量。
 
-{% include image.html url="SVM/support.png" desc="" %}
+{{< figure src="images/support.png" caption="" >}}
 
 从图形来看，当 $y^{(i)} (w ^T x^{(i)} + b) = 1，\alpha_i > 0$，对应的实例 $(x^{(i)}, y^{(i)})$ 是距离分类平面最近的点，称作支持向量（这也是支持向量机名字的由来），也只有相应的支持向量参与判别新分类的运算。
 
@@ -285,7 +291,7 @@ $$
 这时可以通过空间的映射 $\phi(x)$，将原空间映射到新空间，在新空间里，实例也许就完全线性可分了。
 在新空间计算得到分类平面后，将其逆向转换回来，在原空间就得到了非线性的分类平面。
 
-{% include image.html url="SVM/phi.png" desc="" %}
+{{< figure src="images/phi.png" caption="" >}}
 
 假如将所有实例映射到新空间，进行分类平面的求解。
 观察最优化的求解过程，将 $x^{(i)} \rightarrow \phi(x^{(i)})$，并不影响求解过程（因为求解的变量为 $w, b, \alpha$, 而 $x^{(i)}$ 看作常量），只需要将所有的 $x^{(i)} $ 进行替换。
@@ -328,13 +334,12 @@ Kernal martix 是一个矩阵 $K$，$K_{ij} = K(x^{(i)}, x^{(j)})$
 之前讨论的方法，假定所有的实例是完全线性可分的，但是也存在不完全线性可分的情况。
 比如，
 
-{% include image.html url="SVM/nonlinear.png" desc="" %}
+{{< figure src="images/nonlinear.png" caption="" >}}
 
 在这种情况下，可以使用核方法，得到非线性分类．
 但是总体上看，实例还是线性分类的，如果只因为少量的分类错误就使用非线性的方法，代价太大了。
 
-
-{% include image.html url="SVM/soft.png" desc="" %}
+{{< figure src="images/soft.png" caption="" >}}
 
 之前假定实例完全线性可分，使用的是*硬间隔(hard margin)*的判别方法。
 现在引入一种*软间隔(soft margin)*的判别方法，使分类可以容忍部分错误。
@@ -419,12 +424,11 @@ SMO 启发于坐标上升方法。
 
 由等高线来看，在固定一个维度的前提下，找到函数的最大值，即与等高线相切的点，
 
-{% include image.html url="SVM/contour.png" desc="" %}
+{{< figure src="images/contour.png" caption="" >}}
 
 由三维立体来看，逐个维度取最大值，最终会慢慢接近极值点。
 
-{% include image.html url="SVM/contour-3d.png" desc="" %}
-
+{{< figure src="images/contour-3d.png" caption="" >}}
 
 下面类比的来看，用 SMO 求解软间隔的最优化问题，
 
@@ -459,8 +463,7 @@ $$
 \alpha_2 y^{(2)} = - \sum_{i=3}^{m} \alpha_i y^{(i)} - \alpha_1 y^{(1)} \\
 $$
 
-{% include image.html url="SVM/aiaj.png" desc="" %}
-
+{{< figure src="images/aiaj.png" caption="" >}}
 
 对于不同的情况，$\alpha_i$ 取值范围会受到不同的影响。
 

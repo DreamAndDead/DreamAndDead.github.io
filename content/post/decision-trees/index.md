@@ -1,7 +1,15 @@
 ---
-date: "2019-10-23T00:00:00Z"
-tags: algorithm machine-learning
 title: 简明 Decision Trees
+date: "2019-10-23T07:52:00Z"
+categories:
+- Algorithm
+tags: 
+- algorithm
+- machine-learning
+featured_image: images/tree-example.png
+aliases:
+- /2019/10/23/decision-trees.html
+enableMathJax: true
 ---
 
 根据直觉来看，决策树是一种非常自然的方法，和人类处理问题的机制很像。
@@ -36,7 +44,7 @@ title: 简明 Decision Trees
 
 比如对于篮球一对一进攻的行动决策过程：
 
-{% include image.html url="decision-trees/tree-example.png" desc="示例来自 https://github.com/DreamAndDead/decision-trees-example" %}
+{{< figure src="images/tree-example.png" caption="示例来自项目 [decision-tree-example](https://github.com/DreamAndDead/decision-trees-example)" >}}
 
 决策树中有两类结点和一类边，
 - 叶子结点，表示决策的结果，对应实例的目标值
@@ -87,11 +95,11 @@ $$
 
 对于 $n=2$ 的情况，熵函数如下，
 
-![](/assets/img/decision-trees/entropy-n-2.png)
+{{< figure src="images/entropy-n-2.png" caption="" >}}
 
 对于 $n=3$ 的情况，
 
-![](/assets/img/decision-trees/entropy-n-3.png)
+{{< figure src="images/entropy-n-3.png" caption="" >}}
 
 当所有 $p_i$ 取值都相同时 $(\frac{1}{2}, \frac{1}{3}, ...)$，熵取得最大值 $log_2(n)$。
 
