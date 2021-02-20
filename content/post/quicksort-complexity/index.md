@@ -1,7 +1,16 @@
 ---
-date: "2019-08-07T00:00:00Z"
-tags: algorithm
 title: Quicksort Complexity Analysis in Probability
+date: "2019-08-07T16:43:00Z"
+categories:
+- Algorithm
+tags: 
+- math
+- algorithm
+featured_image: images/featured.jpg
+enableMathJax: true
+aliases:
+- /2019/08/07/quicksort-complexity.html
+draft: true
 ---
 
 最近在阅读[《概率论基础教程 A First Course in Probability》][book]的时候，看到**chapter 7 期望的性质**，

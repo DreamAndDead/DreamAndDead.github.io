@@ -1,7 +1,18 @@
 ---
-date: "2019-04-26T00:00:00Z"
-tags: algorithm 3d deferred-shading DirectX9
 title: Deferred Shading Method in DirectX9
+date: "2019-04-26T14:20:00Z"
+categories:
+- Algorithm
+tags: 
+- algorithm
+- 3D 
+- deferred-shading
+- directx9
+featured_image:
+enableMathJax: true
+draft: true
+aliases:
+- /2019/04/26/deferred-shading.html
 ---
 
 In the latest work, we need the engine to support large number of lights.

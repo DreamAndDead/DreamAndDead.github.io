@@ -1,9 +1,17 @@
 ---
-date: "2019-04-22T00:00:00Z"
-tags: math linear-algebra
 title: a matrix det puzzle
+date: "2019-04-22T08:39:00Z"
+categories:
+- Math
+tags: 
+- math
+- linear-algebra
+featured_image: images/featured.jpg
+enableMathJax: true
+draft: true
+aliases:
+- /2019/04/22/a-matrix-det-puzzle.html
 ---
-
 
 求解行列式
 

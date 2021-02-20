@@ -1,7 +1,17 @@
 ---
-date: "2019-04-24T00:00:00Z"
-tags: algorithm 3d math linear-algebra
 title: understanding euler angles
+date: "2019-04-24T09:10:00Z"
+categories:
+- Math
+tags: 
+- algorithm
+- 3D
+- math
+- linear-algebra
+featured_image: images/featured.jpg
+enableMathJax: true
+aliases:
+- /2019/04/24/understanding-euler-angles.html
 ---
 
 Rotation is a big part of transformation in 3d programming. Every programmer
@@ -18,7 +28,7 @@ They two are different concepts.
 
 In brief, vectors have got direction and orientation is for objects.
 
-{% include image.html url="about-euler-angles/aircraft-rotation.png" desc="intrinsic rotation of aircraft from wikipedia" %}
+{{< figure src="images/aircraft-rotation.png" caption="intrinsic rotation of aircraft from wikipedia" >}}
 
 $\vec{X}$ is a vector and is determined by $\psi$ and $\theta$.
 
@@ -52,9 +62,9 @@ with the moving object.
 
 The figures below will provide better understanding.
 
-{% include image.html url="about-euler-angles/extrinsic-rotation.png" desc="extrinsic rotation axes in order $x-y-z$" %}
+{{< figure src="images/extrinsic-rotation.png" caption="extrinsic rotation axes in order $x-y-z$" >}}
 
-{% include image.html url="about-euler-angles/intrinsic-rotation.png" desc="intrinsic rotation axes in order $z-y'-x''$ (also well known as yaw,pitch,roll)" %}
+{{< figure src="images/intrinsic-rotation.png" caption="intrinsic rotation axes in order $z-y'-x''$ (also well known as yaw,pitch,roll)" >}}
 
 
 ## Conversion between extrinsic and intrinsic rotations

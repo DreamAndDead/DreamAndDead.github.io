@@ -1,7 +1,15 @@
 ---
-date: "2019-05-15T00:00:00Z"
-tags: math
 title: Trigonometric Function Illustrations
+date: "2019-05-15T08:09:00Z"
+categories:
+- Math
+tags: 
+- math
+- illustration
+featured_image: images/featured.jpg
+enableMathJax: true
+aliases:
+- /2019/05/15/triangle-math.html
 ---
 
 三角函数是非常重要的一类周期函数，所有周期函数都可以分解为对应的三角函数的组合。
@@ -15,7 +23,7 @@ title: Trigonometric Function Illustrations
 
 # 基础图示
 
-{% include image.html url="triangle-math/figure-in-textbook.png" desc="单位圆中的三角函数值" %}
+{{< figure src="images/figure-in-textbook.png" caption="单位圆中的三角函数值" >}}
 
 在图示中，三角函数对应的值可以照如下的表格来计算。
 
@@ -40,7 +48,7 @@ title: Trigonometric Function Illustrations
 
 经过一个偶然的机会，看到了关于三角函数更加合理的解释。
 
-{% include image.html url="triangle-math/triangle-functions.png" desc="单位圆中的三角函数值" %}
+{{< figure src="images/triangle-functions.png" caption="单位圆中的三角函数值" >}}
 
 |翻译|缩写|英文|公式|
 |:-:|:-:|:-:|:-:|
@@ -55,4 +63,3 @@ title: Trigonometric Function Illustrations
 
 co means complementary 表示余角。所以也就有了弦，切，割的正，余值，以及图中优雅的对应关系。
 
-# The End

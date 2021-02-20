@@ -1,7 +1,15 @@
 ---
-date: "2019-08-12T00:00:00Z"
-tags: linux Xorg xmodmap
 title: How to Customize Keymap in Linux
+date: "2019-08-12T10:29:00Z"
+categories:
+- Xorg
+tags: 
+- linux
+- keymap
+- emacs
+featured_image: images/featured.jpg
+aliases:
+- /2019/08/12/how-to-customize-keymap-in-linux.html
 ---
 
 最近刚开始使用 emacs ，太多 Ctrl Alt 相关的快捷键，边侧的手指不舒服，于是想法将部分键盘按键进行改键。

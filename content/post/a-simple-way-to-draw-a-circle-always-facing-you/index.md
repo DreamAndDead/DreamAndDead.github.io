@@ -1,7 +1,16 @@
 ---
-date: "2019-04-17T00:00:00Z"
-tags: algorithm 3d
 title: A simple way to draw a circle always facing you
+date: "2019-04-17T13:24:00Z"
+categories:
+- Algorithm
+tags: 
+- algorithm
+- 3D
+featured_image:
+enableMathJax: true
+draft: true
+aliases:
+- /2019/04/17/a-simple-way-to-draw-a-circle-always-facing-you.html
 ---
 
 In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light, so that
