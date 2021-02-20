@@ -167,8 +167,7 @@ location ^~ /static/ {
 
 其中对 nginx 的配置如下，使用 curl 进行检测。
 
-<script src="https://gist-it.appspot.com/https://github.com/DreamAndDead/nginx-example/blob/master/location/conf.d/location.conf"></script>
-
+{{< gist-it path="DreamAndDead/nginx-example/blob/master/location/conf.d/location.conf" start=0 end=34 >}}
 
 exact uri 规则先于所有规则（与规则定义的顺序无关），所以这里匹配了 `= /` exact uri 规则而不是 `/` prefix 规则。
 

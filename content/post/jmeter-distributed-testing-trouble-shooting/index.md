@@ -1,19 +1,24 @@
 ---
-date: "2018-05-25T00:00:00Z"
-tags: jmeter trouble-shooting tips
 title: 记一次 Jmeter 分布式测试故障调试过程
+date: "2018-05-25T02:10:00Z"
+categories:
+- Jmeter
+tags: 
+- jmeter
+- test
+- trouble-shooting
+featured_image: images/featured.jpg
+aliases:
+- /2018/05/25/jmeter-distributed-testing-trouble-shooting.html
 ---
 
-之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties
-中配置自己的 IP。
+之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。
 
 至于为什么要这么做，源于这一次 debug 的过程。
 
 <!--more-->
 
 # 运行环境
-
-![jmeter-test-env][jmeter-test-env]
 
 [jmeter-test-env]: http://on7blnbb0.bkt.clouddn.com/image/png/jmeter-trouble-shooting.png
 
@@ -69,14 +74,13 @@ $ sudo service ufw stop
 信息在网上查找，有人建议修改 jmeter 设置，不监听 shutdown 信息，相应的也就不会开启 4445 端口，
 理论上就不会卡在 waiting 那里，而是直接跳过。
 
-
 在 ubuntu 主机，修改 jmeter.properties 文件，
 
-<script src="https://gist-it.appspot.com/https://github.com/apache/jmeter/blob/v4_0/bin/jmeter.properties?slice=1074:1076"></script>
+{{< gist-it path="apache/jmeter/blob/v4_0/bin/jmeter.properties" start=1074 end=1076 >}}
 
+修改为
 
 ```
-#jmeterengine.nongui.maxport=4455 修改为
 jmeterengine.nongui.maxport=0
 ```
 
