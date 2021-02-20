@@ -1,7 +1,14 @@
 ---
-date: "2019-09-20T00:00:00Z"
-tags: python machine-learning
 title: python virtual env with conda
+date: "2019-09-20T09:08:00Z"
+categories:
+- Python
+tags: 
+- python
+- machine-learning
+featured_image: images/python.jpg
+aliases:
+- /2019/09/20/pipenv-with-conda.html
 ---
 
 Anaconda 是一个非常流行的 python 集成环境，用于科学计算，机器学习等。

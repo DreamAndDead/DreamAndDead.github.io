@@ -6,7 +6,7 @@ categories:
 tags: 
 - network
 - lan
-featured_image: images/origin.png
+featured_image: images/featured.jpg
 aliases:
 - /2020/04/10/connect-pc-with-wire.html
 ---
