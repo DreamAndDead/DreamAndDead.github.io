@@ -1,7 +1,15 @@
 ---
-date: "2018-09-27T00:00:00Z"
-tags: devops mysql trouble-shooting
-title: Mysql table suddenly doesn't exists
+title: mysql table suddenly doesn't exists
+date: "2018-09-27T04:10:00Z"
+categories:
+- Mysql
+tags: 
+- devops
+- mysql
+- trouble-shooting
+featured_image: images/featured.jpg
+aliases:
+- /2018/09/27/recover-mysql-innodb-table-data-from-ibd-file.html
 ---
 
 最近内部的 mysql 数据库发生了一件奇怪的事，其中有一个表 users625 突然出现问题，

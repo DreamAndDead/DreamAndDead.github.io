@@ -1,7 +1,15 @@
 ---
-date: "2018-09-27T00:00:00Z"
-tags: devops mysql trouble-shooting
 title: Recover mysql table structure from frm file
+date: "2018-09-27T10:20:00Z"
+categories:
+- Mysql
+tags: 
+- devops
+- mysql
+- trouble-shooting
+featured_image: images/featured.jpg
+aliases:
+- /2018/09/27/recover-mysql-table-structure-from-frm-file.html
 ---
 
 mysql 正常运行的时候，[查看 table 的结构][show-create-table-doc]并不是困难的事。

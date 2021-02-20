@@ -1,7 +1,14 @@
 ---
-date: "2018-05-28T00:00:00Z"
-tags: nginx
 title: How uri match nginx location
+date: "2018-05-28T09:10:00Z"
+categories:
+- Nginx
+tags: 
+- nginx
+- web server
+featured_image: images/featured.jpg
+aliases:
+- /2018/05/28/nginx-location.html
 ---
 
 location 是 nginx 配置中出现最频繁的配置项，一个 uri 是如何与多个 location 进行匹配的？
@@ -128,18 +135,13 @@ location ^~ /api/v1 {
 5. 匹配失败，返回404，结束
 6. 选择当前规则，使用其配置，结束
 
-## 图解
-
-![how-location-match-uri][how-location-match-uri]
-
-draw by draw.io, [源文件][how-location-match-uri-xml]
-
+![][how-location-match-uri]
 
 [how-location-match-uri]: http://on7blnbb0.bkt.clouddn.com/18-9-28/21577003.jpg
 [how-location-match-uri-xml]: http://on7blnbb0.bkt.clouddn.com/how-location-match-uri-in-nginx.xml
 
 
-## FAQ
+# FAQ
 
 有人可能会困惑，如果 prefix 与 disable regex prefix 规则相同，比如，
 
@@ -224,10 +226,6 @@ uri "/api/v1/file/logo.png": case-insesitive regex match "location ~* \.PNG(doll
 $ curl http://localhost:8080/no-where
 uri "/no-where": prefix match "location /"
 ```
-
-# 写在最后
-
-
 
 [pcre lib]: https://www.pcre.org/
 [nginx doc location]: http://nginx.org/en/docs/http/ngx_http_core_module.html#location

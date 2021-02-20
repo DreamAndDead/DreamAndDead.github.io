@@ -1,7 +1,15 @@
 ---
-date: "2018-09-26T00:00:00Z"
-tags: devops linux trouble-shooting
 title: Configure apt rightly for debian squeeze
+date: "2018-09-26T16:50:00Z"
+categories:
+- Debian
+tags: 
+- devops
+- linux
+- trouble-shooting
+featured_image: images/featured.png
+aliases:
+- /2018/09/26/configure-debian-squeeze-apt-source.html
 ---
 
 本想在 Debian Squeeze 上安装一些依赖，没想到刚执行 `apt-get update` ，就出现这样的错误信息。
@@ -93,4 +101,4 @@ Acquire::Check-Valid-Until false;
 
 其中特别提到了 `The second line will fail with an "expired" type message, so you also need to ...`，so sweet！
 
-既然 Debian Squeeze 已经不再更新，apt source 也划入了 archive，这个方案应该是最“长治久安”的。cheers～
+既然 Debian Squeeze 已经不再更新，apt source 也划入了 archive，这个方案应该是最“长治久安”的。
