@@ -1,4 +1,5 @@
-baseURL = "https://dreamanddead.github.io"
+# baseURL = "https://dreamanddead.github.io"
+baseURL = "http://localhost:8000"
 disablePathToLower = true
 languageCode = "zh-cn"
 title = "Brain=f(X)?"

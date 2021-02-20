@@ -1,12 +1,17 @@
 ---
-date: "2020-03-27T00:00:00Z"
-tags: algorithm
 title: 论斗地主残局中的宿命论
+date: "2020-03-27T15:07:00Z"
+categories:
+- Poker
+tags:
+- algorithm
+- fun
+featured_image: images/final-phase.png
+aliases:
+- /2020/03/27/crack-final-phase.html
 ---
 
 之前斗地主中的记牌做了些研究，近期又发现了（欢乐）斗地主的残局模式，对于研究如何出牌是一个很不错的题材。
-
-{% include image.html url="joker/final-phase.png" desc="欢乐斗地主残局模式" %}
 
 <!--more-->
 

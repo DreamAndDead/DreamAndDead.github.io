@@ -1,10 +1,16 @@
 ---
-date: "2020-10-26T00:00:00Z"
-tags: tool debug
 title: gdb pearls
+date: "2020-10-26T09:10:00Z"
+categories:
+- Gdb
+tags:
+- linux
+- C
+- debug
+featured_image: images/gdb.gif
+aliases:
+- /2020/10/26/gdb-pearls.html
 ---
-
-{% include image.html url="gdb.gif" desc="" %}
 
 GDB is a life saver when you debug programs or assist to inspect
 when reading source code.
@@ -13,7 +19,7 @@ Here is a little list about some useful things about gdb.
 
 <!--more-->
 
-## help
+# help
 
 - `help CMD`, hit when curious
 - you can find everything in [gdb manual][manual], `Ctrl-F` it
@@ -21,7 +27,7 @@ Here is a little list about some useful things about gdb.
 [manual]: https://sourceware.org/gdb/current/onlinedocs/gdb/
 
 
-## gui
+# gui
 
 - using [cgdb][cgdb], a concise ncurses interface
 - ddd is buggy, leave it
@@ -30,7 +36,7 @@ Here is a little list about some useful things about gdb.
 [cgdb]: https://cgdb.github.io/docs/cgdb.html
 
 
-## print
+# print
 
 - `set print pretty on`, pretty print
 - `set print array on`, pretty print array
@@ -39,7 +45,7 @@ Here is a little list about some useful things about gdb.
 - `display VAR`, display when stop
 - `ptype EXP`, type of EXP
 
-## breakpoint
+# breakpoint
 
 - `inf b`, list all
 - `d N`, del the N
@@ -64,7 +70,7 @@ clear commands
 ```
 
 
-## jump
+# jump
 
 - `s`, step in
 - `fin`, step out
@@ -74,7 +80,7 @@ clear commands
 [rev]: https://www.sourceware.org/gdb/wiki/ProcessRecord/Tutorial
 
 
-## stack
+# stack
 
 - `bt`, show stack
 - `up/down N`, change to up/down N-th level
@@ -83,14 +89,14 @@ clear commands
 - `thread apply all bt full`, inspect all threads
 
 
-## args
+# args
 
 - `$ gdb a.out --args ...`, passing args
 - `run ...`, start with args
 - `inf args`, show args
 
 
-## macro
+# macro
 
 - `CFLAGS = -ggdb3` with gcc, then you can debug macros (the `#define` things)
 - `inf macros`
@@ -98,7 +104,7 @@ clear commands
 - `macro expand NAME`
 
 
-## remote
+# remote
 
 - install `gdbserver`, [debug remotely][server]
 - `$ gdbserver ip:port prog`, start server
@@ -109,7 +115,7 @@ clear commands
 [server]: https://www.thegeekstuff.com/2014/04/gdbserver-example/
 
 
-## hackable
+# hackable
 
 - custom `~/.gdbinit` file
 - extending with [gdb sequence][script]
@@ -121,7 +127,7 @@ clear commands
 [py]: https://sourceware.org/gdb/current/onlinedocs/gdb/Python.html#Python
 
 
-## other resource
+# other resource
 
 - [gdb cheat sheet][sheet]
 

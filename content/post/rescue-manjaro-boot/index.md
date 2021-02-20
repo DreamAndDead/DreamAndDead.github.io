@@ -1,10 +1,15 @@
 ---
-date: "2020-09-01T00:00:00Z"
-tags: linux manjaro grub
 title: 记一次修复 manjaro 引导的过程
+date: "2020-09-01T10:23:00Z"
+categories:
+- Manjaro
+tags: 
+- linux
+- grub
+featured_image: images/manjaro-logo.png
+aliases:
+- /2020/09/01/rescue-manjaro-boot.html
 ---
-
-{% include image.html url="manjaro-logo.png" desc="" %}
 
 manjaro 发行版最具特色的即是持续不断的软件更新和系统更新，时刻更新自然是一种最佳实践。
 
@@ -24,10 +29,7 @@ Press any key to continue...
 
 <!--more-->
 
-
-# 修复
-
-## 定位
+# 定位
 
 一般来说，大部分出现系统无法引导的问题，原因都在于引导项的路径配置出现错误，比如指向了不正确的分区，这个时间可以借助 grub cmd 模式来解决。
 
@@ -35,7 +37,7 @@ Press any key to continue...
 
 所以要修复系统，只能重装内核。
 
-## 重装内核
+# 重装内核
 
 先在官网下载最新 manjaro 镜像，刻录到 u 盘中，用 u 盘引导进入 live 系统。
 

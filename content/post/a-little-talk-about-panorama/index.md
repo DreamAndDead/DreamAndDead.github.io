@@ -1,11 +1,16 @@
-+++
-title = "A little talk about panorama"
-date = "2020-09-27T14:02:58Z"
-categories = ["Research"]
-tags = ["algorithm"]
-featured_image = "images/panorama-preface.jpg"
-aliases = ["/2020/09/27/a-little-talk-about-panorama.html"]
-+++
+---
+title: A little talk about panorama
+date: "2020-09-27T14:02:58Z"
+categories:
+- Panorama
+tags:
+- algorithm
+- image
+- 3D
+featured_image: images/panorama-preface.jpg
+aliases:
+- /2020/09/27/a-little-talk-about-panorama.html
+---
 
 全景图本身并不神秘。
 
@@ -25,7 +30,7 @@ aliases = ["/2020/09/27/a-little-talk-about-panorama.html"]
 
 全景图既然记录了所有视角的场景，必然在内容方面和普通图片有所区别，本质区别在于[投影变换][format]。
 
-{{< figure src="images/world-map.png" title="world map" >}}
+{{< figure src="images/world-map.png" title="inflate world to panorama map" >}}
 
 上图所有人都不陌生。将地球球体映射到圆柱，再将圆柱展开，成为 2：1 的一张图片，就是常见的世界地图。
 
@@ -33,7 +38,7 @@ aliases = ["/2020/09/27/a-little-talk-about-panorama.html"]
 
 还有另一种存储全景图的方法 [cubic][cubic]，以观察点为中心，用六张图片记录 前，后，左，右，上，下 立方体包围盒的六个面。
 
-{% include image.html url="cubic-map.png" desc="in cubic way" %}
+{{< figure src="images/cubic-map.png" title="panorama in cubic way" >}}
 
 可以将包围盒理解为是球体的内接立方体，两者在场景存储方面是等价的。
 
@@ -51,18 +56,15 @@ aliases = ["/2020/09/27/a-little-talk-about-panorama.html"]
 
 下面示例使用 js 实现的全景图浏览器 [pannellum][pannellum]。
 
-<iframe width="600" height="400" allowfullscreen style="border-style:none;" src="https://cdn.pannellum.org/2.5/pannellum.htm#panorama=https://pannellum.org/images/alma.jpg&amp;autoLoad=true"></iframe>
-
 {{< iframe "https://cdn.pannellum.org/2.5/pannellum.htm#panorama=https://pannellum.org/images/alma.jpg" "100%" "400px" >}}
 
 其中查看的 equirectangular 全景图是
 
-{% include image.html url="panorama-rect.jpg" desc="image in equirectangular" %}
+{{< figure src="images/panorama-rect.jpg" >}}
 
 转换为 cubic 方式，则如下图
 
-{% include image.html url="panorama-cubic.png" desc="image in cubic" %}
-
+{{< figure src="images/panorama-cubic.png" >}}
 
 # 图片生成
 
@@ -85,7 +87,7 @@ aliases = ["/2020/09/27/a-little-talk-about-panorama.html"]
 简单的实践，可以在 FPS 游戏中，完全的第一视角，在分辨率 1：1 的情况下，记录下 fov = 90 的 前，后，左，右，上，下
 6 张图片，完全可以充当全景图浏览器的输入！
 
-# 最后
+# 更多
 
 - 普通手机如何拍摄全景图？
 

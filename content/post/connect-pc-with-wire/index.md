@@ -1,7 +1,14 @@
 ---
-date: "2020-04-10T00:00:00Z"
-tags: network linux
 title: connect two pc with a wire
+date: "2020-04-10T18:20:00Z"
+categories:
+- Network
+tags: 
+- network
+- lan
+featured_image: images/origin.png
+aliases:
+- /2020/04/10/connect-pc-with-wire.html
 ---
 
 先前[组装了一台用于深度学习的服务器][compose]，连接在一个局域网内使用。
@@ -18,7 +25,7 @@ title: connect two pc with a wire
 
 最简单地抽象内部的网络状况，如下图。
 
-{% include image.html url="connect-pc/origin.png" desc="网络拓扑" %}
+{{< figure src="images/origin.png" >}}
 
 主要涉及两台机器，一台开发机和一台服务器，都运行 Linux 系统。
 
@@ -38,7 +45,7 @@ title: connect two pc with a wire
 但是也有一种说法，当前新的网卡都可以自适应的进行调整，直接使用相同的线序也是可以的（未验证）。
 保险起见，还是使用了交叉线的方法，一端使用 568A，一端使用 568B，制作了一根 6 类线。
 
-{% include image.html url="connect-pc/wire.png" desc="交叉线线序" %}
+{{< figure src="images/wire.png" title="交叉线线序" >}}
 
 ## 拓扑
 
@@ -46,7 +53,7 @@ title: connect two pc with a wire
 
 网络拓扑变化为
 
-{% include image.html url="connect-pc/new.png" desc="网络拓扑变化" %}
+{{< figure src="images/new.png" >}}
 
 更改连接后，开发机的网络连接状况没有大的变化，但对于服务器来说，如果想要如期的访问内部网络和外网，就必须通过开发机的转发。
 
@@ -54,7 +61,7 @@ title: connect two pc with a wire
 
 原先的内网使用了网段 `10.27.2.0/23`，那目前两个 pc 互连就使用经典网段 `192.168.0.0` 吧。
 
-{% include image.html url="connect-pc/after.png" desc="设置地址" %}
+{{< figure src="images/after.png" >}}
 
 开发机设置
 
