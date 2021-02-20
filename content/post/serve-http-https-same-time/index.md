@@ -1,9 +1,17 @@
 ---
-date: "2018-05-17T00:00:00Z"
-tags: nginx trouble-shooting http https
 title: Serve http and https at same time with nginx
+date: "2018-05-17T14:30:00Z"
+categories:
+- Nginx
+tags: 
+- nginx
+- trouble-shooting
+- http
+- https
+featured_image: images/featured.jpg
+aliases:
+- /2018/05/17/serve-http-https-same-time.html
 ---
-
 
 之前讨论过，[网站从http迁移到https时，需要注意些什么][tips when migrate to https]。
 由于旧有的服务依旧在运行，需要同时保留http与https。
@@ -14,7 +22,6 @@ title: Serve http and https at same time with nginx
 ```
 
 <!--more-->
-
 
 这让我觉得非常奇怪，按照之前的理解，这样设置应该是没有问题的。
 
@@ -73,10 +80,6 @@ server {
 ```
 
 这时就推荐使用 listen 加 ssl 参数，更细粒度的控制哪些端口运行在 ssl 模式下。
-
-# End
-
-nginx 的文档值得仔细过一遍，说不定能发现更有意思的。
 
 
 [tips when migrate to https]: /2018/04/11/comfortable-way-when-testing-https-site.html

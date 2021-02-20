@@ -1,7 +1,14 @@
 ---
-date: "2018-05-17T00:00:00Z"
-tags: X ssh
 title: SSH X11 Forward
+date: "2018-05-17T20:09:00Z"
+categories:
+- SSH
+tags:
+- ssh
+- Xorg
+featured_image: images/featured.png
+aliases:
+- /2018/05/17/ssh-x11-forward.html
 ---
 
 一般情况下，操作远程电脑，ssh+console足矣。突然有一天，隔壁项目组
@@ -43,8 +50,6 @@ Server端绘制屏幕，处理用户交互，读取鼠标键盘事件，告知Cl
 X有一条核心的设计原则
 
 > provide mechanism, not policy.
->
-> from X11 protocol
 
 从底层来讲，X完全支持你可以设计任何功能（mechanism），但并不强制你用窗口的方式呈现（policy），或许你也有别的方式。
 所以说，窗口也只是一种被大家所熟悉的设计方式。
@@ -106,12 +111,12 @@ X有一条核心的设计原则
 假如机器A，B都运行了X Window System，各自的App都以localhost为X Server地址，
 两者分别在各自机器运行程序。
 
-{% include image.html url="x-remote-connection-a2a-b2b.png" desc="C/S 本地连接" %}
+{{< figure src="images/x-remote-connection-a2a-b2b.png" caption="C/S 本地连接" >}}
 
 在机器A，如果App使用B机器的X Server作为X Server地址，
 则程序在B机器上运行并显示，由B用户操作。
 
-{% include image.html url="x-remote-connection-a2b.png" desc="C/S 远程连接" %}
+{{< figure src="images/x-remote-connection-a2b.png" caption="C/S 远程连接" >}}
 
 ## Test environment
 
@@ -121,7 +126,7 @@ X有一条核心的设计原则
 - ubuntu运行ssh server，mint通过ssh client与之连接
 - 网络地址如图示
 
-{% include image.html url="x-remote-connection-mint-ubuntu.png" desc="内部测试环境" %}
+{{< figure src="images/x-remote-connection-mint-ubuntu.png" caption="内部测试环境" >}}
 
 测试要达到的目标是，将ubuntu上的GUI App，远程运行在mint系统上。
 
@@ -265,7 +270,7 @@ $ DISPLAY=10.27.3.9:0 xterm
 
 上面的示例只是启动了 xterm 程序，流量消耗很小，但是一启动使用firefox，网络带宽达到了10M/s！
 
-{% include image.html url="x11-remote-firefox-network-load.png" desc="x11 remote firefox 带宽情况" %}
+{{< figure src="images/x11-remote-firefox-network-load.png" caption="x11 remote firefox 带宽情况" >}}
 
 xauth从密钥的角度入手，如果要保证安全性，重点在于，如何安全的传递X Server cookie的值到相应的Client。
 使用telnet, rlogin都是不安全的做法，推荐使用ssh加密传输，安全易行。
@@ -335,7 +340,7 @@ X11DisplayOffset 10
 
 这次连接的示意图如下
 
-{% include image.html url="ssh-x11-forward.png" desc="ssh x11 forward 图示， thanks oreilly" %}
+{{< figure src="images/ssh-x11-forward.png" caption="ssh x11 forward 图示 from oreilly" >}}
 
 ssh client请求X forward，如果sshd允许，则在本机开启 X proxy server，并且设置了 DISPLAY 变量为 X proxy server，
 代理所有X流量，通过ssh，传递到client端的6000（没有开启tcp端口也可以，待测试）
@@ -365,7 +370,7 @@ zdw-mint/unix:0  MIT-MAGIC-COOKIE-1  26a01cda76d69ab6a1f39b90a2fbc48b
 只有本地的条目，而且两者完全不同，难道ssh也绕过了xauth机制？
 其实ssh通过一种聪明的方式来传递auth cookie，称为authentication spoofing。
 
-{% include image.html url="ssh-auth-spoof.gif" desc="ssh如何处理auth认证， thanks oreilly" %}
+{{< figure src="images/ssh-auth-spoof.gif" caption="ssh如何处理auth认证 from oreilly" >}}
 
 其中的关键就在于，有两个不同的cookie。
 
@@ -392,12 +397,6 @@ X Server本身的cookie这里称为 real display key，其中ssh client
 - 如果ssh server不可信，过程中也没有暴露真实的cookie
 
 What a clever way!
-
-
-# End
-
-Thanks figures from [oreilly][oreilly ssh x forward]
-
 
 [X arch]: http://tldp.org/HOWTO/XWindow-Overview-HOWTO/index.html
 [Remote X Apps]: http://tldp.org/HOWTO/Remote-X-Apps.html

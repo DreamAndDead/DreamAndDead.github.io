@@ -1,7 +1,15 @@
 ---
-date: "2018-05-22T00:00:00Z"
-tags: time linux
 title: Deal with time in programming
+date: "2018-05-22T08:08:00Z"
+categories:
+- Programing
+tags:
+- programing
+- time
+- linux
+featured_image: images/featured.jpg
+aliases:
+- /2018/05/22/time-in-programming.html
 ---
 
 时间无处不在，在编程中也是如此。
@@ -33,7 +41,7 @@ $ date +"%s.%N"
 
 # Timezone
 
-{% include image.html url="timezone-map.png" desc="时区图" %}
+{{< figure src="images/timezone-map.png" caption="时区图" >}}
 
 在同一时刻，经度距离较远不同地区，时钟的值是不一样的。比如北京时间的晚上8点，同时是纽约时间的早上7点。
 那么 UNIX Epoch time 是如何确保不同地区的时间是一致的呢？
@@ -136,9 +144,6 @@ NTP synchronized: yes
 
 这里没有具体针对特定编程语言来说明时间，时区的用法，不过本质是不变的。
 相信找到相应接口所针对的时间，可以很快掌握使用。
-
-TODO，后续再补上更多编程语言的示例。
-
 
 [about utc]: http://www.timeofdate.com/articles/posts/about-utc.html
 [timezone intro]: http://www.timeofdate.com/articles/posts/timezone-introduction.html
