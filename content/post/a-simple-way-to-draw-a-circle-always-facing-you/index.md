@@ -1,24 +1,20 @@
 ---
 title: A simple way to draw a circle always facing you
 date: "2019-04-17T13:24:00Z"
+lastmod: "2021-02-22T14:12:00Z"
 categories:
 - Algorithm
 tags: 
 - algorithm
 - 3D
-featured_image:
+featured_image: images/featured.jpg
 enableMathJax: true
-draft: true
 aliases:
 - /2019/04/17/a-simple-way-to-draw-a-circle-always-facing-you.html
 ---
 
-In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light, so that
-user can easily tune the parameters about the light.
-
-The interactions just like below:
-
-{% include video.html url="/circle-facing-you/light-range-demo.mp4" desc="light range circle demo" %}
+In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light,
+so that user can easily tune the parameters about the light.
 
 <!--more-->
 
@@ -30,17 +26,17 @@ The point is the circle edge indicates the maximum lighting range of the light.
 
 Everyone knows 3d coordinate pipeline.
 
-{% include image.html url="circle-facing-you/3d-coordinate-pipeline.png" desc="" %}
+{{< figure src="images/3d-coordinate-pipeline.png" caption="" >}}
 
 You put into a 3d coordinate point, and get a 2d coordinate point back(visible or not).
 
 Assuming we have got a vertexes list, that forms a circle whose center is in origin and normal vector is parallel with z axis in local coordinate system.
 
-{% include image.html url="circle-facing-you/circle-facing-z-axis.png" desc="a circle whose surface is perpendicular to z axis" %}
+{{< figure src="images/circle-facing-z-axis.png" desc="a circle whose surface is perpendicular to z caption" >}}
 
 What we do next is to rotate the circle so that the normal vector points at the camera in the **local transform** phase.
 
-{% include image.html url="circle-facing-you/circle-facing-camera.png" desc="" %}
+{{< figure src="images/circle-facing-camera.png" caption="" >}}
 
 The normal vector $\vec{n}$ is easy to get:
 
@@ -54,7 +50,7 @@ $Pos$ is the position in world coordinate system.
 
 Let's discuss about the rotation. Before we start, you will realize the figure below is a great helper for the understanding.
 
-{% include image.html url="circle-facing-you/rotate-vector-to-z.png" desc="" %}
+{{< figure src="images/rotate-vector-to-z.png" caption="" >}}
 
 Given a vector $\vec{p}$, how do we rotate it until it coincides in $z$ axis?
 
@@ -71,10 +67,10 @@ _rotate around $y$ axis by angle $\beta$_
 
 $$
 \begin{bmatrix}
-  \cos\beta & 0 & -\sin\beta & 0 \\
-  0         & 1 &          0 & 0 \\
-  \sin\beta & 0 &  \cos\beta & 0 \\
-  0         & 0 &          0 & 1 \\
+  \cos\beta & 0 & -\sin\beta & 0 \\\\\\
+  0         & 1 &          0 & 0 \\\\\\
+  \sin\beta & 0 &  \cos\beta & 0 \\\\\\
+  0         & 0 &          0 & 1 \\\\\\
 \end{bmatrix}
 $$
 
@@ -82,29 +78,36 @@ _rotate around $x$ axis by angle $-\alpha$_
 
 $$
 \begin{bmatrix}
-  1 & 0              & 0             & 0 \\
-  0 &  \cos(-\alpha) & \sin(-\alpha) & 0 \\
-  0 & -\sin(-\alpha) & \cos(-\alpha) & 0 \\
-  0 & 0              & 0             & 1 \\
+  1 & 0              & 0             & 0 \\\\\\
+  0 &  \cos(-\alpha) & \sin(-\alpha) & 0 \\\\\\
+  0 & -\sin(-\alpha) & \cos(-\alpha) & 0 \\\\\\
+  0 & 0              & 0             & 1 \\\\\\
 \end{bmatrix} =
 \begin{bmatrix}
-  1 & 0          & 0           & 0 \\
-  0 & \cos\alpha & -\sin\alpha & 0 \\
-  0 & \sin\alpha &  \cos\alpha & 0 \\
-  0 & 0          & 0           & 1 \\
+  1 & 0          & 0           & 0 \\\\\\
+  0 & \cos\alpha & -\sin\alpha & 0 \\\\\\
+  0 & \sin\alpha &  \cos\alpha & 0 \\\\\\
+  0 & 0          & 0           & 1 \\\\\\
 \end{bmatrix}
 $$
 
 The trigonometric functions values are easy to get too.
 
 $$
-sin\alpha=\frac{b}{\sqrt{b^2+c^2}} \\
-cos\alpha=\frac{c}{\sqrt{b^2+c^2}} \\
-sin\beta =\frac{a}{\sqrt{a^2+b^2+c^2}} \\
-cos\beta=\frac{\sqrt{b^2+c^2}}{\sqrt{a^2+b^2+c^2}}
+sin\alpha=\frac{b}{\sqrt{b^2+c^2}}
 $$
 
-# The end
+$$
+cos\alpha=\frac{c}{\sqrt{b^2+c^2}}
+$$
+
+$$
+sin\beta =\frac{a}{\sqrt{a^2+b^2+c^2}}
+$$
+
+$$
+cos\beta=\frac{\sqrt{b^2+c^2}}{\sqrt{a^2+b^2+c^2}}
+$$
 
 It's a clear and simple way, isn't it?
 And it can be use to solve more similar problems.

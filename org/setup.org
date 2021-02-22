@@ -1,0 +1,4 @@
+#+hugo_base_dir: ~/project/blog/
+#+hugo_section: post
+#+hugo_front_matter_format: yaml
+
