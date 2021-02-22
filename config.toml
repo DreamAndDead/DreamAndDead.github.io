@@ -4,9 +4,12 @@ languageCode = "zh-cn"
 title = "Brain=f(X)?"
 theme = "diary"
 
+comment = true
+
 [params]
 enableReadingTime=true
 disableAutoCollapse=true
+disqusShortname = "dreamanddead"
 
 [taxonomies]
 tag = "tags"
