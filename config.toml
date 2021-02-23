@@ -6,6 +6,9 @@ theme = "diary"
 copyright = "Attribution-NonCommercial-ShareAlike 4.0 International"
 googleAnalytics = "UA-93899485-1"
 
+# aliyun oss
+cloud_url = "https://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com"
+
 [markup]
   [markup.highlight]
     codeFences = true

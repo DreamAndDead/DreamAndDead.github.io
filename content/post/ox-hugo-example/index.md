@@ -2,12 +2,13 @@
 title: "test ox hugo workflow"
 author: ["DreamAndDead"]
 date: 2021-02-20T11:25:00+08:00
-lastmod: 2021-02-22T14:56:48+08:00
+lastmod: 2021-02-23T17:15:42+08:00
 tags: ["test", "emacs"]
 categories: ["test"]
 draft: true
 featured_image: "images/test.png"
 enableMathJax: true
+comment: false
 ---
 
 ## ox hugo test page {#ox-hugo-test-page}

@@ -1,0 +1,20 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: todo
+#+export_file_name: index
+
+#+title: blog's todo
+#+date: <2021-02-23 二 17:10>
+#+hugo_categories: test
+#+hugo_tags: test
+#+hugo_draft: true
+#+hugo_custom_front_matter: :comment false
+
+* About me
+
+- spent 1 year with javascript, react and etc
+- did the devops things for the next year
+- now work about some 3d algorithms
+- learning about data science
+
+

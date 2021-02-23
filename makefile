@@ -1,7 +1,7 @@
-serve:
-	hugo server
+draft:
+	hugo server -D
 
-dev:
+local:
 	hugo -b http://localhost:8000
 	(cd public; python -m http.server; cd ..)
 

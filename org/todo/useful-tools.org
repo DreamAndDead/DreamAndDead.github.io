@@ -1,0 +1,25 @@
+ncdu
+pydf
+multitail
+iotop
+htop
+atop
+lsof
+iftop
+mtr
+xclip
+ngrep
+netcat
+nmap
+vnstat
+whowatch
+mutt
+parallel
+sdcv
+
+
+
+
+
+gui tool:
+- trimage 压缩图片
