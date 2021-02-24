@@ -878,20 +878,7 @@ v /
 &lt;/table>
 &lt;p>这里加了些优化，对于顺子，数量至少 5 个，全用单张来记忆有些吃力，
 这里只记忆顺子的起始张 和 终止张，中间加上绳子意象，提高记忆效率。&lt;/p>
-&lt;h1 id="记牌过程">记牌过程&lt;/h1>
-&lt;p>在分析了方法之后，来新手场实践一下记忆效果。&lt;/p>
-&lt;p>{% include video.html url=&amp;quot;/joker/example.mp4&amp;quot; desc=&amp;ldquo;a real game example&amp;rdquo; %}&lt;/p>
-&lt;p>在这一对局中，自己是地主，且相应的牌有优势，在整个过程中，按照上面的记牌方法，
-依次记忆为，&lt;/p>
-&lt;pre>&lt;code>石头 14 61 12 72 47 19 11 10 12 36 15 01 11
-石头 钥匙 轮椅 婴儿 企鹅 司机 药酒 筷子 衣领 婴儿 山路 鹦鹉 火箭 筷子
-布 19 63 22 61 11
-布 药酒 留声机 耳朵 轮椅 筷子
-剪刀 10 11 83 14
-剪刀 衣领 筷子 花生 钥匙
-金币 31 82 47
-金币 鲨鱼 靶儿 司机
-&lt;/code>&lt;/pre>&lt;p>So，觉得记忆效果如何呢？&lt;/p>- https://dreamanddead.github.io/post/how-to-remember-cards/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>简明 Decision Trees</title><link>https://dreamanddead.github.io/post/decision-trees/</link><pubDate>Wed, 23 Oct 2019 07:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/decision-trees/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/decision-trees/ -&lt;p>根据直觉来看，决策树是一种非常自然的方法，和人类处理问题的机制很像。
+&lt;p>So，觉得记忆效果如何呢？&lt;/p>- https://dreamanddead.github.io/post/how-to-remember-cards/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>简明 Decision Trees</title><link>https://dreamanddead.github.io/post/decision-trees/</link><pubDate>Wed, 23 Oct 2019 07:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/decision-trees/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/decision-trees/ -&lt;p>根据直觉来看，决策树是一种非常自然的方法，和人类处理问题的机制很像。
 面对问题，在做出一个决策之后，跟随着要考虑子决策，直到决定最终的行动。
 而且这种决策过程在遇到同样问题时可以重复利用，就像先人留下的经验。&lt;/p>
 &lt;p>决策树算法在我看来，更像是一种艺术，其过程没有明确的确定性，而是在一种启发下找寻一种思考的路径。&lt;/p>

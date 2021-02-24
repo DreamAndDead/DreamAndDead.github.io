@@ -29,7 +29,7 @@ Attribution-NonCommercial-ShareAlike 4.0 International</div></div><div ref=extra
 &nbsp;
 <i class=material-icons>schedule</i>
 13 min
-42 s.</div></div></div><div class=post-body-wrapper><div class=post-body v-pre><p>最近刚开始使用 emacs ，太多 Ctrl Alt 相关的快捷键，边侧的手指不舒服，于是想法将部分键盘按键进行改键。</p><p>如果 Caps Lock 可以作为 BackSpace，删除字符的时候就不需要右侧的小指离的太远。
+40 s.</div></div></div><div class=post-body-wrapper><div class=post-body v-pre><p>最近刚开始使用 emacs ，太多 Ctrl Alt 相关的快捷键，边侧的手指不舒服，于是想法将部分键盘按键进行改键。</p><p>如果 Caps Lock 可以作为 BackSpace，删除字符的时候就不需要右侧的小指离的太远。
 如果将 Menu 键改为 Ctrl，这样就可以用小指的指根来按压，方便进行快捷键操作。</p><p>针对这样的需求，开始在网上寻找相关改键的方案，搜索结果几乎一致统一的，在 Xorg 环境下，使用 xmodmap 来修改是最合适的。</p><h1 id=key-concept>key concept</h1><p>在开始之前，我们先了解一下 Xorg 环境下，关于键盘的<a href=https://wiki.archlinux.org/index.php/Xmodmap>一些概念</a>。</p><p>在 Xorg 中，有两种键盘值，分别是 keycode 和 keysym。</p><p>keycode 本质是一组数字表示，和键盘上的按键是一一对应的。
 在按键被按下后，相关信号传递给内核，内核看到的就是这个 keycode 数字。</p><p>而 keysym 是和 keycode 相关联的值，可以理解为是键盘的功能，比如输入字符 a，删除字符等等。
 它是内核对应相应按键所调用的处理方法。</p><p>它们两者的关系就是一个 map 结构，keycode 是 key，keysym 是value。
@@ -156,7 +156,7 @@ mod2        Num_Lock (0x4d)
 mod3
 mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)
 mod5        ISO_Level3_Shift (0x5c),  Mode_switch (0xcb)
-</code></pre><p>我们发现，shift 中只有两个按键，相当于我们将 caps lock 修改成了 shift，利用这一点，可以突破最多 4 个按键绑定的限制。</p><p>但是综合来看，我还是<strong>建议使用 keycode 的方法</strong>来修改，这样相对清晰，稳妥。</p><h1 id=modification>modification</h1><p>在具体了解 xmodmap 之后，再按照我们的想法来修改按键就很简单了。</p><p>比如我目前用的键盘，配合 emacs，很适合将 caps lock 换成 backSpace 键，右边的 menu 换成 ctrl 键。</p><p>{% include image.html url=&ldquo;customize-keymap/penixx-keyboard.jpg&rdquo; desc="" %}</p><pre><code>clear lock
+</code></pre><p>我们发现，shift 中只有两个按键，相当于我们将 caps lock 修改成了 shift，利用这一点，可以突破最多 4 个按键绑定的限制。</p><p>但是综合来看，我还是<strong>建议使用 keycode 的方法</strong>来修改，这样相对清晰，稳妥。</p><h1 id=modification>modification</h1><p>在具体了解 xmodmap 之后，再按照我们的想法来修改按键就很简单了。</p><p>比如我目前用的键盘，配合 emacs，很适合将 caps lock 换成 backSpace 键，右边的 menu 换成 ctrl 键。</p><figure><img src=images/penixx-keyboard.jpg></figure><pre><code>clear lock
 clear control
 keycode 66 = BackSpace BackSpace
 keycode 135 = Control_R

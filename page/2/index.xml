@@ -361,7 +361,9 @@ mod5 ISO_Level3_Shift (0x5c), Mode_switch (0xcb)
 &lt;h1 id="modification">modification&lt;/h1>
 &lt;p>在具体了解 xmodmap 之后，再按照我们的想法来修改按键就很简单了。&lt;/p>
 &lt;p>比如我目前用的键盘，配合 emacs，很适合将 caps lock 换成 backSpace 键，右边的 menu 换成 ctrl 键。&lt;/p>
-&lt;p>{% include image.html url=&amp;ldquo;customize-keymap/penixx-keyboard.jpg&amp;rdquo; desc=&amp;quot;&amp;quot; %}&lt;/p>
+&lt;figure>
+&lt;img src="images/penixx-keyboard.jpg"/>
+&lt;/figure>
 &lt;pre>&lt;code>clear lock
 clear control
 keycode 66 = BackSpace BackSpace
