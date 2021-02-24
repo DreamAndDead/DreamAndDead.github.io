@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Brain=f(X)?</title><link>https://dreamanddead.github.io/post/</link><description>Recent content in Posts on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Attribution-NonCommercial-ShareAlike 4.0 International</copyright><lastBuildDate>Mon, 26 Oct 2020 09:10:00 +0000</lastBuildDate><atom:link href="https://dreamanddead.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>gdb pearls</title><link>https://dreamanddead.github.io/post/gdb-pearls/</link><pubDate>Mon, 26 Oct 2020 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/gdb-pearls/</guid><description>&lt;p>GDB is a life saver when you debug programs or assist to inspect
+when reading source code.&lt;/p>
+&lt;p>Here is a little list about some useful things about gdb.&lt;/p></description></item><item><title>A little talk about panorama</title><link>https://dreamanddead.github.io/post/a-little-talk-about-panorama/</link><pubDate>Sun, 27 Sep 2020 14:02:58 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-little-talk-about-panorama/</guid><description>&lt;p>全景图本身并不神秘。&lt;/p>
+&lt;p>普通的图片，记录的只是在一个位置，一个视角下观察到的场景；
+而全景图可以记录一个位置，所有视角可观察到的场景。&lt;/p>
+&lt;p>全景图虽起名全景，但本质还是图片，可以和普通图片对比着来理解。&lt;/p></description></item><item><title>记一次修复 manjaro 引导的过程</title><link>https://dreamanddead.github.io/post/rescue-manjaro-boot/</link><pubDate>Tue, 01 Sep 2020 10:23:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/rescue-manjaro-boot/</guid><description>&lt;p>manjaro 发行版最具特色的即是持续不断的软件更新和系统更新，时刻更新自然是一种最佳实践。&lt;/p>
+&lt;pre>&lt;code>sudo pacman -Syu
+&lt;/code>&lt;/pre>&lt;p>但是今天出现更新过程意外中断，中途报错出现段错误。重启之后，无法进入系统。&lt;/p>
+&lt;pre>&lt;code>error: file '/vmlinuz-5.7-x86_64' not found.
+error: you need to load the kernel first.
+Press any key to continue...
+&lt;/code>&lt;/pre></description></item><item><title>connect two pc with a wire</title><link>https://dreamanddead.github.io/post/connect-pc-with-wire/</link><pubDate>Fri, 10 Apr 2020 18:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/connect-pc-with-wire/</guid><description>&lt;p>先前&lt;a href="https://dreamanddead.github.io/2020/03/25/compose-deep-learning-machine.html">组装了一台用于深度学习的服务器&lt;/a>，连接在一个局域网内使用。
+通过 ssh 远程连接，tmux 终端复用，nfs 挂载编辑代码，vnc 远程桌面，一切运行的都很流畅。&lt;/p>
+&lt;p>不过最不适的在于，速度太慢了，一时想将开发机中 10G 的数据集传递到服务器，scp rsync nfs 都没有速度。
+尤其经常在 nfs 挂载目录查看图片文件，文件数量繁多，预览等待的时间很长，完全没有操作本地文件相似的体验。&lt;/p>
+&lt;p>为了提高连接速度，计划直接用网线将两者互连。&lt;/p></description></item><item><title>论斗地主残局中的宿命论</title><link>https://dreamanddead.github.io/post/crack-final-phase/</link><pubDate>Fri, 27 Mar 2020 15:07:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/crack-final-phase/</guid><description>&lt;p>之前斗地主中的记牌做了些研究，近期又发现了（欢乐）斗地主的残局模式，对于研究如何出牌是一个很不错的题材。&lt;/p></description></item><item><title>深度学习攒机总结</title><link>https://dreamanddead.github.io/post/compose-deep-learning-machine/</link><pubDate>Wed, 25 Mar 2020 09:02:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/compose-deep-learning-machine/</guid><description>&lt;p>深度学习需要强大的算力做支撑，无奈手边没有这样的机器，租赁和云服务器的方式又略显昂贵，
+免费的云计算服务不是网络不通畅，就是在软件环境上有限制，这大大限制了探索深度学习魅力的自由度。&lt;/p>
+&lt;p>与其花费在租赁和云服务器上，不如自己组装一台算力合适的机器。&lt;/p></description></item><item><title>keras 如何从中断处继续训练</title><link>https://dreamanddead.github.io/post/resume-training-from-crash/</link><pubDate>Wed, 04 Mar 2020 19:32:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/resume-training-from-crash/</guid><description>&lt;p>深度学习的网络模型层次很深，训练模型的时间也很长，没有强大的算力，调试模型的周期就会
+变得非常之长，工作的效率自然就降了下来。&lt;/p>
+&lt;p>获取算力资源的途径，无论是通过云主机，主机租赁，还是个人组建工作站，都代价不菲。&lt;/p>
+&lt;p>但是有一点是确定的，无论使用哪一种方式，都会遇到意外，比如断电，宕机，训练过程被迫中断。
+如果没有一点准备，就意味着再次从头开始训练，无疑是对效率的又一次打击。&lt;/p>
+&lt;p>所以我们要在训练伊始，就要做好训练被中断的准备，以及如何从中断处继续开始。&lt;/p>
+&lt;p>示例项目地址：&lt;a href="https://github.com/DreamAndDead/resume-training-example">DreamAndDead/resume-training-example&lt;/a>&lt;/p></description></item><item><title>斗地主中的记牌策略</title><link>https://dreamanddead.github.io/post/how-to-remember-cards/</link><pubDate>Thu, 20 Feb 2020 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/how-to-remember-cards/</guid><description>&lt;p>斗地主是一种规则简单的扑克游戏，虽然每个玩家手牌数量不多（3 人斗地主，一副牌 54 张，农民每人 17 张，地主 20 张），
+但是要精通其中合作，对抗，决策的过程却不易。&lt;/p>
+&lt;p>而新手在打牌过程中，向上进阶的第一步就是记牌。&lt;/p></description></item><item><title>简明 Decision Trees</title><link>https://dreamanddead.github.io/post/decision-trees/</link><pubDate>Wed, 23 Oct 2019 07:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/decision-trees/</guid><description>&lt;p>根据直觉来看，决策树是一种非常自然的方法，和人类处理问题的机制很像。
+面对问题，在做出一个决策之后，跟随着要考虑子决策，直到决定最终的行动。
+而且这种决策过程在遇到同样问题时可以重复利用，就像先人留下的经验。&lt;/p>
+&lt;p>决策树算法在我看来，更像是一种艺术，其过程没有明确的确定性，而是在一种启发下找寻一种思考的路径。&lt;/p></description></item><item><title>python virtual env with conda</title><link>https://dreamanddead.github.io/post/pipenv-with-conda/</link><pubDate>Fri, 20 Sep 2019 09:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/pipenv-with-conda/</guid><description>Anaconda 是一个非常流行的 python 集成环境，用于科学计算，机器学习等。 它主要的优势在于，新的包管理器 conda 比 pip 更容易管理 numpy scipy 之类的工具包（安装涉及 C 代码编译）。
+另外在开发过程中，保持不同项目使用各自独立的开发环境是一个良好的习惯。 在 python 世界，virtualenv 是最广泛的选择，pipenv 的底层使用的也是它。 conda 内部也有 env 的概念（默认是 base），可以针对不同的项目进行环境的分离，并且对一些开发工具有良好的支持（比如 VS Code 中的 Anaconda 插件）。
+最近在配置 emacs 下的 python 开发环境，相比之下在 Anaconda 方面的插件还没有那么成熟，经过搜索发现， 存在可以集成 pipenv1 和 conda env 的方案2。
+$ pipenv --python=$(conda run which python) --site-packages 上面的命令，可以将 conda env 作为 pipenv virtualenv 来使用，集成了所有 Anaconda 集成的开发库！
+更可贵的是，在使用 conda 升级开发库之后，可以再次重建 virtualenv 获得更新带来的好处。 并且，virtualenv 环境更容易被其它编码工具支持，比如 emacs :)。
+https://pipenv.</description></item><item><title>KD Tree</title><link>https://dreamanddead.github.io/post/kd-tree/</link><pubDate>Thu, 22 Aug 2019 15:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/kd-tree/</guid><description>&lt;p>之前了解学习了机器学习中的 KNN 算法，它的本质是从“已有经验”中找出最相似的案例，来“预测”新的未出现过的情况。&lt;/p>
+&lt;p>在 sklearn 的 KNN 算法描述中，其中提到使用 KD Tree 结构可以加速 nearest neighbors 的查找，从而提高 KNN 算法的效率。&lt;/p>
+&lt;p>这里就来讨论一下 KD Tree 数据结构。&lt;/p></description></item><item><title>How to Customize Keymap in Linux</title><link>https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/</link><pubDate>Mon, 12 Aug 2019 10:29:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/</guid><description>&lt;p>最近刚开始使用 emacs ，太多 Ctrl Alt 相关的快捷键，边侧的手指不舒服，于是想法将部分键盘按键进行改键。&lt;/p>
+&lt;p>如果 Caps Lock 可以作为 BackSpace，删除字符的时候就不需要右侧的小指离的太远。
+如果将 Menu 键改为 Ctrl，这样就可以用小指的指根来按压，方便进行快捷键操作。&lt;/p>
+&lt;p>针对这样的需求，开始在网上寻找相关改键的方案，搜索结果几乎一致统一的，在 Xorg 环境下，使用 xmodmap 来修改是最合适的。&lt;/p></description></item><item><title>Quicksort Complexity Analysis in Probability</title><link>https://dreamanddead.github.io/post/quicksort-complexity/</link><pubDate>Wed, 07 Aug 2019 16:43:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/quicksort-complexity/</guid><description>&lt;p>最近在阅读&lt;a href="https://book.douban.com/subject/25813568/">《概率论基础教程 A First Course in Probability》&lt;/a>时，看到&lt;strong>chapter 7 期望的性质&lt;/strong>，
+其中提到了如何使用概率的方法来衡量快速排序算法的效率，看完之后很受启发，特此记录在这里。&lt;/p>
+&lt;p>对于一个排序算法，对于最好运行情况和最坏运行情况，我们都容易找出相应的输入来测试。
+而对于一般的情况，也就是当我们面对随机的输入，这时可以利用到期望的方式来衡量，
+因为期望就代表着所有情况的平均。&lt;/p></description></item><item><title>Trigonometric Function Illustrations</title><link>https://dreamanddead.github.io/post/triangle-math/</link><pubDate>Wed, 15 May 2019 08:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/triangle-math/</guid><description>&lt;p>三角函数是非常重要的一类周期函数，所有周期函数都可以分解为对应的三角函数的组合。&lt;/p>
+&lt;p>在中学数学中，学习最多是 正弦$sin$，余弦$cos$，正切$tan$ 函数，
+之后了解还有 正割$sec$，余割$csc$，余切$cot$ 函数。&lt;/p>
+&lt;p>其中最让我困惑不解在于它们的命名，什么是正？什么是余？&lt;/p></description></item><item><title>understanding euler angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
+have to understand the underlying math things.&lt;/p>
+&lt;p>I have known about Euler angles for a while, and today we talk about some more details about it.&lt;/p></description></item><item><title>A simple way to draw a circle always facing you</title><link>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</link><pubDate>Wed, 17 Apr 2019 13:24:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</guid><description>&lt;p>In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light,
+so that user can easily tune the parameters about the light.&lt;/p></description></item><item><title>Recover mysql table structure from frm file</title><link>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</link><pubDate>Thu, 27 Sep 2018 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</guid><description>&lt;p>mysql 正常运行的时候，&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/show-create-table.html">查看 table 的结构&lt;/a>并不是困难的事。
+但是有时 mysql 发生故障，这种方法便不再可行。&lt;/p>
+&lt;p>当遇到故障，通常使用新的 mysql 实例来恢复当前的数据。
+建表是非常重要的步骤，我们必须有其它的方法来寻找 table 的结构。&lt;/p></description></item><item><title>mysql table suddenly doesn't exists</title><link>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</link><pubDate>Thu, 27 Sep 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</guid><description>&lt;p>最近内部的 mysql 数据库发生了一件奇怪的事，其中有一个表 users625 突然出现问题，
+所有对它的操作都报错误 &lt;code>数据表不存在&lt;/code>。&lt;/p>
+&lt;pre>&lt;code>mysql&amp;gt; select count(*) from users625;
+ERROR 1146 (42S02): Table 'km8.users625' doesn't exist
+&lt;/code>&lt;/pre>&lt;p>&lt;code>show tables&lt;/code> 它还显示在列表里，在 mysql 数据目录中也可以找到对应的表文件，也没有
+进行过删除操作，突然出现这样的错误非常奇怪。&lt;/p></description></item><item><title>Configure apt rightly for debian squeeze</title><link>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</link><pubDate>Wed, 26 Sep 2018 16:50:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</guid><description>&lt;p>本想在 Debian Squeeze 上安装一些依赖，没想到刚执行 &lt;code>apt-get update&lt;/code> ，就出现这样的错误信息。&lt;/p></description></item><item><title>How uri match nginx location</title><link>https://dreamanddead.github.io/post/nginx-location/</link><pubDate>Mon, 28 May 2018 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/nginx-location/</guid><description>&lt;p>location 是 nginx 配置中出现最频繁的配置项，一个 uri 是如何与多个 location 进行匹配的？
+在有多个 location 都匹配的情况下，如何决定使用哪一个 location 作为匹配结果？&lt;/p>
+&lt;p>清晰内部机制之后，疑问自然迎刃而解。&lt;/p></description></item><item><title>记一次 Jmeter 分布式测试故障调试过程</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</link><pubDate>Fri, 25 May 2018 02:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</guid><description>&lt;p>之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。&lt;/p>
+&lt;p>至于为什么要这么做，源于这一次 debug 的过程。&lt;/p></description></item><item><title>使用Jmeter进行分布式测试</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing/</link><pubDate>Thu, 24 May 2018 19:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing/</guid><description>&lt;p>业务发展初期，关注的更多是功能，直至使用量增加到一定量级，就要考虑高并发，程序性能等问题，
+因此性能测试就成为重要的一环。&lt;/p>
+&lt;p>Loadrunner 是性能测试工具领域的王者，但是闭源无法自由（free）使用。相较之下，开源的 Jmeter 算是一个
+不错的选择。&lt;/p>
+&lt;p>性能测试要达到一定的量级，仅仅靠单机是不够的，必须协调多方资源，模拟高数量级的并发。Jmeter 提供的
+分布式测试方案刚好满足这一点，这也是本文的由来。&lt;/p></description></item><item><title>Deal with time in programming</title><link>https://dreamanddead.github.io/post/time-in-programming/</link><pubDate>Tue, 22 May 2018 08:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/time-in-programming/</guid><description>&lt;p>时间无处不在，在编程中也是如此。
+比如程序日志，每一行必定包含时间。
+通常不会对时间特别关注，除非日志时间不对，或者编程使用时间，取不到正确结果。&lt;/p>
+&lt;p>其实在编程中只需明确几个简单的概念，就可以正确的使用时间。&lt;/p></description></item><item><title>SSH X11 Forward</title><link>https://dreamanddead.github.io/post/ssh-x11-forward/</link><pubDate>Thu, 17 May 2018 20:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/ssh-x11-forward/</guid><description>&lt;p>一般情况下，操作远程电脑，ssh+console足矣。突然有一天，隔壁项目组
+想要检测下，从香港服务器浏览他们的网页，效果是怎么样的。
+背景漆黑语法高亮的控制台好像帮不了忙&amp;hellip;&lt;/p>
+&lt;p>诚然，vnc是一个易用可行的方案，但是这里想探索一下，X Window System本身对远程应用的支持。&lt;/p></description></item><item><title>Serve http and https at same time with nginx</title><link>https://dreamanddead.github.io/post/serve-http-https-same-time/</link><pubDate>Thu, 17 May 2018 14:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/serve-http-https-same-time/</guid><description>&lt;p>之前讨论过，&lt;a href="https://dreamanddead.github.io/2018/04/11/comfortable-way-when-testing-https-site.html">网站从http迁移到https时，需要注意些什么&lt;/a>。
+由于旧有的服务依旧在运行，需要同时保留http与https。
+突然有一天，访问http服务，页面上只出现nginx的错误信息：&lt;/p>
+&lt;pre>&lt;code>400 bad request the plain http request was sent to https port
+&lt;/code>&lt;/pre></description></item><item><title>thinkpad E530c 的升级之路</title><link>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</link><pubDate>Sat, 12 May 2018 20:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</guid><description>&lt;p>不知不觉，自己的&lt;a href="http://detail.zol.com.cn/361/360255/param.shtml">Thinkpad E530c&lt;/a>入手5年，期间换过数次系统，如今不觉有些老态龙钟，
+硬件资源已远远不足以支持日常使用的需求，速度慢多次卡顿，十分损伤工作效率。&lt;/p>
+&lt;p>决心升级一下跟随多年的“小黑”，焕发新颜。&lt;/p></description></item><item><title>Comfortable way when testing HTTPS site</title><link>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</link><pubDate>Wed, 11 Apr 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</guid><description>&lt;p>网站初期一直使用http，近期购买了ssl证书，预期将网站全面升级使用https。&lt;/p>
+&lt;p>当部署https后，居然出现了这种问题&amp;hellip;&lt;/p></description></item><item><title>Play curl with http</title><link>https://dreamanddead.github.io/post/play-curl-with-http/</link><pubDate>Mon, 09 Apr 2018 10:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/play-curl-with-http/</guid><description>&lt;p>curl是一款强大的网络传输工具，支持多种协议，在HTTP的支持方面尤其为人称道。
+对curl的使用越深入，对HTTP也会有更深的理解。&lt;/p></description></item><item><title>Git Internals</title><link>https://dreamanddead.github.io/post/git-internals/</link><pubDate>Wed, 03 Jan 2018 08:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/git-internals/</guid><description>&lt;p>这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。&lt;/p>
+&lt;p>所有示例使用git版本 2.7.4，
+示例仓库可见于github: &lt;a href="https://github.com/DreamAndDead/git-internals-example">https://github.com/DreamAndDead/git-internals-example&lt;/a>&lt;/p></description></item><item><title>Understanding ssh port forwarding</title><link>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</link><pubDate>Wed, 13 Dec 2017 00:00:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</guid><description>&lt;p>这篇文件旨在理好的理解ssh隧道的原理与用法。&lt;/p></description></item></channel></rss>

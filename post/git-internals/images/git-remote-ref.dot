@@ -1,0 +1,43 @@
+digraph G {
+  label="git remote ref in commit tree";
+  fontname="sans serif";
+  
+  rankdir=RL;
+  nodesep=.5;
+  
+  node [margin=1, shape=circle, fillcolor=beige, color=beige, style=filled, width=.9, height=.9, fontname="sans serif", fixedsize=true];
+  edge [fontname="sans serif"];
+
+  A [label="A", group="bottom"];
+  B [label="B", group="bottom"];
+  C [label="C", group="bottom", fillcolor=aliceblue, color=aliceblue];
+  D [label="D", group="bottom", fillcolor=aliceblue, color=aliceblue];
+  E [label="E", fillcolor=aliceblue, color=aliceblue];
+  F [label="F", fillcolor=aliceblue, color=aliceblue];
+
+  master [label="ref\nmaster", fillcolor=darksalmon, color=darksalmon, group="ref"];
+  remote_master [label="ref\norigin/\nmaster", fillcolor=darksalmon, color=darksalmon, group="ref"];
+  
+  B -> A;
+  C -> B [style=dotted];
+  D -> C [style=dotted];
+  E -> A [style=dotted];
+  F -> E [style=dotted];
+  D -> F [style=dotted];
+
+  master -> B;
+  remote_master -> D;
+  
+  
+  {
+    rank=same;
+    B;
+    master;
+  }
+  {
+    rank=same;
+    D;
+    remote_master;
+  }
+
+}

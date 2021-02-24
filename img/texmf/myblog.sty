@@ -1,0 +1,46 @@
+% toolset for blog drawing
+%
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{myblog}[2011/01/11 v0.01 LaTeX package for blog drawing]
+
+\RequirePackage{pgfkeys}
+
+% def blog pgfkeys
+\pgfkeys {
+  /myblog/.is family,
+  /myblog,
+  default/.style = {
+    x label = x,
+    y label = y,
+    x length = 10,
+    y length = 10,
+    x origin = 0,
+    y origin = 0,
+    o x = 0,
+    o y = 0,
+  },
+  x label/.estore in = \xlabel,
+  y label/.estore in = \ylabel,
+  x length/.estore in = \xlength,
+  y length/.estore in = \ylength,
+  x origin/.estore in = \xorigin,
+  y origin/.estore in = \yorigin,
+  o x/.estore in = \ox,
+  o y/.estore in = \oy,
+}
+
+% \axis[x label=x, x length=10, y label=y, y length=10]
+\newcommand{\axis}[2][]{
+  \pgfkeys{/myblog, default, #1};
+  \draw[->] (\ox+\xorigin, \oy+0) -- (\ox+\xlength, \oy+0) node[below] {\xlabel};
+  \draw[->] (\ox+0, \oy+\yorigin) -- (\ox+0, \oy+\ylength) node[left] {\ylabel};
+}
+
+% \helpline[x length=10, y length=10]
+\newcommand{\helpline}[2][]{
+  \pgfkeys{/myblog, default, #1};
+  \draw [help lines, dotted] (\ox+0, \oy+0) grid (\ox+\xlength, \oy+\ylength);
+}
+
+\endinput
+

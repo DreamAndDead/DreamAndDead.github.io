@@ -1,0 +1,109 @@
+<!doctype html><html><head><title>Quicksort Complexity Analysis in Probability</title><meta charset=utf-8><meta name=X-UA-Compatible content="IE=edge"><meta name=google-site-verification content><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name=viewport><meta content="telephone=no" name=format-detection><meta name=description content><meta name=renderer content="webkit"><meta name=theme-color content="#ffffff"><meta property="og:title" content="Quicksort Complexity Analysis in Probability"><meta property="og:description" content="最近在阅读《概率论基础教程 A First Course in Probability》时，看到chapter 7 期望的性质，
+其中提到了如何使用概率的方法来衡量快速排序算法的效率，看完之后很受启发，特此记录在这里。
+对于一个排序算法，对于最好运行情况和最坏运行情况，我们都容易找出相应的输入来测试。
+而对于一般的情况，也就是当我们面对随机的输入，这时可以利用到期望的方式来衡量，
+因为期望就代表着所有情况的平均。"><meta property="og:type" content="article"><meta property="og:url" content="https://dreamanddead.github.io/post/quicksort-complexity/"><meta property="article:published_time" content="2019-08-07T16:43:00+00:00"><meta property="article:modified_time" content="2021-02-22T13:43:00+00:00"><meta property="og:site_name" content="Brain=f(X)?"><meta name=twitter:card content="summary"><meta name=twitter:title content="Quicksort Complexity Analysis in Probability"><meta name=twitter:description content="最近在阅读《概率论基础教程 A First Course in Probability》时，看到chapter 7 期望的性质，
+其中提到了如何使用概率的方法来衡量快速排序算法的效率，看完之后很受启发，特此记录在这里。
+对于一个排序算法，对于最好运行情况和最坏运行情况，我们都容易找出相应的输入来测试。
+而对于一般的情况，也就是当我们面对随机的输入，这时可以利用到期望的方式来衡量，
+因为期望就代表着所有情况的平均。"><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-93899485-1','auto');ga('send','pageview');}</script><script src=/vendor/js/jquery.min.js></script><script src=/vendor/js/popper.min.js></script><script src=/vendor/js/bootstrap.min.js></script><script src=/vendor/js/smooth-scroll.polyfills.min.js></script><link type=text/css rel=stylesheet href=/vendor/css/bootstrap.min.css><script src=/vendor/js/vue.min.js></script><link rel=stylesheet href=https://dreamanddead.github.io/scss/journal.min.c116bc90d171283f099f173854157ec8f183f9073b93443b2c8ad82899ee9025.css integrity="sha256-wRa8kNFxKD8Jnxc4VBV+yPGD+Qc7k0Q7LIrYKJnukCU=" media=screen><link rel=stylesheet href=https://dreamanddead.github.io/scss/dark-mode.min.552aae4638a84aa57cf0b195750a49ea9131d3bb621d1ed3ebc9b14b18166536.css integrity="sha256-VSquRjioSqV88LGVdQpJ6pEx07tiHR7T68mxSxgWZTY=" media=screen><script src=https://dreamanddead.github.io/js/loadCSS.js></script><script>loadCSS("https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons");</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}};</script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js>MathJax.Hub.Queue(function(){var all=MathJax.Hub.getAllJax(),i;for(i=0;i<all.length;i+=1){all[i].SourceElement().parentNode.className+=' has-jax';}});</script><style>code.has-jax{font:inherit;font-size:100%;background:inherit;border:inherit;color:#515151}</style><script src=https://dreamanddead.github.io/js/toc.js></script><script src=https://cdn.jsdelivr.net/npm/vue-disqus@3/dist/vue-disqus.js></script></head><body><div id=app><div ref=sideContainer class=side-container><a class="a-block nav-head false" href=https://dreamanddead.github.io><div class=nav-title>Brain=f(X)?</div><div class=nav-subtitle>Can machine think?</div></a><div class=nav-link-list><a class="a-block nav-link-item false" href=/categories>Categories</a>
+<a class="a-block nav-link-item false" href=/tags>Tags</a>
+<a class="a-block nav-link-item false" href=/index.xml>RSS Feed</a></div><div class=nav-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+Attribution-NonCommercial-ShareAlike 4.0 International</div></div><div ref=extraContainer class=extra-container><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc-content><center>- CATALOG -</center><ul><li><a href=#%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f onclick="onNavClick(`#快速排序-nav`)" id=快速排序-nav>快速排序</a></li><li><a href=#%e6%95%88%e7%8e%87%e5%ba%a6%e9%87%8f onclick="onNavClick(`#效率度量-nav`)" id=效率度量-nav>效率度量</a></li><ul class=collapse data-toggle=collapse><li><a href=#%e6%9c%80%e5%9d%8f%e8%a1%a8%e7%8e%b0 onclick="onNavClick(`#最坏表现-nav`)" id=最坏表现-nav>最坏表现</a></li><li><a href=#%e6%9c%80%e5%a5%bd%e8%a1%a8%e7%8e%b0 onclick="onNavClick(`#最好表现-nav`)" id=最好表现-nav>最好表现</a></li><li><a href=#%e5%b9%b3%e5%9d%87%e8%a1%a8%e7%8e%b0 onclick="onNavClick(`#平均表现-nav`)" id=平均表现-nav>平均表现</a></li></ul><li><a href=#%e5%81%87%e5%a6%82%e6%9c%89%e9%87%8d%e5%a4%8d%e7%9a%84%e6%95%b0%e5%ad%97 onclick="onNavClick(`#假如有重复的数字-nav`)" id=假如有重复的数字-nav>假如有重复的数字</a></li></ul></div></div><div class=pagination><a id=globalBackToTop class="pagination-action animated-visibility" href=#top :class="{ invisible: scrollY == 0 }"><i class="material-icons pagination-action-icon">keyboard_arrow_up</i></a>
+<a class=pagination-action v-on:click=toggleDarkMode><i class="material-icons pagination-action-icon" v-if=isDarkMode>brightness_4</i>
+<i class="material-icons pagination-action-icon" v-else=isDarkMode>brightness_7</i></a></div></div><div class=single-column-drawer-container ref=drawer v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }"><div class=drawer-content><div class=drawer-menu><a class="a-block drawer-menu-item false" href=/categories>Categories</a>
+<a class="a-block drawer-menu-item false" href=/tags>Tags</a>
+<a class="a-block drawer-menu-item false" href=/index.xml>RSS Feed</a><div class=toc><div class=toc-content><center>- CATALOG -</center><ul><li><a href=#%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f onclick="onNavClick(`#快速排序-nav`)" id=快速排序-nav>快速排序</a></li><li><a href=#%e6%95%88%e7%8e%87%e5%ba%a6%e9%87%8f onclick="onNavClick(`#效率度量-nav`)" id=效率度量-nav>效率度量</a></li><ul class=collapse data-toggle=collapse><li><a href=#%e6%9c%80%e5%9d%8f%e8%a1%a8%e7%8e%b0 onclick="onNavClick(`#最坏表现-nav`)" id=最坏表现-nav>最坏表现</a></li><li><a href=#%e6%9c%80%e5%a5%bd%e8%a1%a8%e7%8e%b0 onclick="onNavClick(`#最好表现-nav`)" id=最好表现-nav>最好表现</a></li><li><a href=#%e5%b9%b3%e5%9d%87%e8%a1%a8%e7%8e%b0 onclick="onNavClick(`#平均表现-nav`)" id=平均表现-nav>平均表现</a></li></ul><li><a href=#%e5%81%87%e5%a6%82%e6%9c%89%e9%87%8d%e5%a4%8d%e7%9a%84%e6%95%b0%e5%ad%97 onclick="onNavClick(`#假如有重复的数字-nav`)" id=假如有重复的数字-nav>假如有重复的数字</a></li></ul></div></div></div></div></div><transition name=fade><div v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if=isDrawerOpen v-on:click=toggleDrawer></div></transition><nav ref=navBar class="navbar sticky-top navbar-light single-column-nav-container"><div ref=navBackground class=nav-background></div><div class="container container-narrow nav-content"><button id=nav_dropdown_btn class=nav-dropdown-toggle type=button v-on:click=toggleDrawer>
+<i class=material-icons>menu</i></button>
+<a ref=navTitle class=navbar-brand href=https://dreamanddead.github.io>Brain=f(X)?</a>
+<button type=button class=nav-darkmode-toggle v-on:click=toggleDarkMode>
+<i class=material-icons v-if=isDarkMode>brightness_4</i>
+<i class=material-icons v-else=isDarkMode>brightness_7</i></button></div></nav><div class=single-column-header-container ref=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }"><a href=https://dreamanddead.github.io><div class=single-column-header-title>Brain=f(X)?</div><div class=single-column-header-subtitle>Can machine think?</div></a></div><div id=content><div ref=streamContainer class=stream-container><div class="post-list-container post-list-container-shadow"><div class=post><div class=post-head-wrapper style=background-image:url(https://dreamanddead.github.io/post/quicksort-complexity/images/featured.jpg)><div class=post-title>Quicksort Complexity Analysis in Probability<div class=post-meta><time itemprop=datePublished>2019-08-07 16:43</time>
+<i class=material-icons>folder</i>
+<a href=/categories/>[Algorithm]</a>
+&nbsp;
+<i class=material-icons>label</i>
+<a href=/tags/math>math</a>
+&nbsp;
+<a href=/tags/algorithm>algorithm</a>
+&nbsp;
+<i class=material-icons>schedule</i>
+12 min
+9 s.</div></div></div><div class=post-body-wrapper><div class=post-body v-pre><p>最近在阅读<a href=https://book.douban.com/subject/25813568/>《概率论基础教程 A First Course in Probability》</a>时，看到<strong>chapter 7 期望的性质</strong>，
+其中提到了如何使用概率的方法来衡量快速排序算法的效率，看完之后很受启发，特此记录在这里。</p><p>对于一个排序算法，对于最好运行情况和最坏运行情况，我们都容易找出相应的输入来测试。
+而对于一般的情况，也就是当我们面对随机的输入，这时可以利用到期望的方式来衡量，
+因为期望就代表着所有情况的平均。</p><h1 id=快速排序>快速排序</h1><p>先温习一下快速排序的算法过程。</p><p>假设有一组互不相同的数 $x_1, x_2, &mldr;, x_n$，我们将它们排成一个递增的序列，这个过程称为排序。</p><p>快速排序算法是一个非常有效的方法，它是这样定义的：</p><ul><li>初始的 $n$ 个数看作一个集合</li><li>当 $n = 1$ 时，本身就是有序的</li><li>当 $n = 2$ 时，只需直接比较这两个数并将它们排序即可</li><li>当 $n > 2$ 时，随机选择一个数 $x_i$，然后将所有剩下的数和 $x_i$ 比较，小于 $x_i$ 的数归入左边的集合，大于 $x_i$ 的数归入右边的集合</li><li>然后对所有集合重复上面的处理过程，直到所有的集合只有一个数为止</li></ul><p>举例来看，假设有 $10$ 个不同的数，</p><p>$$
+{5,9,3,10,11,14,8,4,17,6}
+$$</p><p>开始时随机选择一个数，比如选择到了 $10$，然后将所有的数和 $10$ 比较，得到</p><p>$$
+{5, 9, 3, 8, 4, 6}, 10, {11, 14, 17}
+$$</p><p>我们对集合继续同样的过程。比如左边的集合，选择到了 $6$，得到</p><p>$$
+{5, 3, 4}, 6, {9, 8}, 10, {11, 14, 17}
+$$</p><p>对左边的集合再次选择到 $4$，得到</p><p>$$
+{3}, 4, {5}, 6, {9, 8}, 10, {11, 14, 17}
+$$</p><p>重复这个过程直到所有集合只有一个数为止。</p><p>假定右边的集合选定了 $8$ 和 $14$，最终得到排序</p><p>$$
+{3}, 4, {5}, 6, 8, {9}, 10, {11}, 14, {17}
+$$</p><h1 id=效率度量>效率度量</h1><p>在排序的过程中，最基本的运算是比较两个数的大小，
+完成排序过程所需要的比较次数越多，效率就越差。</p><p>我们用比较次数作为metric，我们来衡量算法的效率表现。</p><h2 id=最坏表现>最坏表现</h2><p>还是以上面排序的例子作为示例。</p><p>$$
+{5,9,3,10,11,14,8,4,17,6}
+$$</p><p>假如我们每次选择 $x_i$ 时，$x_i$总是当前集合中最小的数（或者最大），我们来看一下排序的过程是怎样的。</p><p>第一次选择到 $3$，比较了 $9$ 次</p><p>$$
+3, {5,9,10,11,14,8,4,17,6}
+$$</p><p>第二次选择到 $4$，比较了 $8$ 次</p><p>$$
+3, 4, {5,9,10,11,14,8,17,6}
+$$</p><p>第三次选择到 $5$，比较了 $7$ 次</p><p>$$
+3, 4, 5, {9,10,11,14,8,17,6}
+$$</p><p>&mldr;</p><p>第九次选择到 $14$，比较了 $1$ 次</p><p>$$
+3, 4, 5, 6, 8, 9, 10, 11, 14, {17}
+$$</p><p>我们会发现整个排序过程的比较次数近乎为 $O(n^2)$。</p><p>之所以这样的原因就在于，每次选择一个数，进行集合分割时，总是分出<strong>空集</strong>和<strong>元素仅仅减少一个的集合</strong>，这样问题规模的降低速度就变的很慢。</p><h2 id=最好表现>最好表现</h2><p>对比最差的表现，我们来看一下最好的表现。
+还是以上面排序的例子作为示例。</p><p>$$
+{5,9,3,10,11,14,8,4,17,6}
+$$</p><p>第一次选择到 $8$，比较了 $9$ 次</p><p>$$
+{5, 3, 4, 6}, 8, {9, 10, 11, 14, 17}
+$$</p><p>第二次选择到 $4$，比较了 $3$ 次</p><p>$$
+{3}, 4, {5, 6}, 8, {9, 10, 11, 14, 17}
+$$</p><p>第三次选择到 $5，比较了 $1$ 次</p><p>$$
+{3}, 4, 5, {6}, 8, {9, 10, 11, 14, 17}
+$$</p><p>第四次选择到 $11$，比较了 $4$ 次</p><p>$$
+{3}, 4, 5, {6}, 8, {9, 10}, 11, {14, 17}
+$$</p><p>第五次选择到 $10$，比较了 $1$ 次</p><p>$$
+{3}, 4, 5, {6}, 8, {9}, 10, 11, {14, 17}
+$$</p><p>第六次选择到 $17$，比较了 $1$ 次</p><p>$$
+{3}, 4, 5, {6}, 8, {9}, 10, 11, {14}, 17
+$$</p><p>和最差情况相对比，我们每次对集合都近乎是二分的划分，使每个子问题的规模快速减小，这样总体比较次数也快速的减少，整体效率近乎于 $O(nlog(n))$。</p><h2 id=平均表现>平均表现</h2><p>这里是这篇文章的重点，也就是书中使用的概率方法，计算平均效率。</p><p>记 $X$ 是实现 $n$ 个不同数的排序所需要比较的次数，$E[X]$ 就是对这个排序算法效率的一个平均度量。</p><p>为了计算 $E[X]$，我们先将 $X$ 写为一系列随机变量的和。
+我们将 $n$ 个数中最小的数命名为 $1$，第二小的数命名为 $2$，&mldr;，最大的数命名为 $n$，对于 $1 &lt;= i &lt;= j &lt;= n$，记</p><ul><li>$I(i, j) = 1$, 在排序的过程中，数 $i, j$ 直接比较过</li><li>$I(i, j) = 0$, 其它</li></ul><p>根据快速排序的过程，任意两个数 $i, j$ 在排序过程中，</p><ul><li>可能从未比较过（因为被划分到了不同的集合）</li><li>如果它们直接比较过，只可能比较一次，不可能再次比较（因为其中一个数被选择作为比较点，离开了集合）</li></ul><p>由 $X$ 的定义可得：</p><p>$$
+X = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} I(i, j) \tag{1}
+$$</p><p>根据期望的性质，当 $E[X], E[Y]$ 均为有限值时，$E[X+Y] = E[X] + E[Y]$。</p><p>由此可得，</p><p>$$
+\begin{align}
+E[X] &= E[\sum_{i=1}^{n-1} \sum_{j=i+1}^{n} I(i, j)] \\\<br>&= \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} E[I(i, j)] \\\<br>&= \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} P({i和j在排序过程中做过比较}) \tag{2}
+\end{align}
+$$</p><p>下面我们来计算概率 $P({i和j在排序过程中做过比较})$。</p><p>数 $i, i+1, &mldr;, j$ 最开始全部在一个集合中。</p><p>排序开始，随机在 $n$ 个数中选择一个数作为比较点，如果比较点不在 $i, j$ 这个区间内，即比$i$小，或者比$j$大，则在比较并划分集合后，$i, i+1, &mldr;, j$ 还是在一个集合内。</p><p>假如选择的比较点在 $i, i+1, &mldr;, j$ 之中，则只有当选择 $i / j$ 时，$i$ 和 $j$ 才会直接进行比较；否则它们两个将会被划分在比较点两边的两个集合中，再也不可能直接比较。</p><p>因此，$i, j$ 直接进行比较的概率，就是从 $i, i+1, &mldr;, j$ 中选择到 $i / j$ 的概率，等于 $\frac{2}{j - i + 1}$。</p><p>于是</p><p>$$
+P({i和j在排序过程中做过比较}) = \frac{2}{j-i+1} \tag{3}
+$$</p><p>我们来仔细的理解公式$(3)$，在一开始，有 $n$ 个数，其中在 $i, j$ 区间的有 $j-i+1$ 个数。</p><p>在选择比较点之后，根据条件概率，</p><p>$$
+\begin{align}
+&P({i和j在排序过程中做过比较}) \\\<br>=& P({i和j在排序过程中做过比较 \mid 比较点在区间外})P({比较点在区间外}) + \\\<br>& P({i和j在排序过程中做过比较 \mid 比较点在区间内})P({比较点在区间内}) \tag{4}
+\end{align}
+$$</p><p>假如选择点是完全随机的，则</p><p>$$
+\begin{align}
+P({i和j在排序过程中做过比较 \mid 比较点在区间外}) &= P({i和j在排序过程中做过比较}) \\\<br>P({比较点在区间外}) &= \frac{n-(j-i+1)}{n} \\\<br>P({i和j在排序过程中做过比较 \mid 比较点在区间内}) &= \frac{2}{j-i+1} \\\<br>P({比较点在区间内}) &= \frac{j-i+1}{n}
+\end{align}
+$$</p><p>代入公式$(4)$，</p><p>$$
+P({i和j在排序过程中做过比较}) = P({i和j在排序过程中做过比较}) * \frac{n-(j-i+1)}{n} + \frac{2}{j-i+1} * \frac{j-i+1}{n}
+$$</p><p>$$
+P({i和j在排序过程中做过比较}) = \frac{2}{j-i+1} \tag{3}
+$$</p><p>所以，将结果$(3)$代入$(2)$，最终的期望为</p><p>$$
+E[X] = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} P({i和j在排序过程中做过比较}) = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \frac{2}{j-i+1}
+$$</p><p>为了得到 $E[X]$ 的大致估计，当 $n$ 充分大时，我们用积分来近似</p><p>$$
+\begin{align}
+\sum_{j=i+1}^{n} \frac{2}{j-i+1} &\approx \int_{i+1}^{n} \frac{2}{x-i+1} dx \\\<br>&= 2ln(x-i+1) |_{i+1}^n \\\<br>&= 2ln(n-i+1) - 2ln(2) \\\<br>&\approx 2ln(n-i+1)
+\end{align}
+$$</p><p>因此，</p><p>$$
+\begin{align}
+E[X] &= \sum_{i=1}^{n-1} 2 ln(n-i+1) \\\<br>&\approx 2 \int_{1}^{n-1} ln(n-x+1) dx \\\<br>&= 2 \int_{2}^{n} ln(y) dy \\\<br>&= 2(yln(y) - y) |_2^n \\\<br>&\approx 2nln(n)
+\end{align}
+$$</p><p>由此可知，在使用快速排序算法时，当 $n$ 充分大时，平均大概需要 $O(nln(n))$ 次比较才可以将 $n$ 个数排序。</p><h1 id=假如有重复的数字>假如有重复的数字</h1><p>在前面的问题假设中，我们假设 $n$ 个数字是完全不同的，假如在要排序的序列中，出现了重复的数字，我们使用 $i, j$ 区间来计算概率的方法就会失效。</p><p>但是在这种情况下，根据上面对最好情况和最差情况的分析，我们使用一种启发式的方法，在分割集合时，假如要比较的数和比较点相同，我们将它们平均的左右分配。
+举一个例子，极端情况下，所有的数都相同，10 个 6 进行排序。</p><p>$$
+{6, 6, 6, 6, 6, 6, 6, 6, 6, 6}
+$$</p><p>选择比较点 6 之后，我们将和比较点相同的数平均分配到集合的两边，</p><p>$$
+{6, 6, 6, 6, 6}, 6, {6, 6, 6, 6}
+$$</p><p>这样可以使子问题的规模快速减少，保证排序算法的效率。</p><hr width=100% id=EOF><p style=color:#777>Last modified on 2021-02-22</p></div></div><nav class=post-pagination><a class=newer-posts href=https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/>Next<br>How to Customize Keymap in Linux</a>
+<a class=older-posts href=https://dreamanddead.github.io/post/triangle-math/>Previous<br>Trigonometric Function Illustrations</a></nav><div class=post-comment-wrapper><div class=comments><vue-disqus shortname=dreamanddead></vue-disqus></div><noscript><noscript>Please activate JavaScript to view comments.</noscript></noscript><a href=https://disqus.com/ class=dsq-brlink>Comments powered by <span class=logo-disqus>Disqus</span></a></div></div></div></div></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+Attribution-NonCommercial-ShareAlike 4.0 International</div></div><script>let app;app=new Vue({el:'#app',data:{scrollY:0,navOpacity:0,isDrawerOpen:false,mounted:false,isDarkMode:false},methods:{sgn(t,x){let k=1./(1.-2*t);if(x<=t)return 0;else if(x>=1-t)return 1;else{return k*(x-t);}},handleScroll(){this.scrollY=window.scrollY;this.navOpacity=this.sgn(.0,Math.min(1,Math.max(0,window.scrollY/(this.pageHeadHeight()-this.navBarHeight()*0.8))));const{navBar,navBackground,navTitle,extraContainer,streamContainer}=this.$refs;if(this.navOpacity>=1){navBackground.style.opacity=1;navTitle.style.opacity=1;}else{navBackground.style.opacity=0;navTitle.style.opacity=0;}},handleResize(){const{navBar,navBackground,navTitle,extraContainer,streamContainer}=this.$refs;extraContainer.style.left=(streamContainer.offsetWidth-extraContainer.offsetWidth)+'px';},navBarHeight(){return this.$refs.navBar.offsetHeight;},pageHeadHeight(){return this.$refs.pageHead.offsetHeight;},toggleDrawer(){this.isDrawerOpen=!this.isDrawerOpen;document.getElementsByTagName('html')[0].style.overflow=this.isDrawerOpen?'hidden':'unset';},closeDrawer(){this.isDrawerOpen=false;document.getElementsByTagName('html')[0].style.overflow=this.isDrawerOpen?'hidden':'unset';},toggleDarkMode(){this.isDarkMode=!this.isDarkMode;if(this.isDarkMode==true){document.cookie="night=1;path=/";document.body.classList.add("night");}else{document.cookie="night=0;path=/";document.body.classList.remove("night");}}},created(){window.addEventListener('scroll',this.handleScroll);window.addEventListener('resize',this.handleResize);window._nonDesktop=function(){let check=false;(function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4)))check=true;})(navigator.userAgent||navigator.vendor||window.opera);return check;};var night=document.cookie.replace(/(?:(?:^|.*;\s*)night\s*\=\s*([^;]*).*$)|^.*$/,"$1");if(night==""){if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){}}else{if(night=="1"){this.toggleDarkMode();}}},mounted(){this.handleScroll();this.handleResize();this.mounted=true;},destroyed(){window.removeEventListener('scroll',this.handleScroll);window.removeEventListener('resize',this.handleResize);}});</script><script src=https://dreamanddead.github.io/js/journal.js></script></body></html>

@@ -1,0 +1,574 @@
+<!doctype html><html><head><title>Git Internals</title><meta charset=utf-8><meta name=X-UA-Compatible content="IE=edge"><meta name=google-site-verification content><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name=viewport><meta content="telephone=no" name=format-detection><meta name=description content><meta name=renderer content="webkit"><meta name=theme-color content="#ffffff"><meta property="og:title" content="Git Internals"><meta property="og:description" content="这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。
+所有示例使用git版本 2.7.4，
+示例仓库可见于github: https://github.com/DreamAndDead/git-internals-example"><meta property="og:type" content="article"><meta property="og:url" content="https://dreamanddead.github.io/post/git-internals/"><meta property="article:published_time" content="2018-01-03T08:30:00+00:00"><meta property="article:modified_time" content="2018-01-03T08:30:00+00:00"><meta property="og:site_name" content="Brain=f(X)?"><meta name=twitter:card content="summary"><meta name=twitter:title content="Git Internals"><meta name=twitter:description content="这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。
+所有示例使用git版本 2.7.4，
+示例仓库可见于github: https://github.com/DreamAndDead/git-internals-example"><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-93899485-1','auto');ga('send','pageview');}</script><script src=/vendor/js/jquery.min.js></script><script src=/vendor/js/popper.min.js></script><script src=/vendor/js/bootstrap.min.js></script><script src=/vendor/js/smooth-scroll.polyfills.min.js></script><link type=text/css rel=stylesheet href=/vendor/css/bootstrap.min.css><script src=/vendor/js/vue.min.js></script><link rel=stylesheet href=https://dreamanddead.github.io/scss/journal.min.c116bc90d171283f099f173854157ec8f183f9073b93443b2c8ad82899ee9025.css integrity="sha256-wRa8kNFxKD8Jnxc4VBV+yPGD+Qc7k0Q7LIrYKJnukCU=" media=screen><link rel=stylesheet href=https://dreamanddead.github.io/scss/dark-mode.min.552aae4638a84aa57cf0b195750a49ea9131d3bb621d1ed3ebc9b14b18166536.css integrity="sha256-VSquRjioSqV88LGVdQpJ6pEx07tiHR7T68mxSxgWZTY=" media=screen><script src=https://dreamanddead.github.io/js/loadCSS.js></script><script>loadCSS("https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons");</script><script src=https://dreamanddead.github.io/js/toc.js></script><script src=https://cdn.jsdelivr.net/npm/vue-disqus@3/dist/vue-disqus.js></script></head><body><div id=app><div ref=sideContainer class=side-container><a class="a-block nav-head false" href=https://dreamanddead.github.io><div class=nav-title>Brain=f(X)?</div><div class=nav-subtitle>Can machine think?</div></a><div class=nav-link-list><a class="a-block nav-link-item false" href=/categories>Categories</a>
+<a class="a-block nav-link-item false" href=/tags>Tags</a>
+<a class="a-block nav-link-item false" href=/index.xml>RSS Feed</a></div><div class=nav-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+Attribution-NonCommercial-ShareAlike 4.0 International</div></div><div ref=extraContainer class=extra-container><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc-content><center>- CATALOG -</center><ul><li><a href=#git-folder onclick="onNavClick(`#git-folder-nav`)" id=git-folder-nav>.git folder</a></li><li><a href=#key-objects onclick="onNavClick(`#key-objects-nav`)" id=key-objects-nav>key objects</a></li><ul class=collapse data-toggle=collapse><li><a href=#blob onclick="onNavClick(`#blob-nav`)" id=blob-nav>blob</a></li><li><a href=#tree onclick="onNavClick(`#tree-nav`)" id=tree-nav>tree</a></li><ul class=collapse data-toggle=collapse><li><a href=#index onclick="onNavClick(`#index-nav`)" id=index-nav>index</a></li><li><a href=#tree-object onclick="onNavClick(`#tree-object-nav`)" id=tree-object-nav>tree object</a></li></ul><li><a href=#commit onclick="onNavClick(`#commit-nav`)" id=commit-nav>commit</a></li><li><a href=#tag onclick="onNavClick(`#tag-nav`)" id=tag-nav>tag</a></li><ul class=collapse data-toggle=collapse><li><a href=#branch-ref onclick="onNavClick(`#branch-ref-nav`)" id=branch-ref-nav>branch ref</a></li><li><a href=#tag-ref onclick="onNavClick(`#tag-ref-nav`)" id=tag-ref-nav>tag ref</a></li><li><a href=#tag-object onclick="onNavClick(`#tag-object-nav`)" id=tag-object-nav>tag object</a></li></ul></ul><li><a href=#more-about-refs onclick="onNavClick(`#more-about-refs-nav`)" id=more-about-refs-nav>more about refs</a></li><ul class=collapse data-toggle=collapse><li><a href=#head onclick="onNavClick(`#head-nav`)" id=head-nav>HEAD</a></li><li><a href=#remote-ref onclick="onNavClick(`#remote-ref-nav`)" id=remote-ref-nav>remote ref</a></li></ul><li><a href=#objects-relation onclick="onNavClick(`#objects-relation-nav`)" id=objects-relation-nav>objects relation</a></li><li><a href=#more-commits onclick="onNavClick(`#more-commits-nav`)" id=more-commits-nav>more commits</a></li><ul class=collapse data-toggle=collapse><li><a href=#commits-tree onclick="onNavClick(`#commits-tree-nav`)" id=commits-tree-nav>commits tree</a></li><li><a href=#remote-commits onclick="onNavClick(`#remote-commits-nav`)" id=remote-commits-nav>remote commits</a></li></ul><li><a href=#pack onclick="onNavClick(`#pack-nav`)" id=pack-nav>pack</a></li><ul class=collapse data-toggle=collapse><li><a href=#create-pack onclick="onNavClick(`#create-pack-nav`)" id=create-pack-nav>create pack</a></li><li><a href=#packed-refs onclick="onNavClick(`#packed-refs-nav`)" id=packed-refs-nav>packed-refs</a></li><li><a href=#infopack onclick="onNavClick(`#infopack-nav`)" id=infopack-nav>info/pack</a></li><li><a href=#pack-file-index onclick="onNavClick(`#pack-file-index-nav`)" id=pack-file-index-nav>pack file index</a></li><ul class=collapse data-toggle=collapse><li><a href=#fanout-table onclick="onNavClick(`#fanout-table-nav`)" id=fanout-table-nav>fanout table</a></li></ul><li><a href=#pack-file onclick="onNavClick(`#pack-file-nav`)" id=pack-file-nav>pack file</a></li><li><a href=#delta-in-pack-file onclick="onNavClick(`#delta-in-pack-file-nav`)" id=delta-in-pack-file-nav>delta in pack file</a></li></ul></div></div><div class=pagination><a id=globalBackToTop class="pagination-action animated-visibility" href=#top :class="{ invisible: scrollY == 0 }"><i class="material-icons pagination-action-icon">keyboard_arrow_up</i></a>
+<a class=pagination-action v-on:click=toggleDarkMode><i class="material-icons pagination-action-icon" v-if=isDarkMode>brightness_4</i>
+<i class="material-icons pagination-action-icon" v-else=isDarkMode>brightness_7</i></a></div></div><div class=single-column-drawer-container ref=drawer v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }"><div class=drawer-content><div class=drawer-menu><a class="a-block drawer-menu-item false" href=/categories>Categories</a>
+<a class="a-block drawer-menu-item false" href=/tags>Tags</a>
+<a class="a-block drawer-menu-item false" href=/index.xml>RSS Feed</a><div class=toc><div class=toc-content><center>- CATALOG -</center><ul><li><a href=#git-folder onclick="onNavClick(`#git-folder-nav`)" id=git-folder-nav>.git folder</a></li><li><a href=#key-objects onclick="onNavClick(`#key-objects-nav`)" id=key-objects-nav>key objects</a></li><ul class=collapse data-toggle=collapse><li><a href=#blob onclick="onNavClick(`#blob-nav`)" id=blob-nav>blob</a></li><li><a href=#tree onclick="onNavClick(`#tree-nav`)" id=tree-nav>tree</a></li><ul class=collapse data-toggle=collapse><li><a href=#index onclick="onNavClick(`#index-nav`)" id=index-nav>index</a></li><li><a href=#tree-object onclick="onNavClick(`#tree-object-nav`)" id=tree-object-nav>tree object</a></li></ul><li><a href=#commit onclick="onNavClick(`#commit-nav`)" id=commit-nav>commit</a></li><li><a href=#tag onclick="onNavClick(`#tag-nav`)" id=tag-nav>tag</a></li><ul class=collapse data-toggle=collapse><li><a href=#branch-ref onclick="onNavClick(`#branch-ref-nav`)" id=branch-ref-nav>branch ref</a></li><li><a href=#tag-ref onclick="onNavClick(`#tag-ref-nav`)" id=tag-ref-nav>tag ref</a></li><li><a href=#tag-object onclick="onNavClick(`#tag-object-nav`)" id=tag-object-nav>tag object</a></li></ul></ul><li><a href=#more-about-refs onclick="onNavClick(`#more-about-refs-nav`)" id=more-about-refs-nav>more about refs</a></li><ul class=collapse data-toggle=collapse><li><a href=#head onclick="onNavClick(`#head-nav`)" id=head-nav>HEAD</a></li><li><a href=#remote-ref onclick="onNavClick(`#remote-ref-nav`)" id=remote-ref-nav>remote ref</a></li></ul><li><a href=#objects-relation onclick="onNavClick(`#objects-relation-nav`)" id=objects-relation-nav>objects relation</a></li><li><a href=#more-commits onclick="onNavClick(`#more-commits-nav`)" id=more-commits-nav>more commits</a></li><ul class=collapse data-toggle=collapse><li><a href=#commits-tree onclick="onNavClick(`#commits-tree-nav`)" id=commits-tree-nav>commits tree</a></li><li><a href=#remote-commits onclick="onNavClick(`#remote-commits-nav`)" id=remote-commits-nav>remote commits</a></li></ul><li><a href=#pack onclick="onNavClick(`#pack-nav`)" id=pack-nav>pack</a></li><ul class=collapse data-toggle=collapse><li><a href=#create-pack onclick="onNavClick(`#create-pack-nav`)" id=create-pack-nav>create pack</a></li><li><a href=#packed-refs onclick="onNavClick(`#packed-refs-nav`)" id=packed-refs-nav>packed-refs</a></li><li><a href=#infopack onclick="onNavClick(`#infopack-nav`)" id=infopack-nav>info/pack</a></li><li><a href=#pack-file-index onclick="onNavClick(`#pack-file-index-nav`)" id=pack-file-index-nav>pack file index</a></li><ul class=collapse data-toggle=collapse><li><a href=#fanout-table onclick="onNavClick(`#fanout-table-nav`)" id=fanout-table-nav>fanout table</a></li></ul><li><a href=#pack-file onclick="onNavClick(`#pack-file-nav`)" id=pack-file-nav>pack file</a></li><li><a href=#delta-in-pack-file onclick="onNavClick(`#delta-in-pack-file-nav`)" id=delta-in-pack-file-nav>delta in pack file</a></li></ul></div></div></div></div></div><transition name=fade><div v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if=isDrawerOpen v-on:click=toggleDrawer></div></transition><nav ref=navBar class="navbar sticky-top navbar-light single-column-nav-container"><div ref=navBackground class=nav-background></div><div class="container container-narrow nav-content"><button id=nav_dropdown_btn class=nav-dropdown-toggle type=button v-on:click=toggleDrawer>
+<i class=material-icons>menu</i></button>
+<a ref=navTitle class=navbar-brand href=https://dreamanddead.github.io>Brain=f(X)?</a>
+<button type=button class=nav-darkmode-toggle v-on:click=toggleDarkMode>
+<i class=material-icons v-if=isDarkMode>brightness_4</i>
+<i class=material-icons v-else=isDarkMode>brightness_7</i></button></div></nav><div class=single-column-header-container ref=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }"><a href=https://dreamanddead.github.io><div class=single-column-header-title>Brain=f(X)?</div><div class=single-column-header-subtitle>Can machine think?</div></a></div><div id=content><div ref=streamContainer class=stream-container><div class="post-list-container post-list-container-shadow"><div class=post><div class=post-head-wrapper style=background-image:url(https://dreamanddead.github.io/post/git-internals/images/featured.jpg)><div class=post-title>Git Internals<div class=post-meta><time itemprop=datePublished>2018-01-03 08:30</time>
+<i class=material-icons>folder</i>
+<a href=/categories/>[Git]</a>
+&nbsp;
+<i class=material-icons>label</i>
+<a href=/tags/git>git</a>
+&nbsp;
+<a href=/tags/vcs>vcs</a>
+&nbsp;
+<i class=material-icons>schedule</i>
+72 min
+23 s.</div></div></div><div class=post-body-wrapper><div class=post-body v-pre><p>这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。</p><p>所有示例使用git版本 2.7.4，
+示例仓库可见于github: <a href=https://github.com/DreamAndDead/git-internals-example>https://github.com/DreamAndDead/git-internals-example</a></p><h1 id=git-folder>.git folder</h1><p>git仓库所有数据都存储在工作区目录的.git文件夹</p><p>在空目录，init初始化仓库</p><pre><code>mkdir git-internals-example
+cd git-internals-example
+git init
+</code></pre><p>.git/结构如下</p><pre><code>.git/
+ ├── branches/
+ ├── config
+ ├── description
+ ├── HEAD
+ ├── hooks/
+ │   ├── applypatch-msg.sample
+ │   ├── commit-msg.sample
+ │   ├── post-update.sample
+ │   ├── pre-applypatch.sample
+ │   ├── pre-commit.sample
+ │   ├── prepare-commit-msg.sample
+ │   ├── pre-push.sample
+ │   ├── pre-rebase.sample
+ │   └── update.sample
+ ├── info/
+ │   └── exclude
+ ├── objects/
+ │   ├── info/
+ │   └── pack/
+ └── refs/
+     ├── heads/
+     └── tags/
+</code></pre><ul><li>branches/ TODO，暂时不清楚</li><li>config 本地仓库配置</li><li>description 只用于gitweb</li><li><em>HEAD 标识当前所在commit</em></li><li>hooks/ git钩子</li><li>info/ 目前只有exclude文件，效果同.gitignore</li><li><em>objects/ 存储对象</em></li><li><em>refs/ 引用</em></li></ul><p>标注的条目，是本文主要关注的</p><h1 id=key-objects>key objects</h1><p>git有4类关键对象，它们是git设计的核心。</p><p>层次由低到高为blob，tree，commit，tag，它们都以文件的形式存储在.git目录下。</p><p>git命令分为两类，高层(porcelain)命令与底层(plumbing)命令。</p><p>高层命令是我们通常使用
+git时使用的命令如add，commit等，底层命令则不常用。高层命令完成的操作是由一系列底层
+命令协作完成的。底层命令的操作内容更简单，更专一，每个关键对象，都有对应的底层命令。</p><h2 id=blob>blob</h2><p>最简单的理解，一个blob对应于一个文件，将一个文件压缩存储便是一个blob。</p><p>没有高层命令只用于生成blob，而有相应的底层命令来做这件事，hash-object。</p><ul><li>在工作区新建makefile文件，内容是一行注释。</li><li>hash-object以文件为参数，-w 写入blob。
+返回值是一个哈希值，ce616eb8c060404bb253822921a12aab81ed1ae0</li></ul><pre><code>$ echo '# makefile' &gt; makefile
+$ git hash-object -w makefile
+ce616eb8c060404bb253822921a12aab81ed1ae0
+</code></pre><ul><li>blob存储在.git/objects/，哈希值前两个字符为子文件夹名，后续字符为文件名。</li></ul><pre><code>$ find .git/objects -type f
+.git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
+</code></pre><ul><li>git用zlib压缩文件生成blob，直接查看blob文件是乱码。</li><li>git有相应的底层命令查看对象，cat-file，-p means pretty，参数为哈希值而不是blob文件路径。
+这里输出的就是makefile文件的内容。</li></ul><pre><code>$ cat .git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
+.....messive output....
+$ git cat-file -p ce616eb8c060404bb253822921a12aab81ed1ae0
+# makefile
+</code></pre><ul><li>blob是压缩过的文件，自然可以解压缩。
+pigz命令针对zlib进行压缩与解压缩，-d means解压缩。
+hexdump -C 以单字节解码，以16进制标识地址。</li></ul><pre><code>$ pigz -d &lt; .git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0 | hexdump -c
+00000000  62 6c 6f 62 20 31 31 00  23 20 6d 61 6b 65 66 69  |blob 11.# makefi|
+00000010  6c 65 0a                                          |le.|
+00000013
+</code></pre><p>从hexdump输出，可以清楚的看到blob中不只存储了文件内容，还附加了其它一些信息。</p><p>blob解压后内容，字节由前至后：</p><ul><li>4byte：blob 4个字符</li><li>1byte：空格</li><li>未知byte：解析为10进制数字，表示原文件内容的字节长度</li><li>1byte：\0</li><li>剩余byte：原文件内容</li></ul><p>那么blob文件名是如何生成的呢？看起来像是随机的一串字符，实际是用SHA1哈希算法生成的。
+算法的输入就是blob解压的内容。</p><pre><code>$ pigz -d &lt; .git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0 | sha1sum
+ce616eb8c060404bb253822921a12aab81ed1ae0  -
+</code></pre><p>由此blob生成的过程就非常清晰：</p><ul><li>读取文件内容，计算内容字节长度</li><li>&ldquo;blob&rdquo;，字节长度信息，文件内容，组合为blob原始内容</li><li>计算SHA1哈希值</li><li>以哈希值前2个字符与剩余字符为名称，在.git/objects/下新建文件夹与文件</li><li>将原始内容用zlib压缩，存储路径为上一步的文件路径</li></ul><h2 id=tree>tree</h2><p>blob只存储内容信息，那么文件名信息存储在哪里呢？如果只有blob对象，文件名是肯定找不到的，
+事实上它们存储在tree对象中。</p><p>形象的比喻，如果blob代表文件，tree就代表文件夹。文件夹包含子文件夹与其它文件，同样的，
+tree对象也“包含”其它tree对象与其它blob。</p><p>因为tree对象是由git index暂存区的内容生成的，在深入tree对象之前，先了解下index暂存区</p><h3 id=index>index</h3><p>index默认存储于.git/index文件，git init并没有生成它。添加文件到暂存区时，git才会生成
+.git/index并存储暂存区内容。</p><ul><li>借助git高层命令add，将makefile加入index</li><li>用hexdump查看index内容</li></ul><pre><code>$ git add makefile
+$ hexdump -C .git/index
+00000000  44 49 52 43 00 00 00 02  00 00 00 01 5a 4c 75 73  |DIRC........ZLus|
+00000010  21 0f 5c 21 5a 4c 75 73  21 0f 5c 21 00 00 08 0b  |!.\!ZLus!.\!....|
+00000020  00 50 34 54 00 00 81 a4  00 00 03 e8 00 00 03 e8  |.P4T............|
+00000030  00 00 00 0b ce 61 6e b8  c0 60 40 4b b2 53 82 29  |.....an..`@K.S.)|
+00000040  21 a1 2a ab 81 ed 1a e0  00 08 6d 61 6b 65 66 69  |!.*.......makefi|
+00000050  6c 65 00 00 38 0a 9e 35  0e c7 cb c0 4d 17 b6 06  |le..8..5....M...|
+00000060  06 f1 3d 84 2f e4 c9 13                           |..=./...|
+00000068
+</code></pre><p>index文件没有被压缩，以2进制存储，网络字节序。
+具体分析其内容，需要借助<a href=https://github.com/git/git/blob/v2.7.4/Documentation/technical/index-format.txt>官方文档</a>。</p><p>针对目前index的内容，用下面的表格来解读：</p><table><thead><tr><th>行\列</th><th>0</th><th>4</th><th>8</th><th>c</th></tr></thead><tbody><tr><td>00</td><td>DIRC</td><td>version</td><td>index entries number</td><td>ctime seconds</td></tr><tr><td>10</td><td>ctime nanosecond fractions</td><td>mtime seconds</td><td>mtime nanosecond fractions</td><td>dev</td></tr><tr><td>20</td><td>ino</td><td>mode</td><td>uid</td><td>gid</td></tr><tr><td>30</td><td>file size</td><td>entry SHA1&mldr;.</td><td>&mldr;.</td><td>&mldr;.</td></tr><tr><td>40</td><td>&mldr;.</td><td>&mldr;.</td><td>flags(2 byte) entry path..</td><td>&mldr;.</td></tr><tr><td>50</td><td>.. padding to multiple of 8 bytes</td><td>index SHA1&mldr;.</td><td>&mldr;.</td><td>&mldr;.</td></tr><tr><td>60</td><td>&mldr;.</td><td>&mldr;.</td><td></td><td></td></tr></tbody></table><ul><li>00，0： DIRC，4个字符，标识文件类型</li><li>00，4： index格式版本，可取2，3，4。00 00 00 02， 当前版本为2</li><li>00，8： index entries number，index存储条目的数量。00 00 00 01， 只有一条index entry，是上面添加的
+makefile。此后的所有字节都由index entry组成</li><li>index entry:<ul><li>00，c： ctime，通过stat -c &ldquo;%z&rdquo; makefile获得其10进制表示。 5a 4c 75 73，转换为10进制并用date解析，date &ndash;date="@$(printf &ldquo;%d&rdquo; &ldquo;0x5a4c7573&rdquo;)"</li><li>10，0： ctime精确到微秒</li><li>10，4： mtime，通过stat -c &ldquo;%w&rdquo; makefile获得其10进制表示。计算同上</li><li>10，8： mtime精确到微秒</li><li>10，c： device number，通过stat -c &ldquo;%d&rdquo; makefile获得其10进制表示</li><li>20，0： inode number，通过stat -c &ldquo;%i&rdquo; makefile获得其10进制表示</li><li>20，4： 文件类型与权限。占用32bit，只需解读后16bit。 81 a4 => 1000 0001 1010 0100，前4bit 1000代表文件为regular file，其后3bit不使用，最后9bit
+代表文件权限 110 100 100 => 0644</li><li>20，8： uid，state -c &ldquo;%u&rdquo; makefile获得其10进制表示</li><li>20，c： gid，state -c &ldquo;%g&rdquo; makefile获得其10进制表示</li><li>30，0： file size，state -c &ldquo;%s&rdquo; makefile获得其10进制表示， 00 00 00 0b => 11，正是blob所存储的</li><li>30，4 - 40，4： blob SHA1，和blob一节计算的相同，ce616eb8c060404bb253822921a12aab81ed1ae0</li><li>40，8： flags，16bit， 00 08 => 0000 1000<ul><li>1bit，assume valid flag (? TODO)</li><li>1bit，版本2中一定为0</li><li>2bit，stage (during merge) (? TODO)</li><li>12bit，16进制数，表示文件名长度。08 => 8，m a k e f i l e</li></ul></li><li>40，8 - 50，0： file name，从40，8的后16bit开始，存储文件名。最后部分用00 byte补齐为8 byte倍数</li><li>50，4 - last： index SHA1，对index已经存储的内容计算SHA1，并附加到index最后。 head -c -20 .git/index | sha1sum 计算得
+380a9e350ec7cbc04d17b60606f13d842fe4c913</li></ul></li></ul><p>index内存储了相当多的除了文件内容外，关于文件的其它信息。
+后续tree对象的生成，信息都是从这里提取。</p><h3 id=tree-object>tree object</h3><p>了解index以后，回到tree对象来。</p><ul><li>使用git底层命令，write-tree，由当前index生成tree对象</li><li>tree对象和blob相同，也存储在objects目录下</li><li>cat-file查看tree对象，显示blob信息</li></ul><pre><code>$ git write-tree
+5e35decc375ba1d3d14511b6341f2827943aa42f
+$ find .git/objects -type f
+.git/objects/5e/35decc375ba1d3d14511b6341f2827943aa42f
+.git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
+$ git cat-file -p 5e35decc375ba1d3d14511b6341f2827943aa42f
+100644 blob ce616eb8c060404bb253822921a12aab81ed1ae0    makefile
+</code></pre><p>tree对象存储了什么内容呢？</p><ul><li>其它tree对象也使用zlib压缩存储，解压来看内容</li></ul><pre><code>$ pigz -d &lt; .git/objects/5e/35decc375ba1d3d14511b6341f2827943aa42f | hexdump -C
+00000000  74 72 65 65 20 33 36 00  31 30 30 36 34 34 20 6d  |tree 36.100644 m|
+00000010  61 6b 65 66 69 6c 65 00  ce 61 6e b8 c0 60 40 4b  |akefile..an..`@K|
+00000020  b2 53 82 29 21 a1 2a ab  81 ed 1a e0              |.S.)!.*.....|
+0000002c
+</code></pre><ul><li>4byte： tree，4个字符</li><li>1byte： 空格</li><li>未知byte： 解读为10进制数，这里为36，表示tree字节内容长度为36</li><li>1byte： \0。之后所有字节为tree对象内容</li><li>6byte： 100644代表blob</li><li>1byte： 空格</li><li>未知byte： 存储文件名</li><li>1byte： \0</li><li>20byte： blob hash值，ce616eb8c060404bb253822921a12aab81ed1ae0</li></ul><p>与cat-file返回的信息保持一致。</p><p>可见tree对象包含的信息也很少，仅说明它下层包含了哪些blob与其它tree，更具体的如文件权限，写入时间
+之类的信息要从index中寻找。所以index暂存区并不仅仅是“暂存”的文件，它也会随着git push/pull在本地/远程
+之间流转。</p><p>这里有个疑问，工作区并没有目录，为什么会有tree对象？</p><p>其实这个tree对象代表的就是工作区根目录，makefile就是在
+根目录下。工作区目录就像linux中的/目录，存在于每一个仓库。</p><h2 id=commit>commit</h2><p>commit是日常使用git接触的最多的概念，一个commit具体代表什么？这就是本节所要讨论的。</p><ul><li>借助git底层命令，commit-tree，生成commit对象。创建commit的时候，需要指定tree对象hash值与comments信息<ul><li>git中所有commit组织为有向无环图的结构，每一个提交都有一/多个parent commit，除了第1个commit。
+<code>commit-tree -p &lt;hash></code>可以在创建commit时指定parent commit，因为这里就是第1个commit，所以不需要指定parent commit。</li></ul></li><li>同样的，commit对象也存储在objects目录下</li><li>cat-file查看commit，其中存储了：<ul><li>tree对象hash</li><li>因为没有parent commit，这里没有显示parent commit</li><li>author</li><li>committer<ul><li>当前commit的author committer信息来自于git config中的user.name与user.email</li></ul></li><li>提交时的message</li></ul></li></ul><pre><code>$ echo 'first commit' | git commit-tree 5e35decc375ba1d3d14511b6341f2827943aa42f
+409eed957ae86ad7a1ef1eb0ea4a299395d4457d
+$ find .git/objects -type f
+.git/objects/5e/35decc375ba1d3d14511b6341f2827943aa42f
+.git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
+.git/objects/40/9eed957ae86ad7a1ef1eb0ea4a299395d4457d
+$ git cat-file -p 409eed957ae86ad7a1ef1eb0ea4a299395d4457d
+tree 5e35decc375ba1d3d14511b6341f2827943aa42f
+author DreamAndDead &lt;favorofife@yeah.net&gt; 1515037063 +0800
+committer DreamAndDead &lt;favorofife@yeah.net&gt; 1515037063 +0800
+
+first commit
+</code></pre><p>具体看commit对象的存储，完全是字符串</p><pre><code>$ pigz -d &lt; .git/objects/40/9eed957ae86ad7a1ef1eb0ea4a299395d4457d | hexdump -C
+00000000  63 6f 6d 6d 69 74 20 31  38 31 00 74 72 65 65 20  |commit 181.tree |
+00000010  35 65 33 35 64 65 63 63  33 37 35 62 61 31 64 33  |5e35decc375ba1d3|
+00000020  64 31 34 35 31 31 62 36  33 34 31 66 32 38 32 37  |d14511b6341f2827|
+00000030  39 34 33 61 61 34 32 66  0a 61 75 74 68 6f 72 20  |943aa42f.author |
+00000040  44 72 65 61 6d 41 6e 64  44 65 61 64 20 3c 66 61  |DreamAndDead &lt;fa|
+00000050  76 6f 72 6f 66 69 66 65  40 79 65 61 68 2e 6e 65  |vorofife@yeah.ne|
+00000060  74 3e 20 31 35 31 35 30  33 37 30 36 33 20 2b 30  |t&gt; 1515037063 +0|
+00000070  38 30 30 0a 63 6f 6d 6d  69 74 74 65 72 20 44 72  |800.committer Dr|
+00000080  65 61 6d 41 6e 64 44 65  61 64 20 3c 66 61 76 6f  |eamAndDead &lt;favo|
+00000090  72 6f 66 69 66 65 40 79  65 61 68 2e 6e 65 74 3e  |rofife@yeah.net&gt;|
+000000a0  20 31 35 31 35 30 33 37  30 36 33 20 2b 30 38 30  | 1515037063 +080|
+000000b0  30 0a 0a 66 69 72 73 74  20 63 6f 6d 6d 69 74 0a  |0..first commit.|
+000000c0
+</code></pre><ul><li>6byte：commit，6个字符</li><li>1byte：空格</li><li>未知byte：解析为10进制数字，表示commit内容长度</li><li>1byte：\0</li><li>4byte：tree，4个字符</li><li>1byte：空格</li><li>40byte：ascii表示的tree hash，不同于之前用2进制来存储</li><li>1byte：\n</li><li>author info：<ul><li>6byte：author，6个字符</li><li>1byte：空格</li><li>未知byte：author name</li><li>1byte：空格</li><li>未知byte：author email</li><li>1byte：空格</li><li>未知byte：解析为10进制数字，编写patch的时间，用 date &ndash;date="@1515037063" 解读</li><li>1byte：空格</li><li>未知byte：时区</li></ul></li><li>1byte：\n</li><li>committer info： 格式同author info</li><li>2byte：\n\n</li><li>未知byte：提交时输入的message信息</li></ul><p>可见commit的本质在于，指定某一时刻由index生成的tree对象。而某个tree对象，就对应于工作区所有内容的一个快照，是
+永远不变的（除非你修改git历史）。每个commit对应于一个版本的内容，这就是git版本控制的基础。</p><h2 id=tag>tag</h2><p>tag在git中，使用也很频繁，通常用于标定一个提交，且设定后不轻易修改。</p><p>从某种意义上，tag和refs很像，虽然refs不是对象。在了解tag之前，先来看一下refs。</p><h3 id=branch-ref>branch ref</h3><p>通常我们会使用<code>git log &lt;parameter></code>来查看commit log，但是一直记住一个hash作为参数值还是很困难的，
+尤其是commit会越来越多。</p><p>refs可以理解为，是用来指定commit的指针。
+git中的分支，就是一种refs，比如我们通过master这样简单好记的名称来引用commit。</p><ul><li>git关于refs的底层命令是update-ref</li><li>几乎所有仓库都有master分支。这里创建一个master引用，指向唯一一个commit。
+引用不是git对象，引用存储在.git/refs/目录下</li><li>引用的存储方式很简单，单纯记录指定commit的hash值</li></ul><pre><code>$ git update-ref refs/heads/master 409eed957ae86ad7a1ef1eb0ea4a299395d4457d
+$ find .git/refs/heads/ -type f
+.git/refs/heads/master
+$ cat .git/refs/heads/master 
+409eed957ae86ad7a1ef1eb0ea4a299395d4457d
+</code></pre><p>创建master引用之后，git log的操作就简单了</p><pre><code>$ git log master
+</code></pre><p>这就是git分支的本质</p><h3 id=tag-ref>tag ref</h3><ul><li>tag也是commit的引用，也可以用相同的方式创建。不同的是，tags存储在.git/refs/tags目录下</li><li>这样就创建了一个标签引用，本质同master一样</li></ul><pre><code>$ git update-ref refs/tags/v1.0 409eed957ae86ad7a1ef1eb0ea4a299395d4457d
+$ git tag -l
+v1.0
+$ cat .git/refs/tags/v1.0
+409eed957ae86ad7a1ef1eb0ea4a299395d4457d
+</code></pre><p>这样的话，tag怎么会算作一个对象呢？对象都应该存储在objects目录下才对。</p><p>实际上，这只是一种简单的tag形式。通常我们在使用tag的时候，还会加上附注等
+其它的信息，这不是单单一个refs文件所存储的。</p><h3 id=tag-object>tag object</h3><ul><li>用git高层命令tag创建tag对象，版本号v1.1</li><li>refs中指向的值是 d879e38d57885a2728e0fd7281c1c1ff701b5042， 而不是 409eed957ae86ad7a1ef1eb0ea4a299395d4457d</li><li>objects目录下多了新文件，标明的正是tag对象</li><li>cat-file，tag对象存储的信息也很明了，一眼可看明</li></ul><pre><code>$ git tag -a v1.1 409eed957ae86ad7a1ef1eb0ea4a299395d4457d -m 'minor version update'
+$ cat .git/refs/tags/v1.1
+d879e38d57885a2728e0fd7281c1c1ff701b5042
+$ find .git/objects -type f
+.git/objects/5e/35decc375ba1d3d14511b6341f2827943aa42f
+.git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
+.git/objects/d8/79e38d57885a2728e0fd7281c1c1ff701b5042
+.git/objects/40/9eed957ae86ad7a1ef1eb0ea4a299395d4457d
+$ git cat-file -p d879e38d57885a2728e0fd7281c1c1ff701b5042
+object 409eed957ae86ad7a1ef1eb0ea4a299395d4457d
+type commit
+tag v1.1
+tagger DreamAndDead &lt;favorofife@yeah.net&gt; 1515050557 +0800
+
+minor version update
+</code></pre><p>解析原理同之前的几节，查看tag对象的存储</p><pre><code>$ pigz -d &lt; .git/objects/d8/79e38d57885a2728e0fd7281c1c1ff701b5042 | hexdump -C
+00000000  74 61 67 20 31 35 30 00  6f 62 6a 65 63 74 20 34  |tag 150.object 4|
+00000010  30 39 65 65 64 39 35 37  61 65 38 36 61 64 37 61  |09eed957ae86ad7a|
+00000020  31 65 66 31 65 62 30 65  61 34 61 32 39 39 33 39  |1ef1eb0ea4a29939|
+00000030  35 64 34 34 35 37 64 0a  74 79 70 65 20 63 6f 6d  |5d4457d.type com|
+00000040  6d 69 74 0a 74 61 67 20  76 31 2e 31 0a 74 61 67  |mit.tag v1.1.tag|
+00000050  67 65 72 20 44 72 65 61  6d 41 6e 64 44 65 61 64  |ger DreamAndDead|
+00000060  20 3c 66 61 76 6f 72 6f  66 69 66 65 40 79 65 61  | &lt;favorofife@yea|
+00000070  68 2e 6e 65 74 3e 20 31  35 31 35 30 35 30 35 35  |h.net&gt; 151505055|
+00000080  37 20 2b 30 38 30 30 0a  0a 6d 69 6e 6f 72 20 76  |7 +0800..minor v|
+00000090  65 72 73 69 6f 6e 20 75  70 64 61 74 65 0a        |ersion update.|
+0000009e
+</code></pre><p>存储内容也是字符串，同cat-file输出是一致的</p><p>这里的tag只是unsigned tag，如果是signed tag，可能有所不同，这里讨论未涉及</p><h1 id=more-about-refs>more about refs</h1><p>在git对象的解析中，提到了branch ref与tag ref。还有其它的refs值得关注</p><h2 id=head>HEAD</h2><p>HEAD引用起的作用非常简单，标识当前所在的commit。</p><ul><li>存储在.git/HEAD文件中，内容很简单，标明当前的HEAD是一个ref，再通过解引用master ref，就可以定位到当前提交</li></ul><pre><code>$ cat .git/HEAD 
+ref: refs/heads/master
+</code></pre><p>git底层命令symbolic-ref可以用来修改HEAD</p><ul><li>新建分支dev</li><li>修改HEAD，指向dev ref</li><li>此时HEAD指向dev，等同于git checkout切换分支</li></ul><pre><code>$ git branch dev
+$ git symbolic-ref HEAD refs/heads/dev
+$ cat .git/HEAD 
+ref: refs/heads/dev
+</code></pre><p>如果指定checkout参数为某个历史提交的hash值，git会提示我们，当前处于deteched HEAD状态。
+意思是当前commit没有被任何分支refs引用。相应的，.git/HEAD中仅仅存储了当前所在commit的hash值。</p><h2 id=remote-ref>remote ref</h2><p>目前的git仓库仅仅是本地仓库，如果添加服务器版本库地址并进行推送，git会记录相应refs信息到.git/refs/remotes/目录下。</p><p>比如</p><ul><li>切换回master分支</li><li>添加远程git地址</li><li>推送master分支至远程git服务器</li><li>.git/refs/remotes/下生成origin/master文件</li><li>文件内容为一个hash值，记录的是远程服务器git仓库master ref所指向的commit hash值</li></ul><pre><code>$ git checkout master
+$ git remote add origin git@github.com:DreamAndDead/git-internals-example.git
+$ git push origin master
+对象计数中: 3, 完成.
+写入对象中: 100% (3/3), 223 bytes | 0 bytes/s, 完成.
+Total 3 (delta 0), reused 0 (delta 0)
+To git@github.com:DreamAndDead/git-internals-example.git
+* [new branch]      master -&gt; master
+$ find .git/refs/remotes/ -type f
+.git/refs/remotes/origin/master
+$ cat .git/refs/remotes/origin/master 
+409eed957ae86ad7a1ef1eb0ea4a299395d4457d
+</code></pre><p>如果服务器master分支领先于本地，可以使用git fetch来获取远程仓库内容，同时更新remotes/origin/master引用。</p><p>远程引用与本地引用最主要的区别在于，远程引用是只读的。虽然可以checkout到远程引用，但是git并不会更新HEAD，所以不能
+直接在远程引用上创建新commit，只能将本地引用与远程引用相关联，使用push来更新远程引用。</p><h1 id=objects-relation>objects relation</h1><p>从之前对git对象的分析（refs不是对象，但是也放在这里讨论），它们之间的关系非常明确。
+由层次的包含关系，从下至上，如图所示：</p><figure><img src=images/git-object-relation.png alt="git object relation"><figcaption><p>git object relation</p></figcaption></figure><ul><li>blob对应单个文件单元</li><li>tree包含blob与tree，形成层次关系。最上层的tree为工作区目录对应的tree，向下可遍历到所有的子tree与blob</li><li>commit指定一个tree（一般都是最上层的tree），此tree向下遍历的所有tree与blob，是当前commit对应的所有文件内容</li><li>tag用于标识一个commit，通常用于标识代码版本。tag通常不轻易改变，指定对应commit，间接指定了对应的tree，再间接索引了
+某个时刻所有文件内容的快照。如果不修改git commit历史，快照永远不变</li><li>refs，非对象，和tag的作用类似，间接指定某个commit，方便git操作</li></ul><h1 id=more-commits>more commits</h1><h2 id=commits-tree>commits tree</h2><p>目前只有一个commit，结构非常简单。任何项目都会有成百上千数量的commit，如此多个commit的情况下，
+底层对象是怎样组织的呢？</p><p>我们先生成一些新的commit。</p><ul><li>创建新目录src</li><li>创建新文件src/main.c</li><li>加入index</li><li>生成第2个commit</li></ul><pre><code>$ mkdir src
+$ cat &gt; src/main.c &lt;&lt;EOF
+int main(int argc, char** argv) {
+    return 0;
+}
+EOF
+$ git add .
+$ git commit -m 'add main.c source file'
+[master ade93a8] add main.c source file
+ 1 file changed, 3 insertions(+)
+ create mode 100644 src/main.c
+</code></pre><ul><li>修改makefile内容，可以正常编译main.c</li><li>更新index</li><li>生成第3个commit</li></ul><pre><code>$ TAB=&quot;$(printf '\t')&quot;
+$ cat &gt;&gt; makefile &lt;&lt;EOF
+all:
+${TAB}gcc src/main.c
+EOF
+$ git add .
+$ git commit -m 'makefile: compile main.c'
+[master f15d0db] makefile: compile main.c
+ 1 file changed, 2 insertions(+)
+</code></pre><ul><li>这时再看一下objects/目录，已经有11个对象</li><li>依照对git对象关系的理解，用shell脚本，打印出对象之间的组织结构。
+打印内容分为3部分，每部分都是一个commit，按parent指针遍历。
+每个commit部分具体输出<ul><li>commit对象信息hash</li><li>commit所指向的tree对象hash</li><li>tree对象包含的所有blob对象与tree对象hash</li></ul></li><li>一共只有10个对象，还有一个tag对象，最后也列出来</li></ul><pre><code>$ find .git/objects -type f
+.git/objects/5e/35decc375ba1d3d14511b6341f2827943aa42f
+.git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
+.git/objects/ad/e93a829fdc058506eab8511e3925ce588bde2d
+.git/objects/b1/d1b69671a4d54e36adbfec34d268aeeb997164
+.git/objects/d1/419c98aa74222a057e961b65935e67398129bf
+.git/objects/9b/130982db52fca0d9c7bdeacf62800794cc3c06
+.git/objects/01/6a4b40ad7446aa80fc5967fdbcbb9e93ad563a
+.git/objects/d8/79e38d57885a2728e0fd7281c1c1ff701b5042
+.git/objects/40/9eed957ae86ad7a1ef1eb0ea4a299395d4457d
+.git/objects/f1/5d0db34f6043bf79800105cb7fbf9abd7074fa
+.git/objects/6a/04ac96c2dd07c1c034c575a17be4deef9f9970
+$ git rev-list --all |
+&gt; while read commit; do
+&gt;   tree=$(git cat-file -p $commit | head -n 1 | awk '{print $2}')
+&gt;   echo &quot;commit: $commit $(git show -s --format=%s $commit)&quot;
+&gt;   echo &quot;tree: $tree&quot;
+&gt;   echo
+&gt;   git ls-tree -tr $tree
+&gt;   echo
+&gt;   echo
+&gt; done
+commit: f15d0db34f6043bf79800105cb7fbf9abd7074fa makefile: compile main.c
+tree: 6a04ac96c2dd07c1c034c575a17be4deef9f9970
+
+100644 blob b1d1b69671a4d54e36adbfec34d268aeeb997164    makefile
+040000 tree 016a4b40ad7446aa80fc5967fdbcbb9e93ad563a    src
+100644 blob 9b130982db52fca0d9c7bdeacf62800794cc3c06    src/main.c
+
+
+commit: ade93a829fdc058506eab8511e3925ce588bde2d add main.c source file
+tree: d1419c98aa74222a057e961b65935e67398129bf
+
+100644 blob ce616eb8c060404bb253822921a12aab81ed1ae0    makefile
+040000 tree 016a4b40ad7446aa80fc5967fdbcbb9e93ad563a    src
+100644 blob 9b130982db52fca0d9c7bdeacf62800794cc3c06    src/main.c
+
+
+commit: 409eed957ae86ad7a1ef1eb0ea4a299395d4457d first commit
+tree: 5e35decc375ba1d3d14511b6341f2827943aa42f
+
+100644 blob ce616eb8c060404bb253822921a12aab81ed1ae0    makefile
+
+
+$ git cat-file -p d879e38d57885a2728e0fd7281c1c1ff701b5042
+object 409eed957ae86ad7a1ef1eb0ea4a299395d4457d
+type commit
+tag v1.1
+tagger DreamAndDead &lt;favorofife@yeah.net&gt; 1515050557 +0800
+
+minor version update
+
+</code></pre><p>依照输出分析，所有对象间关系如图：</p><figure><img src=images/git-log-internal.png alt="relations between git objects"><figcaption><p>relations between git objects</p></figcaption></figure><p>到这里，我们对git已经有比较深刻地理解：</p><ul><li>通常情况，tree与blob对用户不可见，commit是理解git的基本单元</li><li>所有commit，按照 有向无环图 的形式来组织。每一个新提交，都指向当前commit作为parent</li><li>每次创建commit的本质没有根本性的变化</li><li>git对tree与blob的存储是十分紧凑的，相同内容的tree与blob在多个commit之间复用</li></ul><h2 id=remote-commits>remote commits</h2><p>使用git，不免使用服务器来与其它人进行远程项目开发与协作。</p><p>假设目前的工作流：</p><ul><li>你在本地master分支建立了A B两个commit，push到服务器</li><li>甲 pull服务器的代码，建立commit C，push到服务器</li><li>乙 pull服务器代码，基于commit A，建立新分支，创建了commit E F。切换至master分支，合并分支生成提交D。
+push到服务器</li></ul><p>在这段时间内，你并不清楚甲乙进行了什么样的操作。使用git fetch获取服务器仓库内容，
+对你而言，整个仓库的commit结构是这样的：</p><figure><img src=images/git-remote-ref.png alt="git commits structure"><figcaption><p>git commits structure</p></figcaption></figure><ul><li>本地master指向的最新提交还是B，由parent遍历，只有A B两个提交对自己可见</li><li>git fetch从服务器取得新的commit/tree/blob对象，更新remote/origin/master引用
+服务器所拥有的commit，本地存在一份完整相同的备份！</li><li>假如在master分支，git merge合并origin/master，master会指向提交D，这时提交A B C D E F都会对本地可见</li></ul><p>这里的合并是一个fast-forward，没有考虑合并冲突等情况，但是多人远程协作工作流的本质是类似的。</p><h1 id=pack>pack</h1><p>git默认存储对象的格式被称为松散（loose）对象格式，各个对象分布在.git/objects/子目录中。
+git提供了pack机制，将所有松散对象打包整理为一个二进制包文件packfile，使用delta compression
+差量压缩的方式，文件更为紧凑，体积更小。</p><h2 id=create-pack>create pack</h2><p>先来执行pack过程将松散对象打包为packfile。</p><ul><li>git gc命令，垃圾回收的同时，进行对象pack</li><li>打包之后，所有之前的松散对象消失了。在.git/objects/pack/与info/目录下，生成了3个新文件</li><li>还有一个新文件.git/packed-refs</li></ul><pre><code>$ git gc
+对象计数中: 11, 完成.
+Delta compression using up to 8 threads.
+压缩对象中: 100% (7/7), 完成.
+写入对象中: 100% (11/11), 完成.                                                                          
+Total 11 (delta 0), reused 11 (delta 0)             
+$ find .git/objects/ -type f
+.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack
+.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx
+.git/objects/info/packs
+$ ls .git/packed-refs                                  
+.git/packed-refs                                    
+</code></pre><p>下面的章节详细解释这4个文件相关内容。</p><h2 id=packed-refs>packed-refs</h2><p>如果执行了pack，git会将原有的refs都移动到packed-refs文件中。
+如果创建新的引用，新的引用会在.git/refs下新生成，不会更改packed-refs文件。</p><ul><li>原有的refs消失了</li><li>查看文件内容<ul><li>每一行内容，hash对应refs</li><li>最后一行以^开头，说明其上一行是tag对象，最后一行代表上一行tag对象指向的commit hash</li></ul></li></ul><pre><code>$ find .git/refs/ -type f          
+$ cat .git/packed-refs
+# pack-refs with: peeled fully-peeled                                                                    
+409eed957ae86ad7a1ef1eb0ea4a299395d4457d refs/heads/dev                                                  
+f15d0db34f6043bf79800105cb7fbf9abd7074fa refs/heads/master                                               
+f15d0db34f6043bf79800105cb7fbf9abd7074fa refs/remotes/origin/master                                      
+409eed957ae86ad7a1ef1eb0ea4a299395d4457d refs/tags/v1.0                                                  
+d879e38d57885a2728e0fd7281c1c1ff701b5042 refs/tags/v1.1                                                  
+^409eed957ae86ad7a1ef1eb0ea4a299395d4457d  
+</code></pre><p>使用packed-refs文件，是为了效率。
+因为为了获取指定引用的hash值，git会先在refs中查找，再到packed-refs文件中查找，
+而不是再解析packfile去查找。</p><h2 id=infopack>info/pack</h2><p>TODO，虽然文件内容很简单，但是不清楚这个文件的准确作用，没有找到官方文档记载</p><ul><li>查看文件内容</li></ul><pre><code>$ cat .git/objects/info/packs 
+P pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack
+</code></pre><p>看内容的话，像是只用于记录已打包的包文件名。</p><p>如果你找到准确的文档记载，please tell me :)</p><h2 id=pack-file-index>pack file index</h2><p>packfile内部的结构是非常有意思的，详细参阅 <a href=https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-format.txt>官方文档</a></p><p>在pack过程中，除了生成packfile，同时会生成pack index文件。同packed-refs一样，pack index
+也是为了效率，可以快速定位packfile中所需要的对象。</p><ul><li>verify-pack底层命令可用于解析pack index file。一共11个对象，同pack前是一致的。
+verify-pack的输出分为5列：<ul><li>对象hash</li><li>对象类型</li><li>对象解压后大小</li><li>对象在packfile中的大小</li><li>对象在packfile中的起始偏移位置</li></ul></li><li>最后一行输出，“非 delta”，说明packfile中没有存储delta。delta也是一个比较复杂的话题，后面再研究</li></ul><pre><code>$ git verify-pack -v .git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx
+f15d0db34f6043bf79800105cb7fbf9abd7074fa commit 241 165 12
+ade93a829fdc058506eab8511e3925ce588bde2d commit 239 161 177
+409eed957ae86ad7a1ef1eb0ea4a299395d4457d commit 181 124 338
+d879e38d57885a2728e0fd7281c1c1ff701b5042 tag    150 134 462
+6a04ac96c2dd07c1c034c575a17be4deef9f9970 tree   66 77 596
+016a4b40ad7446aa80fc5967fdbcbb9e93ad563a tree   34 45 673
+d1419c98aa74222a057e961b65935e67398129bf tree   66 76 718
+5e35decc375ba1d3d14511b6341f2827943aa42f tree   36 47 794
+b1d1b69671a4d54e36adbfec34d268aeeb997164 blob   32 42 841
+9b130982db52fca0d9c7bdeacf62800794cc3c06 blob   50 55 883
+ce616eb8c060404bb253822921a12aab81ed1ae0 blob   11 20 938
+非 delta：11 个对象
+.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack: ok
+</code></pre><ul><li>查看pack index本身，输出内容有些长，be patient</li></ul><pre><code>$ hexdump -C .git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx 
+00000000  ff 74 4f 63 00 00 00 02  00 00 00 00 00 00 00 01  |.tOc............|
+00000010  00 00 00 01 00 00 00 01  00 00 00 01 00 00 00 01  |................|
+*
+00000100  00 00 00 01 00 00 00 01  00 00 00 02 00 00 00 02  |................|
+00000110  00 00 00 02 00 00 00 02  00 00 00 02 00 00 00 02  |................|
+*
+00000180  00 00 00 03 00 00 00 03  00 00 00 03 00 00 00 03  |................|
+*
+000001b0  00 00 00 04 00 00 00 04  00 00 00 04 00 00 00 04  |................|
+*
+00000270  00 00 00 04 00 00 00 05  00 00 00 05 00 00 00 05  |................|
+00000280  00 00 00 05 00 00 00 05  00 00 00 05 00 00 00 05  |................|
+*
+000002b0  00 00 00 05 00 00 00 05  00 00 00 05 00 00 00 06  |................|
+000002c0  00 00 00 06 00 00 00 06  00 00 00 06 00 00 00 07  |................|
+000002d0  00 00 00 07 00 00 00 07  00 00 00 07 00 00 00 07  |................|
+*
+00000340  00 00 00 08 00 00 00 08  00 00 00 08 00 00 00 09  |................|
+00000350  00 00 00 09 00 00 00 09  00 00 00 09 00 00 00 09  |................|
+00000360  00 00 00 09 00 00 00 09  00 00 00 0a 00 00 00 0a  |................|
+00000370  00 00 00 0a 00 00 00 0a  00 00 00 0a 00 00 00 0a  |................|
+*
+000003c0  00 00 00 0a 00 00 00 0a  00 00 00 0a 00 00 00 0b  |................|
+000003d0  00 00 00 0b 00 00 00 0b  00 00 00 0b 00 00 00 0b  |................|
+*
+00000400  00 00 00 0b 00 00 00 0b  01 6a 4b 40 ad 74 46 aa  |.........jK@.tF.|
+00000410  80 fc 59 67 fd bc bb 9e  93 ad 56 3a 40 9e ed 95  |..Yg......V:@...|
+00000420  7a e8 6a d7 a1 ef 1e b0  ea 4a 29 93 95 d4 45 7d  |z.j......J)...E}|
+00000430  5e 35 de cc 37 5b a1 d3  d1 45 11 b6 34 1f 28 27  |^5..7[...E..4.('|
+00000440  94 3a a4 2f 6a 04 ac 96  c2 dd 07 c1 c0 34 c5 75  |.:./j........4.u|
+00000450  a1 7b e4 de ef 9f 99 70  9b 13 09 82 db 52 fc a0  |.{.....p.....R..|
+00000460  d9 c7 bd ea cf 62 80 07  94 cc 3c 06 ad e9 3a 82  |.....b....&lt;...:.|
+00000470  9f dc 05 85 06 ea b8 51  1e 39 25 ce 58 8b de 2d  |.......Q.9%.X..-|
+00000480  b1 d1 b6 96 71 a4 d5 4e  36 ad bf ec 34 d2 68 ae  |....q..N6...4.h.|
+00000490  eb 99 71 64 ce 61 6e b8  c0 60 40 4b b2 53 82 29  |..qd.an..`@K.S.)|
+000004a0  21 a1 2a ab 81 ed 1a e0  d1 41 9c 98 aa 74 22 2a  |!.*......A...t&quot;*|
+000004b0  05 7e 96 1b 65 93 5e 67  39 81 29 bf d8 79 e3 8d  |.~..e.^g9.)..y..|
+000004c0  57 88 5a 27 28 e0 fd 72  81 c1 c1 ff 70 1b 50 42  |W.Z'(..r....p.PB|
+000004d0  f1 5d 0d b3 4f 60 43 bf  79 80 01 05 cb 7f bf 9a  |.]..O`C.y.......|
+000004e0  bd 70 74 fa 2c 66 bb 82  0c ff 79 90 ce 00 7b 86  |.pt.,f....y...{.|
+000004f0  b9 6f 6a bd ac d3 e5 f9  25 29 01 fa af 5e b3 e0  |.oj.....%)...^..|
+00000500  61 73 a7 c1 a8 56 9c af  04 55 c6 f8 f0 2e 58 76  |as...V...U....Xv|
+00000510  00 00 02 a1 00 00 01 52  00 00 03 1a 00 00 02 54  |.......R.......T|
+00000520  00 00 03 73 00 00 00 b1  00 00 03 49 00 00 03 aa  |...s.......I....|
+00000530  00 00 02 ce 00 00 01 ce  00 00 00 0c 74 05 8f fa  |............t...|
+00000540  32 d6 4f 25 25 e6 9a ef  0f df 5b a3 f9 5e 24 df  |2.O%%.....[..^$.|
+00000550  a5 74 df 44 c3 8a e3 5d  83 8c 9e 93 c8 e2 34 f2  |.t.D...]......4.|
+00000560  ec 72 9f 78                                       |.r.x|
+00000564
+</code></pre><p>同之前讲到的，pack index并不存储对象，只是为了更方便的在packfile中索引对象。</p><p>一图胜千言，借用 <a href=http://shafiulazam.com/gitbook/7_the_packfile.html%0A>git community book 的插图</a></p><figure><img src=images/git-packfile-index-structure.jpg alt="图解pack index file存储结构"><figcaption><p>图解pack index file存储结构</p></figcaption></figure><p>index file一般都使用version 2，对照上面index file内容，逐字节解析：</p><ul><li>4byte：ff 74 4f 63，magic number</li><li>4byte：00 00 00 02，标明版本号</li><li>256*4byte：fanout table，很有趣的结构，下面单独章节说明，00：8 - 400：8</li><li>对象个数*20byte：所有对象的hash值，按ascii排序。400：8 - 4e0：4部分，11个SHA1顺序排列</li><li>对象个数*4byte：在packfile中每个对象的crc checksums。4e0：4 - 510：0</li><li>对象个数*4byte：在packfile中每个对象的起始偏移位置。510：0 - 530：c</li><li>0byte：只有packfile大小超过2G才会存在，这里不追究</li><li>2*20byte： packfile SHA1与pack index file SHA1。530：c - end</li></ul><h3 id=fanout-table>fanout table</h3><p>pack file index存储结构一目了然，其它块表示的意思很明确。
+fanout table不是一行可以讲完的，这里单独分出一个章节来。</p><p>fanout table的作用也是在于提高查询效率，用于在pack index file中快速查询SHA1。
+下面来详细解析下它是如何做到这一点的。</p><ul><li>单独截取pack index file中fanout table部分</li><li>单独截取对象SHA1列表部分</li></ul><pre><code>$ dd status=none ibs=1 skip=$((0x08)) count=$((0x400)) if=.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx | hexdump -C
+00000000  00 00 00 00 00 00 00 01  00 00 00 01 00 00 00 01  |................|
+00000010  00 00 00 01 00 00 00 01  00 00 00 01 00 00 00 01  |................|
+*
+00000100  00 00 00 02 00 00 00 02  00 00 00 02 00 00 00 02  |................|
+*
+00000170  00 00 00 02 00 00 00 02  00 00 00 03 00 00 00 03  |................|
+00000180  00 00 00 03 00 00 00 03  00 00 00 03 00 00 00 03  |................|
+*
+000001a0  00 00 00 03 00 00 00 03  00 00 00 04 00 00 00 04  |................|
+000001b0  00 00 00 04 00 00 00 04  00 00 00 04 00 00 00 04  |................|
+*
+00000260  00 00 00 04 00 00 00 04  00 00 00 04 00 00 00 05  |................|
+00000270  00 00 00 05 00 00 00 05  00 00 00 05 00 00 00 05  |................|
+*
+000002b0  00 00 00 05 00 00 00 06  00 00 00 06 00 00 00 06  |................|
+000002c0  00 00 00 06 00 00 00 07  00 00 00 07 00 00 00 07  |................|
+000002d0  00 00 00 07 00 00 00 07  00 00 00 07 00 00 00 07  |................|
+*
+00000330  00 00 00 07 00 00 00 07  00 00 00 08 00 00 00 08  |................|
+00000340  00 00 00 08 00 00 00 09  00 00 00 09 00 00 00 09  |................|
+00000350  00 00 00 09 00 00 00 09  00 00 00 09 00 00 00 09  |................|
+00000360  00 00 00 0a 00 00 00 0a  00 00 00 0a 00 00 00 0a  |................|
+*
+000003c0  00 00 00 0a 00 00 00 0b  00 00 00 0b 00 00 00 0b  |................|
+000003d0  00 00 00 0b 00 00 00 0b  00 00 00 0b 00 00 00 0b  |................|
+*
+00000400
+$ dd status=none ibs=1 skip=$((0x400+0x08)) count=$((0x0b*20)) if=.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx | hexdump -C
+00000000  01 6a 4b 40 ad 74 46 aa  80 fc 59 67 fd bc bb 9e  |.jK@.tF...Yg....|
+00000010  93 ad 56 3a 40 9e ed 95  7a e8 6a d7 a1 ef 1e b0  |..V:@...z.j.....|
+00000020  ea 4a 29 93 95 d4 45 7d  5e 35 de cc 37 5b a1 d3  |.J)...E}^5..7[..|
+00000030  d1 45 11 b6 34 1f 28 27  94 3a a4 2f 6a 04 ac 96  |.E..4.('.:./j...|
+00000040  c2 dd 07 c1 c0 34 c5 75  a1 7b e4 de ef 9f 99 70  |.....4.u.{.....p|
+00000050  9b 13 09 82 db 52 fc a0  d9 c7 bd ea cf 62 80 07  |.....R.......b..|
+00000060  94 cc 3c 06 ad e9 3a 82  9f dc 05 85 06 ea b8 51  |..&lt;...:........Q|
+00000070  1e 39 25 ce 58 8b de 2d  b1 d1 b6 96 71 a4 d5 4e  |.9%.X..-....q..N|
+00000080  36 ad bf ec 34 d2 68 ae  eb 99 71 64 ce 61 6e b8  |6...4.h...qd.an.|
+00000090  c0 60 40 4b b2 53 82 29  21 a1 2a ab 81 ed 1a e0  |.`@K.S.)!.*.....|
+000000a0  d1 41 9c 98 aa 74 22 2a  05 7e 96 1b 65 93 5e 67  |.A...t&quot;*.~..e.^g|
+000000b0  39 81 29 bf d8 79 e3 8d  57 88 5a 27 28 e0 fd 72  |9.)..y..W.Z'(..r|
+000000c0  81 c1 c1 ff 70 1b 50 42  f1 5d 0d b3 4f 60 43 bf  |....p.PB.]..O`C.|
+000000d0  79 80 01 05 cb 7f bf 9a  bd 70 74 fa              |y........pt.|
+000000dc
+</code></pre><ul><li>SHA1列表每20byte为一项，共11项，对应11个对象</li><li>fanout table每4byte为一项，共256项<ul><li>第1项，代表所有SHA1中以 01 开始的最小的SHA1在SHA1列表中的索引值。00 00 00 00 表示索引值为0，对应SHA1列表中的
+016a4b40ad7446aa80fc5967fdbcbb9e93ad563a。为什么不是代表以 00 开始的SHA1呢？因为 00 开始的最小的SHA1无论是否存在，必定
+是从索引值0开始的，不需要存储</li><li>第2项，代表所有SHA1中以 02 开始的最小的SHA1在SHA1列表中的索引值。00 00 00 01 表示索引值为1，因为索引0已经存储1个 01 开始SHA1，
+所以 02 开始的SHA1至少从索引1开始。而索引1对应SHA1列表中的409eed957ae86ad7a1ef1eb0ea4a299395d4457d，以 40 而非以 02 开始，所以
+不存在SHA1以 02 为起始的对象</li><li>第3项，代表所有SHA1中以 03 开始的最小的SHA1在SHA1列表中的索引值。00 00 00 01，理解同上，不存在SHA1以 03 起始的对象</li><li>&mldr;&mldr;&mldr;&mldr;..</li><li>第255项，代表所有SHA1中以 ff 开始的最小的SHA1在SHA1列表中的索引值。00 00 00 0b，已经超出了SHA1表的范围，所以不存在 ff 起始的SHA1</li><li>第256项，代表所有对象的个数。00 00 00 0b，共11个对象。第256项代表的索引总是超出SHA1表且指向SHA1表的末尾</li></ul></li></ul><p>所以在查询一个SHA1值，比如 29afa901，先在fanout table找到 29 对应的索引，再找到 2a 对应的索引，所查找的SHA1必定在这两个索引之间。
+如果两个索引相同，说明SHA1不存在于index file中；如果不相同，用二分法查找SHA1，非常快速。</p><p>这就是fanout table提高查询效率的方式。</p><h2 id=pack-file>pack file</h2><p>pack index file存储对象的SHA1，crc等信息，packfile存储对象的内容。</p><ul><li>查看packfile内容，输出内容过多，中间部分用&mldr;&mldr;.省略输出</li></ul><pre><code>$ hexdump -C .git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack 
+00000000  50 41 43 4b 00 00 00 02  00 00 00 0b 91 0f 78 9c  |PACK..........x.|
+00000010  9d cc 41 6a c3 30 10 46  e1 bd 4e a1 7d 21 8c 6c  |..Aj.0.F..N.}!.l|
+00000020  8f 25 95 50 52 f0 45 c6  33 bf 88 69 65 07 a1 06  |.%.PR.E.3..ie...|
+00000030  7a fb f8 0c d9 bd cd f7  7a 03 fc 2c 34 89 e6 59  |z.......z..,4..Y|
+..............................................................................
+..............................................................................
+..............................................................................
+..............................................................................
+00000390  9c 32 4d 85 6a 2e 05 20  28 4a 2d 29 2d ca 53 30  |.2M.j.. (J-)-.S0|
+000003a0  b0 e6 aa e5 02 00 a4 a5  0f 59 3b 78 9c 53 56 c8  |.........Y;x.SV.|
+000003b0  4d cc 4e 4d cb cc 49 e5  02 00 14 ae 03 8c 74 05  |M.NM..I.......t.|
+000003c0  8f fa 32 d6 4f 25 25 e6  9a ef 0f df 5b a3 f9 5e  |..2.O%%.....[..^|
+000003d0  24 df                                             |$.|
+000003d2
+</code></pre><p>packfile的格式非常简单清晰，同样借用 <a href=http://shafiulazam.com/gitbook/7_the_packfile.html%0A>git community book 插图</a></p><figure><img src=images/git-packfile-structure.jpg alt=图解packfile格式><figcaption><p>图解packfile格式</p></figcaption></figure><ul><li>4byte： PACK 4个字符</li><li>4byte： 版本号</li><li>4byte： 存储对象的个数，00 00 00 0b，11个对象</li><li>objects，所有对象内容列表：<ul><li>head info，占用多少byte不固定，取决于每个byte的第1个bit:<ul><li>1byte： 0x91 => 1001 0001<ul><li>1bit： 如果为1，说明其后的1个byte还是head部分；如果为0，说明其后的byte就是对象数据。这里为1</li><li>3bit： 标明对象的类型， 001 标明对象为 commit</li><li>4bit： 对象解压缩后字节大小（需要多部分组合计算）</li></ul></li><li>1byte： 0x0f => 0000 1111，因为上一个byte 第1bit为1，所以这个byte也属于head的一部分<ul><li>1bit： 如果为1，说明其后的1个byte还是head部分；如果为0，说明其后的byte就是对象数据。这里为0</li><li>7bit： 对象解压缩后字节大小（需要多部分组合计算）</li></ul></li></ul></li><li>data，对象压缩内容</li></ul></li></ul><p>借用图解来解释head部分对象解压缩大小的计算，thanks <a href=http://shafiulazam.com/gitbook/7_the_packfile.html%0A>git community book</a></p><figure><img src=images/git-packfile-object-head-structure.jpg alt=如何计算对象size><figcaption><p>如何计算对象size</p></figcaption></figure><ul><li>第一个byte低4bit，为对象解压缩size的最低4bit</li><li>其后每个byte的低7bit，按照移位规则，最终组合成的数字代表对象解压缩的size数值</li></ul><p>接下来从packfile中提取压缩对象</p><ul><li>从packfile index中，提取出所有对象在packfile中的偏移信息。最后一个对象的偏移最小，0x0c，对应SHA1列表中的最后一个，f15d0db34f6043bf79800105cb7fbf9abd7074fa</li><li>上面讲到，head之后才是属于对象内容，那对象内容的大小是多少？并没有告诉我们。这里先在所有对象偏移信息中，找到
+第2小的偏移，0xb1，可以认定从0x0c - 0xb1中的内容，就是压缩对象的内容。果不其然，解压出一个commit对象</li></ul><pre><code>$ dd status=none ibs=1 skip=$((0x400+0x08+0x0b*20+0x0b*4)) count=$((0x0b*4)) if=.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx | hexdump -C
+00000000  00 00 02 a1 00 00 01 52  00 00 03 1a 00 00 02 54  |.......R.......T|
+00000010  00 00 03 73 00 00 00 b1  00 00 03 49 00 00 03 aa  |...s.......I....|
+00000020  00 00 02 ce 00 00 01 ce  00 00 00 0c              |............|
+0000002c
+$ dd status=none ibs=1 skip=$((0x0c+2)) count=$((0xb1-0x0c-2)) if=.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack | pigz -d | hexdump -C
+00000000  74 72 65 65 20 36 61 30  34 61 63 39 36 63 32 64  |tree 6a04ac96c2d|
+00000010  64 30 37 63 31 63 30 33  34 63 35 37 35 61 31 37  |d07c1c034c575a17|
+00000020  62 65 34 64 65 65 66 39  66 39 39 37 30 0a 70 61  |be4deef9f9970.pa|
+00000030  72 65 6e 74 20 61 64 65  39 33 61 38 32 39 66 64  |rent ade93a829fd|
+00000040  63 30 35 38 35 30 36 65  61 62 38 35 31 31 65 33  |c058506eab8511e3|
+00000050  39 32 35 63 65 35 38 38  62 64 65 32 64 0a 61 75  |925ce588bde2d.au|
+00000060  74 68 6f 72 20 44 72 65  61 6d 41 6e 64 44 65 61  |thor DreamAndDea|
+00000070  64 20 3c 66 61 76 6f 72  6f 66 69 66 65 40 79 65  |d &lt;favorofife@ye|
+00000080  61 68 2e 6e 65 74 3e 20  31 35 31 35 30 35 37 30  |ah.net&gt; 15150570|
+00000090  38 38 20 2b 30 38 30 30  0a 63 6f 6d 6d 69 74 74  |88 +0800.committ|
+000000a0  65 72 20 44 72 65 61 6d  41 6e 64 44 65 61 64 20  |er DreamAndDead |
+000000b0  3c 66 61 76 6f 72 6f 66  69 66 65 40 79 65 61 68  |&lt;favorofife@yeah|
+000000c0  2e 6e 65 74 3e 20 31 35  31 35 30 35 37 30 38 38  |.net&gt; 1515057088|
+000000d0  20 2b 30 38 30 30 0a 0a  6d 61 6b 65 66 69 6c 65  | +0800..makefile|
+000000e0  3a 20 63 6f 6d 70 69 6c  65 20 6d 61 69 6e 2e 63  |: compile main.c|
+000000f0  0a                                                |.|
+000000f1
+</code></pre><p>这里存在一个疑问，如果只能确定对象在packfile中的偏移，不能确定对象在packfile中的大小，如果每次都像上面的做法一样，找到其次的偏移再进行减法，
+无疑是非常低效的。</p><p>事实上，对象内容的范围由zlib压缩算法就可以确定。</p><ul><li>比如我们从对象偏移处截取的数据多于对象本身（250byte），再进行解压缩，
+最后还是解析出了对象，不过pigz stderr输出了warnning信息，trailing junk，说明多余的数据并没有参与解压运算。</li></ul><pre><code>$ dd status=none ibs=1 skip=$((0x0c+2)) count=250 if=.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack | pigz -d | hexdump -C
+00000000  74 72 65 65 20 36 61 30  34 61 63 39 36 63 32 64  |tree 6a04ac96c2d|
+00000010  64 30 37 63 31 63 30 33  34 63 35 37 35 61 31 37  |d07c1c034c575a17|
+00000020  62 65 34 64 65 65 66 39  66 39 39 37 30 0a 70 61  |be4deef9f9970.pa|
+00000030  72 65 6e 74 20 61 64 65  39 33 61 38 32 39 66 64  |rent ade93a829fd|
+pigz: &lt;stdin&gt; OK, has trailing junk which was ignored00000040  63 30 35 38 35 30 36 65  61 62 38 35 31 31 65 33  |c058506eab8511e3|
+
+00000050  39 32 35 63 65 35 38 38  62 64 65 32 64 0a 61 75  |925ce588bde2d.au|
+00000060  74 68 6f 72 20 44 72 65  61 6d 41 6e 64 44 65 61  |thor DreamAndDea|
+00000070  64 20 3c 66 61 76 6f 72  6f 66 69 66 65 40 79 65  |d &lt;favorofife@ye|
+00000080  61 68 2e 6e 65 74 3e 20  31 35 31 35 30 35 37 30  |ah.net&gt; 15150570|
+00000090  38 38 20 2b 30 38 30 30  0a 63 6f 6d 6d 69 74 74  |88 +0800.committ|
+000000a0  65 72 20 44 72 65 61 6d  41 6e 64 44 65 61 64 20  |er DreamAndDead |
+000000b0  3c 66 61 76 6f 72 6f 66  69 66 65 40 79 65 61 68  |&lt;favorofife@yeah|
+000000c0  2e 6e 65 74 3e 20 31 35  31 35 30 35 37 30 38 38  |.net&gt; 1515057088|
+000000d0  20 2b 30 38 30 30 0a 0a  6d 61 6b 65 66 69 6c 65  | +0800..makefile|
+000000e0  3a 20 63 6f 6d 70 69 6c  65 20 6d 61 69 6e 2e 63  |: compile main.c|
+000000f0  0a                                                |.|
+000000f1
+</code></pre><p>可以确定，只需要对象数据的开始，就可以解压缩出对象本身。至于具体压缩大小是如何计算的，我还不得而知。Please inform me if you know how :)</p><h2 id=delta-in-pack-file>delta in pack file</h2><p>前面解读了packfile中内容，所有对象经过zlib压缩，排列在一起，聚合为packfile。好像没什么新鲜的，因为每个松散对象
+也是经过zlib压缩的，packfile好像不过是把大家聚集在一个文件中而已，并没有带来什么空间利用率上的提升。</p><p>这也是为什么需要delta机制的原因，delta是packfile得以压缩空间的关键所在。packfile采用了一种名为delta compression的机制，
+将多个对象中重复部分单独存储，其它部分差量存储。</p><p>先来构建一个可以产生delta的环境。</p><ul><li>编译main.c，生成a.out可执行文件</li><li>添加a.out</li><li>创建新的commit</li></ul><pre><code>$ make
+$ git add .
+$ git commit -m 'add a.out binary file'
+[master 3d58afd] add a.out binary file
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100755 a.out
+</code></pre><ul><li>强制在a.out文件后续添加9个字符（包括0x0a）。a.out有8k的大小，9个字符相对其来说不值一提。
+两个文件有8k内容是相同的，只有9个字符的区别，如果将两个文件分别全部存储，那就有8k的冗余数据啊</li><li>添加新的a.out</li><li>创建新commit</li><li>再次执行pack，输出和之前不同的在 Total 17 (delta 1)，有一个差量存储（果不其然，生成了delta）</li><li>生成了新的packfile，同之前的不同</li></ul><pre><code>$ echo '12345678' &gt;&gt; a.out
+$ git add .
+$ git commit -m 'add trailing junk to a.out'
+[master cfaf867] add trailing junk to a.out
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+$ git gc
+对象计数中: 17, 完成.
+Delta compression using up to 8 threads.
+压缩对象中: 100% (13/13), 完成.
+写入对象中: 100% (17/17), 完成.
+Total 17 (delta 1), reused 11 (delta 0)
+$ find .git/objects/ -type f
+.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.idx
+.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack
+.git/objects/info/packs
+</code></pre><ul><li>先来找到两个版本a.out的blob SHA1值<ul><li>git log，最新的两个commit包含a.out文件</li><li>最新commit包含的a.out blob SHA1为 0a323ebc526b357580590d6d7a884d1dd473321b，对应的为append多余字符的a.out</li><li>parent commit包含的a.out blob SHA1为 0ec8e3e23234ba10a9822951812ba37f391da114，对应的是make生成的a.out</li></ul></li><li>再次执行verify-pack来解析下packfile，有一行的输出比较特别，有7列内容<ul><li>前5列同之前的解析是相同的</li><li>第6列，delta chain的深度，TODO，具体不清楚其含义</li><li>第7列，delta对应的base对象SHA1。delta要构建在base对象上，才可以生成新的对象</li></ul></li></ul><pre><code>$ git log --oneline
+cfaf867 add trailing junk to a.out
+3d58afd add a.out binary file
+f15d0db makefile: compile main.c
+ade93a8 add main.c source file
+409eed9 first commit
+$ git ls-tree -tr cfaf867
+100755 blob 0a323ebc526b357580590d6d7a884d1dd473321b    a.out
+100644 blob b1d1b69671a4d54e36adbfec34d268aeeb997164    makefile
+040000 tree 016a4b40ad7446aa80fc5967fdbcbb9e93ad563a    src
+100644 blob 9b130982db52fca0d9c7bdeacf62800794cc3c06    src/main.c
+$ git ls-tree -tr 3d58afd
+100755 blob 0ec8e3e23234ba10a9822951812ba37f391da114    a.out
+100644 blob b1d1b69671a4d54e36adbfec34d268aeeb997164    makefile
+040000 tree 016a4b40ad7446aa80fc5967fdbcbb9e93ad563a    src
+100644 blob 9b130982db52fca0d9c7bdeacf62800794cc3c06    src/main.c
+$ git verify-pack -v .git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.idx
+cfaf8679609f0d2bce01944f58b509db50d371a0 commit 243 167 12
+3d58afd50b5b4211be1850255a3411dd2cc70bae commit 238 160 179
+f15d0db34f6043bf79800105cb7fbf9abd7074fa commit 241 165 339
+ade93a829fdc058506eab8511e3925ce588bde2d commit 239 161 504
+409eed957ae86ad7a1ef1eb0ea4a299395d4457d commit 181 124 665
+d879e38d57885a2728e0fd7281c1c1ff701b5042 tag    150 134 789
+c0649f8482ba4535cb5b662757bd81018b3c21e4 tree   99 110 923
+016a4b40ad7446aa80fc5967fdbcbb9e93ad563a tree   34 45 1033
+9d82ecb86dcde3221b4815505d185791a1a657c7 tree   99 112 1078
+6a04ac96c2dd07c1c034c575a17be4deef9f9970 tree   66 77 1190
+d1419c98aa74222a057e961b65935e67398129bf tree   66 76 1267
+5e35decc375ba1d3d14511b6341f2827943aa42f tree   36 47 1343
+0a323ebc526b357580590d6d7a884d1dd473321b blob   8561 2331 1390
+0ec8e3e23234ba10a9822951812ba37f391da114 blob   7 18 3721 1 0a323ebc526b357580590d6d7a884d1dd473321b
+b1d1b69671a4d54e36adbfec34d268aeeb997164 blob   32 42 3739
+9b130982db52fca0d9c7bdeacf62800794cc3c06 blob   50 55 3781
+ce616eb8c060404bb253822921a12aab81ed1ae0 blob   11 20 3836
+非 delta：16 个对象
+链长 = 1: 1 对象
+.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack: ok
+</code></pre><p>这里有个疑问，0ec8对应的是make生成的a.out，0a32对应的是append字符的a.out。为什么0a32是base，0ec8不是base？
+这样做可能还是因为效率，因为最新的对象，被引用的机率要大于历史对象，将最新的a.out完整存储，方便快速取出对象。</p><p>下面根据verify-pack输出的偏移值，来仔细查看base与delta</p><ul><li>base对象的前16个字节，0xb1 97 04，head info占用了3个字节</li><li>3个字节之后就是base a.out blob的内容。内容过长，中间用&mldr;&mldr;..省略</li><li>delta对象偏移的前16个字节<ul><li>0x67 => 0110 0111<ul><li>0 表示 后续字节不属于head信息</li><li>110 表示 存储类型为 OBJ_OFS_DELTA</li><li>0111 表示 存储数据解压后大小为 7 字节</li></ul></li><li>0x91 1b，解析为一个负的offset值 => 1001 0001 0001 1011<ul><li>1 表示后续字节为offset字段的一部分</li><li>001 0001， offset的一部分，需组合计算，运算规则同对象size的计算，同样的应用移位</li><li>0 表示后续字节为delta数据部分</li><li>001 1011，offset的一部分，需组合计算，运算规则同对象size的计算，同样的应用移位</li><li>组合offset的内容为 00 1101 1001 0001 => 0xd91</li></ul></li><li>delta data，用zlib解压缩，内容为 0xf1 42 e8 42 b0 68 21</li></ul></li></ul><pre><code>$ dd status=none ibs=1 skip=$((1390)) if=.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack | hexdump -C | head -n 1
+00000000  b1 97 04 78 9c ed 59 6f  6c 5b 57 15 bf cf ce df  |...x..Yol[W.....|
+$ dd status=none ibs=1 skip=$((1390+3)) if=.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack | pigz -d | hexdump -C
+00000000  7f 45 4c 46 02 01 01 00  00 00 00 00 00 00 00 00  |.ELF............|
+00000010  02 00 3e 00 01 00 00 00  e0 03 40 00 00 00 00 00  |..&gt;.......@.....|
+pigz: 00000020  40 00 00 00 00 00 00 00  a8 19 00 00 00 00 00 00  |@...............|
+&lt;stdin&gt; OK, has trailing junk which was ignored
+00000030  00 00 00 00 40 00 38 00  09 00 40 00 1f 00 1c 00  |....@.8...@.....|
+00000040  06 00 00 00 05 00 00 00  40 00 00 00 00 00 00 00  |........@.......|
+00000050  40 00 40 00 00 00 00 00  40 00 40 00 00 00 00 00  |@.@.....@.@.....|
+..............................................................................
+..............................................................................
+..............................................................................
+00002140  98 16 00 00 00 00 00 00  01 02 00 00 00 00 00 00  |................|
+00002150  00 00 00 00 00 00 00 00  01 00 00 00 00 00 00 00  |................|
+00002160  00 00 00 00 00 00 00 00  31 32 33 34 35 36 37 38  |........12345678|
+00002170  0a                                                |.|
+00002171
+$ dd status=none ibs=1 skip=$((3721)) if=.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack | hexdump -C | head -n 1
+00000000  67 91 1b 78 9c fb e8 f4  c2 69 43 86 22 00 10 bb  |g..x.....iC.&quot;...|
+$ dd status=none ibs=1 skip=$((3721+3)) if=.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack | pigz -d | hexdump -C
+pigz: &lt;stdin&gt; OK, has trailing junk which was ignored
+00000000  f1 42 e8 42 b0 68 21                              |.B.B.h!|
+00000007
+</code></pre><p>可见两个版本的a.out并没有存储两份，delta部分数据量尤其的小，节省了50%的空间。</p><p>不幸的是，虽然按照 <a href=https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-format.txt#L112>官方文档</a> 的方式解开了OBJ_OFS_DELTA的内容，
+但是我却不知道如何解读，这方面并没有详细的记载，只有找到唯一 <a href=https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-heuristics.txt>官方又有些诙谐的文档</a> ，可以读一下，very funny。</p><p>希望后续有时间深入源码，再来详细的解释delta(dark corner of git)部分。</p><hr width=100% id=EOF><p style=color:#777>Last modified on 2018-01-03</p></div></div><nav class=post-pagination><a class=newer-posts href=https://dreamanddead.github.io/post/play-curl-with-http/>Next<br>Play curl with http</a>
+<a class=older-posts href=https://dreamanddead.github.io/post/understanding-ssh-tunnel/>Previous<br>Understanding ssh port forwarding</a></nav><div class=post-comment-wrapper><div class=comments><vue-disqus shortname=dreamanddead></vue-disqus></div><noscript><noscript>Please activate JavaScript to view comments.</noscript></noscript><a href=https://disqus.com/ class=dsq-brlink>Comments powered by <span class=logo-disqus>Disqus</span></a></div></div></div></div></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+Attribution-NonCommercial-ShareAlike 4.0 International</div></div><script>let app;app=new Vue({el:'#app',data:{scrollY:0,navOpacity:0,isDrawerOpen:false,mounted:false,isDarkMode:false},methods:{sgn(t,x){let k=1./(1.-2*t);if(x<=t)return 0;else if(x>=1-t)return 1;else{return k*(x-t);}},handleScroll(){this.scrollY=window.scrollY;this.navOpacity=this.sgn(.0,Math.min(1,Math.max(0,window.scrollY/(this.pageHeadHeight()-this.navBarHeight()*0.8))));const{navBar,navBackground,navTitle,extraContainer,streamContainer}=this.$refs;if(this.navOpacity>=1){navBackground.style.opacity=1;navTitle.style.opacity=1;}else{navBackground.style.opacity=0;navTitle.style.opacity=0;}},handleResize(){const{navBar,navBackground,navTitle,extraContainer,streamContainer}=this.$refs;extraContainer.style.left=(streamContainer.offsetWidth-extraContainer.offsetWidth)+'px';},navBarHeight(){return this.$refs.navBar.offsetHeight;},pageHeadHeight(){return this.$refs.pageHead.offsetHeight;},toggleDrawer(){this.isDrawerOpen=!this.isDrawerOpen;document.getElementsByTagName('html')[0].style.overflow=this.isDrawerOpen?'hidden':'unset';},closeDrawer(){this.isDrawerOpen=false;document.getElementsByTagName('html')[0].style.overflow=this.isDrawerOpen?'hidden':'unset';},toggleDarkMode(){this.isDarkMode=!this.isDarkMode;if(this.isDarkMode==true){document.cookie="night=1;path=/";document.body.classList.add("night");}else{document.cookie="night=0;path=/";document.body.classList.remove("night");}}},created(){window.addEventListener('scroll',this.handleScroll);window.addEventListener('resize',this.handleResize);window._nonDesktop=function(){let check=false;(function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4)))check=true;})(navigator.userAgent||navigator.vendor||window.opera);return check;};var night=document.cookie.replace(/(?:(?:^|.*;\s*)night\s*\=\s*([^;]*).*$)|^.*$/,"$1");if(night==""){if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){}}else{if(night=="1"){this.toggleDarkMode();}}},mounted(){this.handleScroll();this.handleResize();this.mounted=true;},destroyed(){window.removeEventListener('scroll',this.handleScroll);window.removeEventListener('resize',this.handleResize);}});</script><script src=https://dreamanddead.github.io/js/journal.js></script></body></html>

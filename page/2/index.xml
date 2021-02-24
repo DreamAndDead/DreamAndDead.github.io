@@ -1,0 +1,1244 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Attribution-NonCommercial-ShareAlike 4.0 International</copyright><lastBuildDate>Mon, 26 Oct 2020 09:10:00 +0000</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>KD Tree</title><link>https://dreamanddead.github.io/post/kd-tree/</link><pubDate>Thu, 22 Aug 2019 15:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/kd-tree/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/kd-tree/ -&lt;p>之前了解学习了机器学习中的 KNN 算法，它的本质是从“已有经验”中找出最相似的案例，来“预测”新的未出现过的情况。&lt;/p>
+&lt;p>在 sklearn 的 KNN 算法描述中，其中提到使用 KD Tree 结构可以加速 nearest neighbors 的查找，从而提高 KNN 算法的效率。&lt;/p>
+&lt;p>这里就来讨论一下 KD Tree 数据结构。&lt;/p>
+&lt;h1 id="intro">intro&lt;/h1>
+&lt;p>KD Tree 的名字中，KD means k dimension，是用于描述 k 维空间的树形结构。
+在 k = 1 的情况下，整体退化为二叉搜索树。&lt;/p>
+&lt;p>同样的，KD Tree 也是二叉树形结构，不同在于，树的每一层对应一个分割维度，由当前层级的节点分割。
+随着树的层次越来越深，分割维度在全部维度之间循环。&lt;/p>
+&lt;p>和二叉搜索树类似，在 KD Tree 中，所有分割维度小于分割节点的节点，分布在左子树；否则分布在右子树。&lt;/p>
+&lt;figure>
+&lt;img src="images/kd-tree-intro.png"
+alt="2 dimension kd tree"/> &lt;figcaption>
+&lt;p>2 dimension kd tree&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>总体来看，KD Tree 无非就是将二叉搜索树从一维空间扩展到多维空间。&lt;/p>
+&lt;h1 id="methods">methods&lt;/h1>
+&lt;p>下面介绍 KD Tree 的一些元语方法，深层地理解它是如何使 KNN 得到搜索上的效率提升的。&lt;/p>
+&lt;h2 id="insert">insert&lt;/h2>
+&lt;p>根据 KD Tree 的结构定义，插入节点是一个明显的过程，就像二叉搜索树一样。&lt;/p>
+&lt;ul>
+&lt;li>如果不存在根节点，将插入节点作为根节点&lt;/li>
+&lt;li>在分割维度下，对比插入节点和根节点的值，如果小于，则递归插入左子树；否则递归插入右子树&lt;/li>
+&lt;/ul>
+&lt;p>在这个过程下，新插入的节点都会被插入到叶子处。&lt;/p>
+&lt;figure>
+&lt;img src="images/kd-tree-insert.png"
+alt="2 dimension kd tree insert"/> &lt;figcaption>
+&lt;p>2 dimension kd tree insert&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>我们可以用 insert 方法来构建 KD Tree，只需要将所有数据顺序插入即可。&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/kd-tree-example/blob/f05161dd86486fe673e6615a4477e630cf8b80c4/kdtree.py?footer=minimal&amp;slice=116:139">&lt;/script>
+&lt;h2 id="contain">contain&lt;/h2>
+&lt;p>查找 KD Tree 是否包含特定节点，查询方法和插入节点是相同的。&lt;/p>
+&lt;ul>
+&lt;li>如果根节点不存在，则不包含&lt;/li>
+&lt;li>如果查询节点和根节点相同，则包含&lt;/li>
+&lt;li>在分割维度下，对比查询节点和根节点的值，如果小于，则递归在左子树查找；否则递归在右子树查找&lt;/li>
+&lt;/ul>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/kd-tree-example/blob/f05161dd86486fe673e6615a4477e630cf8b80c4/kdtree.py?footer=minimal&amp;slice=140:159">&lt;/script>
+&lt;h2 id="find_min">find_min&lt;/h2>
+&lt;p>find_min 的含义是，在 KD Tree 树中查找某一个维度值最小的节点。&lt;/p>
+&lt;figure>
+&lt;img src="images/kd-tree-example.png"
+alt="2 dimension kd tree"/> &lt;figcaption>
+&lt;p>2 dimension kd tree&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>比如之前的例子，在 x 维度最小的节点是 &lt;code>(1, 10)&lt;/code>，在 y 维度最小的节点是 &lt;code>(55, 1)&lt;/code>。&lt;/p>
+&lt;p>最简单的实现方法，我们将树整体遍历，用全局变量保存分割维度值最小的节点。&lt;/p>
+&lt;p>这个方法虽然可行，但可以更加高效。
+我们详细来分析，哪些情况下，可以进行剪枝，缩小整体搜索的规模。&lt;/p>
+&lt;p>假如现在要搜索 x 维度下的最小值，&lt;/p>
+&lt;figure>
+&lt;img src="images/find_min_x.png"
+alt="find min node in x dimension"/> &lt;figcaption>
+&lt;p>find min node in x dimension&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>同样地，我们用全局变量保存目前遇到的最小节点值。&lt;/p>
+&lt;p>最开始，从第一层开始搜索，&lt;code>(51, 75)&lt;/code>，对应的分割维度是 x ，刚好是要搜索的维度。
+根据 KD Tree 的结构定义，节点的右子树肯定都是 x 值比 &lt;code>(51, 75)&lt;/code> 大的节点，所以在这种情况下，根本不用搜索右子树（剪枝）。
+同时，如果存在左子树，其中的节点一定比当前根节点要小。&lt;/p>
+&lt;p>到了第二层，进入左子树，&lt;code>(25, 40)&lt;/code>，分割维度为 y 。
+在这个时候，没有依据判断，x 维度下的最小节点一定在左子树/右子树，所以无法剪枝，需要在两个子树下查找。&lt;/p>
+&lt;p>在第三层，&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>(10, 30)&lt;/code>，同样的，分割维度回到 x 维度，只在左子树查找最小值。&lt;/li>
+&lt;li>&lt;code>(35, 90)&lt;/code>，对应 x 维度，左子树为空，当前节点可以作为最小值的备选。&lt;/li>
+&lt;/ul>
+&lt;p>到下一层，&lt;code>(1, 10)&lt;/code>，对应 y 维度，但是左/右子树都为空，可以将当前节点作为备选。&lt;/p>
+&lt;p>综合这个过程，就可以找到任意分割维度下的最小值。&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/kd-tree-example/blob/f05161dd86486fe673e6615a4477e630cf8b80c4/kdtree.py?footer=minimal&amp;slice=160:187">&lt;/script>
+&lt;h2 id="delete">delete&lt;/h2>
+&lt;p>这个方法从树中删除对应的节点。如果树中包含节点，则删除；否则不影响。&lt;/p>
+&lt;p>删除节点的情况就更复杂一些，如果删除的是叶子节点，则直接删除。如果要删除的节点存在子树，则需要处理子树下的节点。&lt;/p>
+&lt;p>假如要删除 A 节点，对应的分割维度为 cd。&lt;/p>
+&lt;figure>
+&lt;img src="images/delete-with-two-subtrees.png"
+alt="delete node A in dimension cd"/> &lt;figcaption>
+&lt;p>delete node A in dimension cd&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>回想假如图中的树是二叉搜索树，在删除 A 之后，需要用 B = find_min(A.right) 来替换 A 的位置，再在右子树递归的删除 B 节点。
+这样即可以删除节点，又保证了树的平衡。&lt;/p>
+&lt;p>相似地，在 KD Tree 中，需要用 B = find_min(A.right, cd) 来替换 A 节点，再在右子树递归删除 B 节点。
+在 KD Tree 的结构中，在相应的分割维度下，右子树的节点&lt;strong>大于等于&lt;/strong>根节点，根节点&lt;strong>大于&lt;/strong>左子树的节点，所以上述的删除策略依旧可以保持树的平衡。&lt;/p>
+&lt;figure>
+&lt;img src="images/delete-without-right-subtree.png"
+alt="delete node A without right subtree"/> &lt;figcaption>
+&lt;p>delete node A without right subtree&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>假如没有右子树，我们模仿上面的策略，使用 B = find_max(A.left, cd) 来替换节点 A，这样不可行，因为可能会破坏树的平衡。&lt;/p>
+&lt;p>假设 A[cd] = x, find_max(A.left, cd) = a，但是根据定义，在左子树有可能存在一个节点 C，C[cd] = a，因为 a &amp;lt; x，在插入节点的时候也被分配到了 A 的左子树这边。
+这样的话，在用 B 替换 A 之后，因为 C 的存在，树就不平衡了。&lt;/p>
+&lt;p>在这种情况下，我们对方法做一些修正，使用 B = find_min(A.left, cd) 代替 A 的位置，再将左/右子树交换位置，这样就完美保持了树结构的平衡。&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/kd-tree-example/blob/f05161dd86486fe673e6615a4477e630cf8b80c4/kdtree.py?footer=minimal&amp;slice=188:216">&lt;/script>
+&lt;h2 id="find_nearest">find_nearest&lt;/h2>
+&lt;p>在 KD Tree 的所有节点中，寻找距离查询节点最近的节点（这里使用 euclidean 距离）。&lt;/p>
+&lt;p>和 find_min 一样，最直观的方法是遍历树的所有节点，用全局变量记录最小距离和距离最小的节点。
+这是直观且可行的，同样地，我们要思考分析如何提高搜索效率。&lt;/p>
+&lt;p>假定搜索节点为 Q，需要在 KD Tree 中找到离 Q 最近的点 C。&lt;/p>
+&lt;p>第一个方面，引入 bounding box 的概念。&lt;/p>
+&lt;figure>
+&lt;img src="images/kd-tree-bounding.png"
+alt="kd tree bounding box"/> &lt;figcaption>
+&lt;p>kd tree bounding box&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>每个节点都有一个对应的 bounding box（下面简称 BB），它的含义是表明当前节点以及其子节点所可能分布的一个范围。&lt;/p>
+&lt;p>来看图上的例子，对于根节点，&lt;code>(51, 75)&lt;/code>，BB 是整个 xy 平面，$x \in (-\infty, \infty), y \in (-\infty, \infty)$。&lt;/p>
+&lt;p>对于第二层节点 &lt;code>(25, 40)&lt;/code>，因为它处于根节点的左侧，由 x 维度分割而来，对应的 BB 为所有 $x &amp;lt; 51$ 的平面范围，$x \in (-\infty, 51), y \in (-\infty, \infty)$。&lt;/p>
+&lt;figure>
+&lt;img src="images/bounding-box-optimization.png"
+alt="bounding box optimization"/> &lt;figcaption>
+&lt;p>bounding box optimization&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>使用 BB 的核心在于，假如当前已知的最小距离小于查询节点到 BB 的距离，那么就可以进行剪枝。
+也就是说，当前遇到的最近节点是 C，如果遇到新节点，相应的 bounding box 不可能比 C 更近，就没有必要继续在新节点下进行搜索。&lt;/p>
+&lt;p>第二个方面，如果不能利用 BB 进行裁剪，则第一步先搜索 Q 可能在的子树，再搜索另外的子树。
+即如果在分割维度下，Q 比当前节点小，则先搜索左子树；否则先搜索右子树。&lt;/p>
+&lt;p>这样在概率上，更快的缩小全局已知的最小距离，在其它节点的查询更可能根据 BB 进行剪枝。&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/kd-tree-example/blob/f05161dd86486fe673e6615a4477e630cf8b80c4/kdtree.py?footer=minimal&amp;slice=222:260">&lt;/script>
+&lt;h2 id="find_k_nearest">find_k_nearest&lt;/h2>
+&lt;p>在 KD Tree 的所有节点中，找到距查询节点最近的 k 个节点（这里使用 euclidean 距离）。&lt;/p>
+&lt;p>这里用到的查询方法，和 find_nearest 是一样的，不同在于，我们使用一个优先队列存储前 k 个最近距离的节点。
+队列的优先级是节点与查询节点 Q 的距离，距离越小，优先级越高。队列有固定的大小，新插入队列的节点会“挤出”优先级更低的节点。&lt;/p>
+&lt;p>这里容易遗忘的一个要点是，只有当队列满的时候再进行 BB 的检测，不然会出现搜索节点数量不足的情况。&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/kd-tree-example/blob/f05161dd86486fe673e6615a4477e630cf8b80c4/kdtree.py?footer=minimal&amp;slice=261:297">&lt;/script>
+&lt;h1 id="ref">ref&lt;/h1>
+&lt;ul>
+&lt;li>thanks &lt;a href="https://www.cs.umd.edu/~mount/420/">CMSC 420 lesson&lt;/a>, most pictures are from its &lt;a href="https://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/kd-tree/KD-Trees-CMSC-420.pdf">lesson note&lt;/a>&lt;/li>
+&lt;li>thanks &lt;a href="https://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/kd-tree/assignment-3-kdtree.pdf">CS106 assignment in stanford&lt;/a>, from it we get how to do k nearest neighbors searching&lt;/li>
+&lt;/ul>- https://dreamanddead.github.io/post/kd-tree/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>How to Customize Keymap in Linux</title><link>https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/</link><pubDate>Mon, 12 Aug 2019 10:29:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/ -&lt;p>最近刚开始使用 emacs ，太多 Ctrl Alt 相关的快捷键，边侧的手指不舒服，于是想法将部分键盘按键进行改键。&lt;/p>
+&lt;p>如果 Caps Lock 可以作为 BackSpace，删除字符的时候就不需要右侧的小指离的太远。
+如果将 Menu 键改为 Ctrl，这样就可以用小指的指根来按压，方便进行快捷键操作。&lt;/p>
+&lt;p>针对这样的需求，开始在网上寻找相关改键的方案，搜索结果几乎一致统一的，在 Xorg 环境下，使用 xmodmap 来修改是最合适的。&lt;/p>
+&lt;h1 id="key-concept">key concept&lt;/h1>
+&lt;p>在开始之前，我们先了解一下 Xorg 环境下，关于键盘的&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap">一些概念&lt;/a>。&lt;/p>
+&lt;p>在 Xorg 中，有两种键盘值，分别是 keycode 和 keysym。&lt;/p>
+&lt;p>keycode 本质是一组数字表示，和键盘上的按键是一一对应的。
+在按键被按下后，相关信号传递给内核，内核看到的就是这个 keycode 数字。&lt;/p>
+&lt;p>而 keysym 是和 keycode 相关联的值，可以理解为是键盘的功能，比如输入字符 a，删除字符等等。
+它是内核对应相应按键所调用的处理方法。&lt;/p>
+&lt;p>它们两者的关系就是一个 map 结构，keycode 是 key，keysym 是value。
+于是，按键就和按键的功能关联起来。&lt;/p>
+&lt;p>这种对应结构管理由 Xorg 来管理，被称为 keymap table，它可以用 xmodmap 来查看和修改。&lt;/p>
+&lt;p>所以说，修改了关联关系，就达到了改键的目的。&lt;/p>
+&lt;h1 id="browse-keymap-table">browse keymap table&lt;/h1>
+&lt;p>通过命令，我们可以查看当前的 keymap table。&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -pke
+keycode 8 =
+keycode 9 = Escape NoSymbol Escape
+keycode 10 = 1 exclam 1 exclam
+keycode 11 = 2 at 2 at
+...............................................
+...............................................
+...............................................
+keycode 23 = Tab ISO_Left_Tab Tab ISO_Left_Tab
+keycode 24 = q Q q Q
+keycode 25 = w W w W
+...............................................
+...............................................
+...............................................
+keycode 254 = XF86WWAN NoSymbol XF86WWAN
+keycode 255 = XF86RFKill NoSymbol XF86RFKill
+&lt;/code>&lt;/pre>
+&lt;p>可以观察到，一个 keycode 对应了多个 keysym。&lt;/p>
+&lt;p>其实第一个是按键本身按下所对应的 keysym，后面的 keysym 对应于&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">当修饰键所按下时的情况&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>Key&lt;/li>
+&lt;li>Shift+Key&lt;/li>
+&lt;li>Mode_switch+Key&lt;/li>
+&lt;li>Mode_switch+Shift+Key&lt;/li>
+&lt;li>etc&lt;/li>
+&lt;/ol>
+&lt;p>我们通常只需要了解前两个就足够了，即按键本身和 shift 加按键两种情况。&lt;/p>
+&lt;p>每个 keycode 用数字来标识，而 keysym 有相应的名称，比如 n N BackSpace，表达相应的功能含义。
+如果想设置为空值，可以设置为 NoSymbol。&lt;/p>
+&lt;h1 id="check-out-specific-key">check out specific key&lt;/h1>
+&lt;p>通过 xev 工具，&lt;/p>
+&lt;pre>&lt;code>$ xev -event keyboard
+&lt;/code>&lt;/pre>
+&lt;p>可以监听到所有的键盘消息，并打印出 log。&lt;/p>
+&lt;p>通过这种方式，我们就可以检测出当前键盘的按键对应的 keycode 是什么，调用了什么 keysym。&lt;/p>
+&lt;p>比如在按下字符 d 之后，可以从 log 中看到 keycode 是 40 ，使用的 keysym 为 d，数字标识为 0x64&lt;/p>
+&lt;pre>&lt;code>KeyPress event, serial 28, synthetic NO, window 0x6e00001,
+root 0x1d5, subw 0x0, time 34680022, (634,241), root:(3198,270),
+state 0x0, keycode 40 (keysym 0x64, d), same_screen YES,
+XLookupString gives 1 bytes: (64) &amp;quot;d&amp;quot;
+XmbLookupString gives 1 bytes: (64) &amp;quot;d&amp;quot;
+XFilterEvent returns: False
+KeyRelease event, serial 28, synthetic NO, window 0x6e00001,
+root 0x1d5, subw 0x0, time 34680062, (634,241), root:(3198,270),
+state 0x0, keycode 40 (keysym 0x64, d), same_screen YES,
+XLookupString gives 1 bytes: (64) &amp;quot;d&amp;quot;
+XFilterEvent returns: False
+&lt;/code>&lt;/pre>
+&lt;h1 id="configure-keymap-table">configure keymap table&lt;/h1>
+&lt;p>修改按键就是使用 xmodmap 配置 keymap table 的过程。&lt;/p>
+&lt;p>第一种方法，可以通过命令，直接进行修改，使一行配置生效。&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -e 'keycode 38 = b E'
+&lt;/code>&lt;/pre>
+&lt;p>另外一种方法，可以将配置写在文件中，载入文件进行批量修改。&lt;/p>
+&lt;pre>&lt;code>$ xmodmap ~/.Xmodmap
+&lt;/code>&lt;/pre>
+&lt;p>另外在配置的过程中，如果有修改不合适的地方，可以使用&lt;/p>
+&lt;pre>&lt;code>$ setxkbmap
+&lt;/code>&lt;/pre>
+&lt;p>来重置 keymap table 到默认状态。&lt;/p>
+&lt;h2 id="grammar">grammar&lt;/h2>
+&lt;p>通过&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -grammar
+&lt;/code>&lt;/pre>
+&lt;p>可以查看 xmodmap 配置所使用的语法规则，&lt;/p>
+&lt;pre>&lt;code>xmodmap accepts the following input expressions:
+pointer = default reset pointer buttons to default
+pointer = NUMBER ... set pointer button codes
+keycode NUMBER = [KEYSYM ...] map keycode to given keysyms
+keysym KEYSYM = [KEYSYM ...] look up keysym and do a keycode operation
+clear MODIFIER remove all keys for this modifier
+add MODIFIER = KEYSYM ... add the keysyms to the modifier
+remove MODIFIER = KEYSYM ... remove the keysyms from the modifier
+where NUMBER is a decimal, octal, or hex constant; KEYSYM is a valid
+Key Symbol name; and MODIFIER is one of the eight modifier names: Shift,
+Lock, Control, Mod1, Mod2, Mod3, Mod4, or Mod5. Lines beginning with
+an exclamation mark (!) are taken as comments. Case is significant except
+for MODIFIER names.
+Keysyms on the left hand side of the = sign are looked up before any changes
+are made; keysyms on the right are looked up after all of those on the left
+have been resolved. This makes it possible to swap modifier keys.
+&lt;/code>&lt;/pre>&lt;p>pointer 是和鼠标事件相关的，这里先不讨论。
+至于后面的 5 种规则，我们之后详细的从实践角度分析一下它们的作用。&lt;/p>
+&lt;h2 id="keycode-">keycode =&lt;/h2>
+&lt;p>首先我们来看，&lt;/p>
+&lt;pre>&lt;code>keycode NUMBER = [KEYSYM ...] map keycode to given keysyms
+&lt;/code>&lt;/pre>
+&lt;p>这个配置是万能配置，可以将任何键盘按键映射到任何按键处理方法上。&lt;/p>
+&lt;p>我们在 xev 中看到键盘 a 的 keycode 是 38，我们现在将它映射到 shift 方法上。&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -e 'keycode 38 = Shift_L A'
+&lt;/code>&lt;/pre>
+&lt;p>如同去前面说的，第一个是单独按键的 keysym，第二个是有 shift 修饰的时候的 keysym。&lt;/p>
+&lt;p>（大家可以体会一下这个示例，观察一下 a 按键的行为，修改之后变得非常微妙。记得使用 &lt;code>setxkbmap&lt;/code> 重置成正常的布局~）&lt;/p>
+&lt;h2 id="keysym-">keysym =&lt;/h2>
+&lt;p>另外一种配置方法是&lt;/p>
+&lt;pre>&lt;code>keysym KEYSYM = [KEYSYM ...] look up keysym and do a keycode operation
+&lt;/code>&lt;/pre>
+&lt;p>这个配置就有些微妙了。
+它可以将相应 keysym 代表的处理方法，赋值给另一个　keysym。&lt;/p>
+&lt;p>比如&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -e 'keysym a = b'
+$ xmodmap -pke | grep 38
+keycode 38 = b B b B
+&lt;/code>&lt;/pre>
+&lt;p>可以看到原来绑定的 a 方法都绑定成为了 b 方法，而且附带修饰键的 keysym 也一并修改了。
+也就是我们按 a 键的时候，其实输入的是 b。&lt;/p>
+&lt;p>但如果&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -e 'keysym a = b c'
+$ xmodmap -pke | grep 38
+keycode 38 = b c b c
+&lt;/code>&lt;/pre>
+&lt;p>它则会这样的绑定结果。
+因为没有具体的文档告诉我们这样配置后的规则到底是什么，所以不推荐用这种方法来配置。&lt;/p>
+&lt;p>有意思的是，文档中提到，这种方法可以用来交换两个按键。&lt;/p>
+&lt;pre>&lt;code>Keysyms on the left hand side of the = sign are looked up before any changes
+are made; keysyms on the right are looked up after all of those on the left
+have been resolved. This makes it possible to swap modifier keys.
+&lt;/code>&lt;/pre>
+&lt;p>keysym = keysym，左侧解析在前，右侧在左侧解析后再解析。&lt;/p>
+&lt;p>所以如果我们载入这样的配置&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">keysym a = b
+keysym b = a
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>发现 a b 两个按键互换了。&lt;/p>
+&lt;p>从某种意义上，这种交换很像 python 中变量的交换。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">a, b = b, a
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>左侧的 a b 先解析成对象的地址，右侧的 a b 解析为对象的值，然后统一赋值。&lt;/p>
+&lt;p>这样来看的话，keysym 的符号表示更像是一个变量指针。&lt;/p>
+&lt;h2 id="modifier">modifier&lt;/h2>
+&lt;p>下面来看 modifier 的部分。&lt;/p>
+&lt;p>一共有 8 个修饰键，通过&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -pm
+&lt;/code>&lt;/pre>
+&lt;p>可以查看当前状态。&lt;/p>
+&lt;pre>&lt;code>xmodmap: up to 4 keys per modifier, (keycodes in parentheses):
+shift Shift_L (0x32), Shift_R (0x3e)
+lock Caps_Lock (0x42)
+control Control_L (0x25), Control_R (0x69)
+mod1 Alt_L (0x40), Alt_R (0x6c), Meta_L (0xcd)
+mod2 Num_Lock (0x4d)
+mod3
+mod4 Super_L (0x85), Super_R (0x86), Super_L (0xce), Hyper_L (0xcf)
+mod5 ISO_Level3_Shift (0x5c), Mode_switch (0xcb)
+&lt;/code>&lt;/pre>
+&lt;p>我们可以发现，不同于之前 keycode 和 keysym 的对应关系，修饰键是一个分类，其中包括了一些 keysym。&lt;/p>
+&lt;p>前 4 个我们可以轻易的看出是 shift capslock control alt 分类。&lt;/p>
+&lt;p>每个 keysym 有自己的含义，比如 a，当使用这个 keysym 的时候，系统会输入 a 字符。
+modifier 是一个分类，当某个 keysym 归于这个分类的时候，它就同时附加了相应 modifier 的功能。&lt;/p>
+&lt;p>关于 modifier，语法规定可以这样修改&lt;/p>
+&lt;pre>&lt;code>clear MODIFIER remove all keys for this modifier
+add MODIFIER = KEYSYM ... add the keysyms to the modifier
+remove MODIFIER = KEYSYM ... remove the keysyms from the modifier
+&lt;/code>&lt;/pre>
+&lt;p>clear 可以清空某个 modifier 包含的全部 keysym；
+add 可以添加对应的 keysym 到 modifier；
+remove 可以删除相应 modifier 下的 keysym。&lt;/p>
+&lt;p>remove 不如 clear 常用，因为一般的修改都直接 clear 相关的 modifier，再添加相应的 keysym，这样逻辑清晰，不容易出错。&lt;/p>
+&lt;p>在改动 modifier 按键的时候要考虑两点：&lt;/p>
+&lt;p>一是，尽量不要将有一定功能含义的 keysym 加入到 modifier 中。&lt;/p>
+&lt;p>假如我们将 a 加入到 shift 组中，&lt;/p>
+&lt;pre>&lt;code>xmodmap -e 'add shift = a'
+&lt;/code>&lt;/pre>
+&lt;p>会发生非常不舒服的情况，单独按 a 还是会输入 a，当 a 按下，再按别的键，它又成了 shift （可以体会一下）。&lt;/p>
+&lt;p>所以，将像 a 这样的 keysym 加入 modifier，并不会消除它本身的含义，导致它本身的含义和 modifier 的含义发生混乱。
+但是像 Shift_L 这样的 keysym，如果它不在 modifier 组中，它什么功能都没有，天生就适合作为 modifier。&lt;/p>
+&lt;p>二是，两种修改方法的结果有一些差异。&lt;/p>
+&lt;pre>&lt;code>keycode NUMBER = [KEYSYM ...] map keycode to given keysyms
+keysym KEYSYM = [KEYSYM ...] look up keysym and do a keycode operation
+&lt;/code>&lt;/pre>
+&lt;p>这两种方法都可以进行改键。
+假如我们想将键盘上的 caps lock 改成 control 按键，
+用第一种方法，我们先找到 caps lock 的 keycode 是 66，然后载入配置&lt;/p>
+&lt;pre>&lt;code>clear shift
+clear lock
+keycode 66 = Shift_L
+add shift = Shift_L Shift_R
+&lt;/code>&lt;/pre>
+&lt;p>打印目前的 modifier 结果，&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -pm
+xmodmap: up to 4 keys per modifier, (keycodes in parentheses):
+shift Shift_L (0x32), Shift_R (0x3e), Shift_L (0x42)
+lock
+control Control_L (0x25), Control_R (0x69)
+mod1 Alt_L (0x40), Alt_R (0x6c), Meta_L (0xcd)
+mod2 Num_Lock (0x4d)
+mod3
+mod4 Super_L (0x85), Super_R (0x86), Super_L (0xce), Hyper_L (0xcf)
+mod5 ISO_Level3_Shift (0x5c), Mode_switch (0xcb)
+&lt;/code>&lt;/pre>
+&lt;p>发现 shift 中多了一个 Shift_L 键，那是新加的 caps lock 键。&lt;/p>
+&lt;p>假如我们用第二种方式，改变 keysym Caps_Lock 的含义。&lt;/p>
+&lt;pre>&lt;code>clear lock
+keysym Caps_Lock = Shift_L
+&lt;/code>&lt;/pre>
+&lt;p>然后查看当前 modifier 的状态，&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -pm
+xmodmap: up to 4 keys per modifier, (keycodes in parentheses):
+shift Shift_L (0x32), Shift_R (0x3e)
+lock
+control Control_L (0x25), Control_R (0x69)
+mod1 Alt_L (0x40), Alt_R (0x6c), Meta_L (0xcd)
+mod2 Num_Lock (0x4d)
+mod3
+mod4 Super_L (0x85), Super_R (0x86), Super_L (0xce), Hyper_L (0xcf)
+mod5 ISO_Level3_Shift (0x5c), Mode_switch (0xcb)
+&lt;/code>&lt;/pre>
+&lt;p>我们发现，shift 中只有两个按键，相当于我们将 caps lock 修改成了 shift，利用这一点，可以突破最多 4 个按键绑定的限制。&lt;/p>
+&lt;p>但是综合来看，我还是&lt;strong>建议使用 keycode 的方法&lt;/strong>来修改，这样相对清晰，稳妥。&lt;/p>
+&lt;h1 id="modification">modification&lt;/h1>
+&lt;p>在具体了解 xmodmap 之后，再按照我们的想法来修改按键就很简单了。&lt;/p>
+&lt;p>比如我目前用的键盘，配合 emacs，很适合将 caps lock 换成 backSpace 键，右边的 menu 换成 ctrl 键。&lt;/p>
+&lt;p>{% include image.html url=&amp;ldquo;customize-keymap/penixx-keyboard.jpg&amp;rdquo; desc=&amp;quot;&amp;quot; %}&lt;/p>
+&lt;pre>&lt;code>clear lock
+clear control
+keycode 66 = BackSpace BackSpace
+keycode 135 = Control_R
+add control = Control_L Control_R
+&lt;/code>&lt;/pre>
+&lt;h1 id="load-at-boot">load at boot&lt;/h1>
+&lt;p>在修改之后，我们想在启动的时候，自动载入改键的配置。&lt;/p>
+&lt;p>可以在 &lt;code>~/.xinitrc&lt;/code> 文件中，加入&lt;/p>
+&lt;pre>&lt;code>[[ -f ~/.Xmodmap ]] &amp;amp;&amp;amp; xmodmap ~/.Xmodmap
+&lt;/code>&lt;/pre>
+&lt;p>而一般情况下，&lt;code>.xinitrc&lt;/code> 中已经有了相应的配置，不需要另外再添加。&lt;/p>
+&lt;h1 id="refs">refs&lt;/h1>
+&lt;ul>
+&lt;li>&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap">arch wiki&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.zouyesheng.com/xmodmap-usage.html">xmodmap tutorial&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">arch wiki cn&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://askubuntu.com/questions/29603/how-do-i-clear-xmodmap-settings">reset xmodmap&lt;/a>&lt;/li>
+&lt;/ul>- https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Quicksort Complexity Analysis in Probability</title><link>https://dreamanddead.github.io/post/quicksort-complexity/</link><pubDate>Wed, 07 Aug 2019 16:43:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/quicksort-complexity/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/quicksort-complexity/ -&lt;p>最近在阅读&lt;a href="https://book.douban.com/subject/25813568/">《概率论基础教程 A First Course in Probability》&lt;/a>时，看到&lt;strong>chapter 7 期望的性质&lt;/strong>，
+其中提到了如何使用概率的方法来衡量快速排序算法的效率，看完之后很受启发，特此记录在这里。&lt;/p>
+&lt;p>对于一个排序算法，对于最好运行情况和最坏运行情况，我们都容易找出相应的输入来测试。
+而对于一般的情况，也就是当我们面对随机的输入，这时可以利用到期望的方式来衡量，
+因为期望就代表着所有情况的平均。&lt;/p>
+&lt;h1 id="快速排序">快速排序&lt;/h1>
+&lt;p>先温习一下快速排序的算法过程。&lt;/p>
+&lt;p>假设有一组互不相同的数 $x_1, x_2, &amp;hellip;, x_n$，我们将它们排成一个递增的序列，这个过程称为排序。&lt;/p>
+&lt;p>快速排序算法是一个非常有效的方法，它是这样定义的：&lt;/p>
+&lt;ul>
+&lt;li>初始的 $n$ 个数看作一个集合&lt;/li>
+&lt;li>当 $n = 1$ 时，本身就是有序的&lt;/li>
+&lt;li>当 $n = 2$ 时，只需直接比较这两个数并将它们排序即可&lt;/li>
+&lt;li>当 $n &amp;gt; 2$ 时，随机选择一个数 $x_i$，然后将所有剩下的数和 $x_i$ 比较，小于 $x_i$ 的数归入左边的集合，大于 $x_i$ 的数归入右边的集合&lt;/li>
+&lt;li>然后对所有集合重复上面的处理过程，直到所有的集合只有一个数为止&lt;/li>
+&lt;/ul>
+&lt;p>举例来看，假设有 $10$ 个不同的数，&lt;/p>
+&lt;p>$$
+{5,9,3,10,11,14,8,4,17,6}
+$$&lt;/p>
+&lt;p>开始时随机选择一个数，比如选择到了 $10$，然后将所有的数和 $10$ 比较，得到&lt;/p>
+&lt;p>$$
+{5, 9, 3, 8, 4, 6}, 10, {11, 14, 17}
+$$&lt;/p>
+&lt;p>我们对集合继续同样的过程。比如左边的集合，选择到了 $6$，得到&lt;/p>
+&lt;p>$$
+{5, 3, 4}, 6, {9, 8}, 10, {11, 14, 17}
+$$&lt;/p>
+&lt;p>对左边的集合再次选择到 $4$，得到&lt;/p>
+&lt;p>$$
+{3}, 4, {5}, 6, {9, 8}, 10, {11, 14, 17}
+$$&lt;/p>
+&lt;p>重复这个过程直到所有集合只有一个数为止。&lt;/p>
+&lt;p>假定右边的集合选定了 $8$ 和 $14$，最终得到排序&lt;/p>
+&lt;p>$$
+{3}, 4, {5}, 6, 8, {9}, 10, {11}, 14, {17}
+$$&lt;/p>
+&lt;h1 id="效率度量">效率度量&lt;/h1>
+&lt;p>在排序的过程中，最基本的运算是比较两个数的大小，
+完成排序过程所需要的比较次数越多，效率就越差。&lt;/p>
+&lt;p>我们用比较次数作为metric，我们来衡量算法的效率表现。&lt;/p>
+&lt;h2 id="最坏表现">最坏表现&lt;/h2>
+&lt;p>还是以上面排序的例子作为示例。&lt;/p>
+&lt;p>$$
+{5,9,3,10,11,14,8,4,17,6}
+$$&lt;/p>
+&lt;p>假如我们每次选择 $x_i$ 时，$x_i$总是当前集合中最小的数（或者最大），我们来看一下排序的过程是怎样的。&lt;/p>
+&lt;p>第一次选择到 $3$，比较了 $9$ 次&lt;/p>
+&lt;p>$$
+3, {5,9,10,11,14,8,4,17,6}
+$$&lt;/p>
+&lt;p>第二次选择到 $4$，比较了 $8$ 次&lt;/p>
+&lt;p>$$
+3, 4, {5,9,10,11,14,8,17,6}
+$$&lt;/p>
+&lt;p>第三次选择到 $5$，比较了 $7$ 次&lt;/p>
+&lt;p>$$
+3, 4, 5, {9,10,11,14,8,17,6}
+$$&lt;/p>
+&lt;p>&amp;hellip;&lt;/p>
+&lt;p>第九次选择到 $14$，比较了 $1$ 次&lt;/p>
+&lt;p>$$
+3, 4, 5, 6, 8, 9, 10, 11, 14, {17}
+$$&lt;/p>
+&lt;p>我们会发现整个排序过程的比较次数近乎为 $O(n^2)$。&lt;/p>
+&lt;p>之所以这样的原因就在于，每次选择一个数，进行集合分割时，总是分出&lt;strong>空集&lt;/strong>和&lt;strong>元素仅仅减少一个的集合&lt;/strong>，这样问题规模的降低速度就变的很慢。&lt;/p>
+&lt;h2 id="最好表现">最好表现&lt;/h2>
+&lt;p>对比最差的表现，我们来看一下最好的表现。
+还是以上面排序的例子作为示例。&lt;/p>
+&lt;p>$$
+{5,9,3,10,11,14,8,4,17,6}
+$$&lt;/p>
+&lt;p>第一次选择到 $8$，比较了 $9$ 次&lt;/p>
+&lt;p>$$
+{5, 3, 4, 6}, 8, {9, 10, 11, 14, 17}
+$$&lt;/p>
+&lt;p>第二次选择到 $4$，比较了 $3$ 次&lt;/p>
+&lt;p>$$
+{3}, 4, {5, 6}, 8, {9, 10, 11, 14, 17}
+$$&lt;/p>
+&lt;p>第三次选择到 $5，比较了 $1$ 次&lt;/p>
+&lt;p>$$
+{3}, 4, 5, {6}, 8, {9, 10, 11, 14, 17}
+$$&lt;/p>
+&lt;p>第四次选择到 $11$，比较了 $4$ 次&lt;/p>
+&lt;p>$$
+{3}, 4, 5, {6}, 8, {9, 10}, 11, {14, 17}
+$$&lt;/p>
+&lt;p>第五次选择到 $10$，比较了 $1$ 次&lt;/p>
+&lt;p>$$
+{3}, 4, 5, {6}, 8, {9}, 10, 11, {14, 17}
+$$&lt;/p>
+&lt;p>第六次选择到 $17$，比较了 $1$ 次&lt;/p>
+&lt;p>$$
+{3}, 4, 5, {6}, 8, {9}, 10, 11, {14}, 17
+$$&lt;/p>
+&lt;p>和最差情况相对比，我们每次对集合都近乎是二分的划分，使每个子问题的规模快速减小，这样总体比较次数也快速的减少，整体效率近乎于 $O(nlog(n))$。&lt;/p>
+&lt;h2 id="平均表现">平均表现&lt;/h2>
+&lt;p>这里是这篇文章的重点，也就是书中使用的概率方法，计算平均效率。&lt;/p>
+&lt;p>记 $X$ 是实现 $n$ 个不同数的排序所需要比较的次数，$E[X]$ 就是对这个排序算法效率的一个平均度量。&lt;/p>
+&lt;p>为了计算 $E[X]$，我们先将 $X$ 写为一系列随机变量的和。
+我们将 $n$ 个数中最小的数命名为 $1$，第二小的数命名为 $2$，&amp;hellip;，最大的数命名为 $n$，对于 $1 &amp;lt;= i &amp;lt;= j &amp;lt;= n$，记&lt;/p>
+&lt;ul>
+&lt;li>$I(i, j) = 1$, 在排序的过程中，数 $i, j$ 直接比较过&lt;/li>
+&lt;li>$I(i, j) = 0$, 其它&lt;/li>
+&lt;/ul>
+&lt;p>根据快速排序的过程，任意两个数 $i, j$ 在排序过程中，&lt;/p>
+&lt;ul>
+&lt;li>可能从未比较过（因为被划分到了不同的集合）&lt;/li>
+&lt;li>如果它们直接比较过，只可能比较一次，不可能再次比较（因为其中一个数被选择作为比较点，离开了集合）&lt;/li>
+&lt;/ul>
+&lt;p>由 $X$ 的定义可得：&lt;/p>
+&lt;p>$$
+X = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} I(i, j) \tag{1}
+$$&lt;/p>
+&lt;p>根据期望的性质，当 $E[X], E[Y]$ 均为有限值时，$E[X+Y] = E[X] + E[Y]$。&lt;/p>
+&lt;p>由此可得，&lt;/p>
+&lt;p>$$
+\begin{align}
+E[X] &amp;amp;= E[\sum_{i=1}^{n-1} \sum_{j=i+1}^{n} I(i, j)] \\\&lt;br>
+&amp;amp;= \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} E[I(i, j)] \\\&lt;br>
+&amp;amp;= \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} P({i和j在排序过程中做过比较}) \tag{2}
+\end{align}
+$$&lt;/p>
+&lt;p>下面我们来计算概率 $P({i和j在排序过程中做过比较})$。&lt;/p>
+&lt;p>数 $i, i+1, &amp;hellip;, j$ 最开始全部在一个集合中。&lt;/p>
+&lt;p>排序开始，随机在 $n$ 个数中选择一个数作为比较点，如果比较点不在 $i, j$ 这个区间内，即比$i$小，或者比$j$大，则在比较并划分集合后，$i, i+1, &amp;hellip;, j$ 还是在一个集合内。&lt;/p>
+&lt;p>假如选择的比较点在 $i, i+1, &amp;hellip;, j$ 之中，则只有当选择 $i / j$ 时，$i$ 和 $j$ 才会直接进行比较；否则它们两个将会被划分在比较点两边的两个集合中，再也不可能直接比较。&lt;/p>
+&lt;p>因此，$i, j$ 直接进行比较的概率，就是从 $i, i+1, &amp;hellip;, j$ 中选择到 $i / j$ 的概率，等于 $\frac{2}{j - i + 1}$。&lt;/p>
+&lt;p>于是&lt;/p>
+&lt;p>$$
+P({i和j在排序过程中做过比较}) = \frac{2}{j-i+1} \tag{3}
+$$&lt;/p>
+&lt;p>我们来仔细的理解公式$(3)$，在一开始，有 $n$ 个数，其中在 $i, j$ 区间的有 $j-i+1$ 个数。&lt;/p>
+&lt;p>在选择比较点之后，根据条件概率，&lt;/p>
+&lt;p>$$
+\begin{align}
+&amp;amp;P({i和j在排序过程中做过比较}) \\\&lt;br>
+=&amp;amp; P({i和j在排序过程中做过比较 \mid 比较点在区间外})P({比较点在区间外}) + \\\&lt;br>
+&amp;amp; P({i和j在排序过程中做过比较 \mid 比较点在区间内})P({比较点在区间内}) \tag{4}
+\end{align}
+$$&lt;/p>
+&lt;p>假如选择点是完全随机的，则&lt;/p>
+&lt;p>$$
+\begin{align}
+P({i和j在排序过程中做过比较 \mid 比较点在区间外}) &amp;amp;= P({i和j在排序过程中做过比较}) \\\&lt;br>
+P({比较点在区间外}) &amp;amp;= \frac{n-(j-i+1)}{n} \\\&lt;br>
+P({i和j在排序过程中做过比较 \mid 比较点在区间内}) &amp;amp;= \frac{2}{j-i+1} \\\&lt;br>
+P({比较点在区间内}) &amp;amp;= \frac{j-i+1}{n}
+\end{align}
+$$&lt;/p>
+&lt;p>代入公式$(4)$，&lt;/p>
+&lt;p>$$
+P({i和j在排序过程中做过比较}) = P({i和j在排序过程中做过比较}) * \frac{n-(j-i+1)}{n} + \frac{2}{j-i+1} * \frac{j-i+1}{n}
+$$&lt;/p>
+&lt;p>$$
+P({i和j在排序过程中做过比较}) = \frac{2}{j-i+1} \tag{3}
+$$&lt;/p>
+&lt;p>所以，将结果$(3)$代入$(2)$，最终的期望为&lt;/p>
+&lt;p>$$
+E[X] = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} P({i和j在排序过程中做过比较}) = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \frac{2}{j-i+1}
+$$&lt;/p>
+&lt;p>为了得到 $E[X]$ 的大致估计，当 $n$ 充分大时，我们用积分来近似&lt;/p>
+&lt;p>$$
+\begin{align}
+\sum_{j=i+1}^{n} \frac{2}{j-i+1} &amp;amp;\approx \int_{i+1}^{n} \frac{2}{x-i+1} dx \\\&lt;br>
+&amp;amp;= 2ln(x-i+1) |_{i+1}^n \\\&lt;br>
+&amp;amp;= 2ln(n-i+1) - 2ln(2) \\\&lt;br>
+&amp;amp;\approx 2ln(n-i+1)
+\end{align}
+$$&lt;/p>
+&lt;p>因此，&lt;/p>
+&lt;p>$$
+\begin{align}
+E[X] &amp;amp;= \sum_{i=1}^{n-1} 2 ln(n-i+1) \\\&lt;br>
+&amp;amp;\approx 2 \int_{1}^{n-1} ln(n-x+1) dx \\\&lt;br>
+&amp;amp;= 2 \int_{2}^{n} ln(y) dy \\\&lt;br>
+&amp;amp;= 2(yln(y) - y) |_2^n \\\&lt;br>
+&amp;amp;\approx 2nln(n)
+\end{align}
+$$&lt;/p>
+&lt;p>由此可知，在使用快速排序算法时，当 $n$ 充分大时，平均大概需要 $O(nln(n))$ 次比较才可以将 $n$ 个数排序。&lt;/p>
+&lt;h1 id="假如有重复的数字">假如有重复的数字&lt;/h1>
+&lt;p>在前面的问题假设中，我们假设 $n$ 个数字是完全不同的，假如在要排序的序列中，出现了重复的数字，我们使用 $i, j$ 区间来计算概率的方法就会失效。&lt;/p>
+&lt;p>但是在这种情况下，根据上面对最好情况和最差情况的分析，我们使用一种启发式的方法，在分割集合时，假如要比较的数和比较点相同，我们将它们平均的左右分配。
+举一个例子，极端情况下，所有的数都相同，10 个 6 进行排序。&lt;/p>
+&lt;p>$$
+{6, 6, 6, 6, 6, 6, 6, 6, 6, 6}
+$$&lt;/p>
+&lt;p>选择比较点 6 之后，我们将和比较点相同的数平均分配到集合的两边，&lt;/p>
+&lt;p>$$
+{6, 6, 6, 6, 6}, 6, {6, 6, 6, 6}
+$$&lt;/p>
+&lt;p>这样可以使子问题的规模快速减少，保证排序算法的效率。&lt;/p>- https://dreamanddead.github.io/post/quicksort-complexity/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Trigonometric Function Illustrations</title><link>https://dreamanddead.github.io/post/triangle-math/</link><pubDate>Wed, 15 May 2019 08:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/triangle-math/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/triangle-math/ -&lt;p>三角函数是非常重要的一类周期函数，所有周期函数都可以分解为对应的三角函数的组合。&lt;/p>
+&lt;p>在中学数学中，学习最多是 正弦$sin$，余弦$cos$，正切$tan$ 函数，
+之后了解还有 正割$sec$，余割$csc$，余切$cot$ 函数。&lt;/p>
+&lt;p>其中最让我困惑不解在于它们的命名，什么是正？什么是余？&lt;/p>
+&lt;h1 id="基础图示">基础图示&lt;/h1>
+&lt;figure>
+&lt;img src="images/figure-in-textbook.png"
+alt="单位圆中的三角函数值"/> &lt;figcaption>
+&lt;p>单位圆中的三角函数值&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>在图示中，三角函数对应的值可以照如下的表格来计算。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">翻译&lt;/th>
+&lt;th style="text-align:center">缩写&lt;/th>
+&lt;th style="text-align:center">英文&lt;/th>
+&lt;th style="text-align:center">公式&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">正弦&lt;/td>
+&lt;td style="text-align:center">sin&lt;/td>
+&lt;td style="text-align:center">sine&lt;/td>
+&lt;td style="text-align:center">$\dfrac{CD}{OD}$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余弦&lt;/td>
+&lt;td style="text-align:center">cos&lt;/td>
+&lt;td style="text-align:center">cosine&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OC}{OD}$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">正切&lt;/td>
+&lt;td style="text-align:center">tan&lt;/td>
+&lt;td style="text-align:center">tangent&lt;/td>
+&lt;td style="text-align:center">$\dfrac{AB}{OA}$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余切&lt;/td>
+&lt;td style="text-align:center">cot&lt;/td>
+&lt;td style="text-align:center">cotangent&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OA}{AB}$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">正割&lt;/td>
+&lt;td style="text-align:center">sec&lt;/td>
+&lt;td style="text-align:center">secant&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OD}{OC}$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余割&lt;/td>
+&lt;td style="text-align:center">csc&lt;/td>
+&lt;td style="text-align:center">cosecant&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OD}{CD}$&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>又因为图中是一个单位圆，$OD\ =\ OA\ =\ 1$，所以有三条边的长度对应三个三角函数值。&lt;/p>
+&lt;p>观察对应的公式，我们会发现，正弦和余割互为倒数，余弦和正割互为倒数。
+为什么不是正弦和正割对应，余弦和余割对应呢？&lt;/p>
+&lt;p>而且图中只能表示出三个函数值，不能表现出六个函数值吗？&lt;/p>
+&lt;h1 id="改进图示">改进图示&lt;/h1>
+&lt;p>经过一个偶然的机会，看到了关于三角函数更加合理的解释。&lt;/p>
+&lt;figure>
+&lt;img src="images/triangle-functions.png"
+alt="单位圆中的三角函数值"/> &lt;figcaption>
+&lt;p>单位圆中的三角函数值&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">翻译&lt;/th>
+&lt;th style="text-align:center">缩写&lt;/th>
+&lt;th style="text-align:center">英文&lt;/th>
+&lt;th style="text-align:center">公式&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">正弦&lt;/td>
+&lt;td style="text-align:center">sin&lt;/td>
+&lt;td style="text-align:center">sine&lt;/td>
+&lt;td style="text-align:center">$\dfrac{CD}{OD}=CD$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余弦&lt;/td>
+&lt;td style="text-align:center">cos&lt;/td>
+&lt;td style="text-align:center">cosine&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OC}{OD}=\dfrac{FG}{OF}=FG$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">正切&lt;/td>
+&lt;td style="text-align:center">tan&lt;/td>
+&lt;td style="text-align:center">tangent&lt;/td>
+&lt;td style="text-align:center">$\dfrac{AB}{OA}=AB$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余切&lt;/td>
+&lt;td style="text-align:center">cot&lt;/td>
+&lt;td style="text-align:center">cotangent&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OA}{AB}=\dfrac{AE}{OA}=AE$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">正割&lt;/td>
+&lt;td style="text-align:center">sec&lt;/td>
+&lt;td style="text-align:center">secant&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OD}{OC}=\dfrac{OB}{OA}=OB$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余割&lt;/td>
+&lt;td style="text-align:center">csc&lt;/td>
+&lt;td style="text-align:center">cosecant&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OD}{CD}=\dfrac{OE}{OA}=OE$&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>所以，三角函数重要的是比例关系，这张图就清晰的表达了一点。&lt;/p>
+&lt;p>co means complementary 表示余角。所以也就有了弦，切，割的正，余值，以及图中优雅的对应关系。&lt;/p>- https://dreamanddead.github.io/post/triangle-math/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>understanding euler angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/understanding-euler-angles/ -&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
+have to understand the underlying math things.&lt;/p>
+&lt;p>I have known about Euler angles for a while, and today we talk about some more details about it.&lt;/p>
+&lt;h1 id="direction-vs-orientation">Direction vs Orientation&lt;/h1>
+&lt;p>Most people can&amp;rsquo;t tell the difference of direction and orientation.
+They two are different concepts.&lt;/p>
+&lt;p>In brief, vectors have got direction and orientation is for objects.&lt;/p>
+&lt;figure>
+&lt;img src="images/aircraft-rotation.png"
+alt="intrinsic rotation of aircraft from wikipedia"/> &lt;figcaption>
+&lt;p>intrinsic rotation of aircraft from wikipedia&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>$\vec{X}$ is a vector and is determined by $\psi$ and $\theta$.&lt;/p>
+&lt;p>$\phi$ means nothing to the vector(a spinning vector?), but is necessary to the plane object.&lt;/p>
+&lt;p>That&amp;rsquo;s the key difference between direction and orientation and
+Euler angles describe the orientation.&lt;/p>
+&lt;h1 id="euler-angles">Euler angles&lt;/h1>
+&lt;p>The Euler angles are three angles introduced by Leonhard Euler to describe the orientation of rigid
+body with respect to a fixed coordinate system.&lt;/p>
+&lt;h2 id="order">Order&lt;/h2>
+&lt;p>There exist 12 possible sequences of rotation axes, divided into 2 groups:&lt;/p>
+&lt;ul>
+&lt;li>Proper Euler angles($z-x-z, x-y-x, y-z-y, z-y-z, x-z-x, y-x-y$)&lt;/li>
+&lt;li>Tait-Bryan angles($x-y-z, y-z-x, z-x-y, x-z-y, z-y-x, y-x-z$)&lt;/li>
+&lt;/ul>
+&lt;p>Proper Euler angles only use 2 axes in rotations($x,y$ or $y,z$ or $x,z$),
+but Tait-Bryan angles use all 3 axes($x,y,z$) in different order.&lt;/p>
+&lt;h2 id="convention">Convention&lt;/h2>
+&lt;p>The three elemental rotations may be extrinsic or intrinsic.&lt;/p>
+&lt;p>&lt;strong>extrinsic&lt;/strong> means the original coordinate system remains motionless as the rotations go.&lt;/p>
+&lt;p>&lt;strong>intrinsic&lt;/strong> means the rotation is always based on the rotating coordinate system which is solidary
+with the moving object.&lt;/p>
+&lt;p>The figures below will provide better understanding.&lt;/p>
+&lt;figure>
+&lt;img src="images/extrinsic-rotation.png"
+alt="extrinsic rotation axes in order $x-y-z$"/> &lt;figcaption>
+&lt;p>extrinsic rotation axes in order $x-y-z$&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;figure>
+&lt;img src="images/intrinsic-rotation.png"
+alt="intrinsic rotation axes in order $z-y&amp;#39;-x&amp;#39;&amp;#39;$ (also well known as yaw,pitch,roll)"/> &lt;figcaption>
+&lt;p>intrinsic rotation axes in order $z-y'-x''$ (also well known as yaw,pitch,roll)&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="conversion-between-extrinsic-and-intrinsic-rotations">Conversion between extrinsic and intrinsic rotations&lt;/h2>
+&lt;p>&lt;em>Any extrinsic rotation is equivalent to an intrinsic rotation by the same angles but with inverted order of elemental rotations, and vice versa.&lt;/em>&lt;/p>
+&lt;p>Take the figure above as an example.
+We have got extrinsic rotation in order $x-y-z$ with angles $\phi,\theta,\psi$
+and intrinsic rotation in inverted order $z-y'-x''$ with angles $\psi,\theta,\phi$.&lt;/p>
+&lt;p>The final rotation results are same as long as the angles($\phi,\theta$ and $\psi$)
+are equivalent.&lt;/p>
+&lt;p>Let&amp;rsquo;s get a proof.&lt;/p>
+&lt;p>First we denote&lt;/p>
+&lt;ul>
+&lt;li>$E_x$ as the transformation matrix rotating around $x$ axis with angle $\phi$&lt;/li>
+&lt;li>$E_y$ as the transformation matrix rotating around $y$ axis with angle $\theta$&lt;/li>
+&lt;li>$E_z$ as the transformation matrix rotating around $z$ axis with angle $\psi$&lt;/li>
+&lt;li>$I_z$ as the transformation matrix rotating around $z$ axis with angle $\psi$&lt;/li>
+&lt;li>$I_{y'}$ as the transformation matrix rotating around $y'$ axis with angle $\theta$&lt;/li>
+&lt;li>$I_{x''}$ as the transformation matrix rotating around $x''$ axis with angle $\phi$&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>All the matrices are relative to original $x-y-z$ coordinate system.&lt;/strong>&lt;/p>
+&lt;p>We need to prove&lt;/p>
+&lt;p>$$
+E_x E_y E_z = I_z I_{y'} I_{x''}
+$$&lt;/p>
+&lt;p>Obviously,&lt;/p>
+&lt;p>$$E_z = I_z$$&lt;/p>
+&lt;p>because they share the same definition.&lt;/p>
+&lt;p>Next, considering $I_{y'}$, rotating around $y'$ in the new $x'-y'-z'$ coordinate system after $I_z$&amp;rsquo;s rotation.&lt;/p>
+&lt;p>If $x'-y'-z'$ coincides with $x-y-z$ then $E_y = I_{y'}$.&lt;/p>
+&lt;p>So we first rotate the $x'-y'-z'$ back and use $E_y$ to do the rotation and resume the $x'-y'-z'$ coordinate system.&lt;/p>
+&lt;p>In equation that&amp;rsquo;s&lt;/p>
+&lt;p>$$
+I_{y'} = I_z^{-1} E_y I_z
+$$&lt;/p>
+&lt;p>In the same idea we get&lt;/p>
+&lt;p>$$
+I_{x''} = (I_z I_{y'})^{-1} E_x (I_z I_{y'})
+$$&lt;/p>
+&lt;p>So&lt;/p>
+&lt;p>$$
+\begin{align}
+I_z I_{y'} I_{x''} &amp;amp;= I_z I_{y'} (I_z I_{y'})^{-1} E_x (I_z I_{y'}) \&lt;br>
+&amp;amp;= E_x (I_z I_{y'}) \&lt;br>
+&amp;amp;= E_x (I_z I_z^{-1} E_y I_z) \&lt;br>
+&amp;amp;= E_x E_y I_z \&lt;br>
+&amp;amp;= E_x E_y E_z
+\end{align}
+$$&lt;/p>
+&lt;h1 id="the-end">The end&lt;/h1>
+&lt;p>In &lt;a href="https://www.wikiwand.com/en/Euler_angles">wikipedia&lt;/a>, I know more about &lt;a href="https://www.wikiwand.com/en/Euler_angles">euler angles&lt;/a> including extrinsic/intrinsic and Proper/Tait-Bryan.&lt;/p>
+&lt;p>I first see the conversion between extrinsic and intrinsic in &lt;a href="http://www.cnitblog.com/luckydmz/archive/2010/09/07/68674.html">this blog&lt;/a> and that shocked me. There&amp;rsquo;s &lt;a href="https://www.wikiwand.com/en/Davenport_chained_rotations#/Conversion_between_intrinsic_and_extrinsic_rotations">another proof in wikipedia&lt;/a> and a enlightening answer about &lt;a href="https://math.stackexchange.com/a/1155951">relativity&lt;/a>.&lt;/p>- https://dreamanddead.github.io/post/understanding-euler-angles/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>A simple way to draw a circle always facing you</title><link>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</link><pubDate>Wed, 17 Apr 2019 13:24:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ -&lt;p>In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light,
+so that user can easily tune the parameters about the light.&lt;/p>
+&lt;p>The idea is simple.
+Imaging a point light lighting range is a ball bubble, you will see a round transparent circle wherever you look at it.
+The point is the circle edge indicates the maximum lighting range of the light.&lt;/p>
+&lt;h1 id="drawing">Drawing&lt;/h1>
+&lt;p>Everyone knows 3d coordinate pipeline.&lt;/p>
+&lt;figure>
+&lt;img src="images/3d-coordinate-pipeline.png"/>
+&lt;/figure>
+&lt;p>You put into a 3d coordinate point, and get a 2d coordinate point back(visible or not).&lt;/p>
+&lt;p>Assuming we have got a vertexes list, that forms a circle whose center is in origin and normal vector is parallel with z axis in local coordinate system.&lt;/p>
+&lt;figure>
+&lt;img src="images/circle-facing-z-axis.png"/>
+&lt;/figure>
+&lt;p>What we do next is to rotate the circle so that the normal vector points at the camera in the &lt;strong>local transform&lt;/strong> phase.&lt;/p>
+&lt;figure>
+&lt;img src="images/circle-facing-camera.png"/>
+&lt;/figure>
+&lt;p>The normal vector $\vec{n}$ is easy to get:&lt;/p>
+&lt;p>$$
+\vec{n} = normalize(Pos_{camera} - Pos_{light})
+$$&lt;/p>
+&lt;p>$Pos$ is the position in world coordinate system.&lt;/p>
+&lt;h2 id="rotation">Rotation&lt;/h2>
+&lt;p>Let&amp;rsquo;s discuss about the rotation. Before we start, you will realize the figure below is a great helper for the understanding.&lt;/p>
+&lt;figure>
+&lt;img src="images/rotate-vector-to-z.png"/>
+&lt;/figure>
+&lt;p>Given a vector $\vec{p}$, how do we rotate it until it coincides in $z$ axis?&lt;/p>
+&lt;p>Check out this approach: first we rotate $\vec{p}$ to $\vec{r}$, then rotate $\vec{r}$ to $\vec{s}$. We do an easy transformation in one step.&lt;/p>
+&lt;p>Conversely, how to rotate $\vec{s}$ to $\vec{p}$ is just a reverse procedure.&lt;/p>
+&lt;ol>
+&lt;li>rotate around $y$ axis by angle $\beta$;&lt;/li>
+&lt;li>rotate around $x$ axis by angle $-\alpha$.&lt;/li>
+&lt;/ol>
+&lt;p>The rotation matrix is easy to be constructed.&lt;/p>
+&lt;p>&lt;em>rotate around $y$ axis by angle $\beta$&lt;/em>&lt;/p>
+&lt;p>$$
+\begin{bmatrix}
+\cos\beta &amp;amp; 0 &amp;amp; -\sin\beta &amp;amp; 0 \\\&lt;br>
+0 &amp;amp; 1 &amp;amp; 0 &amp;amp; 0 \\\&lt;br>
+\sin\beta &amp;amp; 0 &amp;amp; \cos\beta &amp;amp; 0 \\\&lt;br>
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 \\\&lt;br>
+\end{bmatrix}
+$$&lt;/p>
+&lt;p>&lt;em>rotate around $x$ axis by angle $-\alpha$&lt;/em>&lt;/p>
+&lt;p>$$
+\begin{bmatrix}
+1 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 \\\&lt;br>
+0 &amp;amp; \cos(-\alpha) &amp;amp; \sin(-\alpha) &amp;amp; 0 \\\&lt;br>
+0 &amp;amp; -\sin(-\alpha) &amp;amp; \cos(-\alpha) &amp;amp; 0 \\\&lt;br>
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 \\\&lt;br>
+\end{bmatrix} =
+\begin{bmatrix}
+1 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 \\\&lt;br>
+0 &amp;amp; \cos\alpha &amp;amp; -\sin\alpha &amp;amp; 0 \\\&lt;br>
+0 &amp;amp; \sin\alpha &amp;amp; \cos\alpha &amp;amp; 0 \\\&lt;br>
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 \\\&lt;br>
+\end{bmatrix}
+$$&lt;/p>
+&lt;p>The trigonometric functions values are easy to get too.&lt;/p>
+&lt;p>$$
+sin\alpha=\frac{b}{\sqrt{b^2+c^2}}
+$$&lt;/p>
+&lt;p>$$
+cos\alpha=\frac{c}{\sqrt{b^2+c^2}}
+$$&lt;/p>
+&lt;p>$$
+sin\beta =\frac{a}{\sqrt{a^2+b^2+c^2}}
+$$&lt;/p>
+&lt;p>$$
+cos\beta=\frac{\sqrt{b^2+c^2}}{\sqrt{a^2+b^2+c^2}}
+$$&lt;/p>
+&lt;p>It&amp;rsquo;s a clear and simple way, isn&amp;rsquo;t it?
+And it can be use to solve more similar problems.&lt;/p>
+&lt;p>e.g.&lt;/p>
+&lt;ol>
+&lt;li>how to rotate a vector to $x$ or $y$ axis?&lt;/li>
+&lt;li>how to rotate two vectors together? (rotating the first vector to z axis and rotating back to the second vector)&lt;/li>
+&lt;li>etc&lt;/li>
+&lt;/ol>
+&lt;p>Trust you could find more. :)&lt;/p>- https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Recover mysql table structure from frm file</title><link>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</link><pubDate>Thu, 27 Sep 2018 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ -&lt;p>mysql 正常运行的时候，&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/show-create-table.html">查看 table 的结构&lt;/a>并不是困难的事。
+但是有时 mysql 发生故障，这种方法便不再可行。&lt;/p>
+&lt;p>当遇到故障，通常使用新的 mysql 实例来恢复当前的数据。
+建表是非常重要的步骤，我们必须有其它的方法来寻找 table 的结构。&lt;/p>
+&lt;h1 id="table-结构定义在哪里">table 结构定义在哪里&lt;/h1>
+&lt;p>通常关注的用户数据，底层都实际存储在 mysql 数据目录。
+其它的元数据也不例外，比如 table 表结构的定义。&lt;/p>
+&lt;p>mysql 数据目录文件结构是非常清晰的，&lt;/p>
+&lt;ul>
+&lt;li>目录对应数据库&lt;/li>
+&lt;li>frm 文件存储了 table 结构的定义&lt;/li>
+&lt;li>ibdata 文件存储了 mysql 的元数据及其它&lt;/li>
+&lt;/ul>
+&lt;p>table 定义的结构，就存在于 frm 文件中，当然管理元数据的 ibdata 也会有记录。&lt;/p>
+&lt;p>当存在 frm 文件的时候，恢复表结构相对容易；
+但是如果执行了 drop table，便删除了 frm 文件，本文所提供的方法就爱莫能助了。
+这种情况下，可以尝试从 ibdata 恢复表结构，这暂时不在下面的讨论范围内。&lt;/p>
+&lt;h1 id="解析-table-结构">解析 table 结构&lt;/h1>
+&lt;p>下面介绍 3 种方式，从 frm 文件中，解析得到 &lt;code>create table&lt;/code> 命令。&lt;/p>
+&lt;h2 id="mysqlfrm">mysqlfrm&lt;/h2>
+&lt;p>mysqlfrm 是 &lt;a href="https://downloads.mysql.com/archives/utilities/">mysql utilities 工具集&lt;/a> 中的其中之一，
+用于分析 frm 文件生成 create table 命令。
+目前已经不再更新，部分功能并入了新版本的 mysql shell（version 8 及以后）。&lt;/p>
+&lt;p>mysql utilities 需要 python2 环境，安装非常简单。&lt;/p>
+&lt;pre>&lt;code>$ tar -xvzf mysql-utilities-1.6.5.tar.gz
+$ cd mysql-utilities-1.6.5
+$ python setup.py build
+$ python setup.py install
+&lt;/code>&lt;/pre>&lt;p>mysqlfrm 支持两类模式来解读 frm：&lt;/p>
+&lt;h3 id="直接分析">直接分析&lt;/h3>
+&lt;p>这种模式比较直接，逐个字节分析 frm 文件，尽可能的提取信息。&lt;/p>
+&lt;p>这种模式下，需要使用 &lt;code>--diagnostic&lt;/code> 参数。&lt;/p>
+&lt;pre>&lt;code>$ mysqlfrm --diagnostic /data/sakila/actor.frm
+&lt;/code>&lt;/pre>&lt;h3 id="借助-mysql-实例分析">借助 mysql 实例分析&lt;/h3>
+&lt;p>这种模式，借助新的 mysql 实例，从中完成 frm 的分析工作。
+可以用两种方式来指定，如何开启新的 mysql 实例。&lt;/p>
+&lt;p>一，从当前的 mysql 服务中 spawn，使用 &lt;code>--server&lt;/code> 指定 mysql 服务&lt;/p>
+&lt;pre>&lt;code>$ mysqlfrm --server=root:pass@localhost:3306 --port=3310 /data/sakila/actor.frm
+&lt;/code>&lt;/pre>&lt;p>二，启动新的 mysql 实例，使用 &lt;code>--basedir&lt;/code> 指定 mysql 程序路径&lt;/p>
+&lt;pre>&lt;code>$ mysqlfrm --basedir=/usr/local/bin/mysql --port=3310 /data/sakila/actor.frm
+&lt;/code>&lt;/pre>&lt;p>&lt;code>--port&lt;/code> 给新的实例指定端口，是为了避免与当前的 3306 端口出现冲突。&lt;/p>
+&lt;h2 id="dbsake">dbsake&lt;/h2>
+&lt;p>这是偶然发现的一个工具，文档中它这样介绍自己：&lt;/p>
+&lt;blockquote>
+&lt;p>dbsake - a (s)wiss-(a)rmy-(k)nif(e) for MySQL&lt;/p>
+&lt;/blockquote>
+&lt;p>作者一定是一个对 mysql 很有心得的人，
+工具从下载，安装到使用，简单，利落。&lt;/p>
+&lt;pre>&lt;code>$ curl -s get.dbsake.net &amp;gt; dbsake
+$ chmod u+x dbsake
+$ ./dbsake frmdump [frm-file-path]
+&lt;/code>&lt;/pre>&lt;h2 id="online-service">online service&lt;/h2>
+&lt;p>有一些在线的服务，也关注这样的问题。
+使用过的&lt;a href="https://recovery.twindb.com/">twindb online&lt;/a>，体验非常好，相关的工具集也很棒。&lt;/p>
+&lt;p>从 &lt;code>Recover Structure -&amp;gt; from .frm file&lt;/code> 入口，上传 frm，就可以得到 &lt;code>create table&lt;/code> 命令。&lt;/p>
+&lt;h1 id="写在最后">写在最后&lt;/h1>
+&lt;p>在使用上，可以多个工具都测试一下，对比哪个工具恢复的命令更为完善可取，选择最佳的。&lt;/p>
+&lt;p>参考：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://docs.oracle.com/cd/E17952_01/mysql-utilities-1.6-en/mysqlfrm.html">mysqlfrm official doc&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://dbsake.readthedocs.io/en/latest/commands/frmdump.html">dbsake project doc&lt;/a>&lt;/li>
+&lt;/ul>- https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>mysql table suddenly doesn't exists</title><link>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</link><pubDate>Thu, 27 Sep 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ -&lt;p>最近内部的 mysql 数据库发生了一件奇怪的事，其中有一个表 users625 突然出现问题，
+所有对它的操作都报错误 &lt;code>数据表不存在&lt;/code>。&lt;/p>
+&lt;pre>&lt;code>mysql&amp;gt; select count(*) from users625;
+ERROR 1146 (42S02): Table 'km8.users625' doesn't exist
+&lt;/code>&lt;/pre>&lt;p>&lt;code>show tables&lt;/code> 它还显示在列表里，在 mysql 数据目录中也可以找到对应的表文件，也没有
+进行过删除操作，突然出现这样的错误非常奇怪。&lt;/p>
+&lt;p>内部运行环境：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">名称&lt;/th>
+&lt;th style="text-align:center">值&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">OS&lt;/td>
+&lt;td style="text-align:center">Debian Squeeze x64&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">mysql 版本&lt;/td>
+&lt;td style="text-align:center">5.1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">mysql 引擎&lt;/td>
+&lt;td style="text-align:center">innodb&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h1 id="发生了什么">发生了什么&lt;/h1>
+&lt;p>突然出现这种情况，第一反应必定是想办法将表中的用户数据找回，但是目前发生问题的情况与原因都不明晰，
+不能轻举妄动。&lt;/p>
+&lt;p>查看 mysql 日志，在操作出错的时候，日志这样显示：&lt;/p>
+&lt;pre>&lt;code>mysqld: 180926 11:10:53 InnoDB: cannot calculate statistics for table km8/users625
+mysqld: InnoDB: because the .ibd file is missing. For help, please refer to
+mysqld: InnoDB: http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html
+mysqld: 180926 11:10:53 [ERROR] MySQL is trying to open a table handle but the .ibd file for
+mysqld: table km8/users625 does not exist.
+mysqld: Have you deleted the .ibd file from the database directory under
+mysqld: the MySQL datadir, or have you used DISCARD TABLESPACE?
+mysqld: See http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html
+mysqld: how you can resolve the problem.
+&lt;/code>&lt;/pre>&lt;p>其中提到3个可追溯的点：&lt;/p>
+&lt;ul>
+&lt;li>ibd file&lt;/li>
+&lt;li>DISCARD TABLESPACE&lt;/li>
+&lt;li>&lt;a href="http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html">http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>了解这3点提到的内容，应该对判断情况有很好的帮助。&lt;/p>
+&lt;h2 id="ibd-file">ibd file&lt;/h2>
+&lt;p>日志中提问，是否丢失了 ibd 文件？先到 mysql 数据目录下查找，&lt;/p>
+&lt;pre>&lt;code>.
+├── ibdata1
+├── .......
+├── .......
+└── km8
+├── ............
+├── ............
+├── users625.frm
+├── users625.ibd
+├── ............
+└── ............
+&lt;/code>&lt;/pre>&lt;p>users625 的 ibd 文件是存在的，与之一起的还有文件 users625.frm 。&lt;/p>
+&lt;p>根据官方文档&lt;a href="https://dev.mysql.com/doc/internals/en/frm-file-format.html">对 frm 文件的描述&lt;/a>，frm 文件是用来保存 table 表结构（即 table 的定义）的，无论使用什么存储引擎。&lt;/p>
+&lt;p>与之相对的，ibd 文件是用来存储表数据（即行数据）的，通常情况下，所有数据都会存储在系统的 ibd 文件，
+但是当开启选项 &lt;a href="https://dev.mysql.com/doc/refman/5.5/en/innodb-parameters.html#sysvar_innodb_file_per_table">innodb_file_per_table&lt;/a> 的时候，每个表的数据会使用单独的 ibd 文件来存储。&lt;/p>
+&lt;p>当前的 mysql 就开启了这个选项，&lt;/p>
+&lt;pre>&lt;code>[mysqld]
+innodb_file_per_table=1
+&lt;/code>&lt;/pre>&lt;p>目前 frm 与 ibd 文件都存在，从中恢复数据便存在一些希望。&lt;/p>
+&lt;h2 id="discard-tablespace">DISCARD TABLESPACE&lt;/h2>
+&lt;p>日志中提到的 &lt;code>DISCARD TABLESPACE&lt;/code> 其实是在猜测导致 ibd 文件丢失的原因，因为它会删除相应 table 的 ibd 文件（所谓 tablespace）。&lt;/p>
+&lt;pre>&lt;code>&amp;gt; ALTER TABLE km8.users625 DISCARD TABLESPACE;
+&lt;/code>&lt;/pre>&lt;p>底层的 users625.ibd 文件就会被删除，丢失所有表数据。&lt;/p>
+&lt;p>根据目前情况来看， ibd 文件还存在，所以它不是导致错误的原因。&lt;/p>
+&lt;h2 id="trouble-shooting-doc">trouble shooting doc&lt;/h2>
+&lt;p>&lt;a href="http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html">日志中提到的参考链接&lt;/a>，其中列举了多种情况，和当前问题相关的是一个&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-troubleshooting-datadict.html">子链接&lt;/a>，
+按照它提供的方法，尝试进行数据恢复。&lt;/p>
+&lt;h1 id="数据恢复">数据恢复&lt;/h1>
+&lt;p>官方文档提到的&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-troubleshooting-datadict.html">恢复数据&lt;/a>的方法，思路很清晰：&lt;/p>
+&lt;ol>
+&lt;li>启用相同版本的 mysql 实例（启用选项 innodb_file_per_table）&lt;/li>
+&lt;li>建立同样结构的数据表&lt;/li>
+&lt;li>替换 ibd 文件（保持文件权限一致）&lt;/li>
+&lt;li>导入 ibd 文件中的数据&lt;/li>
+&lt;li>使用 mysqldump，导出数据&lt;/li>
+&lt;li>将导出的数据导入原数据库&lt;/li>
+&lt;/ol>
+&lt;p>我按照这种方式尝试恢复数据，并不是那么顺利：&lt;/p>
+&lt;h2 id="如何获得-table-表结构">如何获得 table 表结构？&lt;/h2>
+&lt;p>在第2步，需要建立同样结构的数据表，目前只有 frm 和 ibd 文件，怎么样得到 &lt;code>create table&lt;/code> 命令？&lt;/p>
+&lt;p>根据底层数据存储的理解，table 表结构存储在 frm 文件中，而目前已经有&lt;a href="https://www.cnblogs.com/dreamanddead/p/recover-mysql-table-structure-from-frm-file.html">相应的方法&lt;/a>从中提取出 &lt;code>create table&lt;/code> 命令，
+这样就可以用于在新的 mysql 实例中建立 table 。&lt;/p>
+&lt;h2 id="tablespace-id-不对应">tablespace id 不对应？&lt;/h2>
+&lt;p>在第4步，尝试导入数据的时候，&lt;/p>
+&lt;pre>&lt;code>&amp;gt; ALTER TABLE km8.users625 IMPORT TABLESPACE;
+ERROR 1030 (HY000): Got error -1 from storage engine
+&lt;/code>&lt;/pre>&lt;p>总是出现失败，同时在 mysql 新实例的日志中发现这样的错误：&lt;/p>
+&lt;pre>&lt;code>mysqld: InnoDB: Error: tablespace id in file './km8/users625.ibd' is 18446744073709551615, but in the InnoDB
+mysqld: InnoDB: data dictinary it is 1.
+&lt;/code>&lt;/pre>&lt;p>原来在内部，ibd 文件本身有一个 id，必须和 mysql innodb 内部的 table 元数据相对应，才可以进行导入。&lt;/p>
+&lt;p>根据错误信息搜索到&lt;a href="http://www.chriscalender.com/recovering-an-innodb-table-from-only-an-ibd-file/">一篇文章&lt;/a>，其中提到两种办法：&lt;/p>
+&lt;ol>
+&lt;li>重复建表，因为 mysql 内部的 tablespace id 是累计递增的，预先建立 （18446744073709551615 - 1）张表，再建立
+users625 表，就可以对应 id，并进行导入。&lt;/li>
+&lt;li>修改 ibd 文件，因为 tablespace id 存储于 ibd 文件，找到它并将其修改为 1，使之与内部的 id 对应，就可以进行导入。&lt;/li>
+&lt;/ol>
+&lt;p>考虑第 1 种方法，要预先建立上亿张空表？！这根本不可能。&lt;/p>
+&lt;p>于是尝试第 2 种方法，研究 ibd 的文件格式，修改对应 id。&lt;/p>
+&lt;p>用二进制编辑器打开 users625.ibd 文件，&lt;/p>
+&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-27/5492997.jpg" alt="users625-ibd-hexdump">&lt;/p>
+&lt;pre>&lt;code>18:26:08 UTC - mysqld got signal 6. This could be because you hit a bug. It is also possible that this
+binary or one of the libraries it was linked against is corrupt, improperly built or misconfigured.
+This error can also be cuased by malfunctioning hardware.
+&lt;/code>&lt;/pre>&lt;p>不敢相信自己的眼睛，居然有错误 log 在二进制文件里？！ibd 的文件格式可没有这么说明过。&lt;/p>
+&lt;p>随便找一个邻居表正常的 ibd 文件作对比，&lt;/p>
+&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-27/50479657.jpg" alt="normal-ibd-hexdump">&lt;/p>
+&lt;p>看来是出现了 bug ，崩溃的环境直接将数据文件给毁了，这也解释了为什么 tablespace id 会那么大，因为 log
+覆盖了原本的 id 字段，使 mysql 解读出了一个好笑的数字。&lt;/p>
+&lt;h2 id="暂时放弃">暂时放弃&lt;/h2>
+&lt;p>这种情况下，还没有办法将数据恢复回来，只能暂时将表删除，新建空表，保证上层应用程序可以运行。
+将 ibd 文件备份下来，看后续还没有其它的办法将其恢复。&lt;/p>
+&lt;h1 id="检测所有-table-状态">检测所有 table 状态&lt;/h1>
+&lt;p>当前只发现一个出现问题的 table ，可能同时也有其它的 table 出现问题。对此需要做一个全面的检测，
+检测有没有其它的表受到牵连。&lt;/p>
+&lt;pre>&lt;code>$ mysqlcheck --all-databases
+&lt;/code>&lt;/pre>&lt;h1 id="写在最后">写在最后&lt;/h1>
+&lt;p>数据库的备份是非常重要的！直接导入备份数据，是解决问题最保险最便捷的办法。
+如果没有备份，遇到 bug 丢失数据，只能怪时运不济。&lt;/p>
+&lt;p>同时数据库也最好选择稳定的版本，降低出现 bug 的概率。&lt;/p>- https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Configure apt rightly for debian squeeze</title><link>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</link><pubDate>Wed, 26 Sep 2018 16:50:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ -&lt;p>本想在 Debian Squeeze 上安装一些依赖，没想到刚执行 &lt;code>apt-get update&lt;/code> ，就出现这样的错误信息。&lt;/p>
+&lt;pre>&lt;code>W: GPG error: http://mirrors.163.com squeeze Release: The following signatures were invalid: KEYEXPIRED 1520281423 KEYEXPIRED 1501892461
+E: Release file expired, ignoring http://mirrors.163.com/debian-archive/dists/squeeze-lts/Release (invalid since 923d 19h 26min 3s)
+&lt;/code>&lt;/pre>&lt;h1 id="问题出在哪里">问题出在哪里&lt;/h1>
+&lt;p>Debian Squeeze 6.0 版本对于当前最新的 9.5 版本来说，是过于陈旧了。
+错误信息表示，证书过期，也不是太意外的事。&lt;/p>
+&lt;p>以 &lt;code>The following signatures were invalid&lt;/code> 为关键字进行搜索，大体有两种方案：&lt;/p>
+&lt;h2 id="缓存原因">缓存原因？&lt;/h2>
+&lt;p>搜索到的大多数结果给出这样的解答，&lt;a href="https://www.cnblogs.com/arrongao/archive/2012/12/13/2815614.html">比如这里&lt;/a>&lt;/p>
+&lt;pre>&lt;code>sudo apt-get clean
+cd /var/lib/apt
+sudo mv lists lists.old
+sudo mkdir -p lists/partial
+sudo apt-get clean
+sudo apt-get update
+&lt;/code>&lt;/pre>&lt;p>他们认为原因是 apt 系统出现临时性的缓存故障，所以用 clean 的方式来清除。
+我不知道在当时是否真的有效，毕竟那篇博客写在 2012 年，当时 Debian 6.0 也才发布一年，决不至于密钥出现过期，怀疑到缓存身上也
+情有可原。&lt;/p>
+&lt;p>但是当前我的密钥是真的过期了，invalid since 923d(ays)，我尝试了这种 clean 的方法，并不能生效。看来解决方案也有保持期啊。&lt;/p>
+&lt;h2 id="密钥续期">密钥续期？&lt;/h2>
+&lt;p>另一种方案是续期密钥，&lt;a href="https://askubuntu.com/a/837004">比如这里&lt;/a>&lt;/p>
+&lt;pre>&lt;code>sudo apt-key list | grep &amp;quot;expired: &amp;quot;
+sudo apt-key adv --keyserver keys.gnupg.net --recv-keys [KEY]
+&lt;/code>&lt;/pre>&lt;p>这种方案想为过期的密钥续期，使其可用。
+我先在系统里查看了密钥的情况，确实过期的太久。&lt;/p>
+&lt;pre>&lt;code>$ sudo apt-key list
+/etc/apt/trusted.gpg
+--------------------
+..........................
+..........................
+..........................
+pub 2048R/6D849617 2009-01-24 [expired: 2013-01-23]
+uid Debian-Volatile Archive Automatic Signing Key (5.0/lenny)
+pub 4096R/B98321F9 2010-08-07 [expired: 2014-08-05]
+uid Squeeze Stable Release Key &amp;lt;debian-release@lists.debian.org&amp;gt;
+..........................
+..........................
+..........................
+&lt;/code>&lt;/pre>&lt;p>于是用 &lt;code>apt-key adv&lt;/code> 进行续期，再次查看密钥情况，发现并没有多少改观，
+时间确实前进更新了几个月，但是依旧保持着 expired 状态，毕竟还差很多年。&lt;/p>
+&lt;p>我想可能和第一种方案是一样的问题，“方案过期”。在当时版本还支持的时候，应该是有效果的，但是当前情况已经
+发生了变化，错误信息是一样的，但是问题本身已经出现了本质的变化。&lt;/p>
+&lt;h1 id="当前的正确方案">当前的正确方案&lt;/h1>
+&lt;p>于是继续搜索，在&lt;a href="https://wiki.debian.org/DebianSqueeze">官方文档的FAQ部分&lt;/a>，找到了官方解答。&lt;/p>
+&lt;p>1.修改 source.list&lt;/p>
+&lt;pre>&lt;code>deb http://archive.debian.org/debian squeeze main
+deb http://archive.debian.org/debian squeeze-lts main
+&lt;/code>&lt;/pre>&lt;p>2.同时配置 apt，添加以下内容到 /etc/apt/apt.conf(没有则新建)&lt;/p>
+&lt;pre>&lt;code>Acquire::Check-Valid-Until false;
+&lt;/code>&lt;/pre>&lt;p>其中特别提到了 &lt;code>The second line will fail with an &amp;quot;expired&amp;quot; type message, so you also need to ...&lt;/code>，so sweet！&lt;/p>
+&lt;p>既然 Debian Squeeze 已经不再更新，apt source 也划入了 archive，这个方案应该是最“长治久安”的。&lt;/p>- https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>How uri match nginx location</title><link>https://dreamanddead.github.io/post/nginx-location/</link><pubDate>Mon, 28 May 2018 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/nginx-location/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/nginx-location/ -&lt;p>location 是 nginx 配置中出现最频繁的配置项，一个 uri 是如何与多个 location 进行匹配的？
+在有多个 location 都匹配的情况下，如何决定使用哪一个 location 作为匹配结果？&lt;/p>
+&lt;p>清晰内部机制之后，疑问自然迎刃而解。&lt;/p>
+&lt;h1 id="location-规则类型">location 规则类型&lt;/h1>
+&lt;p>根据&lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location">官方文档&lt;/a>，location 配置语法如下&lt;/p>
+&lt;pre>&lt;code>Syntax: location [ = | ~ | ~* | ^~ ] uri { ... }
+location @name { ... }
+Default: —
+Context: server, location
+&lt;/code>&lt;/pre>&lt;p>其语法对应了 location 规则的 5 种类型：&lt;/p>
+&lt;h2 id="prefix">prefix&lt;/h2>
+&lt;p>前缀匹配规则，如果 uri 包含相应的前缀，则匹配成功。&lt;/p>
+&lt;p>语法上， location 之后单纯跟上 uri，没有任何操作符。&lt;/p>
+&lt;pre>&lt;code>location /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h2 id="exact-uri">exact uri&lt;/h2>
+&lt;p>完全匹配规则，如果 uri 和规则完全相同，则匹配成功。&lt;/p>
+&lt;p>语法上，使用 = 操作符。&lt;/p>
+&lt;pre>&lt;code>location = /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h2 id="case-sensitive-regex">case-sensitive regex&lt;/h2>
+&lt;p>区分大小写的正则表达式匹配规则，如果 uri 与正则表达式相匹配，则匹配成功。
+正则表达式使用 &lt;a href="https://www.pcre.org/">pcre library&lt;/a>，语法和 perl 兼容。&lt;/p>
+&lt;p>语法上，使用 ~ 操作符。&lt;/p>
+&lt;p>这里有一个细节，uri 作为一个 string，只要 regex 匹配其中的一部分，即可算作匹配。
+比如有如下的规则，&lt;/p>
+&lt;pre>&lt;code>location ~ /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;p>可以匹配 uri&lt;/p>
+&lt;ul>
+&lt;li>/api/v1/login&lt;/li>
+&lt;li>/pod/api/v1&lt;/li>
+&lt;/ul>
+&lt;p>如果想要匹配整个 string，则要使用 &lt;code>^ $&lt;/code>。
+比如，&lt;/p>
+&lt;pre>&lt;code>location ~ ^/api/v1.*$ {
+....
+}
+&lt;/code>&lt;/pre>&lt;p>可以匹配 uri&lt;/p>
+&lt;ul>
+&lt;li>/api/v1/login&lt;/li>
+&lt;/ul>
+&lt;p>不可以匹配&lt;/p>
+&lt;ul>
+&lt;li>/pod/api/v1&lt;/li>
+&lt;/ul>
+&lt;h2 id="case-insensitive-regex">case-insensitive regex&lt;/h2>
+&lt;p>规则同上，区别只在于，正则表达式不区分大小写。
+&lt;strong>不&lt;/strong>区分大小写的正则表达式匹配规则，如果 uri 与正则表达式相匹配，则匹配成功。&lt;/p>
+&lt;p>语法上，使用 &lt;code>~*&lt;/code> 操作符。&lt;/p>
+&lt;pre>&lt;code>location ~* /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h2 id="disable-regex-prefix">disable regex prefix&lt;/h2>
+&lt;p>匹配流程与 prefix 规则相同，有一点区别在于，如果最长匹配是当前规则，则之后不进行 正则表达式 规则的搜索。
+这一点可能有些难以理解，后面会详细讲解。&lt;/p>
+&lt;p>语法上，使用 &lt;code>^~&lt;/code> 操作符。&lt;/p>
+&lt;pre>&lt;code>location ^~ /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h1 id="uri-如何选择-location">uri 如何选择 location&lt;/h1>
+&lt;p>前面讲到，location 规则有 5 种类型，那么 uri 如何在多种不同类型的 location 规则之间，
+最终选择到唯一的 location 规则呢？&lt;/p>
+&lt;p>根据&lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location">官方文档&lt;/a>的描述，详细规则如下：&lt;/p>
+&lt;ol>
+&lt;li>如果存在 exact uri 规则与 uri 匹配，至步骤 6&lt;/li>
+&lt;li>在所有 prefix 规则和 disable regex prefix 规则中进行匹配（&lt;strong>与这些规则定义的顺序无关&lt;/strong>），
+如果没有匹配到规则，至步骤 3；如果存在匹配的规则，选择出最长匹配 uri 的规则：
+&lt;ul>
+&lt;li>如果规则是 disable regex prefix 类型，至步骤 6&lt;/li>
+&lt;li>如果规则是 prefix 类型，记住当前匹配的 prefix 规则，选为待定，至步骤 3&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>逐个遍历 case-sensitive regex 规则和 case-insensitive regex 规则（&lt;strong>按照这些规则定义的前后顺序&lt;/strong>）:
+&lt;ul>
+&lt;li>如果规则匹配，则遍历终止，至步骤 6&lt;/li>
+&lt;li>如果规则没有匹配，则继续&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>如果之前有 prefix 规则条目被选择为待定，至步骤 6&lt;/li>
+&lt;li>匹配失败，返回404，结束&lt;/li>
+&lt;li>选择当前规则，使用其配置，结束&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-28/21577003.jpg" alt="">&lt;/p>
+&lt;h1 id="faq">FAQ&lt;/h1>
+&lt;p>有人可能会困惑，如果 prefix 与 disable regex prefix 规则相同，比如，&lt;/p>
+&lt;pre>&lt;code>location /static/ {
+....
+}
+location ^~ /static/ {
+....
+}
+&lt;/code>&lt;/pre>&lt;p>最终会匹配哪一条规则？是否应该继续查找 regex 规则？&lt;/p>
+&lt;p>实际上，这种情况 nginx 会报错，&lt;code>nginx: [emerg] duplicate location &amp;quot;/static/&amp;quot; in /etc/nginx/conf.d/location.conf&lt;/code>，
+所以这种情况是不用考虑的。&lt;/p>
+&lt;h1 id="示例">示例&lt;/h1>
+&lt;p>示例项目在 &lt;a href="https://github.com/DreamAndDead/nginx-example">nginx example&lt;/a>，
+参考 readme 文件，在本地启动 nginx server。&lt;/p>
+&lt;p>其中对 nginx 的配置如下，使用 curl 进行检测。&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/nginx-example/blob/master/location/conf.d/location.conf?footer=minimal&amp;slice=0:34">&lt;/script>
+&lt;p>exact uri 规则先于所有规则（与规则定义的顺序无关），所以这里匹配了 &lt;code>= /&lt;/code> exact uri 规则而不是 &lt;code>/&lt;/code> prefix 规则。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/
+uri &amp;quot;/&amp;quot;: exact match &amp;quot;location = /&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>exact uri 规则先于所有规则（与规则定义的顺序无关），所以这里没有匹配 &lt;code>^~ /static/&lt;/code> disable regex prefix 和 &lt;code>~* \.PNG$&lt;/code>，&lt;code>~ \.png$&lt;/code> regex 规则。&lt;/p>
+&lt;p>正是因为 exact uri 规则的这种属性，如果有高频率使用的 uri，建议使用 exact uri 匹配，加快匹配速度。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/static/logo.png
+uri &amp;quot;/static/logo.png&amp;quot;: exact uri match &amp;quot;location = /static/logo.png&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>prefix 规则中，匹配 uri 长度最长的规则会选中，所以没有选中 &lt;code>/&lt;/code> prefix 规则。同样的，从这一点来看，&lt;code>/api&lt;/code> 和 &lt;code>/api/&lt;/code> 是不一样的。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/api
+uri &amp;quot;/api&amp;quot;: prefix match &amp;quot;location /api&amp;quot;
+$ curl http://localhost:8080/api/
+uri &amp;quot;/api/&amp;quot;: prefix match &amp;quot;location /api/&amp;quot;
+$ curl http://localhost:8080/api/v1
+uri &amp;quot;/api/v1&amp;quot;: prefix match &amp;quot;location /api/&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>如果匹配了 &lt;code>^~ /static/&lt;/code> disable regex prefix 规则，则不再去搜索之后的 regex 规则。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/static/thinkpad.png
+uri &amp;quot;/static/thinkpad.png&amp;quot;: disable regex prefix match &amp;quot;location ^~ /static/&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>在 regex 规则的匹配中，定义的先后顺序是重要的，所以 &lt;code>~ \.png$&lt;/code> case-sensitive 规则永远不会被匹配。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/files/large.png
+uri &amp;quot;/files/large.png&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
+$ curl http://localhost:8080/files/large.PNG
+uri &amp;quot;/files/large.PNG&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>即使先匹配了 &lt;code>/api/&lt;/code> prefix 规则作为待定，但是也匹配了 regex 规则，优先使用 regex 规则。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/api/v1/file/logo.png
+uri &amp;quot;/api/v1/file/logo.png&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>存在 &lt;code>/&lt;/code> prefix 规则是有益的，收容所有未明确定位的 uri，再做错误处理。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/no-where
+uri &amp;quot;/no-where&amp;quot;: prefix match &amp;quot;location /&amp;quot;
+&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/nginx-location/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item></channel></rss>

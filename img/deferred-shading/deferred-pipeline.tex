@@ -1,0 +1,43 @@
+% refer to: http://www.texample.net/tikz/examples/simple-flow-chart/
+
+\documentclass[border=10pt]{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+\begin{document}
+
+\tikzstyle{block} = [rectangle, draw, node distance=4cm, text width=8em, text centered, rounded corners, minimum height=1.5cm]
+\tikzstyle{long} = [rectangle, draw, text width=15cm, text centered, rounded corners, minimum height=2cm]
+\tikzstyle{line} = [draw, -latex]
+
+\tikzstyle{read} = [draw, triangle 45-]
+\tikzstyle{write} = [draw, -triangle 45]
+\begin{tikzpicture}
+ 
+    % nodes
+    \node [block] (geo) {Geometry Stage};
+    \node [block, right of=geo] (light) {Lighting Stage};
+    \node [block, right of=light] (post) {Post-Processing Stage};
+    \node [block, right of=post] (final) {Final Stage};
+    
+    \node [long] at (6, -3) (buffer) {G-buffer\\(color, depth, diffuse, specular)};
+    
+    
+    % lines
+    \path [line] (geo) -- (light);
+    \path [line] (light) -- (post);
+    \path [line] (post) -- (final);
+    
+    \path [write] (1, -.75) -- (1, -2);
+    \path [read] (3, -.75) -- (3, -2);
+    \path [write] (5, -.75) -- (5, -2);
+    \path [read] (7, -.75) -- (7, -2);
+    \path [write] (9, -.75) -- (9, -2);
+    \path [read] (11, -.75) -- (11, -2);
+    \path [write] (13, -.75) -- (13, -2);
+    
+\end{tikzpicture}
+\end{document}
+
+    

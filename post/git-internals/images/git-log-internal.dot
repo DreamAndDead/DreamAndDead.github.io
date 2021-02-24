@@ -1,0 +1,51 @@
+digraph G {
+  label="git commit log internal";
+  fontname="sans serif";
+  
+  rankdir=LR;
+  nodesep=.5;
+  
+  node [margin=1, shape=circle, style=filled, width=.9, height=.9, fontname="sans serif", fixedsize=true];
+  edge [fontname="sans serif"];
+  
+  {
+    rank=same;
+    commit_1;
+    commit_2;
+    commit_3;
+  }
+
+  tag_1 [label="tag v1.1\nd879e3", fillcolor=azure1, color=azure1, group=bottom];
+  ref_1 [label="ref\nmaster", fillcolor=darksalmon, color=darksalmon, group=top];
+  
+  
+  commit_1 [label="commit\n409eed", fillcolor=beige, color=beige, group=bottom];
+  commit_2 [label="commit\nadeq3a", fillcolor=beige, color=beige, group=middle];
+  commit_3 [label="commit\nf15d0d", fillcolor=beige, color=beige, group=top];
+  
+  tree_1 [label="tree\n5e35de", fillcolor=darkseagreen1, color=darkseagreen1, group=bottom];
+  tree_2 [label="tree\nd1419c", fillcolor=darkseagreen1, color=darkseagreen1, group=middle];
+  tree_3 [label="tree\n6a04ac", fillcolor=darkseagreen1, color=darkseagreen1, group=top];
+  tree_4 [label="tree\n016a4b", fillcolor=darkseagreen1, color=darkseagreen1, group=middle];
+  
+  blob_1 [label="blob\nce616e", fillcolor=darkolivegreen1, color=darkolivegreen1, group=bottom];
+  blob_2 [label="blob\n9b1309", fillcolor=darkolivegreen1, color=darkolivegreen1, group=middle];
+  blob_3 [label="blob\nb1d1b6", fillcolor=darkolivegreen1, color=darkolivegreen1, group=top];
+
+  tag_1 -> commit_1;
+  ref_1 -> commit_3;
+  
+  commit_2 -> commit_1 [xlabel="parent  "];
+  commit_3 -> commit_2 [xlabel="parent  "];
+  
+  commit_1 -> tree_1;
+  commit_2 -> tree_2;
+  commit_3 -> tree_3;
+  
+  tree_1 -> blob_1;
+  tree_2 -> blob_1;
+  tree_2 -> tree_4;
+  tree_3 -> tree_4;
+  tree_3 -> blob_3;
+  tree_4 -> blob_2;
+}

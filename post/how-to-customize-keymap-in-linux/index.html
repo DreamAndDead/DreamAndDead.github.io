@@ -1,0 +1,167 @@
+<!doctype html><html><head><title>How to Customize Keymap in Linux</title><meta charset=utf-8><meta name=X-UA-Compatible content="IE=edge"><meta name=google-site-verification content><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name=viewport><meta content="telephone=no" name=format-detection><meta name=description content><meta name=renderer content="webkit"><meta name=theme-color content="#ffffff"><meta property="og:title" content="How to Customize Keymap in Linux"><meta property="og:description" content="最近刚开始使用 emacs ，太多 Ctrl Alt 相关的快捷键，边侧的手指不舒服，于是想法将部分键盘按键进行改键。
+如果 Caps Lock 可以作为 BackSpace，删除字符的时候就不需要右侧的小指离的太远。
+如果将 Menu 键改为 Ctrl，这样就可以用小指的指根来按压，方便进行快捷键操作。
+针对这样的需求，开始在网上寻找相关改键的方案，搜索结果几乎一致统一的，在 Xorg 环境下，使用 xmodmap 来修改是最合适的。"><meta property="og:type" content="article"><meta property="og:url" content="https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/"><meta property="article:published_time" content="2019-08-12T10:29:00+00:00"><meta property="article:modified_time" content="2019-08-12T10:29:00+00:00"><meta property="og:site_name" content="Brain=f(X)?"><meta name=twitter:card content="summary"><meta name=twitter:title content="How to Customize Keymap in Linux"><meta name=twitter:description content="最近刚开始使用 emacs ，太多 Ctrl Alt 相关的快捷键，边侧的手指不舒服，于是想法将部分键盘按键进行改键。
+如果 Caps Lock 可以作为 BackSpace，删除字符的时候就不需要右侧的小指离的太远。
+如果将 Menu 键改为 Ctrl，这样就可以用小指的指根来按压，方便进行快捷键操作。
+针对这样的需求，开始在网上寻找相关改键的方案，搜索结果几乎一致统一的，在 Xorg 环境下，使用 xmodmap 来修改是最合适的。"><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-93899485-1','auto');ga('send','pageview');}</script><script src=/vendor/js/jquery.min.js></script><script src=/vendor/js/popper.min.js></script><script src=/vendor/js/bootstrap.min.js></script><script src=/vendor/js/smooth-scroll.polyfills.min.js></script><link type=text/css rel=stylesheet href=/vendor/css/bootstrap.min.css><script src=/vendor/js/vue.min.js></script><link rel=stylesheet href=https://dreamanddead.github.io/scss/journal.min.c116bc90d171283f099f173854157ec8f183f9073b93443b2c8ad82899ee9025.css integrity="sha256-wRa8kNFxKD8Jnxc4VBV+yPGD+Qc7k0Q7LIrYKJnukCU=" media=screen><link rel=stylesheet href=https://dreamanddead.github.io/scss/dark-mode.min.552aae4638a84aa57cf0b195750a49ea9131d3bb621d1ed3ebc9b14b18166536.css integrity="sha256-VSquRjioSqV88LGVdQpJ6pEx07tiHR7T68mxSxgWZTY=" media=screen><script src=https://dreamanddead.github.io/js/loadCSS.js></script><script>loadCSS("https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons");</script><script src=https://dreamanddead.github.io/js/toc.js></script><script src=https://cdn.jsdelivr.net/npm/vue-disqus@3/dist/vue-disqus.js></script></head><body><div id=app><div ref=sideContainer class=side-container><a class="a-block nav-head false" href=https://dreamanddead.github.io><div class=nav-title>Brain=f(X)?</div><div class=nav-subtitle>Can machine think?</div></a><div class=nav-link-list><a class="a-block nav-link-item false" href=/categories>Categories</a>
+<a class="a-block nav-link-item false" href=/tags>Tags</a>
+<a class="a-block nav-link-item false" href=/index.xml>RSS Feed</a></div><div class=nav-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+Attribution-NonCommercial-ShareAlike 4.0 International</div></div><div ref=extraContainer class=extra-container><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc-content><center>- CATALOG -</center><ul><li><a href=#key-concept onclick="onNavClick(`#key-concept-nav`)" id=key-concept-nav>key concept</a></li><li><a href=#browse-keymap-table onclick="onNavClick(`#browse-keymap-table-nav`)" id=browse-keymap-table-nav>browse keymap table</a></li><li><a href=#check-out-specific-key onclick="onNavClick(`#check-out-specific-key-nav`)" id=check-out-specific-key-nav>check out specific key</a></li><li><a href=#configure-keymap-table onclick="onNavClick(`#configure-keymap-table-nav`)" id=configure-keymap-table-nav>configure keymap table</a></li><ul class=collapse data-toggle=collapse><li><a href=#grammar onclick="onNavClick(`#grammar-nav`)" id=grammar-nav>grammar</a></li><li><a href=#keycode- onclick="onNavClick(`#keycode--nav`)" id=keycode--nav>keycode =</a></li><li><a href=#keysym- onclick="onNavClick(`#keysym--nav`)" id=keysym--nav>keysym =</a></li><li><a href=#modifier onclick="onNavClick(`#modifier-nav`)" id=modifier-nav>modifier</a></li></ul><li><a href=#modification onclick="onNavClick(`#modification-nav`)" id=modification-nav>modification</a></li><li><a href=#load-at-boot onclick="onNavClick(`#load-at-boot-nav`)" id=load-at-boot-nav>load at boot</a></li><li><a href=#refs onclick="onNavClick(`#refs-nav`)" id=refs-nav>refs</a></li></ul></div></div><div class=pagination><a id=globalBackToTop class="pagination-action animated-visibility" href=#top :class="{ invisible: scrollY == 0 }"><i class="material-icons pagination-action-icon">keyboard_arrow_up</i></a>
+<a class=pagination-action v-on:click=toggleDarkMode><i class="material-icons pagination-action-icon" v-if=isDarkMode>brightness_4</i>
+<i class="material-icons pagination-action-icon" v-else=isDarkMode>brightness_7</i></a></div></div><div class=single-column-drawer-container ref=drawer v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }"><div class=drawer-content><div class=drawer-menu><a class="a-block drawer-menu-item false" href=/categories>Categories</a>
+<a class="a-block drawer-menu-item false" href=/tags>Tags</a>
+<a class="a-block drawer-menu-item false" href=/index.xml>RSS Feed</a><div class=toc><div class=toc-content><center>- CATALOG -</center><ul><li><a href=#key-concept onclick="onNavClick(`#key-concept-nav`)" id=key-concept-nav>key concept</a></li><li><a href=#browse-keymap-table onclick="onNavClick(`#browse-keymap-table-nav`)" id=browse-keymap-table-nav>browse keymap table</a></li><li><a href=#check-out-specific-key onclick="onNavClick(`#check-out-specific-key-nav`)" id=check-out-specific-key-nav>check out specific key</a></li><li><a href=#configure-keymap-table onclick="onNavClick(`#configure-keymap-table-nav`)" id=configure-keymap-table-nav>configure keymap table</a></li><ul class=collapse data-toggle=collapse><li><a href=#grammar onclick="onNavClick(`#grammar-nav`)" id=grammar-nav>grammar</a></li><li><a href=#keycode- onclick="onNavClick(`#keycode--nav`)" id=keycode--nav>keycode =</a></li><li><a href=#keysym- onclick="onNavClick(`#keysym--nav`)" id=keysym--nav>keysym =</a></li><li><a href=#modifier onclick="onNavClick(`#modifier-nav`)" id=modifier-nav>modifier</a></li></ul><li><a href=#modification onclick="onNavClick(`#modification-nav`)" id=modification-nav>modification</a></li><li><a href=#load-at-boot onclick="onNavClick(`#load-at-boot-nav`)" id=load-at-boot-nav>load at boot</a></li><li><a href=#refs onclick="onNavClick(`#refs-nav`)" id=refs-nav>refs</a></li></ul></div></div></div></div></div><transition name=fade><div v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if=isDrawerOpen v-on:click=toggleDrawer></div></transition><nav ref=navBar class="navbar sticky-top navbar-light single-column-nav-container"><div ref=navBackground class=nav-background></div><div class="container container-narrow nav-content"><button id=nav_dropdown_btn class=nav-dropdown-toggle type=button v-on:click=toggleDrawer>
+<i class=material-icons>menu</i></button>
+<a ref=navTitle class=navbar-brand href=https://dreamanddead.github.io>Brain=f(X)?</a>
+<button type=button class=nav-darkmode-toggle v-on:click=toggleDarkMode>
+<i class=material-icons v-if=isDarkMode>brightness_4</i>
+<i class=material-icons v-else=isDarkMode>brightness_7</i></button></div></nav><div class=single-column-header-container ref=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }"><a href=https://dreamanddead.github.io><div class=single-column-header-title>Brain=f(X)?</div><div class=single-column-header-subtitle>Can machine think?</div></a></div><div id=content><div ref=streamContainer class=stream-container><div class="post-list-container post-list-container-shadow"><div class=post><div class=post-head-wrapper style=background-image:url(https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/images/featured.jpg)><div class=post-title>How to Customize Keymap in Linux<div class=post-meta><time itemprop=datePublished>2019-08-12 10:29</time>
+<i class=material-icons>folder</i>
+<a href=/categories/>[Xorg]</a>
+&nbsp;
+<i class=material-icons>label</i>
+<a href=/tags/linux>linux</a>
+&nbsp;
+<a href=/tags/keymap>keymap</a>
+&nbsp;
+<a href=/tags/emacs>emacs</a>
+&nbsp;
+<i class=material-icons>schedule</i>
+13 min
+42 s.</div></div></div><div class=post-body-wrapper><div class=post-body v-pre><p>最近刚开始使用 emacs ，太多 Ctrl Alt 相关的快捷键，边侧的手指不舒服，于是想法将部分键盘按键进行改键。</p><p>如果 Caps Lock 可以作为 BackSpace，删除字符的时候就不需要右侧的小指离的太远。
+如果将 Menu 键改为 Ctrl，这样就可以用小指的指根来按压，方便进行快捷键操作。</p><p>针对这样的需求，开始在网上寻找相关改键的方案，搜索结果几乎一致统一的，在 Xorg 环境下，使用 xmodmap 来修改是最合适的。</p><h1 id=key-concept>key concept</h1><p>在开始之前，我们先了解一下 Xorg 环境下，关于键盘的<a href=https://wiki.archlinux.org/index.php/Xmodmap>一些概念</a>。</p><p>在 Xorg 中，有两种键盘值，分别是 keycode 和 keysym。</p><p>keycode 本质是一组数字表示，和键盘上的按键是一一对应的。
+在按键被按下后，相关信号传递给内核，内核看到的就是这个 keycode 数字。</p><p>而 keysym 是和 keycode 相关联的值，可以理解为是键盘的功能，比如输入字符 a，删除字符等等。
+它是内核对应相应按键所调用的处理方法。</p><p>它们两者的关系就是一个 map 结构，keycode 是 key，keysym 是value。
+于是，按键就和按键的功能关联起来。</p><p>这种对应结构管理由 Xorg 来管理，被称为 keymap table，它可以用 xmodmap 来查看和修改。</p><p>所以说，修改了关联关系，就达到了改键的目的。</p><h1 id=browse-keymap-table>browse keymap table</h1><p>通过命令，我们可以查看当前的 keymap table。</p><pre><code>$ xmodmap -pke
+keycode   8 =
+keycode   9 = Escape NoSymbol Escape
+keycode  10 = 1 exclam 1 exclam
+keycode  11 = 2 at 2 at
+...............................................
+...............................................
+...............................................
+keycode  23 = Tab ISO_Left_Tab Tab ISO_Left_Tab
+keycode  24 = q Q q Q
+keycode  25 = w W w W
+...............................................
+...............................................
+...............................................
+keycode 254 = XF86WWAN NoSymbol XF86WWAN
+keycode 255 = XF86RFKill NoSymbol XF86RFKill
+</code></pre><p>可以观察到，一个 keycode 对应了多个 keysym。</p><p>其实第一个是按键本身按下所对应的 keysym，后面的 keysym 对应于<a href=https://wiki.archlinux.org/index.php/Xmodmap_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)>当修饰键所按下时的情况</a></p><ol><li>Key</li><li>Shift+Key</li><li>Mode_switch+Key</li><li>Mode_switch+Shift+Key</li><li>etc</li></ol><p>我们通常只需要了解前两个就足够了，即按键本身和 shift 加按键两种情况。</p><p>每个 keycode 用数字来标识，而 keysym 有相应的名称，比如 n N BackSpace，表达相应的功能含义。
+如果想设置为空值，可以设置为 NoSymbol。</p><h1 id=check-out-specific-key>check out specific key</h1><p>通过 xev 工具，</p><pre><code>$ xev -event keyboard
+</code></pre><p>可以监听到所有的键盘消息，并打印出 log。</p><p>通过这种方式，我们就可以检测出当前键盘的按键对应的 keycode 是什么，调用了什么 keysym。</p><p>比如在按下字符 d 之后，可以从 log 中看到 keycode 是 40 ，使用的 keysym 为 d，数字标识为 0x64</p><pre><code>KeyPress event, serial 28, synthetic NO, window 0x6e00001,
+    root 0x1d5, subw 0x0, time 34680022, (634,241), root:(3198,270),
+    state 0x0, keycode 40 (keysym 0x64, d), same_screen YES,
+    XLookupString gives 1 bytes: (64) &quot;d&quot;
+    XmbLookupString gives 1 bytes: (64) &quot;d&quot;
+    XFilterEvent returns: False
+
+KeyRelease event, serial 28, synthetic NO, window 0x6e00001,
+    root 0x1d5, subw 0x0, time 34680062, (634,241), root:(3198,270),
+    state 0x0, keycode 40 (keysym 0x64, d), same_screen YES,
+    XLookupString gives 1 bytes: (64) &quot;d&quot;
+    XFilterEvent returns: False
+</code></pre><h1 id=configure-keymap-table>configure keymap table</h1><p>修改按键就是使用 xmodmap 配置 keymap table 的过程。</p><p>第一种方法，可以通过命令，直接进行修改，使一行配置生效。</p><pre><code>$ xmodmap -e 'keycode 38 = b E'
+</code></pre><p>另外一种方法，可以将配置写在文件中，载入文件进行批量修改。</p><pre><code>$ xmodmap ~/.Xmodmap
+</code></pre><p>另外在配置的过程中，如果有修改不合适的地方，可以使用</p><pre><code>$ setxkbmap
+</code></pre><p>来重置 keymap table 到默认状态。</p><h2 id=grammar>grammar</h2><p>通过</p><pre><code>$ xmodmap -grammar
+</code></pre><p>可以查看 xmodmap 配置所使用的语法规则，</p><pre><code>xmodmap accepts the following input expressions:
+
+    pointer = default              reset pointer buttons to default
+    pointer = NUMBER ...           set pointer button codes
+    keycode NUMBER = [KEYSYM ...]  map keycode to given keysyms
+    keysym KEYSYM = [KEYSYM ...]   look up keysym and do a keycode operation
+    clear MODIFIER                 remove all keys for this modifier
+    add MODIFIER = KEYSYM ...      add the keysyms to the modifier
+    remove MODIFIER = KEYSYM ...   remove the keysyms from the modifier
+
+where NUMBER is a decimal, octal, or hex constant; KEYSYM is a valid
+Key Symbol name; and MODIFIER is one of the eight modifier names:  Shift,
+Lock, Control, Mod1, Mod2, Mod3, Mod4, or Mod5.  Lines beginning with
+an exclamation mark (!) are taken as comments.  Case is significant except
+for MODIFIER names.
+
+Keysyms on the left hand side of the = sign are looked up before any changes
+are made; keysyms on the right are looked up after all of those on the left
+have been resolved.  This makes it possible to swap modifier keys.
+</code></pre><p>pointer 是和鼠标事件相关的，这里先不讨论。
+至于后面的 5 种规则，我们之后详细的从实践角度分析一下它们的作用。</p><h2 id=keycode->keycode =</h2><p>首先我们来看，</p><pre><code>keycode NUMBER = [KEYSYM ...]  map keycode to given keysyms
+</code></pre><p>这个配置是万能配置，可以将任何键盘按键映射到任何按键处理方法上。</p><p>我们在 xev 中看到键盘 a 的 keycode 是 38，我们现在将它映射到 shift 方法上。</p><pre><code>$ xmodmap -e 'keycode 38 = Shift_L A'
+</code></pre><p>如同去前面说的，第一个是单独按键的 keysym，第二个是有 shift 修饰的时候的 keysym。</p><p>（大家可以体会一下这个示例，观察一下 a 按键的行为，修改之后变得非常微妙。记得使用 <code>setxkbmap</code> 重置成正常的布局~）</p><h2 id=keysym->keysym =</h2><p>另外一种配置方法是</p><pre><code>keysym KEYSYM = [KEYSYM ...]   look up keysym and do a keycode operation
+</code></pre><p>这个配置就有些微妙了。
+它可以将相应 keysym 代表的处理方法，赋值给另一个　keysym。</p><p>比如</p><pre><code>$ xmodmap -e 'keysym a = b'
+$ xmodmap -pke | grep 38
+keycode  38 = b B b B
+</code></pre><p>可以看到原来绑定的 a 方法都绑定成为了 b 方法，而且附带修饰键的 keysym 也一并修改了。
+也就是我们按 a 键的时候，其实输入的是 b。</p><p>但如果</p><pre><code>$ xmodmap -e 'keysym a = b c'
+$ xmodmap -pke | grep 38
+keycode  38 = b c b c
+</code></pre><p>它则会这样的绑定结果。
+因为没有具体的文档告诉我们这样配置后的规则到底是什么，所以不推荐用这种方法来配置。</p><p>有意思的是，文档中提到，这种方法可以用来交换两个按键。</p><pre><code>Keysyms on the left hand side of the = sign are looked up before any changes
+are made; keysyms on the right are looked up after all of those on the left
+have been resolved.  This makes it possible to swap modifier keys.
+</code></pre><p>keysym = keysym，左侧解析在前，右侧在左侧解析后再解析。</p><p>所以如果我们载入这样的配置</p><div class=highlight><pre style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>keysym a = b
+keysym b = a
+</code></pre></div><p>发现 a b 两个按键互换了。</p><p>从某种意义上，这种交换很像 python 中变量的交换。</p><div class=highlight><pre style=background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>a, b = b, a
+</code></pre></div><p>左侧的 a b 先解析成对象的地址，右侧的 a b 解析为对象的值，然后统一赋值。</p><p>这样来看的话，keysym 的符号表示更像是一个变量指针。</p><h2 id=modifier>modifier</h2><p>下面来看 modifier 的部分。</p><p>一共有 8 个修饰键，通过</p><pre><code>$ xmodmap -pm
+</code></pre><p>可以查看当前状态。</p><pre><code>xmodmap:  up to 4 keys per modifier, (keycodes in parentheses):
+
+shift       Shift_L (0x32),  Shift_R (0x3e)
+lock        Caps_Lock (0x42)
+control     Control_L (0x25),  Control_R (0x69)
+mod1        Alt_L (0x40),  Alt_R (0x6c),  Meta_L (0xcd)
+mod2        Num_Lock (0x4d)
+mod3
+mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)
+mod5        ISO_Level3_Shift (0x5c),  Mode_switch (0xcb)
+</code></pre><p>我们可以发现，不同于之前 keycode 和 keysym 的对应关系，修饰键是一个分类，其中包括了一些 keysym。</p><p>前 4 个我们可以轻易的看出是 shift capslock control alt 分类。</p><p>每个 keysym 有自己的含义，比如 a，当使用这个 keysym 的时候，系统会输入 a 字符。
+modifier 是一个分类，当某个 keysym 归于这个分类的时候，它就同时附加了相应 modifier 的功能。</p><p>关于 modifier，语法规定可以这样修改</p><pre><code>clear MODIFIER                 remove all keys for this modifier
+add MODIFIER = KEYSYM ...      add the keysyms to the modifier
+remove MODIFIER = KEYSYM ...   remove the keysyms from the modifier
+</code></pre><p>clear 可以清空某个 modifier 包含的全部 keysym；
+add 可以添加对应的 keysym 到 modifier；
+remove 可以删除相应 modifier 下的 keysym。</p><p>remove 不如 clear 常用，因为一般的修改都直接 clear 相关的 modifier，再添加相应的 keysym，这样逻辑清晰，不容易出错。</p><p>在改动 modifier 按键的时候要考虑两点：</p><p>一是，尽量不要将有一定功能含义的 keysym 加入到 modifier 中。</p><p>假如我们将 a 加入到 shift 组中，</p><pre><code>xmodmap -e 'add shift = a'
+</code></pre><p>会发生非常不舒服的情况，单独按 a 还是会输入 a，当 a 按下，再按别的键，它又成了 shift （可以体会一下）。</p><p>所以，将像 a 这样的 keysym 加入 modifier，并不会消除它本身的含义，导致它本身的含义和 modifier 的含义发生混乱。
+但是像 Shift_L 这样的 keysym，如果它不在 modifier 组中，它什么功能都没有，天生就适合作为 modifier。</p><p>二是，两种修改方法的结果有一些差异。</p><pre><code>keycode NUMBER = [KEYSYM ...]  map keycode to given keysyms
+keysym KEYSYM = [KEYSYM ...]   look up keysym and do a keycode operation
+</code></pre><p>这两种方法都可以进行改键。
+假如我们想将键盘上的 caps lock 改成 control 按键，
+用第一种方法，我们先找到 caps lock 的 keycode 是 66，然后载入配置</p><pre><code>clear shift
+clear lock
+keycode 66 = Shift_L
+add shift = Shift_L Shift_R
+</code></pre><p>打印目前的 modifier 结果，</p><pre><code>$ xmodmap -pm
+xmodmap:  up to 4 keys per modifier, (keycodes in parentheses):
+
+shift       Shift_L (0x32),  Shift_R (0x3e),  Shift_L (0x42)
+lock
+control     Control_L (0x25),  Control_R (0x69)
+mod1        Alt_L (0x40),  Alt_R (0x6c),  Meta_L (0xcd)
+mod2        Num_Lock (0x4d)
+mod3
+mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)
+mod5        ISO_Level3_Shift (0x5c),  Mode_switch (0xcb)
+</code></pre><p>发现 shift 中多了一个 Shift_L 键，那是新加的 caps lock 键。</p><p>假如我们用第二种方式，改变 keysym Caps_Lock 的含义。</p><pre><code>clear lock
+keysym Caps_Lock = Shift_L
+</code></pre><p>然后查看当前 modifier 的状态，</p><pre><code>$ xmodmap -pm
+xmodmap:  up to 4 keys per modifier, (keycodes in parentheses):
+
+shift       Shift_L (0x32),  Shift_R (0x3e)
+lock
+control     Control_L (0x25),  Control_R (0x69)
+mod1        Alt_L (0x40),  Alt_R (0x6c),  Meta_L (0xcd)
+mod2        Num_Lock (0x4d)
+mod3
+mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)
+mod5        ISO_Level3_Shift (0x5c),  Mode_switch (0xcb)
+</code></pre><p>我们发现，shift 中只有两个按键，相当于我们将 caps lock 修改成了 shift，利用这一点，可以突破最多 4 个按键绑定的限制。</p><p>但是综合来看，我还是<strong>建议使用 keycode 的方法</strong>来修改，这样相对清晰，稳妥。</p><h1 id=modification>modification</h1><p>在具体了解 xmodmap 之后，再按照我们的想法来修改按键就很简单了。</p><p>比如我目前用的键盘，配合 emacs，很适合将 caps lock 换成 backSpace 键，右边的 menu 换成 ctrl 键。</p><p>{% include image.html url=&ldquo;customize-keymap/penixx-keyboard.jpg&rdquo; desc="" %}</p><pre><code>clear lock
+clear control
+keycode 66 = BackSpace BackSpace
+keycode 135 = Control_R
+add control = Control_L Control_R
+</code></pre><h1 id=load-at-boot>load at boot</h1><p>在修改之后，我们想在启动的时候，自动载入改键的配置。</p><p>可以在 <code>~/.xinitrc</code> 文件中，加入</p><pre><code>[[ -f ~/.Xmodmap ]] &amp;&amp; xmodmap ~/.Xmodmap
+</code></pre><p>而一般情况下，<code>.xinitrc</code> 中已经有了相应的配置，不需要另外再添加。</p><h1 id=refs>refs</h1><ul><li><a href=https://wiki.archlinux.org/index.php/Xmodmap>arch wiki</a></li><li><a href=https://www.zouyesheng.com/xmodmap-usage.html>xmodmap tutorial</a></li><li><a href=https://wiki.archlinux.org/index.php/Xmodmap_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)>arch wiki cn</a></li><li><a href=https://askubuntu.com/questions/29603/how-do-i-clear-xmodmap-settings>reset xmodmap</a></li></ul><hr width=100% id=EOF><p style=color:#777>Last modified on 2019-08-12</p></div></div><nav class=post-pagination><a class=newer-posts href=https://dreamanddead.github.io/post/kd-tree/>Next<br>KD Tree</a>
+<a class=older-posts href=https://dreamanddead.github.io/post/quicksort-complexity/>Previous<br>Quicksort Complexity Analysis in Probability</a></nav><div class=post-comment-wrapper><div class=comments><vue-disqus shortname=dreamanddead></vue-disqus></div><noscript><noscript>Please activate JavaScript to view comments.</noscript></noscript><a href=https://disqus.com/ class=dsq-brlink>Comments powered by <span class=logo-disqus>Disqus</span></a></div></div></div></div></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+Attribution-NonCommercial-ShareAlike 4.0 International</div></div><script>let app;app=new Vue({el:'#app',data:{scrollY:0,navOpacity:0,isDrawerOpen:false,mounted:false,isDarkMode:false},methods:{sgn(t,x){let k=1./(1.-2*t);if(x<=t)return 0;else if(x>=1-t)return 1;else{return k*(x-t);}},handleScroll(){this.scrollY=window.scrollY;this.navOpacity=this.sgn(.0,Math.min(1,Math.max(0,window.scrollY/(this.pageHeadHeight()-this.navBarHeight()*0.8))));const{navBar,navBackground,navTitle,extraContainer,streamContainer}=this.$refs;if(this.navOpacity>=1){navBackground.style.opacity=1;navTitle.style.opacity=1;}else{navBackground.style.opacity=0;navTitle.style.opacity=0;}},handleResize(){const{navBar,navBackground,navTitle,extraContainer,streamContainer}=this.$refs;extraContainer.style.left=(streamContainer.offsetWidth-extraContainer.offsetWidth)+'px';},navBarHeight(){return this.$refs.navBar.offsetHeight;},pageHeadHeight(){return this.$refs.pageHead.offsetHeight;},toggleDrawer(){this.isDrawerOpen=!this.isDrawerOpen;document.getElementsByTagName('html')[0].style.overflow=this.isDrawerOpen?'hidden':'unset';},closeDrawer(){this.isDrawerOpen=false;document.getElementsByTagName('html')[0].style.overflow=this.isDrawerOpen?'hidden':'unset';},toggleDarkMode(){this.isDarkMode=!this.isDarkMode;if(this.isDarkMode==true){document.cookie="night=1;path=/";document.body.classList.add("night");}else{document.cookie="night=0;path=/";document.body.classList.remove("night");}}},created(){window.addEventListener('scroll',this.handleScroll);window.addEventListener('resize',this.handleResize);window._nonDesktop=function(){let check=false;(function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4)))check=true;})(navigator.userAgent||navigator.vendor||window.opera);return check;};var night=document.cookie.replace(/(?:(?:^|.*;\s*)night\s*\=\s*([^;]*).*$)|^.*$/,"$1");if(night==""){if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){}}else{if(night=="1"){this.toggleDarkMode();}}},mounted(){this.handleScroll();this.handleResize();this.mounted=true;},destroyed(){window.removeEventListener('scroll',this.handleScroll);window.removeEventListener('resize',this.handleResize);}});</script><script src=https://dreamanddead.github.io/js/journal.js></script></body></html>

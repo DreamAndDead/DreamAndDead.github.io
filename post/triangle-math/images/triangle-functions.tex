@@ -1,0 +1,53 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+
+\begin{document}
+\begin{tikzpicture}
+ 
+  \coordinate (O) at (0, 0);
+  \coordinate (A) at (4, 0);
+  \coordinate (B) at (4, {4* sqrt(3)});
+  \coordinate (C) at (2, 0);
+  \coordinate (D) at (2, {2*sqrt(3)});
+  \coordinate (E) at (4, {-4/sqrt(3)});
+  \coordinate (F) at ({2*sqrt(3)}, -2);
+  \coordinate (G) at ({2*sqrt(3)}, 0);
+  
+  \draw (O) circle [x radius=4, y radius=4];
+  
+  \draw (O) -- (A);
+  \draw [blue, thick] (O) -- (B);
+  
+  \draw [red, thick] (C) -- (D);
+  \draw [yellow, thick] (A) -- (B);
+  \draw [blue, thick] (O) -- (E);
+  \draw [yellow, thick] (E) -- (A);
+  \draw [red, thick] (F) -- (G);
+  
+  \node [below left] at (O) {$O$};
+  \node [right] at (A) {$A$};
+  \node [right] at (B) {$B$};
+  \node [below] at (C) {$C$};
+  \node [above, xshift=-0.05cm] at (D) {$D$};
+  \node [right] at (E) {$E$};
+  \node [below] at (F) {$F$};
+  \node [above] at (G) {$G$};
+  
+  \coordinate (radius) at (1, {sqrt(3)});
+  \coordinate (sin) at (2, {sqrt(3)});
+  \coordinate (cos) at ({2*sqrt(3)}, -1);
+  \coordinate (tan) at (4, {2*sqrt(3)});
+  \coordinate (sec) at (3, {3*sqrt(3)});
+  \coordinate (csc) at (2.8, {-2.8/sqrt(3)});
+  \coordinate (cot) at (4, {-2/sqrt(3)});
+  
+  \node [above left] at (radius) {$1$};
+  \node [right] at (sin) {$sin$};
+  \node [left] at (cos) {$cos$};
+  \node [right] at (tan) {$tan$};
+  \node [left] at (sec) {$sec$};
+  \node [left, xshift=-0.2cm] at (csc) {$csc$};
+  \node [right] at (cot) {$cot$};
+ 
+\end{tikzpicture}
+\end{document}

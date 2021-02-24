@@ -1,0 +1,1169 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Attribution-NonCommercial-ShareAlike 4.0 International</copyright><lastBuildDate>Mon, 26 Oct 2020 09:10:00 +0000</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>gdb pearls</title><link>https://dreamanddead.github.io/post/gdb-pearls/</link><pubDate>Mon, 26 Oct 2020 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/gdb-pearls/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/gdb-pearls/ -&lt;p>GDB is a life saver when you debug programs or assist to inspect
+when reading source code.&lt;/p>
+&lt;p>Here is a little list about some useful things about gdb.&lt;/p>
+&lt;h1 id="help">help&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>help CMD&lt;/code>, hit when curious&lt;/li>
+&lt;li>you can find everything in &lt;a href="https://sourceware.org/gdb/current/onlinedocs/gdb/">gdb manual&lt;/a>, &lt;code>Ctrl-F&lt;/code> it&lt;/li>
+&lt;/ul>
+&lt;h1 id="gui">gui&lt;/h1>
+&lt;ul>
+&lt;li>using &lt;a href="https://cgdb.github.io/docs/cgdb.html">cgdb&lt;/a>, a concise ncurses interface&lt;/li>
+&lt;li>ddd is buggy, leave it&lt;/li>
+&lt;li>typing &lt;code>M-x gdb&lt;/code> in emacs&lt;/li>
+&lt;/ul>
+&lt;h1 id="print">print&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>set print pretty on&lt;/code>, pretty print&lt;/li>
+&lt;li>&lt;code>set print array on&lt;/code>, pretty print array&lt;/li>
+&lt;li>&lt;code>p *array@N&lt;/code>, print array of length N&lt;/li>
+&lt;li>&lt;code>p *pointer&lt;/code>, pretty print struct&lt;/li>
+&lt;li>&lt;code>display VAR&lt;/code>, display when stop&lt;/li>
+&lt;li>&lt;code>ptype EXP&lt;/code>, type of EXP&lt;/li>
+&lt;/ul>
+&lt;h1 id="breakpoint">breakpoint&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>inf b&lt;/code>, list all&lt;/li>
+&lt;li>&lt;code>d N&lt;/code>, del the N&lt;/li>
+&lt;li>&lt;code>d br&lt;/code>, del all&lt;/li>
+&lt;li>&lt;code>en/dis N&lt;/code>, enable/disable the N&lt;/li>
+&lt;li>&lt;code>tb&lt;/code>, temporary, del when hit&lt;/li>
+&lt;li>&lt;code>b WHERE if COND&lt;/code>, conditional break&lt;/li>
+&lt;li>&lt;code>commands N&lt;/code>, eval cmd when hit&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>(gdb) commands 1
+&amp;gt;print argc
+&amp;gt;del 1
+&amp;gt;end
+&lt;/code>&lt;/pre>&lt;p>clear commands&lt;/p>
+&lt;pre>&lt;code>(gdb) commands 1
+&amp;gt;end
+&lt;/code>&lt;/pre>&lt;h1 id="jump">jump&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>s&lt;/code>, step in&lt;/li>
+&lt;li>&lt;code>fin&lt;/code>, step out&lt;/li>
+&lt;li>&lt;code>record&lt;/code> first, then use &lt;code>rn&lt;/code>, &lt;code>rs&lt;/code>, &lt;code>rc&lt;/code> to do &lt;a href="https://www.sourceware.org/gdb/wiki/ProcessRecord/Tutorial">reverse debugging&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h1 id="stack">stack&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>bt&lt;/code>, show stack&lt;/li>
+&lt;li>&lt;code>up/down N&lt;/code>, change to up/down N-th level&lt;/li>
+&lt;li>&lt;code>n 0&lt;/code>, back to top level&lt;/li>
+&lt;li>&lt;code>inf locals&lt;/code>, view locals in current stack level&lt;/li>
+&lt;li>&lt;code>thread apply all bt full&lt;/code>, inspect all threads&lt;/li>
+&lt;/ul>
+&lt;h1 id="args">args&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>$ gdb a.out --args ...&lt;/code>, passing args&lt;/li>
+&lt;li>&lt;code>run ...&lt;/code>, start with args&lt;/li>
+&lt;li>&lt;code>inf args&lt;/code>, show args&lt;/li>
+&lt;/ul>
+&lt;h1 id="macro">macro&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>CFLAGS = -ggdb3&lt;/code> with gcc, then you can debug macros (the &lt;code>#define&lt;/code> things)&lt;/li>
+&lt;li>&lt;code>inf macros&lt;/code>&lt;/li>
+&lt;li>&lt;code>inf macro NAME&lt;/code>&lt;/li>
+&lt;li>&lt;code>macro expand NAME&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h1 id="remote">remote&lt;/h1>
+&lt;ul>
+&lt;li>install &lt;code>gdbserver&lt;/code>, &lt;a href="https://www.thegeekstuff.com/2014/04/gdbserver-example/">debug remotely&lt;/a>&lt;/li>
+&lt;li>&lt;code>$ gdbserver ip:port prog&lt;/code>, start server&lt;/li>
+&lt;li>&lt;code>$ gdb prog&lt;/code>, start client&lt;/li>
+&lt;li>&lt;code>target remote ip:port&lt;/code>, connect server&lt;/li>
+&lt;/ul>
+&lt;h1 id="hackable">hackable&lt;/h1>
+&lt;ul>
+&lt;li>custom &lt;code>~/.gdbinit&lt;/code> file&lt;/li>
+&lt;li>extending with &lt;a href="https://sourceware.org/gdb/current/onlinedocs/gdb/Sequences.html#Sequences">gdb sequence&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="https://sourceware.org/gdb/wiki/STLSupport?action=AttachFile&amp;amp;do=view&amp;amp;target=stl-views-1.0.3.gdb">stl&lt;/a> is a good example&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>extending with &lt;a href="https://sourceware.org/gdb/current/onlinedocs/gdb/Python.html#Python">python&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h1 id="other-resource">other resource&lt;/h1>
+&lt;ul>
+&lt;li>&lt;a href="http://www.yolinux.com/TUTORIALS/GDB-Commands.html#STLDEREF">gdb cheat sheet&lt;/a>&lt;/li>
+&lt;/ul>- https://dreamanddead.github.io/post/gdb-pearls/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>A little talk about panorama</title><link>https://dreamanddead.github.io/post/a-little-talk-about-panorama/</link><pubDate>Sun, 27 Sep 2020 14:02:58 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-little-talk-about-panorama/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/a-little-talk-about-panorama/ -&lt;p>全景图本身并不神秘。&lt;/p>
+&lt;p>普通的图片，记录的只是在一个位置，一个视角下观察到的场景；
+而全景图可以记录一个位置，所有视角可观察到的场景。&lt;/p>
+&lt;p>全景图虽起名全景，但本质还是图片，可以和普通图片对比着来理解。&lt;/p>
+&lt;h1 id="图片文件">图片文件&lt;/h1>
+&lt;p>图片也是文件，是文件就需要存储。&lt;/p>
+&lt;p>普通图片一般存储为 jpg/png 等格式，全景图也不例外，同样使用相同格式来存储，
+不过存储的内容有些许不同。&lt;/p>
+&lt;p>全景图既然记录了所有视角的场景，必然在内容方面和普通图片有所区别，本质区别在于&lt;a href="https://wiki.panotools.org/Panorama_formats">投影变换&lt;/a>。&lt;/p>
+&lt;figure>
+&lt;img src="images/world-map.png"/> &lt;figcaption>
+&lt;p>inflate world to panorama map&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>上图所有人都不陌生。将地球球体映射到圆柱，再将圆柱展开，成为 2：1 的一张图片，就是常见的世界地图。&lt;/p>
+&lt;p>其本质就是一种主流的存储全景图的方法 &lt;a href="https://wiki.panotools.org/Equirectangular_Projection">equirectangular&lt;/a>。&lt;/p>
+&lt;p>还有另一种存储全景图的方法 &lt;a href="https://wiki.panotools.org/Cubic_Projection">cubic&lt;/a>，以观察点为中心，用六张图片记录 前，后，左，右，上，下 立方体包围盒的六个面。&lt;/p>
+&lt;figure>
+&lt;img src="images/cubic-map.png"/> &lt;figcaption>
+&lt;p>panorama in cubic way&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>可以将包围盒理解为是球体的内接立方体，两者在场景存储方面是等价的。&lt;/p>
+&lt;p>比如 &lt;a href="https://jaxry.github.io/panorama-to-cubemap/">Panorama to Cubemap&lt;/a>，就可以将 equirectangular 转换为 cubic 格式。&lt;/p>
+&lt;h1 id="图片浏览器">图片浏览器&lt;/h1>
+&lt;p>存储图片文件之后，需要图片浏览器来查看图片。&lt;/p>
+&lt;p>普通图片的浏览器，只是简单读取矩阵像素点，呈现在平面屏幕。&lt;/p>
+&lt;p>而全景图保留了全部视角，就需要另外的一种浏览方式，允许各个视角进行切换。&lt;/p>
+&lt;p>&lt;a href="https://wiki.panotools.org/Panorama_Viewers">相应的浏览器&lt;/a>有很多，本质都是将全景图中投影的数据，通过算法计算，还原到任意视角上。&lt;/p>
+&lt;p>下面示例使用 js 实现的全景图浏览器 &lt;a href="https://pannellum.org/documentation/overview/">pannellum&lt;/a>。&lt;/p>
+&lt;iframe src="https://cdn.pannellum.org/2.5/pannellum.htm#panorama=https://pannellum.org/images/alma.jpg" width="100%" height="400px"
+frameborder="0"
+scrolling="no">
+&lt;/iframe>
+&lt;p>其中查看的 equirectangular 全景图是&lt;/p>
+&lt;figure>
+&lt;img src="images/panorama-rect.jpg"/>
+&lt;/figure>
+&lt;p>转换为 cubic 方式，则如下图&lt;/p>
+&lt;figure>
+&lt;img src="images/panorama-cubic.png"/>
+&lt;/figure>
+&lt;h1 id="图片生成">图片生成&lt;/h1>
+&lt;p>普通图片只需要一个镜头，在一个视角下感光即可，记录所有颜色的矩阵，即保留为图片。&lt;/p>
+&lt;p>对于全景图，假如使用 cubic 记录的方式（因为等价），则需要通过镜头来记录 6 张图，即包围盒的六个面。&lt;/p>
+&lt;p>假如使用单镜头拍摄，在现实中做到这一点并不容易。&lt;/p>
+&lt;ol>
+&lt;li>6 张图片需要使用 fov = 90 的广角来拍摄，大部分设备是不支持的。&lt;/li>
+&lt;li>即使得到 6 张相应的图片，并不能保证边角是严丝合缝的，可能存在误差引起的断裂痕迹。&lt;/li>
+&lt;/ol>
+&lt;p>普通的用户如果想通过这种方式得到完美的全景图，远远没有拍摄一张图片加美颜那么简单。&lt;/p>
+&lt;p>如果把拍摄放到虚拟世界中呢？&lt;/p>
+&lt;p>想像在 3D 游戏中，实时看到的场景是通过线性代数计算出来的，想要得到一个角度的场景图片轻而易举，
+并且数学计算十分严密，边界是完全吻合的。相机被抽象为点，没有实体相机的大小误差。&lt;/p>
+&lt;p>简单的实践，可以在 FPS 游戏中，完全的第一视角，在分辨率 1：1 的情况下，记录下 fov = 90 的 前，后，左，右，上，下
+6 张图片，完全可以充当全景图浏览器的输入！&lt;/p>
+&lt;h1 id="更多">更多&lt;/h1>
+&lt;ul>
+&lt;li>普通手机如何拍摄全景图？&lt;/li>
+&lt;/ul>
+&lt;p>目前存在拍摄全景图的相机应用，考虑手机只有一个摄像头，且 fov 调整空间有限，分辨率各不相同，
+拍摄全景图就需要相机应用引导用户拍摄多个视角下的场景，覆盖全景所有的面，最后通过合成算法合成全景图。&lt;/p>
+&lt;p>相应地也存在一些优秀的合成工具，如 microsoft 的 &lt;a href="https://www.microsoft.com/en-us/research/product/computational-photography-applications/image-composite-editor/">ICE&lt;/a>，和 开源的 &lt;a href="https://www.ptgui.com/">PTGui&lt;/a>。&lt;/p>
+&lt;ul>
+&lt;li>有哪些拍摄全景图的设备？&lt;/li>
+&lt;/ul>
+&lt;p>市场存在很多不同的拍摄全景图的设备，拍摄全景的原理并没有发生变化，只不过其使用多个固定的镜头，
+使输入易预测，加上部分冗余和一些算法处理，可以一步生成相应的全景图。&lt;/p>
+&lt;p>详细可参考 &lt;a href="https://www.leiphone.com/news/201512/bMLT4bE88swBjG19.html">this link&lt;/a>。&lt;/p>- https://dreamanddead.github.io/post/a-little-talk-about-panorama/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>记一次修复 manjaro 引导的过程</title><link>https://dreamanddead.github.io/post/rescue-manjaro-boot/</link><pubDate>Tue, 01 Sep 2020 10:23:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/rescue-manjaro-boot/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/rescue-manjaro-boot/ -&lt;p>manjaro 发行版最具特色的即是持续不断的软件更新和系统更新，时刻更新自然是一种最佳实践。&lt;/p>
+&lt;pre>&lt;code>sudo pacman -Syu
+&lt;/code>&lt;/pre>&lt;p>但是今天出现更新过程意外中断，中途报错出现段错误。重启之后，无法进入系统。&lt;/p>
+&lt;pre>&lt;code>error: file '/vmlinuz-5.7-x86_64' not found.
+error: you need to load the kernel first.
+Press any key to continue...
+&lt;/code>&lt;/pre>&lt;h1 id="定位">定位&lt;/h1>
+&lt;p>一般来说，大部分出现系统无法引导的问题，原因都在于引导项的路径配置出现错误，比如指向了不正确的分区，这个时间可以借助 grub cmd 模式来解决。&lt;/p>
+&lt;p>这是今天出现的情况，引导路径没有问题，只是在引导的目录下，找不到内核文件（可能是更新中断的副作用吧）。&lt;/p>
+&lt;p>所以要修复系统，只能重装内核。&lt;/p>
+&lt;h1 id="重装内核">重装内核&lt;/h1>
+&lt;p>先在官网下载最新 manjaro 镜像，刻录到 u 盘中，用 u 盘引导进入 live 系统。&lt;/p>
+&lt;p>仔细查看分区，我的系统在一个单独的硬盘上，&lt;code>/dev/sdb&lt;/code>。&lt;/p>
+&lt;p>其中&lt;/p>
+&lt;pre>&lt;code>/boot 挂载在 /dev/sdb1
+/ 挂载在 /dev/sdb2
+&lt;/code>&lt;/pre>&lt;p>首先将分区挂载&lt;/p>
+&lt;pre>&lt;code>sudo mount -t ext4 /dev/sdb2 /mnt
+sudo mount -t ext2 /dev/sdb1 /mnt/boot
+&lt;/code>&lt;/pre>&lt;p>进入“原系统的根目录“，&lt;code>chroot&lt;/code>&lt;/p>
+&lt;pre>&lt;code>cd /mnt
+manjaro-choot .
+&lt;/code>&lt;/pre>&lt;p>在这一步之后，shell 中的操作就和原先正常的系统是一样的。&lt;/p>
+&lt;p>继续完成之前没有完成的更新&lt;/p>
+&lt;pre>&lt;code>sudo pacman -Syu
+&lt;/code>&lt;/pre>&lt;p>安装内核文件&lt;/p>
+&lt;pre>&lt;code>sudo pacman -S linux
+&lt;/code>&lt;/pre>&lt;p>更新引导&lt;/p>
+&lt;pre>&lt;code>sudo update-grub
+&lt;/code>&lt;/pre>&lt;p>再次重启就恢复正常。&lt;/p>- https://dreamanddead.github.io/post/rescue-manjaro-boot/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>connect two pc with a wire</title><link>https://dreamanddead.github.io/post/connect-pc-with-wire/</link><pubDate>Fri, 10 Apr 2020 18:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/connect-pc-with-wire/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/connect-pc-with-wire/ -&lt;p>先前&lt;a href="https://dreamanddead.github.io/2020/03/25/compose-deep-learning-machine.html">组装了一台用于深度学习的服务器&lt;/a>，连接在一个局域网内使用。
+通过 ssh 远程连接，tmux 终端复用，nfs 挂载编辑代码，vnc 远程桌面，一切运行的都很流畅。&lt;/p>
+&lt;p>不过最不适的在于，速度太慢了，一时想将开发机中 10G 的数据集传递到服务器，scp rsync nfs 都没有速度。
+尤其经常在 nfs 挂载目录查看图片文件，文件数量繁多，预览等待的时间很长，完全没有操作本地文件相似的体验。&lt;/p>
+&lt;p>为了提高连接速度，计划直接用网线将两者互连。&lt;/p>
+&lt;h1 id="现状">现状&lt;/h1>
+&lt;p>最简单地抽象内部的网络状况，如下图。&lt;/p>
+&lt;figure>
+&lt;img src="images/origin.png"/>
+&lt;/figure>
+&lt;p>主要涉及两台机器，一台开发机和一台服务器，都运行 Linux 系统。&lt;/p>
+&lt;p>开发机有一个无线网卡和一个有线接口，服务器只有一个有线接口。
+开发机通过无线网卡接入内网，服务器通过有线连接接入内网。&lt;/p>
+&lt;p>开发机 ip 为 &lt;code>10.27.3.9/23&lt;/code>，服务器 ip 为 &lt;code>10.27.2.145/23&lt;/code>，内部网关 ip 为 &lt;code>10.27.2.1&lt;/code>。&lt;/p>
+&lt;p>在当前情况下，开发机和服务器网络互通，也可以连通内部网络的其它机器，且都可以连接外网。
+连接环境其实很理想，唯一缺点在于连接速度。&lt;/p>
+&lt;h1 id="互连">互连&lt;/h1>
+&lt;h2 id="网线">网线&lt;/h2>
+&lt;p>根据先前对网络的了解，同等设备间连接需要使用交叉线，比如 pc 连 pc，交换机连交换机。
+但是也有一种说法，当前新的网卡都可以自适应的进行调整，直接使用相同的线序也是可以的（未验证）。
+保险起见，还是使用了交叉线的方法，一端使用 568A，一端使用 568B，制作了一根 6 类线。&lt;/p>
+&lt;figure>
+&lt;img src="images/wire.png"/> &lt;figcaption>
+&lt;p>交叉线线序&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="拓扑">拓扑&lt;/h2>
+&lt;p>由于服务器只有一个有线接口，在将服务器与开发机互连之后，服务器无法像之前一样接入内网。&lt;/p>
+&lt;p>网络拓扑变化为&lt;/p>
+&lt;figure>
+&lt;img src="images/new.png"/>
+&lt;/figure>
+&lt;p>更改连接后，开发机的网络连接状况没有大的变化，但对于服务器来说，如果想要如期的访问内部网络和外网，就必须通过开发机的转发。&lt;/p>
+&lt;h2 id="网络层地址">网络层地址&lt;/h2>
+&lt;p>原先的内网使用了网段 &lt;code>10.27.2.0/23&lt;/code>，那目前两个 pc 互连就使用经典网段 &lt;code>192.168.0.0&lt;/code> 吧。&lt;/p>
+&lt;figure>
+&lt;img src="images/after.png"/>
+&lt;/figure>
+&lt;p>开发机设置&lt;/p>
+&lt;pre>&lt;code>ip 192.168.0.1
+mask 255.255.254.0
+gateway 192.168.0.1
+&lt;/code>&lt;/pre>&lt;p>服务器设置&lt;/p>
+&lt;pre>&lt;code>ip 192.168.0.2
+mask 255.255.254.0
+gateway 192.168.0.1
+&lt;/code>&lt;/pre>&lt;p>两者就使用了同样的网段，且开发机作为这个网络的网关。&lt;/p>
+&lt;p>设置地址之后，用 ping 来检测网络连通性。&lt;/p>
+&lt;p>在开发机上&lt;/p>
+&lt;pre>&lt;code>$ ping 192.168.0.1 # 连通自身
+$ ping 192.168.0.2 # 连通服务器
+&lt;/code>&lt;/pre>&lt;p>在服务器上&lt;/p>
+&lt;pre>&lt;code>$ ping 192.168.0.2 # 连通自身
+$ ping 192.168.0.1 # 连通开发机
+&lt;/code>&lt;/pre>&lt;p>网络连通，没有出现问题。&lt;/p>
+&lt;h2 id="包转发">包转发&lt;/h2>
+&lt;p>在连通两者的同时，服务器想要连接外部网络（用于安装软件，更新系统），就需要开发机负责转发来自服务器的包。&lt;/p>
+&lt;p>开发机有两块网卡，要保证网络包在两者之间的转发，需要启用 &lt;a href="https://linuxhint.com/enable_ip_forwarding_ipv4_debian_linux/">ip forward&lt;/a>。&lt;/p>
+&lt;pre>&lt;code>$ sudo sysctl net.ipv4.ip_forward=1
+&lt;/code>&lt;/pre>&lt;p>这时服务器就可以连通开发机的另一个网卡的地址。&lt;/p>
+&lt;pre>&lt;code>$ ping 10.27.3.9
+&lt;/code>&lt;/pre>&lt;h2 id="nat">NAT&lt;/h2>
+&lt;p>成功设置了包转发之后，服务器虽然可以连通开发机的另一块网卡，但是却连不通相应网络的网关。&lt;/p>
+&lt;pre>&lt;code>$ ping 10.27.2.1 # 无法连通
+&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://blog.csdn.net/tiger_he/article/details/80805075">为什么会这样？&lt;/a>&lt;/p>
+&lt;p>考虑服务器发出去的包，源地址是 &lt;code>192.168.0.2&lt;/code>，通过有线网络进入开发机，通过无线网卡转发到另一个内网。
+当网关 &lt;code>10.27.2.1&lt;/code> 收到这个包并做出响应，返回包的目的地址是收到包的源地址 &lt;code>192.168.0.2&lt;/code>。
+对于网关来说，它并不属于 &lt;code>10.27.2.0&lt;/code> 这个网络，需要进一步查找自己的路由表进行发送选择（大概率会被丢弃），
+这样返回的包就不能回到内网 &lt;code>10.27.2.0&lt;/code>，从而也不能返回到开发机，服务器就更不用说了。&lt;/p>
+&lt;p>我们需要的是，当包在通过无线网卡转发出去的时候，将包的源地址 &lt;code>192.168.0.2&lt;/code> 修改为开发机的地址 &lt;code>10.27.3.9&lt;/code>，
+这样网关就会将这个包正确返回回来，在开发机内部，将返回包的目的地址重新替换为 &lt;code>192.168.0.2&lt;/code>，这样服务器就与外部连通了。&lt;/p>
+&lt;p>设置 &lt;a href="https://wiki.archlinux.org/index.php/Iptables_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">iptables&lt;/a> 的 nat 表（wlp3s0 是无线网卡）就可以达到这样的效果。&lt;/p>
+&lt;pre>&lt;code>$ sudo iptables -P FORWARD ACCEPT
+$ sudo iptables -t nat -A POSTROUTING -o wlp3s0 -j MASQUERADE
+&lt;/code>&lt;/pre>&lt;h2 id="route">route&lt;/h2>
+&lt;p>检查开发机的路由表&lt;/p>
+&lt;pre>&lt;code>$ route -n
+Kernel IP routing table
+Destination Gateway Genmask Flags Metric Ref Use Iface
+0.0.0.0 10.27.2.1 0.0.0.0 UG 600 0 0 wlp3s0
+0.0.0.0 192.168.0.1 0.0.0.0 UG 3600 0 0 enp2s0
+10.27.2.0 0.0.0.0 255.255.254.0 U 600 0 0 wlp3s0
+192.168.0.0 0.0.0.0 255.255.254.0 U 100 0 0 enp2s0
+&lt;/code>&lt;/pre>&lt;p>出现了新的默认网关 &lt;code>192.168.0.1&lt;/code>，这明显是没有必要的，因为那边只有一台机器，不会有什么包需要到那里去。&lt;/p>
+&lt;p>可以选择将这条记录删除，避免出现无意义的转发&lt;/p>
+&lt;pre>&lt;code>$ sudo route del default gw 192.168.0.1 dev enp2s0
+&lt;/code>&lt;/pre>&lt;h1 id="end">end&lt;/h1>
+&lt;p>通过上面的设置，既连通了两台 pc，又没有阻碍彼此对外网的访问。
+且 6 类线直接连通两块千兆网卡，文件操作瞬间变顺畅了。&lt;/p>- https://dreamanddead.github.io/post/connect-pc-with-wire/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>论斗地主残局中的宿命论</title><link>https://dreamanddead.github.io/post/crack-final-phase/</link><pubDate>Fri, 27 Mar 2020 15:07:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/crack-final-phase/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/crack-final-phase/ -&lt;p>之前斗地主中的记牌做了些研究，近期又发现了（欢乐）斗地主的残局模式，对于研究如何出牌是一个很不错的题材。&lt;/p>
+&lt;h1 id="残局模式">残局模式&lt;/h1>
+&lt;figure>
+&lt;img src="images/10.png"/>
+&lt;/figure>
+&lt;p>残局模式的设定很简单。&lt;/p>
+&lt;p>玩家是地主，先手出牌，对面只有一个 AI 农民（设定另一个农民牌太差，几近于无）。
+过程中彼此可以看到对手的牌，按照斗地主的规则进行出牌。&lt;/p>
+&lt;p>从博弈的角度看，当前情况属于一种零和博弈，只能存在一人胜一人负的结果（但是没有平局结果）。
+这很容易理解，只要一个人先出完手上的牌，已经成为胜者，另一个人手上的牌再好，也是负局。&lt;/p>
+&lt;p>在这种情况下，如何才能赢？&lt;/p>
+&lt;h1 id="如何获胜">如何获胜&lt;/h1>
+&lt;p>了解了设定之后，我们来思考如何才能获胜。&lt;/p>
+&lt;p>一种简单的想法，枚举双方所有出牌的可能，搜索出一条已方获胜的路径。&lt;/p>
+&lt;p>表面上可行，深层次思考则站不住脚。假如对方一直选择 pass，对于已方一定是获胜路径，但是对手根本不会那样出牌。
+所以问题出在，对方也在根据你出牌的情况，选择要打的牌。上面的方法只是假定对手没有思考能力。&lt;/p>
+&lt;p>在网上参考了他人的想法，都提到使用 &lt;a href="http://web.cs.ucla.edu/~rosen/161/notes/minimax.html">minmax 对抗搜索&lt;/a> 的方法。&lt;/p>
+&lt;h1 id="对抗搜索">对抗搜索&lt;/h1>
+&lt;p>通常将 minmax 对抗搜索归为 AI 算法（游戏里的 AI），用于给游戏中的电脑角色增加“智能”，为游戏添加些许趣味。&lt;/p>
+&lt;figure>
+&lt;img src="images/minmax.png"/>
+&lt;/figure>
+&lt;p>对抗搜索的思想很简单，以上图为例。&lt;/p>
+&lt;ul>
+&lt;li>每个结点表示一种局面情况&lt;/li>
+&lt;li>方块结点表示轮流到自己出牌，圆形结点表示轮流到对手出牌&lt;/li>
+&lt;li>结点到子结点的边表示一种出牌选择&lt;/li>
+&lt;li>结点中的数值用于量化自己的优势&lt;/li>
+&lt;/ul>
+&lt;p>在零和博弈下，自己的优势越大，对手的优势自然越小。&lt;/p>
+&lt;p>从根结点开始，自己先手出牌，有 3 种出牌选择，A B C。&lt;/p>
+&lt;ul>
+&lt;li>假如选择出牌方式 A，对手有两种出牌可能，D E。
+&lt;ul>
+&lt;li>假如对手选择出牌方式 D，在这种局面下，自己的优势有 7 分&lt;/li>
+&lt;li>假如对手选择方式 E，则自己的优势只有 3 分&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>站在对手的角度思考，自然是让我们的优势越小越好，所以他自然会选择出牌方式 E，反向回推，自己如果先手按 A 方式出牌，只能得到 3 分的优势。&lt;/p>
+&lt;ul>
+&lt;li>假如选择方式 B，对手只有一种出牌可能 F
+&lt;ul>
+&lt;li>之后局面优势有 15 分&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>所以自己如果先手方式 B，可以得到 15 分的优势。&lt;/p>
+&lt;ul>
+&lt;li>假如选择方式 C，对手有 4 种出牌方式可选，G H I J
+&lt;ul>
+&lt;li>按照惯例，对手肯定要最小化我们的优势，他必定会选择出牌方式 G&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>所以先手以 C 方式出牌的情况下，只能得 1 分优势。&lt;/p>
+&lt;p>最后综合一下自己先手出牌的情况 A B C，我们必定从中选择一种优势最大的方式，即方式 B，
+这样会得到 15 分的优势，所以根节点优势是 15。&lt;/p>
+&lt;p>对手总想让我们的优势最小化，而我们想将优势最大化，这也是 minmax 的名称由来。&lt;/p>
+&lt;p>我们是否能得到优势 22 分呢？也有可能，就是对手不太专心思考，给了我们一次机会。
+如果对手完全理性，分析透彻，我们从根结点的局面开始只能得到 15 分的优势。&lt;/p>
+&lt;h1 id="优化">优化&lt;/h1>
+&lt;p>按照对抗算法的思想，就有了编写程序来破解残局模式的方向。&lt;/p>
+&lt;p>自己在实现这样一个&lt;a href="https://github.com/DreamAndDead/joker">小项目&lt;/a>的过程中，发现一些可优化的点，这样会使程序运行的速度更快。&lt;/p>
+&lt;p>因为实践发现，在每人手上的单牌比较多的情况下（最大 20 张牌），单纯来搜索，破解一个局面要花很长时间。&lt;/p>
+&lt;p>在优化之后，即使只是单线程的 python 程序，也可以在分钟内破解所有残局问题。&lt;/p>
+&lt;h2 id="简化表示">简化表示&lt;/h2>
+&lt;p>在搜索过程中，始终使用数值在量化自己的优势，这里可以进行一些简化的表示，优势只有 1 和 -1 两种表示。&lt;/p>
+&lt;p>1 表示自己获胜，-1 表示对手获胜。之所以可以这样表示的原因在于，即使每人手上有 20 张牌，整个树的深度最大为 40 层，
+到最终的叶子结点，必定可以得到终局的结果，再回溯上去。&lt;/p>
+&lt;p>其它量化优势的方法可以用在象棋这一类游戏中，因为走法过多，而且很难算到终局（层数太深了）。
+在这种情况下，程序只会搜索一定的深度，并对最终深度的叶子结点（局面）进行打分（比如车马炮的数量等），将其作为优势的判定。&lt;/p>
+&lt;p>所以要在象棋方面的 AI 有所突破，就需要&lt;/p>
+&lt;ul>
+&lt;li>搜索更深的层次&lt;/li>
+&lt;li>更高效的书面判定方法&lt;/li>
+&lt;/ul>
+&lt;p>相比之下，残局模式因为深度的限制，显得更简单一些。&lt;/p>
+&lt;h2 id="剪枝">剪枝&lt;/h2>
+&lt;p>针对 minmax 算法，有成熟的 &lt;a href="http://web.cs.ucla.edu/~rosen/161/notes/alphabeta.html">alpha beta 剪枝算法&lt;/a>来优化效率。&lt;/p>
+&lt;p>在这里我们使用 1 -1 的简化表示之后，剪枝的逻辑也变得简单。&lt;/p>
+&lt;p>在 max 过程，轮到自己出牌，&lt;/p>
+&lt;ul>
+&lt;li>如果存在一种优势为 1 的情况，就不需要对其它情况进行搜索，直接返回 1，因为已经有一种情况必胜&lt;/li>
+&lt;li>只有在所有出牌情况都为 -1 的情况，才表示自己在这种局面必输&lt;/li>
+&lt;/ul>
+&lt;p>在 min 过程，轮到对手出牌，&lt;/p>
+&lt;ul>
+&lt;li>如果存在一种优势为 -1 的情况，就不需要对其它情况进行搜索，直接返回 -1，因为对手已经有一种情况必胜&lt;/li>
+&lt;li>只有在所有出牌情况都为 1 的情况，才表示对手在此局面下必输&lt;/li>
+&lt;/ul>
+&lt;h2 id="缓存">缓存&lt;/h2>
+&lt;p>在搜索的过程中，难免出现一些重复的局面，如果提前将局面的优势记录下来，这样后续再遇到这种情况下，就可以避免重复的消耗。&lt;/p>
+&lt;h1 id="对出牌的启示">对出牌的启示&lt;/h1>
+&lt;p>出牌不仅要从自己的角度来思考问题，也要时刻站在对方的角度来想问题，这也是对抗搜索所强调的。
+而且考虑的越远，胜算越大。&lt;/p>
+&lt;p>而我们在打牌的时候，不免有些侥幸心理，猜想对手不会怎么样出牌，这种思维方式不时会将我们置于不利的局面。&lt;/p>
+&lt;p>当然这只是在明牌的情况下，实际在打牌时，看不到对方的牌，还需要一些猜测，这样会更加困难。&lt;/p>
+&lt;p>其次值得注意的是，我们之所以在残局模式下可以战胜对手，不是因为我们技巧高超，而是因为存在绝对胜利的路径。
+也就是说，我们的手牌是有优势的，对手不论怎么出牌，我们都能赢，因为 minmax 已经搜索了所有可能的局面。&lt;/p>
+&lt;p>这何尝不是一种宿命论。&lt;/p>- https://dreamanddead.github.io/post/crack-final-phase/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>深度学习攒机总结</title><link>https://dreamanddead.github.io/post/compose-deep-learning-machine/</link><pubDate>Wed, 25 Mar 2020 09:02:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/compose-deep-learning-machine/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/compose-deep-learning-machine/ -&lt;p>深度学习需要强大的算力做支撑，无奈手边没有这样的机器，租赁和云服务器的方式又略显昂贵，
+免费的云计算服务不是网络不通畅，就是在软件环境上有限制，这大大限制了探索深度学习魅力的自由度。&lt;/p>
+&lt;p>与其花费在租赁和云服务器上，不如自己组装一台算力合适的机器。&lt;/p>
+&lt;h1 id="规划">规划&lt;/h1>
+&lt;h2 id="gpu">GPU&lt;/h2>
+&lt;p>粗略来看，在深度学习方面 GPU 的训练效率是 CPU 的 10 倍，所以选择 GPU 是最重要的第一步。&lt;/p>
+&lt;p>根据这两篇出色的文章，&lt;a href="https://www.cnblogs.com/xiaozhi_5638/p/10923351.html">深度学习如何选择GPU?&lt;/a>，&lt;a href="https://zhuanlan.zhihu.com/p/42749496">更新2080Ti后，深度学习该选什么显卡?&lt;/a>&lt;/p>
+&lt;p>在没有过高的预算情况下，配置了 影弛 RTX 2070 SUPER。&lt;/p>
+&lt;h2 id="主板">主板&lt;/h2>
+&lt;p>选择一个资源丰厚的主板是重要的第二步，因为主板限定了 CPU 的型号，PCIe 通道的数量，以及 m.2 usb3.0 等外接口。&lt;/p>
+&lt;p>最终选择了 x99 主板，华南寨板 x99-f8（没有预算），因为提供了足够的接口，支持 E5 系列 CPU，提供 40 个 PCIe 通道。&lt;/p>
+&lt;p>附：&lt;a href="https://www.chiphell.com/thread-2153551-1-1.html">PCIe 通道解析&lt;/a>&lt;/p>
+&lt;p>当前的单张显卡占据 16 个通道，后期拓展双显卡使用 32 通道，留出一定拓展空间。&lt;/p>
+&lt;h2 id="cpu">CPU&lt;/h2>
+&lt;p>CPU 选择了 E5 V3 2080，服务器系列的 CPU 虽然主频不高，但是核心多，足够稳定（还是预算）&lt;/p>
+&lt;p>附：&lt;a href="https://ark.intel.com/content/www/us/en/ark/products/series/78583/intel-xeon-processor-e5-v3-family.html">E5 性能规格表&lt;/a>&lt;/p>
+&lt;h2 id="内存">内存&lt;/h2>
+&lt;p>本着内存越大越好，频率越高越好的原则，配置了单条 32G 2400MHz 三星内存。&lt;/p>
+&lt;p>重要的是它支持 recc，服务器主板的专享。&lt;/p>
+&lt;p>当前是单条单通道，之后可能拓展到 4 通道。&lt;/p>
+&lt;h2 id="硬盘">硬盘&lt;/h2>
+&lt;p>硬盘选择的范围就比较小，SSD 是必须的，这里配置了 m.2 接口的 Tigo 硬盘。&lt;/p>
+&lt;h2 id="电源">电源&lt;/h2>
+&lt;p>电源要为所有元件供能，且最高瓦数要有拓展之后的盈余。&lt;/p>
+&lt;p>在预算吃紧的情况下，配置了口碑不错的 海韵 850W，留出了大量电力供日后拓展。&lt;/p>
+&lt;h2 id="机箱">机箱&lt;/h2>
+&lt;p>选购了一个精简的塔式机箱，最大可安装 E-ATX 主板，内部空间足够大，且可以藏线，硬盘位多，前后带 3 个风扇散热通畅，后期也可以加装水冷。&lt;/p>
+&lt;h2 id="cpu-散热">CPU 散热&lt;/h2>
+&lt;p>这方面选择配套 x99 主板的散热器就可以，铜管数越多越好。&lt;/p>
+&lt;h2 id="支架">支架&lt;/h2>
+&lt;p>显卡的确很重，而且由于主板是侧装的，显卡的重量很容易将 PCIe 接口压弯，所以最好配置一个显卡支架做支撑，不至于引起更多问题。&lt;/p>
+&lt;h1 id="装机">装机&lt;/h1>
+&lt;p>硬件组装的过程就不赘述了，在装入机箱前，一定要先安装 windows，用 AIDA64 跑满足够小时的压力测试，提前发现硬件组合的问题。&lt;/p>
+&lt;h1 id="系统">系统&lt;/h1>
+&lt;h2 id="os">OS&lt;/h2>
+&lt;p>虽然 Linux 种类繁多，但是还是推荐 ubuntu 18.04，配置快捷不折腾。&lt;/p>
+&lt;p>虽然有 server 版，但是这里建议使用 desktop 版，性能差异并非太大，且提供了图形界面（只占用很少的显存），方便查看和调整其中的数据（尤其是图片）。&lt;/p>
+&lt;p>而且使用了图形界面，所以 NVidia 驱动已经为 &lt;a href="https://docs.nvidia.com/deploy/driver-persistence/">persistence 状态&lt;/a>。&lt;/p>
+&lt;h2 id="remote">Remote&lt;/h2>
+&lt;ul>
+&lt;li>openssh-server，服务器必备，使用 ssh 可远程终端连接&lt;/li>
+&lt;li>nfs-server，用于导出用户根目录，可以挂载到开发机，用心爱的编辑器开发&lt;/li>
+&lt;li>tmux，在 ssh 会话中开启多终端，同时防止 ssh 中断导致训练中断&lt;/li>
+&lt;li>tigervnc，必要时需要远程使用图形界面&lt;/li>
+&lt;/ul>
+&lt;h2 id="env">Env&lt;/h2>
+&lt;p>配置最新的 tensorflow 环境&lt;/p>
+&lt;h3 id="python">Python&lt;/h3>
+&lt;p>建议使用 conda 来提供 python 环境，使用 miniconda，精简，按需添加。&lt;/p>
+&lt;p>官方下载 miniconda 安装脚本，安装后配置&lt;a href="https://mirror.tuna.tsinghua.edu.cn/help/anaconda/">镜像源&lt;/a>。&lt;/p>
+&lt;p>使用 python 3.7 创建基础环境，和其它的库的版本匹配更好。&lt;/p>
+&lt;pre>&lt;code>$ conda create -n deep-learning python==3.7
+&lt;/code>&lt;/pre>&lt;h3 id="nvidia-driver--cuda--cudnn--tensorflow">NVidia driver &amp;amp; Cuda &amp;amp; CuDNN &amp;amp; tensorflow&lt;/h3>
+&lt;p>根据 &lt;a href="https://www.tensorflow.org/install/gpu#install_cuda_with_apt">tensorflow 的官方文档&lt;/a>，提供了安装 nvidia 驱动，cuda，cudnn 的方法&lt;/p>
+&lt;p>对于 18.04 版本，它提供了如下的方法，从官方源安装 driver, cuda, cudnn 这一系列让新手头疼的库。&lt;/p>
+&lt;pre>&lt;code># Add NVIDIA package repositories
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
+sudo dpkg -i cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+sudo apt-get update
+wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
+sudo apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
+sudo apt-get update
+# Install NVIDIA driver
+sudo apt-get install --no-install-recommends nvidia-driver-440 # 应该是 440，而不是 418!!!!!!
+&lt;/code>&lt;/pre>&lt;p>在驱动安装之后，使用提供的命令，检测显卡的状态，验证驱动是否已经安装好&lt;/p>
+&lt;pre>&lt;code>$ nvidia-smi
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 440.64.00 Driver Version: 440.64.00 CUDA Version: 10.2 |
+|-------------------------------+----------------------+----------------------+
+| GPU Name Persistence-M| Bus-Id Disp.A | Volatile Uncorr. ECC |
+| Fan Temp Perf Pwr:Usage/Cap| Memory-Usage | GPU-Util Compute M. |
+|===============================+======================+======================|
+| 0 GeForce RTX 207... On | 00000000:03:00.0 Off | N/A |
+| 34% 30C P2 36W / 215W | 73MiB / 7979MiB | 4% Default |
++-------------------------------+----------------------+----------------------+
++-----------------------------------------------------------------------------+
+| Processes: GPU Memory |
+| GPU PID Type Process name Usage |
+|=============================================================================|
+| 0 1220 G /usr/lib/xorg/Xorg 24MiB |
+| 0 1290 G /usr/bin/gnome-shell 49MiB |
++-----------------------------------------------------------------------------+
+&lt;/code>&lt;/pre>&lt;p>之后再安装 cuda, cudnn 和 TersorRT（可选）&lt;/p>
+&lt;pre>&lt;code># Install development and runtime libraries (~4GB)
+sudo apt-get install --no-install-recommends \
+cuda-10-1 \
+libcudnn7=7.6.4.38-1+cuda10.1 \
+libcudnn7-dev=7.6.4.38-1+cuda10.1
+# Install TensorRT. Requires that libcudnn7 is installed above.
+sudo apt-get install -y --no-install-recommends libnvinfer6=6.0.1-1+cuda10.1 \
+libnvinfer-dev=6.0.1-1+cuda10.1 \
+libnvinfer-plugin6=6.0.1-1+cuda10.1
+&lt;/code>&lt;/pre>&lt;p>官方发布的 tensorflow 2.1.0 在 cuda 10.1，cudnn 7.6 的&lt;a href="https://www.tensorflow.org/install/source#linux">环境&lt;/a>下编译，&lt;/p>
+&lt;p>根据驱动的版本，安装&lt;/p>
+&lt;pre>&lt;code>$ pip install tensorflow-gpu==2.1.0 keras==2.3.1
+&lt;/code>&lt;/pre>&lt;p>至此，python，tensorflow，显卡驱动，cuda，keras 的版本就有了合理的匹配。&lt;/p>
+&lt;p>安装之后，检测 tensorflow &lt;a href="https://stackoverflow.com/questions/38009682/how-to-tell-if-tensorflow-is-using-gpu-acceleration-from-inside-python-shell">是否使用了 gpu&lt;/a>。&lt;/p>
+&lt;p>一切配置检验之后，建议更新所有包到最新版本&lt;/p>
+&lt;pre>&lt;code>$ apt update
+$ apt upgrade
+&lt;/code>&lt;/pre>&lt;h1 id="end">End&lt;/h1>
+&lt;p>试运行一些项目，内存空间充足，显存足够，显卡算力足够，CPU 24 线程并发，开发效率大大的提高了。&lt;/p>- https://dreamanddead.github.io/post/compose-deep-learning-machine/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>keras 如何从中断处继续训练</title><link>https://dreamanddead.github.io/post/resume-training-from-crash/</link><pubDate>Wed, 04 Mar 2020 19:32:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/resume-training-from-crash/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/resume-training-from-crash/ -&lt;p>深度学习的网络模型层次很深，训练模型的时间也很长，没有强大的算力，调试模型的周期就会
+变得非常之长，工作的效率自然就降了下来。&lt;/p>
+&lt;p>获取算力资源的途径，无论是通过云主机，主机租赁，还是个人组建工作站，都代价不菲。&lt;/p>
+&lt;p>但是有一点是确定的，无论使用哪一种方式，都会遇到意外，比如断电，宕机，训练过程被迫中断。
+如果没有一点准备，就意味着再次从头开始训练，无疑是对效率的又一次打击。&lt;/p>
+&lt;p>所以我们要在训练伊始，就要做好训练被中断的准备，以及如何从中断处继续开始。&lt;/p>
+&lt;p>示例项目地址：&lt;a href="https://github.com/DreamAndDead/resume-training-example">DreamAndDead/resume-training-example&lt;/a>&lt;/p>
+&lt;h1 id="运行前建议">运行前建议&lt;/h1>
+&lt;p>这一节和中断无关，但是对于效率的重要性同样重要。&lt;/p>
+&lt;p>每当提出一个网络模型，在准备训练之前，
+建议先在一个性质相似的小型数据集上运行，观察模型质量，
+比如手写识别使用 &lt;code>mnist&lt;/code>，图片识别使用 &lt;code>cifar10&lt;/code>，
+这样有两个好处，&lt;/p>
+&lt;ol>
+&lt;li>排除代码运行错误&lt;/li>
+&lt;li>对模型的基本性能有粗略的估计&lt;/li>
+&lt;/ol>
+&lt;p>这样就可以提前修复错误，修正质量不佳的模型，免去在大型数据集上浪费时间。&lt;/p>
+&lt;h1 id="训练过程">训练过程&lt;/h1>
+&lt;p>在预防训练中断之前，先来了解完整的训练过程是怎样的。&lt;/p>
+&lt;p>训练模型主要涉及以下三部分，&lt;/p>
+&lt;ol>
+&lt;li>代码，指导训练过程，文件大小可忽略不计&lt;/li>
+&lt;li>训练数据集，文件相对比较多，总体容量比较大&lt;/li>
+&lt;li>训练产出，通常是模型，训练日志，模型精度数据，模型大小一般是 G 级别左右&lt;/li>
+&lt;/ol>
+&lt;p>所谓训练过程即，&lt;strong>通过代码构建训练方式，从训练数据集中，得到模型产出，以及评估模型质量的数据。&lt;/strong>&lt;/p>
+&lt;p>训练开始，需要&lt;/p>
+&lt;ul>
+&lt;li>数据预处理方法，比如图片 &lt;code>reshape&lt;/code>，灰度化，以匹配模型输入&lt;/li>
+&lt;li>标签编码方法，比如 &lt;code>one-hot&lt;/code> 编码&lt;/li>
+&lt;li>训练测试数据的分割方法，通常按比例分割训练数据和测试数据&lt;/li>
+&lt;/ul>
+&lt;p>训练时的状态&lt;/p>
+&lt;ul>
+&lt;li>当前 &lt;code>epoch&lt;/code> 序号&lt;/li>
+&lt;li>当前模型权重&lt;/li>
+&lt;li>训练日志，比如当前模型的 &lt;code>acc, loss, val acc, val loss&lt;/code>&lt;/li>
+&lt;li>当前优化器状态，比如在训练中，使用了随过程 &lt;code>lr&lt;/code> 可变的优化器&lt;/li>
+&lt;/ul>
+&lt;p>训练产出&lt;/p>
+&lt;ul>
+&lt;li>数据预处理方法&lt;/li>
+&lt;li>标签编码方法&lt;/li>
+&lt;li>训练日志&lt;/li>
+&lt;li>最佳模型，按 &lt;code>min(val_loss)&lt;/code> 的方式或者 &lt;code>max(val_acc)&lt;/code> 方式&lt;/li>
+&lt;li>模型质量报告，比如 &lt;code>sklearn.metrics.classification_report&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>我们的目标是，确保整个训练过程最终能得到训练产出。&lt;/p>
+&lt;h2 id="中间状态">中间状态&lt;/h2>
+&lt;p>在训练过程中，何时发生中断是不可知的，为了确保实现我们的目标，即使中断后再次运行，训练效果应该和没有中断一样。
+这就需要在中断时，时刻保存中间状态。&lt;/p>
+&lt;p>&lt;em>这里的中间状态以 &lt;code>epoch&lt;/code> 为单位的，如果在 &lt;code>epoch&lt;/code> 中间中断，则无法恢复到相应的 &lt;code>batch&lt;/code> 继续训练。&lt;/em>&lt;/p>
+&lt;p>以下就从中间状态的角度，对训练过程的每个要素进行审视。&lt;/p>
+&lt;h3 id="数据预处理方法">数据预处理方法&lt;/h3>
+&lt;p>数据预处理方法，通常是处理训练数据的函数，使数据和模型输入保持一致，
+不存在状态，是训练代码的一部分。&lt;/p>
+&lt;p>它不属于中间状态，但是算作最终产出的一部分，因为其它人在使用模型的时候，对于新的数据，
+也需要同样的预处理方法。&lt;/p>
+&lt;p>不需要单独存储，使用者通过 &lt;code>import&lt;/code> 导入即可。&lt;/p>
+&lt;h3 id="标签编码方法">标签编码方法&lt;/h3>
+&lt;p>标签编码方法，这一步在训练一开始就要安排，而且编码表是产出的一部分（因为模型使用者要对模型输出进行解读），
+需要存储，但是不作为中间状态，因为此时模型还未开始训练。&lt;/p>
+&lt;p>如果使用 &lt;code>sklearn&lt;/code> 提供的类进行编码，比如 &lt;code>one-hot encode&lt;/code>，&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">from&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">sklearn.preprocessing&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> LabelBinarizer
+le = LabelBinarizer()
+Y = le.fit_transform(Y)
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以使用对象序列化的方式存储 &lt;code>label encoder&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">pickle&lt;/span>
+pickle.dump(le, &lt;span style="color:#658b00">open&lt;/span>(&lt;span style="color:#cd5555">&amp;#39;le.pkl&amp;#39;&lt;/span>, &lt;span style="color:#cd5555">&amp;#39;wb&amp;#39;&lt;/span>))
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用者可以通过反序列化加载 &lt;code>label encoder&lt;/code>，用于解读模型输出&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">pickle&lt;/span>
+le = pickle.load(&lt;span style="color:#658b00">open&lt;/span>(&lt;span style="color:#cd5555">&amp;#39;le.pkl&amp;#39;&lt;/span>, &lt;span style="color:#cd5555">&amp;#39;rb&amp;#39;&lt;/span>))
+pred = model.predict(X)
+Y = le.inverse_transform(pred)
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="训练测试数据的分割方法">训练测试数据的分割方法&lt;/h3>
+&lt;p>数据分割本身就本着随机的原则，如果训练的过程中发生中断，
+之后再次开始训练，数据就可能重新发生分割。&lt;/p>
+&lt;p>其实再一次的分割，可能和之前分割得到的数据不同，但是同样本着随机的原则。
+所以这一点可以算作中间状态，也可以不算。&lt;/p>
+&lt;p>如果想要进行准确的控制，可以通过 &lt;code>random_state&lt;/code> 来控制。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">from&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">sklearn.model_selection&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> train_test_split
+trainX, testX, trainY, testY = train_test_split(X, Y, test_size=&lt;span style="color:#b452cd">0.2&lt;/span>, random_state=&lt;span style="color:#b452cd">1&lt;/span>)
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="当前-epoch-序号">当前 &lt;code>epoch&lt;/code> 序号&lt;/h3>
+&lt;p>训练是以 &lt;code>epoch&lt;/code> 为单位的，中断发生在哪个 &lt;code>epoch&lt;/code>，这一点绝对是需要记录的中间状态。&lt;/p>
+&lt;p>这一点可以在 &lt;code>keras callback&lt;/code> 中来实现。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">CustomCallback&lt;/span>(keras.callbacks.Callback):
+&lt;span style="color:#8b008b;font-weight:bold">def&lt;/span> &lt;span style="color:#008b45">on_epoch_end&lt;/span>(self, epoch, logs=None):
+&lt;span style="color:#228b22"># save the epoch&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>当从中断处再次运行时，需要加载上次中断的 &lt;code>epoch&lt;/code> 序号，传入训练过程。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">model.fit(initial_epoch=last_epoch+&lt;span style="color:#b452cd">1&lt;/span>) &lt;span style="color:#228b22"># +1，想想为什么&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="当前模型权重-和-当前优化器状态">当前模型权重 和 当前优化器状态&lt;/h3>
+&lt;p>当前模型权重是最重要的中间状态，还有和它一起的优化器状态。&lt;/p>
+&lt;p>为什么将两者放在一起，因为 &lt;code>keras&lt;/code> 提供了单独存储权重的方法，但是没有提供单独存储优化器的方法。
+所以这两者需要&lt;a href="https://keras-cn.readthedocs.io/en/latest/legacy/getting_started/FAQ/#save_model">存储在一起&lt;/a>。&lt;/p>
+&lt;p>存储模型和优化器&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">model.save(path)
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>加载两者&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">keras&lt;/span>
+model = keras.models.load_model(path)
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="训练日志">训练日志&lt;/h3>
+&lt;p>在每个 &lt;code>epoch&lt;/code> 结束，&lt;code>keras&lt;/code> 都会衡量当前模型在训练集和验证集上的表现，比如 &lt;code>acc, loss&lt;/code>。
+这些训练日志，用于在整个训练过程中衡量模型的质量，不仅作为中间状态，还作为最终产出。&lt;/p>
+&lt;p>和 &lt;code>epoch&lt;/code> 序号一样，可以通过 &lt;code>on_epoch_end&lt;/code> 来存储，它可以保存为文本形式，也可以保存为图形。&lt;/p>
+&lt;p>如果要保存图形，最好不依赖 gui 库。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">matplotlib&lt;/span>
+matplotlib.use(&lt;span style="color:#cd5555">&amp;#34;Agg&amp;#34;&lt;/span>)
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="最佳模型">最佳模型&lt;/h3>
+&lt;p>在训练结束后，我们希望得到一个效果最佳的模型作为最终结果。&lt;/p>
+&lt;p>但是要在整体过程中，选择哪一个模型是最佳模型，每个人都有自己的判断标准。
+选取最大 &lt;code>val_acc&lt;/code> 的模型是一种常用的办法。&lt;/p>
+&lt;p>这里要提到一点，如果使用 &lt;code>keras&lt;/code> 提供的 &lt;code>ModelCheckpoint&lt;/code> 来记录 &lt;code>best model&lt;/code>，
+如果发生中断，&lt;code>ModelCheckpoint&lt;/code> 在再次运行时，其中记录的最佳 &lt;code>val_acc&lt;/code> 会被清除为 &lt;code>-inf&lt;/code>。&lt;/p>
+&lt;p>也就是说再次从中断处运行，对于 &lt;code>ModelCheckpoint&lt;/code> 就像是重新开始一样，这一定不是你想要的结果。&lt;/p>
+&lt;p>所以记录最佳模型的过程，最好通过自定义 &lt;code>keras callback&lt;/code> 来做。&lt;/p>
+&lt;h3 id="模型质量报告">模型质量报告&lt;/h3>
+&lt;p>这一点并不必需。&lt;/p>
+&lt;p>在训练结束后，保存相关数据报告，不作为中间状态，用文本存储即可。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">from&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">sklearn.metrics&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> classification_report
+predictions = model.predict(testX, batch_size=&lt;span style="color:#b452cd">64&lt;/span>)
+report = classification_report(testY.argmax(axis=&lt;span style="color:#b452cd">1&lt;/span>),
+predictions.argmax(axis=&lt;span style="color:#b452cd">1&lt;/span>))
+&lt;span style="color:#8b008b;font-weight:bold">with&lt;/span> &lt;span style="color:#658b00">open&lt;/span>(&lt;span style="color:#cd5555">&amp;#39;report.txt&amp;#39;&lt;/span>, &lt;span style="color:#cd5555">&amp;#39;w&amp;#39;&lt;/span>) &lt;span style="color:#8b008b;font-weight:bold">as&lt;/span> f:
+f.write(report)
+&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="结语">结语&lt;/h1>
+&lt;p>通过这种方式，定可以使训练过程更加健壮，提高工作效率。&lt;/p>
+&lt;p>完整代码可参考 &lt;a href="https://github.com/DreamAndDead/resume-training-example">DreamAndDead/resume-training-example&lt;/a>&lt;/p>
+&lt;h1 id="refs">refs&lt;/h1>
+&lt;ol>
+&lt;li>&lt;a href="https://keras-cn.readthedocs.io/">keras cn docs&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://keras.io/callbacks/">keras callback guide&lt;/a>&lt;/li>
+&lt;li>project &lt;a href="https://github.com/HarborZeng/resume_traning">HarborZeng/resume_traning&lt;/a>&lt;/li>
+&lt;/ol>- https://dreamanddead.github.io/post/resume-training-from-crash/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>斗地主中的记牌策略</title><link>https://dreamanddead.github.io/post/how-to-remember-cards/</link><pubDate>Thu, 20 Feb 2020 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/how-to-remember-cards/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/how-to-remember-cards/ -&lt;p>斗地主是一种规则简单的扑克游戏，虽然每个玩家手牌数量不多（3 人斗地主，一副牌 54 张，农民每人 17 张，地主 20 张），
+但是要精通其中合作，对抗，决策的过程却不易。&lt;/p>
+&lt;p>而新手在打牌过程中，向上进阶的第一步就是记牌。&lt;/p>
+&lt;h1 id="为什么要记牌">为什么要记牌&lt;/h1>
+&lt;p>随着牌局的进行，每个人手上的牌越来越少。如果牌数很少，发现其中的最优决策就更容易。
+记牌就是为了让玩家清楚，在某一个时刻，三个玩家的手上一共还握着什么牌。&lt;/p>
+&lt;p>所以记牌是为了充分利用打算过程中的信息，来做更好的决策，比如一些基础的记牌，&lt;/p>
+&lt;ul>
+&lt;li>记最大的牌。大王，小王，2 出过几张，还剩几张。如果全部打完，A 就是最大的，A 也打完 K 就是最大的，以此类推&lt;/li>
+&lt;li>7 和 10 打出几张。如果 7 10 都已经出完，没有人可以打出顺子&lt;/li>
+&lt;li>自己手上的缺点牌是否打出。缺点牌可能是别人手中的炸弹&lt;/li>
+&lt;li>地主的底牌。地主的底牌如果没有出，则一定还停留在手上&lt;/li>
+&lt;/ul>
+&lt;p>即使是这些基本的记牌，也会给决策过程带来不小的帮助。&lt;/p>
+&lt;p>最理想的记牌就是记住所有每个玩家出过的牌，这一点需要一些技巧，这也是这篇文章要讨论的。&lt;/p>
+&lt;h1 id="记牌-vs-算牌">记牌 vs 算牌&lt;/h1>
+&lt;p>记牌与算牌不同，记牌是记忆当前已经出过的牌，而算牌是根据每个人出过的牌去推测其手上有什么牌。&lt;/p>
+&lt;p>比如开局地主出 &lt;code>3334&lt;/code>，记牌只是单纯的知道当前已经打出了 4 张牌，而算牌需要一些分析过程。&lt;/p>
+&lt;ul>
+&lt;li>地主手上大概率没有 &lt;code>3&lt;/code>，一般不会冒着拆开炸弹的危险&lt;/li>
+&lt;li>大概率没有 &lt;code>4&lt;/code>，如果还有一个 4，可以 33344 出，如果还有两个 4，为什么不出 333444 飞机呢，三个 4 就更不可能了&lt;/li>
+&lt;/ul>
+&lt;p>当然，算牌的分析只是概率，多数情况下并非 100% 的确定一定有，一定没有什么牌，但对于决策过程同样是有帮助的。&lt;/p>
+&lt;p>算牌需要记牌，不然无从加以计算，有时候要不断回忆对手出过的牌，加大算牌的概率。&lt;/p>
+&lt;h1 id="如何记忆一副扑克牌">如何记忆一副扑克牌&lt;/h1>
+&lt;p>在讨论记牌之前，需要先讨论如何记忆一整副扑克牌。&lt;/p>
+&lt;p>听起来难度陡然上升，其实记忆一整副扑克牌是记忆技巧的基本功。&lt;/p>
+&lt;p>所谓的记忆技巧，主要利用了人脑天生对图像敏感的特性。它的过程也很简单，&lt;/p>
+&lt;ol>
+&lt;li>将所有扑克牌进行编码&lt;/li>
+&lt;li>将所有编码对应一种意象&lt;/li>
+&lt;li>记忆意象&lt;/li>
+&lt;li>逆向还原为扑克&lt;/li>
+&lt;/ol>
+&lt;h2 id="扑克编码">扑克编码&lt;/h2>
+&lt;p>每一步要将 54 张牌对应 54 个编码。&lt;/p>
+&lt;p>通常大家使用的编码方式都非常相似，&lt;/p>
+&lt;p>对于 A - 10 的 4 种花色的 40 张牌，对应到数字 10 - 49 这 40 个数字。&lt;/p>
+&lt;p>其中十位数对应花色，黑桃为 1（一个尖头），红桃为 2（两个圆头），梅花为 3（三个圆头），方块为 4（四个尖头）。&lt;/p>
+&lt;p>个位数对应点数，10 对应 0，A 对应 1，2 对应 2，&amp;hellip;，9 对应 9。&lt;/p>
+&lt;p>例如，黑桃 10 对应编码 10，梅花 8 对应编码 38&lt;/p>
+&lt;p>对于 J - K 的 12 张牌，在点数上，J 对应 1，Q 对应 2，K 对应 3&lt;/p>
+&lt;p>花色上，黑桃对应 6，红桃对应 7，梅花对应 8，方块对应 9&lt;/p>
+&lt;p>例如，红桃 Q 为 72，方块 K 为 93。&lt;/p>
+&lt;p>大王对应编码 0
+小王对应编码 1&lt;/p>
+&lt;p>至此 54 张牌编码完成。&lt;/p>
+&lt;h2 id="编码意象">编码意象&lt;/h2>
+&lt;p>将扑克编码之后，需要为每个不同的编码找定一个对应的意象。&lt;/p>
+&lt;p>中国文化博大精深，利用编码的谐音，可以对应出容易记忆的编码，谐音编码不便的条目可以用象形来对应。&lt;/p>
+&lt;p>如以下的编码表，就是我个人在用的编码表。&lt;/p>
+&lt;figure>
+&lt;img src="images/poker.jpg"/>
+&lt;/figure>
+&lt;p>编码表只要适合自己就是最好的，可以根据自己的需求去更改个别码点。&lt;/p>
+&lt;h2 id="记忆意象">记忆意象&lt;/h2>
+&lt;p>对于一副牌，按照牌的先后顺序，对应成意象之后，就需要将这些意象按顺序记忆起来。&lt;/p>
+&lt;p>记忆的方法有很多种，比如&lt;/p>
+&lt;ul>
+&lt;li>链条法，将前后两个意象用一个动作联系起来，一直串联起所有的牌，不便之处在于有些意象关联的太为脆弱，关联容易断裂。&lt;/li>
+&lt;li>定桩法（所谓记忆宫殿），也是诸多记忆大师在使用的方法，就是预先记忆一连串有顺序的地点（或大或小），
+然后将意象放在相应的地点中去。&lt;/li>
+&lt;/ul>
+&lt;p>我个人更喜欢一种类似于讲故事的方法，按顺序将各个意象（人物）悉数托出。&lt;/p>
+&lt;p>在记忆意象的时候，尽量调用多种感观，引起夸张的联想，这样更容易记忆。&lt;/p>
+&lt;h2 id="逆向还原">逆向还原&lt;/h2>
+&lt;p>记忆所有的意象之后，按顺序将意象转换为编码，转换为牌。&lt;/p>
+&lt;p>这样就完成了记忆扑克牌的过程。&lt;/p>
+&lt;p>综合来看，记忆扑克牌涉及数字逻辑和图像想象，是非常不错的训练左右脑的方法。&lt;/p>
+&lt;h1 id="记牌方法">记牌方法&lt;/h1>
+&lt;p>在了解记忆扑克的基础上，再来记忆每个玩家的牌。&lt;/p>
+&lt;h2 id="三家的牌">三家的牌&lt;/h2>
+&lt;p>出牌无论什么风向，你的左右都各有一个玩家，一个上家，一个下家。&lt;/p>
+&lt;pre>&lt;code> 上家 &amp;lt;------ 下家
+\ ^
+\ /
+v /
+自己
+&lt;/code>&lt;/pre>&lt;p>斗地主一共有 3 个玩家，最大手牌个数为 20。&lt;/p>
+&lt;p>如果使用定桩法，需要 3 个不同的记忆桩，如果用故事法则需要 3 个不同的故事，每个玩家最多记忆 20 个意象。&lt;/p>
+&lt;p>为每个人物定一个起始意象，用于和第一张牌做关联，因为最开始的牌容易忘记。
+个人觉得剪刀，石头，布是三个不错的意象，隐含了三家相互制衡的关系。&lt;/p>
+&lt;pre>&lt;code> 剪刀 &amp;lt;------ 布
+\ ^
+\ /
+v /
+石头
+&lt;/code>&lt;/pre>&lt;h2 id="地主底牌">地主底牌&lt;/h2>
+&lt;p>底牌有 3 张，有明确的花色，所有人可见，且都归属于地主手中。&lt;/p>
+&lt;p>3 张底牌对应 3 个不同的意象，和玩家的手牌分开记忆，作为第四个记忆桩/故事。&lt;/p>
+&lt;p>底牌对应的起始意象是金币，表示挖到的，而且很有价值。&lt;/p>
+&lt;p>在打牌时，要时刻注意地主有没有打出过底牌，如果有打出，则再次记忆打出的底牌，作为之前的抵消。&lt;/p>
+&lt;p>一点启示：&lt;/p>
+&lt;p>当自己是地主时，如果可以打底牌，尽量先打底牌。&lt;/p>
+&lt;p>比如手上一对 8，要配上顺子，其中一张 8 是底牌，就用它配顺子先打出，减小对手猜自己牌的机会。&lt;/p>
+&lt;h2 id="关注数量">关注数量&lt;/h2>
+&lt;p>斗地主不同于双升，对于牌的花色没有明确的要求，并且我们记牌的核心主要是为了关注相应点数的牌的数量，并不需要关注花色。&lt;/p>
+&lt;p>再者，如果用传统的记牌方法，打一个顺子/连对，需要瞬间记住太多牌，影响记忆速度。&lt;/p>
+&lt;p>这里讨论一种改进方法，关注数量的记牌方法，而不是花色，关键在于对编码方法做进一步的改进。&lt;/p>
+&lt;p>对于 A - 10，同样用 10 - 49 的编码，但是十位数表示数量，个位数表示点数。&lt;/p>
+&lt;p>对于 J - K，同样用 {6,7,8,9}{1,2,3} 的编码，不过映射方式出现变化。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">方式&lt;/th>
+&lt;th style="text-align:center">牌&lt;/th>
+&lt;th style="text-align:center">编码&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">大王&lt;/td>
+&lt;td style="text-align:center">0&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">小王&lt;/td>
+&lt;td style="text-align:center">1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">10&lt;/td>
+&lt;td style="text-align:center">10&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">9&lt;/td>
+&lt;td style="text-align:center">19&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">J&lt;/td>
+&lt;td style="text-align:center">61&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">Q&lt;/td>
+&lt;td style="text-align:center">62&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">K&lt;/td>
+&lt;td style="text-align:center">63&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">AA&lt;/td>
+&lt;td style="text-align:center">21&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">10 10&lt;/td>
+&lt;td style="text-align:center">20&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">99&lt;/td>
+&lt;td style="text-align:center">29&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">JJ&lt;/td>
+&lt;td style="text-align:center">71&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">QQ&lt;/td>
+&lt;td style="text-align:center">72&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">KK&lt;/td>
+&lt;td style="text-align:center">73&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">AAA&lt;/td>
+&lt;td style="text-align:center">31&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">10 10 10&lt;/td>
+&lt;td style="text-align:center">30&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">999&lt;/td>
+&lt;td style="text-align:center">39&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">JJJ&lt;/td>
+&lt;td style="text-align:center">81&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">QQQ&lt;/td>
+&lt;td style="text-align:center">82&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">KKK&lt;/td>
+&lt;td style="text-align:center">83&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">AAAA&lt;/td>
+&lt;td style="text-align:center">41&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">10 10 10 10&lt;/td>
+&lt;td style="text-align:center">40&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">9999&lt;/td>
+&lt;td style="text-align:center">49&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">JJJJ&lt;/td>
+&lt;td style="text-align:center">91&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">QQQQ&lt;/td>
+&lt;td style="text-align:center">92&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">KKKK&lt;/td>
+&lt;td style="text-align:center">93&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">顺子&lt;/td>
+&lt;td style="text-align:center">34567&lt;/td>
+&lt;td style="text-align:center">13 rope 17&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">顺子&lt;/td>
+&lt;td style="text-align:center">910JQK&lt;/td>
+&lt;td style="text-align:center">19 rope 63&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">连对&lt;/td>
+&lt;td style="text-align:center">334455&lt;/td>
+&lt;td style="text-align:center">23 24 25&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">连对&lt;/td>
+&lt;td style="text-align:center">1010JJQQKK&lt;/td>
+&lt;td style="text-align:center">20 71 72 73&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">飞机&lt;/td>
+&lt;td style="text-align:center">333444&lt;/td>
+&lt;td style="text-align:center">33 34&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">飞机&lt;/td>
+&lt;td style="text-align:center">101010JJJQQQKKK&lt;/td>
+&lt;td style="text-align:center">30 81 82 83&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">其它&lt;/td>
+&lt;td style="text-align:center">对于带牌的情况，将所带的牌附加记忆，编码规则和上开始相同&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>这里加了些优化，对于顺子，数量至少 5 个，全用单张来记忆有些吃力，
+这里只记忆顺子的起始张 和 终止张，中间加上绳子意象，提高记忆效率。&lt;/p>
+&lt;h1 id="记牌过程">记牌过程&lt;/h1>
+&lt;p>在分析了方法之后，来新手场实践一下记忆效果。&lt;/p>
+&lt;p>{% include video.html url=&amp;quot;/joker/example.mp4&amp;quot; desc=&amp;ldquo;a real game example&amp;rdquo; %}&lt;/p>
+&lt;p>在这一对局中，自己是地主，且相应的牌有优势，在整个过程中，按照上面的记牌方法，
+依次记忆为，&lt;/p>
+&lt;pre>&lt;code>石头 14 61 12 72 47 19 11 10 12 36 15 01 11
+石头 钥匙 轮椅 婴儿 企鹅 司机 药酒 筷子 衣领 婴儿 山路 鹦鹉 火箭 筷子
+布 19 63 22 61 11
+布 药酒 留声机 耳朵 轮椅 筷子
+剪刀 10 11 83 14
+剪刀 衣领 筷子 花生 钥匙
+金币 31 82 47
+金币 鲨鱼 靶儿 司机
+&lt;/code>&lt;/pre>&lt;p>So，觉得记忆效果如何呢？&lt;/p>- https://dreamanddead.github.io/post/how-to-remember-cards/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>简明 Decision Trees</title><link>https://dreamanddead.github.io/post/decision-trees/</link><pubDate>Wed, 23 Oct 2019 07:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/decision-trees/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/decision-trees/ -&lt;p>根据直觉来看，决策树是一种非常自然的方法，和人类处理问题的机制很像。
+面对问题，在做出一个决策之后，跟随着要考虑子决策，直到决定最终的行动。
+而且这种决策过程在遇到同样问题时可以重复利用，就像先人留下的经验。&lt;/p>
+&lt;p>决策树算法在我看来，更像是一种艺术，其过程没有明确的确定性，而是在一种启发下找寻一种思考的路径。&lt;/p>
+&lt;h1 id="介绍">介绍&lt;/h1>
+&lt;p>一些机器学习算法，所输入的数据之间有明确的距离概念，比如神经网络，KNN，任何两个实例通过特征可以计算出两者之间的距离。距离越近，两者越相似&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>。&lt;/p>
+&lt;p>但是存在一些无法衡量距离的特征，比如离散值属性，没有明确的距离概念，各个取值之间是平等的，只有一些语义的判别，这时就无法计算距离和相似性。
+这也是决策树发挥作用的地方。&lt;/p>
+&lt;p>其它算法是逼近连续值函数的算法，而决策树是逼近离散值函数的算法。&lt;/p>
+&lt;h2 id="适用范围">适用范围&lt;/h2>
+&lt;p>决策树是有监督学习算法，其目标值是离散值（即分类问题），根据目前所拥有的实例（经验），习得一个决策方法（树），
+用这个决策方法对新的未知情况进行决策。&lt;/p>
+&lt;p>数据实例多由 &lt;em>&amp;lt;属性, 值&amp;gt;&lt;/em> 对来表示，属性表示从何处进行决策，值表示了决策的方向。&lt;/p>
+&lt;p>在训练数据中可以包含些许错误，如果正确数据占据多数，还是可以保证决策的质量。&lt;/p>
+&lt;h2 id="结构">结构&lt;/h2>
+&lt;p>决策树顾名思义是一种树形结构，用于表示连续的决策过程。&lt;/p>
+&lt;p>比如对于篮球一对一进攻的行动决策过程：&lt;/p>
+&lt;figure>
+&lt;img src="images/tree-example.png"
+alt="示例来自项目 decision-tree-example"/> &lt;figcaption>
+&lt;p>示例来自项目 &lt;a href="https://github.com/DreamAndDead/decision-trees-example">decision-tree-example&lt;/a>&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>决策树中有两类结点和一类边，&lt;/p>
+&lt;ul>
+&lt;li>叶子结点，表示决策的结果，对应实例的目标值&lt;/li>
+&lt;li>非叶子结点，表示决策所使用的属性，对应实例的属性&lt;/li>
+&lt;li>非叶子结点到子结点的边，表示决策属性所取的值，即决策的方向&lt;/li>
+&lt;/ul>
+&lt;p>这样的话，从根结点到叶子结点的任意路径，就形成了一个决策过程。
+如何从已有的实例中找到相应的决策方法，这就是算法所要解决的问题。&lt;/p>
+&lt;h1 id="核心算法">核心算法&lt;/h1>
+&lt;h2 id="描述">描述&lt;/h2>
+&lt;p>定义样本集合为 $S$，决策属性集合为 $A$，使用如下的步骤生成一棵决策树，&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>&lt;/p>
+&lt;ol>
+&lt;li>如果 $S$ 中所有实例的目标值相同，则生成叶子结点，结点值为 $S$ 中实例的目标值&lt;/li>
+&lt;li>如果 $A$ 为空，则生成叶子结点，结点值为 $S$ 中占比例最高的目标值&lt;/li>
+&lt;li>从 $A$ 中&lt;strong>选择属性&lt;/strong> $a$，生成分支结点，结点值为属性 $a$&lt;/li>
+&lt;li>对于属性 $a$ 的每个可能值 $v_i$
+&lt;ol>
+&lt;li>在分支结点下生成一个分支，对应属性测试 $a = v_i$，实例集合为 $S_i$&lt;/li>
+&lt;li>若 $S_i$ 为空，则生成叶子结点作为子结点，结点值为 $S$ 中占比例最高的目标值&lt;/li>
+&lt;li>若 $S_i$ 不为空，则回到第 1 步，使用样本集合 $S_i$，决策属性集合 $A - {a}$，生成决策树，将其根结点作为子结点&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ol>
+&lt;p>可见决策树算法是一个递归的过程，且这个过程是贪婪的，因为它从不回溯，在划分一个集合之后，继续向下划分其子集合。&lt;/p>
+&lt;p>整个过程符合直觉，容易理解，值得注意的是 step 2 和 step 4.2。&lt;/p>
+&lt;p>step 2 对应的情况是，$S$ 中所有实例的决策属性值相同，但是目标属性值不完全相同。
+可能数据本身有些许错误，也可能数据提供的属性不足。在这时，使用少数服从多数的原则，使用多数目标值作为决策值。&lt;/p>
+&lt;p>step 4.2 对应的情况是，$S_i$ 没有数据提供给 $a = v_i$ 进行判别，这时就退一步从未划分的 $S$ 中选择多数目标值作为决策值。&lt;/p>
+&lt;h2 id="属性选择">属性选择&lt;/h2>
+&lt;p>对于集合 $S$，有多种可能的决策树可以拟合，但是算法只选择了其中的一个。
+算法在整个决策树空间中进行搜索，决定最终生成哪一个决策树的重要步骤就是 step 3。&lt;/p>
+&lt;p>属性选择有多种方法，每个方法都从不同的角度出发。&lt;/p>
+&lt;h3 id="信息增益">信息增益&lt;/h3>
+&lt;p>熵是信息论中的概念，简单理解，熵表示信息量的多少，数值越小，表明信息量越少，信息越简单越纯。&lt;/p>
+&lt;p>$$
+Entropy = \sum_{i=1}^n - p_i log_2 p_i \&lt;br>
+\sum_{i=1}^n p_i = 1
+$$&lt;/p>
+&lt;p>对于 $n=2$ 的情况，熵函数如下，&lt;/p>
+&lt;figure>
+&lt;img src="images/entropy-n-2.png"/>
+&lt;/figure>
+&lt;p>对于 $n=3$ 的情况，&lt;/p>
+&lt;figure>
+&lt;img src="images/entropy-n-3.png"/>
+&lt;/figure>
+&lt;p>当所有 $p_i$ 取值都相同时 $(\frac{1}{2}, \frac{1}{3}, &amp;hellip;)$，熵取得最大值 $log_2(n)$。&lt;/p>
+&lt;p>信息增益方法使用熵来作为属性选择的依据。&lt;/p>
+&lt;p>首先，计算集合 $S$ 对目标值的熵 $Entro(S)$。&lt;/p>
+&lt;p>再选定一个属性 $a$，根据 $a$ 取值的不同 $v_1, &amp;hellip;, v_n$，集合划分为 $S_1, &amp;hellip;, S_n$，每个集合实例个数所占比例为 $p_i$，计算得到新的平均熵值为&lt;/p>
+&lt;p>$$
+\sum_{i=1}^{n} p_i Entro(S_i)
+$$&lt;/p>
+&lt;p>在使用属性 $a$ 对集合的划分后，得到信息增益（熵的变化），&lt;/p>
+&lt;p>$$
+Gain(S, a) = Entro(S) - \sum_{i=1}^{n} p_i Entro(S_i)
+$$&lt;/p>
+&lt;p>对于属性 $a$ 来说，划分得到平均熵值越小，表明得到的实例越纯，越接近于决策结果，这时 $Gain(S, a)$ 越大。&lt;/p>
+&lt;p>从这个角度，可以选择信息增益最大的属性 $a$ 作为当前决策属性。&lt;/p>
+&lt;p>$$
+\underset{a \in A}{\mathrm{argmax}}\ Gain(S, a)
+$$&lt;/p>
+&lt;h3 id="信息增益率">信息增益率&lt;/h3>
+&lt;p>在选择属性时，使用信息增益方法，倾向于选择属性取值更多的树。
+因为属性取值越多，生成的分支越多，每个分支下的子集合结点越少，子集合对目标属性的熵更可能越小。
+极端情况下，每个子集合只有一个结点，得到的平均熵值为 0。&lt;/p>
+&lt;p>信息增益率(Gain Ratio) 方法&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>正是因为考虑到这一点才被提出，它的想法在于对信息增益增加一个惩罚项，使其取消这种倾向。&lt;/p>
+&lt;p>$$
+GainRatio(S, a) = \frac{Gain(S, a)}{SplitInformation(S, a)}
+$$&lt;/p>
+&lt;p>Split Information 表示的是集合 $S$ 对属性 $a$ 的熵。
+根据前面对熵的讨论，当属性 $a$ 对应的属性取值越多，其熵值可能越大，这样就对信息增益的选择方向做了一些平衡。&lt;/p>
+&lt;p>$$
+SplitInformation(S, a) = \sum_{i=1}^{n} - p_i log_2 p_i \&lt;br>
+p_i = \frac{|S_i|}{|S|}
+$$&lt;/p>
+&lt;p>从信息增益率的角度，选择 $GainRatio(S, a)$ 最大的属性作为决策属性。&lt;/p>
+&lt;p>$$
+\underset{a \in A}{\mathrm{argmax}}\ GainRatio(S, a)
+$$&lt;/p>
+&lt;p>在某些情况下，可能出现 $Gain(S, a)$ 很小的情况，但是由于大部分实例在属性 $a$ 上取值都相同，这时 $SplitInformation(S, a)$ 变的很小，因为作为分母，导致 $GainRatio(S, a)$ 变的很大。
+在这时选择的属性 $a$ 不一定是我们期望的，因为 $Gain(S, a)$ 很小。&lt;/p>
+&lt;p>一种改进的思路是，先计算所有属性的 $Gain(S, a)$，选择 $Gain(S, a)$ 超出平均值的属性 $a$，再进行 $GainRatio(S, a)$ 的计算，选择 $GainRatio(S, a)$ 最大的属性。&lt;/p>
+&lt;h3 id="基尼系数">基尼系数&lt;/h3>
+&lt;p>基尼系数是另一种衡量方法&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>。&lt;/p>
+&lt;p>从概率的角度来看，基尼系数表示从 $S$ 中随机选择两个目标值分类，其分类不一致的概率。
+基尼系数越小，说明集合目标值分类的纯度越高。&lt;/p>
+&lt;p>计算方法如下，其中 $Y$ 表示目标属性的取值集合。&lt;/p>
+&lt;p>$$
+Gini(S) = \sum_{i=1}^{|Y|} \sum_{j \neq i} p_i p_j = 1 - \sum_{i=1}^{|Y|} p_i^2
+$$&lt;/p>
+&lt;p>在选定属性 $a$ 进行划分之后，计算平均系数&lt;/p>
+&lt;p>$$
+GiniIndex(S, a) = \sum_{i=1}^n \frac{|S_i|}{|S|} Gini(S_i)
+$$&lt;/p>
+&lt;p>同样地，选择基尼系数最小的属性作为分类属性。&lt;/p>
+&lt;p>$$
+\underset{a \in A}{\mathrm{argmin}}\ GiniIndex(S, a)
+$$&lt;/p>
+&lt;p>值得一提的是，没有绝对的标准，说明选择哪一个属性选择方法更好，相比之下，防止过拟合的方法对决策树的准确率的影响更为明显。&lt;/p>
+&lt;h1 id="拓展">拓展&lt;/h1>
+&lt;p>之前描述的算法表达了决策树的核心，在其基础上，需要新的方法帮助决策树适应新的情况。&lt;/p>
+&lt;h2 id="防止过拟合">防止过拟合&lt;/h2>
+&lt;p>粗略的讲，过拟合是指决策树在样本空间的错误率很低，但是预测未知新实例的错误率很高。&lt;/p>
+&lt;p>这表明决策树只学习到了样本的特征，而没有学习到本质特征。&lt;/p>
+&lt;p>防止过拟合有多种方法，下面介绍三种常见的方式。&lt;/p>
+&lt;h3 id="停止增长">停止增长&lt;/h3>
+&lt;p>过拟合是对样本过度适应的结果。
+为了防止过度适应，就此设定一个约束，比如在树达到一定层数时，就停止向下搜索。&lt;/p>
+&lt;p>但是约束也是一个粗略的概念，这就将问题就变成了，哪些约束是合理的？&lt;/p>
+&lt;p>这个问题可能更难回答，对于数据的不同，特征的不同，最合理的约束自然也不同。
+所以没有明确统一的约束方法可以使用。&lt;/p>
+&lt;h3 id="错误率降低修剪">错误率降低修剪&lt;/h3>
+&lt;p>错误率降低修剪的思想是，先使决策树完全拟合数据，再自底向上对树进行修剪，降低预测新实例的错误率。&lt;/p>
+&lt;p>它的过程如下，&lt;/p>
+&lt;ul>
+&lt;li>将样本空间分为训练集合和测试集合&lt;/li>
+&lt;li>针对训练集合，生成决策树&lt;/li>
+&lt;li>自底向上，遍历所有非叶子结点
+&lt;ul>
+&lt;li>删除非叶子结点，合并它下面的所有实例，生成一个叶子结点，结点值为实例中占比例最大的目标值&lt;/li>
+&lt;li>在测试集合上进行错误率测试
+&lt;ul>
+&lt;li>如果错误率有所降低，就保留修剪&lt;/li>
+&lt;li>如果错误率没有降低，就撤消修剪&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>由此得到的决策树，就在训练和预测方面达成了一个微妙的平衡。&lt;/p>
+&lt;h3 id="规则后修剪">规则后修剪&lt;/h3>
+&lt;p>和错误率降低修剪类似，规则后修剪也是先在训练集合生成决策树，再在测试集合修剪树。
+不同的是，它从规则的角度入手。&lt;/p>
+&lt;p>对于决策树来说，从根结点到叶子结点每一个路径，都是一个明确的规则（如果 &amp;hellip; 则 &amp;hellip;）。
+一个规则有前件和后件。前件是多个条件的交，后件是目标属性的分类值。&lt;/p>
+&lt;ul>
+&lt;li>将样本空间分为训练集合和测试集合&lt;/li>
+&lt;li>针对训练集合，生成决策树&lt;/li>
+&lt;li>从根结点到叶子结点，生成所有的规则&lt;/li>
+&lt;li>依次选择规则
+&lt;ul>
+&lt;li>计算规则在测试样本中的错误率&lt;/li>
+&lt;li>逐个删除规则前件中的条件，保留错误率降低的删除，直至错误率不能再降低为止&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>将所有规则按照错误率由低到高排序，作为对新实例的预测方法&lt;/li>
+&lt;/ul>
+&lt;p>错误率降低修剪受限于决策树的上下顺序，修剪上面的结点，则下面的结点一定会被合并；
+而规则后修剪则没有这种约束，因为它将树解构成了独立的规则。&lt;/p>
+&lt;p>所以有理由相信，规则后修剪优于错误率降低修剪。&lt;/p>
+&lt;h2 id="处理连续值属性">处理连续值属性&lt;/h2>
+&lt;p>之前所有的讨论都基于，属性值是离散值的情况。对于不同的问题，属性值也可能是连续值。
+对于这类属性，就没有办法应用之前讨论的方法。&lt;/p>
+&lt;p>既然取值不是离散的，就将连续值进行离散化。&lt;/p>
+&lt;p>在样本集合中，找到连续值属性的所有取值，从小到大排序，计算所有取值的中点值，作为决策属性的可取值。
+根据中点值，总可以将样本分为两类，大于中点的和小于中点的。&lt;/p>
+&lt;p>这样就可以应用开始讨论的选择属性的方法。&lt;/p>
+&lt;p>对于连续值属性有一个要点，它在作为决策结点划分集合时，在子分支的集合中依然保留这个属性，之后也可以再次作为决策属性。
+这一点很容易理解，毕竟连续值是有顺序的。上面的处理方式，不过是将多分叉的情况，使用多个二分叉来处理。&lt;/p>
+&lt;h2 id="处理缺失值">处理缺失值&lt;/h2>
+&lt;p>真实世界的数据采集，由于多种原因，难免存在部分实例的属性值有所缺失。&lt;/p>
+&lt;p>在这种情况下，算法如何处理缺失值就很重要了。&lt;/p>
+&lt;p>主要需要解决三个问题，&lt;/p>
+&lt;ol>
+&lt;li>在有缺失值的情况下，如何选择决策最佳的属性？&lt;/li>
+&lt;li>对于有缺失值的实例，如何将其划分到子结点的分类中？&lt;/li>
+&lt;li>对于有缺失值的新实例，如何进行目标值的判别？&lt;/li>
+&lt;/ol>
+&lt;p>一种简单的做法，从样本中去除所有属性缺失的实例，就不需要理会上面的问题。
+但是这种方式可能导致可用的训练数据太少，大多数属性缺失的实例没有得到利用。&lt;/p>
+&lt;p>另一种相对周全的办法，是用概率来处理缺失值&lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>。&lt;/p>
+&lt;p>在样本集合 $S$ 中为每一个样本赋予一个权重 $w_x$，初始为 1。
+对于属性 $a$，$\overset{\sim}{S}$ 表示 $S$ 在属性 $a$ 上没有缺失值的样本子集。&lt;/p>
+&lt;p>在 $\overset{\sim}{S}$ 中，假定属性 $a$ 有 $n$ 个可取值， ${ v_1, &amp;hellip;, v_n }$，$\overset{\sim}{S_i}$ 为属性 $a = v_i$ 的 $\overset{\sim}{S}$ 子集。&lt;/p>
+&lt;p>在 $S$ 中，目标属性 $t$ 有 $m$ 个可取值， ${ y_1, &amp;hellip;, y_m }$，$\overset{\sim}{S^i}$ 为目标属性 $t = y_i$ 的 $\overset{\sim}{S}$ 子集。&lt;/p>
+&lt;p>显然&lt;/p>
+&lt;p>$$
+\overset{\sim}{S} = \bigcup_{i=1}^n \overset{\sim}{S_i} \&lt;br>
+\overset{\sim}{S} = \bigcup_{i=1}^m \overset{\sim}{S^i}
+$$&lt;/p>
+&lt;p>其中&lt;/p>
+&lt;p>$$
+\overset{\sim}{\rho} = \frac{\sum_{x \in \overset{\sim}{S}} w_x}{\sum_{x \in S} w_x} \&lt;br>
+\overset{\sim}{p_i} = \frac{\sum_{x \in \overset{\sim}{S}_i} w_x}{\sum_{x \in \overset{\sim}{S}} w_x} \&lt;br>
+\overset{\sim}{r_i} = \frac{\sum_{x \in \overset{\sim}{S^i}} w_x}{\sum_{x \in \overset{\sim}{S}} w_x}
+$$&lt;/p>
+&lt;p>直观的看，$\overset{\sim}{\rho}$ 表示无缺失值样本所占的比例。
+$\overset{\sim}{p_i}$ 表示对应属性的无缺失值样本中，属性值 $a = v_i$ 所占的比例。
+$\overset{\sim}{r_i}$ 表示对应属性的无缺失值样本中，目标值 $t = y_i$ 所占的比例。&lt;/p>
+&lt;p>显然&lt;/p>
+&lt;p>$$
+\sum_{i=1}^n \overset{\sim}{p_i} = 1 \&lt;br>
+\sum_{i=1}^m \overset{\sim}{r_i} = 1
+$$&lt;/p>
+&lt;p>在这个基础上，改进信息增益的计算式&lt;/p>
+&lt;p>$$
+Gain(S, a) = \overset{\sim}{\rho} * Gain(\overset{\sim}{S}, a) = \overset{\sim}{\rho} * (Ent(\overset{\sim}{S}) - \sum_{i=1}^n \overset{\sim}{p_i} Ent(\overset{\sim}{S_i})) \&lt;br>
+Ent(\overset{\sim}{S}) = \sum_{i=1}^m \overset{\sim}{r_i} \log_2 \overset{\sim}{r_i}
+$$&lt;/p>
+&lt;p>相当于在原先的基础上，避开了缺失值，考虑了每个样本的权重，这样就对应解决了第一个问题。&lt;/p>
+&lt;p>假如选定了属性 $a$ 作为决策属性，若样本 $x$ 在属性 $a$ 上有取值，则划分到相应的子集合中，
+若样本 $x$ 在属性 $a$ 上缺失值，就将 $x$ 划分到所有子集合中，相应的将其权重在不同的子集合中修改为 $\overset{\sim}{p_i} * w_x$。&lt;/p>
+&lt;p>直观来看，这种方法将缺失属性的样本以不同的概率划分到不同的子结点中，这也是一开始使用权重计算 $Gain(S, a)$ 的原因。
+这样就回答了第二个问题。&lt;/p>
+&lt;p>至于第三个问题，还没有见到资料提到过相关内容，后续有机会再处理。&lt;/p>
+&lt;h2 id="处理不同代价的属性">处理不同代价的属性&lt;/h2>
+&lt;p>这是一个比较实际的问题，比如要诊断一个病人的症状，病人可能要做多种多样的检查，来采集数据，供医生诊断。
+但是不同的检查，价格有高有低，疼痛程度也不同，即采集属性数据的代价有所不同。&lt;/p>
+&lt;p>所以我们也希望，算法可以相对倾向于使用低代价的属性来进行诊断。&lt;/p>
+&lt;p>具体在算法中，将代价计入属性选择的过程中。比如采集属性 $a$ 的数据代价为 $Cost(a)$，则可以使用&lt;/p>
+&lt;p>$$
+\frac{Gain(S, a)}{Cost(a)}
+$$&lt;/p>
+&lt;p>来平衡属性选择的计算。代价越大，选择其的可能性越小。&lt;/p>
+&lt;p>上式是一个直观的思路，在这一思路下还存在很多的选择方法。
+不过同属性选择本身一样，并没有准确的理由，判别哪一种方法更好的方法。&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>&lt;a href="https://book.douban.com/subject/1138189/">《模式分类》 Richard O. Duda / Peter E. Hart / David G. Stork&lt;/a> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2" role="doc-endnote">
+&lt;p>&lt;a href="https://book.douban.com/subject/1102235/">《Machine Learning》 Tom Mitchell&lt;/a> &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:3" role="doc-endnote">
+&lt;p>&lt;a href="https://book.douban.com/subject/26708119/">《机器学习》 周志华&lt;/a> &lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>- https://dreamanddead.github.io/post/decision-trees/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>python virtual env with conda</title><link>https://dreamanddead.github.io/post/pipenv-with-conda/</link><pubDate>Fri, 20 Sep 2019 09:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/pipenv-with-conda/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/pipenv-with-conda/ -&lt;p>Anaconda 是一个非常流行的 python 集成环境，用于科学计算，机器学习等。
+它主要的优势在于，新的包管理器 conda 比 pip 更容易管理 numpy scipy 之类的工具包（安装涉及 C 代码编译）。&lt;/p>
+&lt;p>另外在开发过程中，保持不同项目使用各自独立的开发环境是一个良好的习惯。
+在 python 世界，virtualenv 是最广泛的选择，pipenv 的底层使用的也是它。
+conda 内部也有 env 的概念（默认是 base），可以针对不同的项目进行环境的分离，并且对一些开发工具有良好的支持（比如 VS Code 中的 Anaconda 插件）。&lt;/p>
+&lt;p>最近在配置 emacs 下的 python 开发环境，相比之下在 Anaconda 方面的插件还没有那么成熟，经过搜索发现，
+存在可以集成 pipenv&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> 和 conda env 的方案&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ pipenv --python=&lt;span style="color:#8b008b;font-weight:bold">$(&lt;/span>conda run which python&lt;span style="color:#8b008b;font-weight:bold">)&lt;/span> --site-packages
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令，可以将 conda env 作为 pipenv virtualenv 来使用，集成了所有 Anaconda 集成的开发库！&lt;/p>
+&lt;p>更可贵的是，在使用 conda 升级开发库之后，可以再次重建 virtualenv 获得更新带来的好处。
+并且，virtualenv 环境更容易被其它编码工具支持，比如 emacs :)。&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>&lt;a href="https://pipenv.readthedocs.io/en/latest/advanced/#pipenv-and-other-python-distributions">https://pipenv.readthedocs.io/en/latest/advanced/#pipenv-and-other-python-distributions&lt;/a> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2" role="doc-endnote">
+&lt;p>&lt;a href="https://stackoverflow.com/questions/50546339/pipenv-with-conda">https://stackoverflow.com/questions/50546339/pipenv-with-conda&lt;/a> &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>
+- https://dreamanddead.github.io/post/pipenv-with-conda/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item></channel></rss>
