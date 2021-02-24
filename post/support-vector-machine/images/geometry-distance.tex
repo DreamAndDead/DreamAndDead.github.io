@@ -1,0 +1,25 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{myblog}
+
+\begin{document}
+\begin{tikzpicture}
+  %\helpline;
+  \axis[x label=$x_1$, y label=$x_2$];
+
+  % solid
+  \draw[solid]  (-1, 9) -- (9, -1);
+  
+  % \vec w
+  \coordinate (w) at (5.4, 5.4);
+  \coordinate (a) at (6, 8);
+  \coordinate (p) at (3, 5);
+  \coordinate (u) at (4-.2, 6-.2);
+  \coordinate (r) at (4.5, 6.5);
+  \draw[->] (p) node[below left] {P} -- (a) node[right] {A};
+  \node[below right] at (r) {$\gamma$};
+  \draw[->] (p) -- (u) node[above left] {$\frac{w}{||w||}$};
+  \draw[->] (4, 4) -- (w);
+  \node[right] at (w) {$w$};
+\end{tikzpicture}
+\end{document}

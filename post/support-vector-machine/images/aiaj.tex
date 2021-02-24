@@ -1,0 +1,24 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{myblog}
+
+\begin{document}
+\begin{tikzpicture}
+  %\helpline;
+  \axis[x label=$\alpha_i$, y label=$\alpha_j$];
+
+  \coordinate (ci) at (7, 0);
+  \coordinate (cj) at (0, 7);
+  \coordinate (cij) at (7, 7);
+  
+  \draw (ci) node[below] {C} -- (cij);
+  \draw (cj) node[left] {C} -- (cij);
+  
+  % random line
+  \draw (3, -1) -- (9, 5);
+  \draw (-1, 1) -- (7, 9);
+  \draw (0, 8) -- (9, -1);
+  \draw (-2, 6) -- (5, -1);
+
+\end{tikzpicture}
+\end{document}

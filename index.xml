@@ -182,7 +182,126 @@ manjaro-choot .
 &lt;pre>&lt;code>sudo pacman -S linux
 &lt;/code>&lt;/pre>&lt;p>更新引导&lt;/p>
 &lt;pre>&lt;code>sudo update-grub
-&lt;/code>&lt;/pre>&lt;p>再次重启就恢复正常。&lt;/p>- https://dreamanddead.github.io/post/rescue-manjaro-boot/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>connect two pc with a wire</title><link>https://dreamanddead.github.io/post/connect-pc-with-wire/</link><pubDate>Fri, 10 Apr 2020 18:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/connect-pc-with-wire/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/connect-pc-with-wire/ -&lt;p>先前&lt;a href="https://dreamanddead.github.io/2020/03/25/compose-deep-learning-machine.html">组装了一台用于深度学习的服务器&lt;/a>，连接在一个局域网内使用。
+&lt;/code>&lt;/pre>&lt;p>再次重启就恢复正常。&lt;/p>- https://dreamanddead.github.io/post/rescue-manjaro-boot/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Bellman Equation Deduction</title><link>https://dreamanddead.github.io/post/bellman-equation/</link><pubDate>Thu, 27 Aug 2020 11:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/bellman-equation/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/bellman-equation/ -&lt;p>详细理解 Bellman 方程的证明过程。&lt;/p>
+&lt;h1 id="prequisite">Prequisite&lt;/h1>
+&lt;h2 id="条件概率和独立性">条件概率和独立性&lt;/h2>
+&lt;p>条件概率是概率论是最为基础的概念。在事件 B 发生的条件下，A 事件发生的概率等于 A B 事件同时发生的概率除以 B 事件发生的概率。&lt;/p>
+&lt;p>$$
+P(A|B) = P(AB) / P(B)
+$$&lt;/p>
+&lt;p>移项得到&lt;/p>
+&lt;p>$$
+\begin{equation} \label{cond}
+P(AB) = P(A|B)P(B) \tag{1}
+\end{equation}
+$$&lt;/p>
+&lt;p>如果 A B 两个事件相互独立，彼此没有依赖关系，则 A B 同时发生的概率等于 A 事件发生的概率乘以 B 事件发生的概率。&lt;/p>
+&lt;p>$$
+P(AB) = P(A)P(B)
+$$&lt;/p>
+&lt;p>在相互独立的前提下，综合可知&lt;/p>
+&lt;p>$$
+\begin{equation} \label{ind}
+P(A|B) = P(A) \tag{2}
+\end{equation}
+$$&lt;/p>
+&lt;h2 id="全概率公式">全概率公式&lt;/h2>
+&lt;p>若事件 $B_1, B_2, &amp;hellip;, B_n$ 是全空间 $\Omega$ 的一个划分，&lt;/p>
+&lt;p>$$
+\sum_{i=1}^n P(B_i) = 1
+$$&lt;/p>
+&lt;p>则&lt;/p>
+&lt;p>$$
+P(A) = \sum_{i=1}^n P(AB_i)
+$$&lt;/p>
+&lt;p>进一步地，根据 $\eqref{cond}$ 可得&lt;/p>
+&lt;p>$$
+\begin{equation} \label{full}
+P(A) = \sum_{i=1}^n P(A | B_i) P(B_i) \tag{3}
+\end{equation}
+$$&lt;/p>
+&lt;p>$\eqref{full}$ 是理解之后公式变化的要点。&lt;/p>
+&lt;h1 id="value-function">Value function&lt;/h1>
+&lt;p>RL 的基础思想很简洁，Agent 不断和 Env 相交互，以最大化收益为目标。&lt;/p>
+&lt;p>在 MDP 框架下，Agent 选择 Action 影响 Env，Env 反馈 State 和 Reward。&lt;/p>
+&lt;p>$$
+S_0, A_0, R_1, S_1, A_1, R_2, S_2, A_2, &amp;hellip;
+$$&lt;/p>
+&lt;p>Env 的行为完全由 $p(s', r|s, a)$ 来决定，&lt;/p>
+&lt;p>$$
+\sum_{s'} \sum_r p(s', r|s, a) = 1
+$$&lt;/p>
+&lt;p>Agent 在 t 时刻之后所能得到的全部收益为&lt;/p>
+&lt;p>$$
+\begin{equation}
+G_t = \sum_{k=0}^{\infty} \gamma^k R_{k+t+1}
+\end{equation}
+$$&lt;/p>
+&lt;p>当然 $G_t$ 不是孤立的存在，因为后续的收益和 agent 当前所处的状态以及后续使用的策略（policy）相关。&lt;/p>
+&lt;p>定义 state value function，衡量 agent 在 t 时刻处于 s 状态，后续使用策略 $\pi$ 可得到的累计收益。&lt;/p>
+&lt;p>$$
+V_\pi(s) = E_\pi[G_t | S_t = s]
+$$&lt;/p>
+&lt;p>进一步地，假如 agent 已经 在 t 时刻已经采取某一动作 a，定义 state action value function 为在此之后可得到的累计收益。&lt;/p>
+&lt;p>$$
+Q_\pi(s, a) = E_\pi[G_t| S_t = s, A_t = a]
+$$&lt;/p>
+&lt;p>事实上，由于行为和反馈不断循环的特性，$V_\pi(s)$ 和 $Q_\pi(s, a)$ 存在着一定的关系。&lt;/p>
+&lt;p>\begin{align}
+V_\pi(s) &amp;amp;= E_\pi[G_t | S_t = s] \nonumber \\\&lt;br>
+&amp;amp;= \sum_a \pi(a|s) E_\pi[G_t| S_t = s, A_t = a] \nonumber \\\&lt;br>
+&amp;amp;= \sum_a \pi(a|s) Q_\pi(s, a) \label{vq} \tag{4}
+\end{align}&lt;/p>
+&lt;p>推导过程利用了 \eqref{full}，其中&lt;/p>
+&lt;p>$$
+\sum_a \pi(a|s) = 1
+$$&lt;/p>
+&lt;p>至于 Q 则复杂一点，&lt;/p>
+&lt;p>\begin{align}
+Q_\pi(s, a) &amp;amp;= E_\pi[G_t| S_t = s, A_t = a] \nonumber \\\&lt;br>
+&amp;amp;= E_\pi[R_{t+1} + \gamma G_{t+1}| S_t = s, A_t = a] \nonumber \\\&lt;br>
+&amp;amp;= E_\pi[R_{t+1} | S_t = s, A_t = a] + \gamma E_\pi[G_{t+1}| S_t = s, A_t = a] \nonumber
+\end{align}&lt;/p>
+&lt;p>分成两部分来看，前一部分，&lt;/p>
+&lt;p>$$
+E_\pi[R_{t+1}| S_t = s, A_t = a] = \sum_r p(r | s, a) r
+$$&lt;/p>
+&lt;p>而&lt;/p>
+&lt;p>$$
+p(r | s, a) = \sum_{s'} p(s', r | s, a)
+$$&lt;/p>
+&lt;p>（依旧是 \eqref{full}，看出来了吗）&lt;/p>
+&lt;p>综合可得&lt;/p>
+&lt;p>$$
+E_\pi[R_{t+1}| S_t = s, A_t = a] = \sum_r p(r | s, a) r = \sum_r \sum_{s'} p(s', r | s, a) r
+$$&lt;/p>
+&lt;p>再来看另一项&lt;/p>
+&lt;p>$$
+E_\pi[G_{t+1}| S_t = s, A_t = a] = \sum_{s'} p(s' | s, a) E_\pi [G_{t+1} | S_{t+1} = s', S_t = s, A_t = a ]
+$$&lt;/p>
+&lt;p>（依旧是 \eqref{full}）&lt;/p>
+&lt;p>其中&lt;/p>
+&lt;p>$$
+p(s' | s, a) = \sum_r p(s', r | s, a)
+$$&lt;/p>
+&lt;p>（依旧是 \eqref{full}）&lt;/p>
+&lt;p>根据 MDP 的定义， $S_t A_t$ 只影响 $R_{t+1}$，和 $R_{t+2}$ 并不相关（相互独立），回忆 \eqref{ind}，综合可知&lt;/p>
+&lt;p>$$
+E_\pi[G_{t+1}| S_t = s, A_t = a] = \sum_{s'} \sum_r p(s', r | s, a) E_\pi [G_{t+1} | S_{t+1} = s'] = \sum_{s'} \sum_r p(s', r | s, a) V_\pi(s')
+$$&lt;/p>
+&lt;p>$$
+\begin{equation} \label{qv}
+Q_\pi(s, a) = E_\pi[G_t| S_t = s, A_t = a] = \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma V_\pi(s')] \tag{5}
+\end{equation}
+$$&lt;/p>
+&lt;h1 id="recursive-format">Recursive format&lt;/h1>
+&lt;p>利用 \eqref{vq} 和 \eqref{qv}，进一步推出各自 value function 的递归形式，&lt;/p>
+&lt;p>$$
+V_\pi(s) = \sum_a \pi(a|s) Q_\pi(s, a) = \sum_a \pi(a|s) \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma V_\pi(s')]
+$$&lt;/p>
+&lt;p>$$
+Q_\pi(s, a) = \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma V_\pi(s')] = \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma \sum_{a'} \pi(a'|s') Q_\pi(s', a')]
+$$&lt;/p>- https://dreamanddead.github.io/post/bellman-equation/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>connect two pc with a wire</title><link>https://dreamanddead.github.io/post/connect-pc-with-wire/</link><pubDate>Fri, 10 Apr 2020 18:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/connect-pc-with-wire/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/connect-pc-with-wire/ -&lt;p>先前&lt;a href="https://dreamanddead.github.io/2020/03/25/compose-deep-learning-machine.html">组装了一台用于深度学习的服务器&lt;/a>，连接在一个局域网内使用。
 通过 ssh 远程连接，tmux 终端复用，nfs 挂载编辑代码，vnc 远程桌面，一切运行的都很流畅。&lt;/p>
 &lt;p>不过最不适的在于，速度太慢了，一时想将开发机中 10G 的数据集传递到服务器，scp rsync nfs 都没有速度。
 尤其经常在 nfs 挂载目录查看图片文件，文件数量繁多，预览等待的时间很长，完全没有操作本地文件相似的体验。&lt;/p>
@@ -1131,26 +1250,4 @@ $$&lt;/p>
 &lt;p>&lt;a href="https://book.douban.com/subject/26708119/">《机器学习》 周志华&lt;/a> &lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section>- https://dreamanddead.github.io/post/decision-trees/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>python virtual env with conda</title><link>https://dreamanddead.github.io/post/pipenv-with-conda/</link><pubDate>Fri, 20 Sep 2019 09:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/pipenv-with-conda/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/pipenv-with-conda/ -&lt;p>Anaconda 是一个非常流行的 python 集成环境，用于科学计算，机器学习等。
-它主要的优势在于，新的包管理器 conda 比 pip 更容易管理 numpy scipy 之类的工具包（安装涉及 C 代码编译）。&lt;/p>
-&lt;p>另外在开发过程中，保持不同项目使用各自独立的开发环境是一个良好的习惯。
-在 python 世界，virtualenv 是最广泛的选择，pipenv 的底层使用的也是它。
-conda 内部也有 env 的概念（默认是 base），可以针对不同的项目进行环境的分离，并且对一些开发工具有良好的支持（比如 VS Code 中的 Anaconda 插件）。&lt;/p>
-&lt;p>最近在配置 emacs 下的 python 开发环境，相比之下在 Anaconda 方面的插件还没有那么成熟，经过搜索发现，
-存在可以集成 pipenv&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> 和 conda env 的方案&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ pipenv --python=&lt;span style="color:#8b008b;font-weight:bold">$(&lt;/span>conda run which python&lt;span style="color:#8b008b;font-weight:bold">)&lt;/span> --site-packages
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令，可以将 conda env 作为 pipenv virtualenv 来使用，集成了所有 Anaconda 集成的开发库！&lt;/p>
-&lt;p>更可贵的是，在使用 conda 升级开发库之后，可以再次重建 virtualenv 获得更新带来的好处。
-并且，virtualenv 环境更容易被其它编码工具支持，比如 emacs :)。&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
-&lt;hr>
-&lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
-&lt;p>&lt;a href="https://pipenv.readthedocs.io/en/latest/advanced/#pipenv-and-other-python-distributions">https://pipenv.readthedocs.io/en/latest/advanced/#pipenv-and-other-python-distributions&lt;/a> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:2" role="doc-endnote">
-&lt;p>&lt;a href="https://stackoverflow.com/questions/50546339/pipenv-with-conda">https://stackoverflow.com/questions/50546339/pipenv-with-conda&lt;/a> &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;/section>
-- https://dreamanddead.github.io/post/pipenv-with-conda/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item></channel></rss>
+&lt;/section>- https://dreamanddead.github.io/post/decision-trees/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item></channel></rss>

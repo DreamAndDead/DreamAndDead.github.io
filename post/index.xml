@@ -9,7 +9,7 @@ when reading source code.&lt;/p>
 &lt;pre>&lt;code>error: file '/vmlinuz-5.7-x86_64' not found.
 error: you need to load the kernel first.
 Press any key to continue...
-&lt;/code>&lt;/pre></description></item><item><title>connect two pc with a wire</title><link>https://dreamanddead.github.io/post/connect-pc-with-wire/</link><pubDate>Fri, 10 Apr 2020 18:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/connect-pc-with-wire/</guid><description>&lt;p>先前&lt;a href="https://dreamanddead.github.io/2020/03/25/compose-deep-learning-machine.html">组装了一台用于深度学习的服务器&lt;/a>，连接在一个局域网内使用。
+&lt;/code>&lt;/pre></description></item><item><title>Bellman Equation Deduction</title><link>https://dreamanddead.github.io/post/bellman-equation/</link><pubDate>Thu, 27 Aug 2020 11:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/bellman-equation/</guid><description>&lt;p>详细理解 Bellman 方程的证明过程。&lt;/p></description></item><item><title>connect two pc with a wire</title><link>https://dreamanddead.github.io/post/connect-pc-with-wire/</link><pubDate>Fri, 10 Apr 2020 18:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/connect-pc-with-wire/</guid><description>&lt;p>先前&lt;a href="https://dreamanddead.github.io/2020/03/25/compose-deep-learning-machine.html">组装了一台用于深度学习的服务器&lt;/a>，连接在一个局域网内使用。
 通过 ssh 远程连接，tmux 终端复用，nfs 挂载编辑代码，vnc 远程桌面，一切运行的都很流畅。&lt;/p>
 &lt;p>不过最不适的在于，速度太慢了，一时想将开发机中 10G 的数据集传递到服务器，scp rsync nfs 都没有速度。
 尤其经常在 nfs 挂载目录查看图片文件，文件数量繁多，预览等待的时间很长，完全没有操作本地文件相似的体验。&lt;/p>
@@ -26,7 +26,8 @@ Press any key to continue...
 &lt;p>而新手在打牌过程中，向上进阶的第一步就是记牌。&lt;/p></description></item><item><title>简明 Decision Trees</title><link>https://dreamanddead.github.io/post/decision-trees/</link><pubDate>Wed, 23 Oct 2019 07:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/decision-trees/</guid><description>&lt;p>根据直觉来看，决策树是一种非常自然的方法，和人类处理问题的机制很像。
 面对问题，在做出一个决策之后，跟随着要考虑子决策，直到决定最终的行动。
 而且这种决策过程在遇到同样问题时可以重复利用，就像先人留下的经验。&lt;/p>
-&lt;p>决策树算法在我看来，更像是一种艺术，其过程没有明确的确定性，而是在一种启发下找寻一种思考的路径。&lt;/p></description></item><item><title>python virtual env with conda</title><link>https://dreamanddead.github.io/post/pipenv-with-conda/</link><pubDate>Fri, 20 Sep 2019 09:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/pipenv-with-conda/</guid><description>Anaconda 是一个非常流行的 python 集成环境，用于科学计算，机器学习等。 它主要的优势在于，新的包管理器 conda 比 pip 更容易管理 numpy scipy 之类的工具包（安装涉及 C 代码编译）。
+&lt;p>决策树算法在我看来，更像是一种艺术，其过程没有明确的确定性，而是在一种启发下找寻一种思考的路径。&lt;/p></description></item><item><title>简明 SVM</title><link>https://dreamanddead.github.io/post/support-vector-machine/</link><pubDate>Mon, 14 Oct 2019 14:03:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/support-vector-machine/</guid><description>&lt;p>最近研究了 SVM 算法&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> &lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>，发现它本身的推导过程真是充满了美感！
+在这里梳理其中的逻辑关系，记录下自己的理解。&lt;/p></description></item><item><title>python virtual env with conda</title><link>https://dreamanddead.github.io/post/pipenv-with-conda/</link><pubDate>Fri, 20 Sep 2019 09:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/pipenv-with-conda/</guid><description>Anaconda 是一个非常流行的 python 集成环境，用于科学计算，机器学习等。 它主要的优势在于，新的包管理器 conda 比 pip 更容易管理 numpy scipy 之类的工具包（安装涉及 C 代码编译）。
 另外在开发过程中，保持不同项目使用各自独立的开发环境是一个良好的习惯。 在 python 世界，virtualenv 是最广泛的选择，pipenv 的底层使用的也是它。 conda 内部也有 env 的概念（默认是 base），可以针对不同的项目进行环境的分离，并且对一些开发工具有良好的支持（比如 VS Code 中的 Anaconda 插件）。
 最近在配置 emacs 下的 python 开发环境，相比之下在 Anaconda 方面的插件还没有那么成熟，经过搜索发现， 存在可以集成 pipenv1 和 conda env 的方案2。
 $ pipenv --python=$(conda run which python) --site-packages 上面的命令，可以将 conda env 作为 pipenv virtualenv 来使用，集成了所有 Anaconda 集成的开发库！
@@ -43,9 +44,33 @@ https://pipenv.</description></item><item><title>KD Tree</title><link>https://dr
 因为期望就代表着所有情况的平均。&lt;/p></description></item><item><title>Trigonometric Function Illustrations</title><link>https://dreamanddead.github.io/post/triangle-math/</link><pubDate>Wed, 15 May 2019 08:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/triangle-math/</guid><description>&lt;p>三角函数是非常重要的一类周期函数，所有周期函数都可以分解为对应的三角函数的组合。&lt;/p>
 &lt;p>在中学数学中，学习最多是 正弦$sin$，余弦$cos$，正切$tan$ 函数，
 之后了解还有 正割$sec$，余割$csc$，余切$cot$ 函数。&lt;/p>
-&lt;p>其中最让我困惑不解在于它们的命名，什么是正？什么是余？&lt;/p></description></item><item><title>understanding euler angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
+&lt;p>其中最让我困惑不解在于它们的命名，什么是正？什么是余？&lt;/p></description></item><item><title>Deferred Shading Method in DirectX9</title><link>https://dreamanddead.github.io/post/deferred-shading/</link><pubDate>Fri, 26 Apr 2019 14:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/deferred-shading/</guid><description>&lt;p>In the latest work, we need the engine to support large number of lights.
+As we all know, the classic way built in DirectX9 is not a reasonable method to do that because of
+efficiency, so deferred shading way becomes the choice.&lt;/p>
+&lt;p>Adding new features in an existent system is never an easy thing. You&amp;rsquo;ll encounter tons of ceilings
+and pits.
+After the feature finished I decided to build a simple project just for deferred shading method itself. That why this blog is here.&lt;/p>
+&lt;p>ps. The project example is &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">on the github&lt;/a>, enjoy it with the blog. :)&lt;/p></description></item><item><title>understanding euler angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
 have to understand the underlying math things.&lt;/p>
-&lt;p>I have known about Euler angles for a while, and today we talk about some more details about it.&lt;/p></description></item><item><title>A simple way to draw a circle always facing you</title><link>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</link><pubDate>Wed, 17 Apr 2019 13:24:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</guid><description>&lt;p>In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light,
+&lt;p>I have known about Euler angles for a while, and today we talk about some more details about it.&lt;/p></description></item><item><title>a matrix det puzzle</title><link>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</link><pubDate>Mon, 22 Apr 2019 08:39:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</guid><description>&lt;p>求解行列式&lt;/p>
+&lt;p>$$
+\newcommand\iddots{\mathinner{
+\kern1mu\raise1pt{.}
+\kern2mu\raise4pt{.}
+\kern2mu\raise7pt{\Rule{0pt}{7pt}{0pt}.}
+\kern1mu
+}}
+$$&lt;/p>
+&lt;p>$$
+D_{2n} = \begin{vmatrix}
+a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n}
+$$&lt;/p></description></item><item><title>A simple way to draw a circle always facing you</title><link>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</link><pubDate>Wed, 17 Apr 2019 13:24:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</guid><description>&lt;p>In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light,
 so that user can easily tune the parameters about the light.&lt;/p></description></item><item><title>Recover mysql table structure from frm file</title><link>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</link><pubDate>Thu, 27 Sep 2018 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</guid><description>&lt;p>mysql 正常运行的时候，&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/show-create-table.html">查看 table 的结构&lt;/a>并不是困难的事。
 但是有时 mysql 发生故障，这种方法便不再可行。&lt;/p>
 &lt;p>当遇到故障，通常使用新的 mysql 实例来恢复当前的数据。

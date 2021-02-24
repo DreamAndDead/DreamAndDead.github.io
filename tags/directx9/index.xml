@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>directx9 on Brain=f(X)?</title><link>https://dreamanddead.github.io/tags/directx9/</link><description>Recent content in directx9 on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Attribution-NonCommercial-ShareAlike 4.0 International</copyright><lastBuildDate>Fri, 26 Apr 2019 14:20:00 +0000</lastBuildDate><atom:link href="https://dreamanddead.github.io/tags/directx9/index.xml" rel="self" type="application/rss+xml"/><item><title>Deferred Shading Method in DirectX9</title><link>https://dreamanddead.github.io/post/deferred-shading/</link><pubDate>Fri, 26 Apr 2019 14:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/deferred-shading/</guid><description>&lt;p>In the latest work, we need the engine to support large number of lights.
+As we all know, the classic way built in DirectX9 is not a reasonable method to do that because of
+efficiency, so deferred shading way becomes the choice.&lt;/p>
+&lt;p>Adding new features in an existent system is never an easy thing. You&amp;rsquo;ll encounter tons of ceilings
+and pits.
+After the feature finished I decided to build a simple project just for deferred shading method itself. That why this blog is here.&lt;/p>
+&lt;p>ps. The project example is &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">on the github&lt;/a>, enjoy it with the blog. :)&lt;/p></description></item></channel></rss>

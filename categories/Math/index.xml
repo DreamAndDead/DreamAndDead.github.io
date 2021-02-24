@@ -3,4 +3,22 @@
 之后了解还有 正割$sec$，余割$csc$，余切$cot$ 函数。&lt;/p>
 &lt;p>其中最让我困惑不解在于它们的命名，什么是正？什么是余？&lt;/p></description></item><item><title>understanding euler angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
 have to understand the underlying math things.&lt;/p>
-&lt;p>I have known about Euler angles for a while, and today we talk about some more details about it.&lt;/p></description></item></channel></rss>
+&lt;p>I have known about Euler angles for a while, and today we talk about some more details about it.&lt;/p></description></item><item><title>a matrix det puzzle</title><link>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</link><pubDate>Mon, 22 Apr 2019 08:39:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</guid><description>&lt;p>求解行列式&lt;/p>
+&lt;p>$$
+\newcommand\iddots{\mathinner{
+\kern1mu\raise1pt{.}
+\kern2mu\raise4pt{.}
+\kern2mu\raise7pt{\Rule{0pt}{7pt}{0pt}.}
+\kern1mu
+}}
+$$&lt;/p>
+&lt;p>$$
+D_{2n} = \begin{vmatrix}
+a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n}
+$$&lt;/p></description></item></channel></rss>

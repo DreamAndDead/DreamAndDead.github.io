@@ -1,4 +1,430 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Attribution-NonCommercial-ShareAlike 4.0 International</copyright><lastBuildDate>Mon, 26 Oct 2020 09:10:00 +0000</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>KD Tree</title><link>https://dreamanddead.github.io/post/kd-tree/</link><pubDate>Thu, 22 Aug 2019 15:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/kd-tree/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/kd-tree/ -&lt;p>之前了解学习了机器学习中的 KNN 算法，它的本质是从“已有经验”中找出最相似的案例，来“预测”新的未出现过的情况。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Attribution-NonCommercial-ShareAlike 4.0 International</copyright><lastBuildDate>Mon, 26 Oct 2020 09:10:00 +0000</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>简明 SVM</title><link>https://dreamanddead.github.io/post/support-vector-machine/</link><pubDate>Mon, 14 Oct 2019 14:03:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/support-vector-machine/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/support-vector-machine/ -&lt;p>最近研究了 SVM 算法&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> &lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>，发现它本身的推导过程真是充满了美感！
+在这里梳理其中的逻辑关系，记录下自己的理解。&lt;/p>
+&lt;h1 id="间隔-margin">间隔 Margin&lt;/h1>
+&lt;h2 id="启发-intuition">启发 Intuition&lt;/h2>
+&lt;p>考虑一个简单的二分类问题，实例的特征(feature)空间有两个维度，实例分类目标值(target)为正例和反例。&lt;/p>
+&lt;p>假如所有实例&lt;strong>完全线性可分&lt;/strong>（存在超平面将正反实例完全分开），&lt;/p>
+&lt;figure>
+&lt;img src="images/intuition.png"
+alt="x 代表正例，o 代表反例"/> &lt;figcaption>
+&lt;p>x 代表正例，o 代表反例&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>上图实线直线（在高维度也称超平面 hyper plane，后面统一简称平面）就是一种可能的分类方法。&lt;/p>
+&lt;p>在当前分类下，直观上看，正例 A 距离分类平面比正例 B 要”远“很多。
+相比之下，我们更容易相信正例 A 在当前分类方法下“更可能”是正确的，因为正例 B 距离平面”太近“了，分类方法稍微有一些参数的调整，比如变成了虚线表示的分类，正例 B 很可能就被划分为反例。&lt;/p>
+&lt;p>根据这个示例，直觉上猜想，实例距离分类平面”越远“，它”更可能“被分类正确。&lt;/p>
+&lt;h2 id="量化间隔">量化间隔&lt;/h2>
+&lt;p>在直觉的基础上，需要进一步量化所谓“远近”这个概念。
+以下使用 &lt;strong>间隔(margin)&lt;/strong> 表示实例与平面之间的距离。&lt;/p>
+&lt;p>在继续之前，先完整定义上面示例的分类问题。&lt;/p>
+&lt;p>实例 feature 有两个维度，用向量 $x$ 表示，$x \in \mathbb{R}^2 $，
+分类 target 分为正例和反例，用整数 $y$ 表示， $ y \in { +1, -1 } $，
+并且假设所有实例完全线性可分。&lt;/p>
+&lt;p>因此分类平面可以用下式来表示，&lt;/p>
+&lt;p>$$ w ^T x + b = 0 $$&lt;/p>
+&lt;p>$w, b$ 是分类平面的参数，$w \in \mathbb{R}^2, b \in \mathbb{R}$。&lt;/p>
+&lt;figure>
+&lt;img src="images/classify.png"/>
+&lt;/figure>
+&lt;p>可以计算，对于所有正例，$ w ^T x + b &amp;gt; 0 $，对于反例，$ w ^T x + b &amp;lt; 0 $，正反例有明显的符号区别。&lt;/p>
+&lt;p>根据符号的不同，就可以构建一个简单的分类假设，&lt;/p>
+&lt;p>$$
+h(x) = g(w ^T x + b)
+$$&lt;/p>
+&lt;p>$$
+g(z) = \begin{cases}
++1, \text{ when $z &amp;gt; 0$ } \\\&lt;br>
+-1, \text{ when $z &amp;lt; 0$ }
+\end{cases}
+$$&lt;/p>
+&lt;figure>
+&lt;img src="images/gz.png"/>
+&lt;/figure>
+&lt;p>在具体公式的基础上，应用最先关于“远近”的直觉，如果一个正例， $w ^T x ^{(i)} + b \gg 0$，则可以认为间隔很大，当前分类正确的可能性更高。&lt;/p>
+&lt;p>这个间隔称其为 &lt;em>函数间隔(functional margin)&lt;/em>，因为它只关心函数计算得到的结果，符号表示为 $\hat \gamma$。&lt;/p>
+&lt;p>$$
+\hat \gamma ^{(i)}= w ^T x ^{(i)} + b
+$$&lt;/p>
+&lt;p>仔细思考会发现，使用函数间隔存在一个问题，对于 $w = [1, 1] ^T, b = 1$ 和 $w = [100, 100]^T, b = 100$，两者表示的是相同的分类平面 $w ^T x + b = 0$，但是后者计算得到的函数间隔是前者的 100 倍，这就有些不合理。&lt;/p>
+&lt;p>从另一个角度来看待间隔，直接在几何平面上考虑实例点到分类平面的距离。这样就克服了上述问题，无论 $w, b$ 怎样放缩变化，只要分类平面不变，间隔就是不变的。&lt;/p>
+&lt;p>这个间隔称为 &lt;em>几何间隔(geometric margin)&lt;/em>，符号定义为 $\gamma$。容易发现，在 $||w|| = 1$ 的情况下，函数间隔和几何间隔相同。&lt;/p>
+&lt;p>$$
+\gamma ^{(i)} = \frac{w ^T x ^{(i)} + b}{||w||}
+$$&lt;/p>
+&lt;p>推导过程主要应用了，向量 $PA$ 长度为单位向量 $\dfrac{w}{||w||}$ 的 $\gamma$ 倍。&lt;/p>
+&lt;figure>
+&lt;img src="images/geometry-distance.png"/>
+&lt;/figure>
+&lt;p>$$
+w ^T (A - \gamma \frac{w}{||w||} ) + b = 0
+$$&lt;/p>
+&lt;p>$$
+w ^T A - \gamma \frac{w^T w}{||w||} + b = 0
+$$&lt;/p>
+&lt;p>$$
+\gamma ||w|| = w ^T A + b
+$$&lt;/p>
+&lt;p>$$
+\gamma = \frac{w^T A + b}{||w||}
+$$&lt;/p>
+&lt;h1 id="最优分类">最优分类&lt;/h1>
+&lt;p>对全部实例应用最开始得到的直觉，最优的分类平面，应该使所有实例到平面的间隔尽可能的远。
+具体的说，就是使所有实例中到平面的最小间隔最大化。&lt;/p>
+&lt;p>给定实例集合，&lt;/p>
+&lt;p>$$
+S = { (x ^{(i)}, y ^{(i)}); i=1,&amp;hellip;,m }
+$$&lt;/p>
+&lt;p>定义 $S$ 到分类平面的间隔为所有实例到平面的最小几何间隔，&lt;/p>
+&lt;p>$$
+||w|| = 1
+$$&lt;/p>
+&lt;p>$$
+\gamma^{(i)} = y^{(i)} * (w ^T x^{(i)} + b)
+$$&lt;/p>
+&lt;p>$$
+\gamma = \min \gamma^{(i)}\ \ \ i=1,&amp;hellip;,m
+$$&lt;/p>
+&lt;p>&lt;em>间隔永远是正值，对于正例，$y^{(i)} = +1, w ^T x^{(i)} + b &amp;gt; 0$，对于反例，$y^{(i)} = -1, w ^T x^{(i)} + b &amp;lt; 0$&lt;/em>&lt;/p>
+&lt;p>最优的分类，就是使 $\gamma$ 最大的分类。&lt;/p>
+&lt;p>$$
+\begin{align}
+&amp;amp; max_{\gamma,w,b}\ \gamma\&lt;br>
+s.t.\ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq \gamma,\ i=1,&amp;hellip;,m\&lt;br>
+&amp;amp; ||w|| = 1
+\end{align}
+$$&lt;/p>
+&lt;p>根据凸优化理论&lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>，$||w|| = 1$ 在这里不是一个仿射函数，优化问题不符合 QCQP 的求解条件。&lt;/p>
+&lt;p>变通地，使用函数间隔改写方程，&lt;/p>
+&lt;p>$$
+\begin{align}
+&amp;amp; max_{\hat \gamma,w,b}\ \frac{\hat \gamma}{||w||}\&lt;br>
+s.t.\ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq \hat \gamma,\ i=1,&amp;hellip;,m
+\end{align}
+$$&lt;/p>
+&lt;p>前面讨论过使用函数间隔遇到的问题，在保持分类平面不变的情况下，函数间隔可以随着 $ w, b $ 的放缩而放缩。
+同样地，在最优解情况，总可以放缩 $w, b$，使得 $\hat \gamma = 1$。&lt;/p>
+&lt;p>于是问题就转化为&lt;/p>
+&lt;p>$$
+\begin{align}
+&amp;amp; max_{w,b}\ \frac{1}{||w||} \&lt;br>
+s.t.\ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq 1,\ i=1,&amp;hellip;,m
+\end{align}
+$$&lt;/p>
+&lt;p>将 $||w||$ 取倒数平方，$max \rightarrow min$，问题就转化成了 QCQP 的形式，可以应用已知的凸优化方法进行求解。&lt;/p>
+&lt;p>$$
+\begin{align}
+&amp;amp; min_{w,b}\ \frac 1 2 ||w||^2 \&lt;br>
+s.t.\ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq 1,\ i=1,&amp;hellip;,m
+\end{align}
+$$&lt;/p>
+&lt;p>求解得到 $w, b$，其参数构成的超平面就是之前假设的最优分类。&lt;/p>
+&lt;h2 id="计算最优化">计算最优化&lt;/h2>
+&lt;p>这个问题是一个经典的凸优化问题，&lt;/p>
+&lt;p>$$
+\begin{align}
+&amp;amp; min_{w,b}\ \frac 1 2 ||w||^2 \&lt;br>
+s.t.\ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq 1,\ i=1,&amp;hellip;,m
+\end{align}
+$$&lt;/p>
+&lt;p>将条件转化为 $\leq$ 的形式，&lt;/p>
+&lt;p>$$
+g_i(w, b) = - y^{(i)} * (w ^T x^{(i)} + b) + 1 \leq 0
+$$&lt;/p>
+&lt;p>使用拉格朗日乘子法&lt;sup id="fnref:4">&lt;a href="#fn:4" class="footnote-ref" role="doc-noteref">4&lt;/a>&lt;/sup> &lt;sup id="fnref:5">&lt;a href="#fn:5" class="footnote-ref" role="doc-noteref">5&lt;/a>&lt;/sup> &lt;sup id="fnref:6">&lt;a href="#fn:6" class="footnote-ref" role="doc-noteref">6&lt;/a>&lt;/sup>，转化为拉格朗日函数(lagrangian)，&lt;/p>
+&lt;p>$$
+\mathcal{L} (w, b, \alpha) = \frac 1 2 ||w||^2 + \sum_{i=1}^{m} \alpha_i \left[- y^{(i)} * (w ^T x^{(i)} + b) + 1 \right]
+$$&lt;/p>
+&lt;p>根据不等式约束的 KKT 条件&lt;sup id="fnref:7">&lt;a href="#fn:7" class="footnote-ref" role="doc-noteref">7&lt;/a>&lt;/sup>，在极值处 $w, b$，存在 $\alpha$ 满足&lt;/p>
+&lt;p>$$
+\triangledown _w \mathcal{L} (w, b, \alpha) = 0
+$$&lt;/p>
+&lt;p>$$
+\triangledown _b \mathcal{L} (w, b, \alpha) = 0
+$$&lt;/p>
+&lt;p>$$
+g_i(w , b ) \le 0
+$$&lt;/p>
+&lt;p>$$
+\alpha_i \geq 0
+$$&lt;/p>
+&lt;p>$$
+\alpha_i g_i(w , b ) = 0
+$$&lt;/p>
+&lt;p>从另外的角度&lt;sup id="fnref:8">&lt;a href="#fn:8" class="footnote-ref" role="doc-noteref">8&lt;/a>&lt;/sup> &lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>来观察拉格朗日函数，
+$\min\limits_{w, b} \max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$ 和约束条件下的 $\min\limits_{w, b} \dfrac 1 2 ||w||^2$ 问题是等价的。&lt;/p>
+&lt;p>假如存在 $g_i &amp;gt; 0$ 脱离了约束，则可以使对应的 $\alpha_i = \infty$，相应的 $\max\limits_{\alpha} \mathcal{L} (w, b, \alpha) = \infty$；
+如果所有 $g_i \le 0$ 满足约束，则只有 $\alpha_i = 0\ (\text{unless } g_i = 0)$ 才能确保 $\max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$ 取最大值，此时 $\max\limits_{\alpha} \mathcal{L} (w, b, \alpha) = \dfrac 1 2 ||w||^2$。&lt;/p>
+&lt;p>所以对于 $\min\limits_{w, b} \max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$，必定在满足 $g_i \le 0$ 的约束时才能取到最小值（表面上没有约束，其实过滤了不满足约束的值）。&lt;/p>
+&lt;p>假设原(primal)问题最优解为 $p^* = \min\limits_{w, b} \max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$，
+考虑其对偶(dual)问题，$d^* = \max\limits_{\alpha} \min\limits_{w, b} \mathcal{L} (w, b, \alpha)$，&lt;/p>
+&lt;p>根据弱对偶性(weak duality)，始终满足&lt;/p>
+&lt;p>$$
+d^* \le p^*
+$$&lt;/p>
+&lt;p>因为，假如原问题最优解取值为 $w_p, b_p, \alpha_p$，对偶问题最优解取值为 $w_d, b_d, \alpha_d$，则&lt;/p>
+&lt;p>$$
+d^* = \mathcal{L} (w_d, b_d, \alpha_d) \le \mathcal{L} (w_p, b_p, \alpha_d) \le \mathcal{L} (w_p, b_p, \alpha_p) = p^*
+$$&lt;/p>
+&lt;p>在这里，问题满足 Slater 条件（&lt;em>充分条件，暂时不讨论&lt;/em>），故问题满足强对偶性(strong duality)，$d^* = p^*$。&lt;/p>
+&lt;p>所以可以通过求解对偶问题，得到原问题的解，以下先求解 $\min\limits_{w, b} \mathcal{L} (w, b, \alpha)$，将 $\alpha$ 看作常量。&lt;/p>
+&lt;p>$$
+\triangledown _w \mathcal{L} (w, b, \alpha) = 0
+$$&lt;/p>
+&lt;p>$$
+w + \sum_{i=1}^{m} \alpha_i (-y ^{(i)} x ^{(i)}) = 0
+$$&lt;/p>
+&lt;p>$$
+w = \sum_{i=1}^{m} \alpha_i y ^{(i)} x ^{(i)}
+$$&lt;/p>
+&lt;p>$$
+\triangledown _b \mathcal{L} (w, b, \alpha) = 0
+$$&lt;/p>
+&lt;p>$$
+\sum_{i=1}^{m} \alpha_i y ^{(i)} = 0
+$$&lt;/p>
+&lt;p>根据上面求得的公式，代入 $\mathcal{L} (w, b, \alpha)$，消去 $w, b$，&lt;/p>
+&lt;p>$$
+\begin{align}
+\mathcal{L} (w, b, \alpha) &amp;amp; = \frac{1}{2} w^T w + \sum_{i=1}^{m} (-w^T \alpha_i y^{(i)} x^{(i)} - \alpha_i y^{(i)} b + \alpha_i) \\\&lt;br>
+&amp;amp; = \frac{1}{2} w^T w + \sum_{i=1}^{m} -w^T \alpha_i y^{(i)} x^{(i)} + \sum_{i=1}^{m} - \alpha_i y^{(i)} b + \sum_{i=1}^{m} \alpha_i \\\&lt;br>
+&amp;amp; = \frac{1}{2} w^T w - w^T w + 0 + \sum_{i=1}^{m} \alpha_i \\\&lt;br>
+&amp;amp; = - \frac{1}{2} w^T w + \sum_{i=1}^{m} \alpha_i \\\&lt;br>
+&amp;amp; = \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\&lt;br>
+\end{align}
+$$&lt;/p>
+&lt;p>现在问题转化为对称问题的最大值问题（之后使用 SMO 算法&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>来求解）。&lt;/p>
+&lt;p>$$
+\begin{align}
+\max \limits_{\alpha} \ &amp;amp; \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\&lt;br>
+\text{s.t.} \ &amp;amp; \alpha_i \geq 0 \\\&lt;br>
+&amp;amp; \sum_{i=1}^{m} \alpha_i y^{(i)} = 0
+\end{align}
+$$&lt;/p>
+&lt;h2 id="支持向量">支持向量&lt;/h2>
+&lt;p>假如已经通过最优化方法求得 $w, b, \alpha$，得到分类平面 $ {w} ^T x + b = 0$，
+对于新的未知分类的实例，可以通过计算 ${w} ^T x + b$，根据符号的正负来进行分类其是正例还是反例。&lt;/p>
+&lt;p>$$
+{w} ^T x + b = \sum_{i=1}^{m} \alpha_i y^{(i)} {x^{(i)}} ^T x + b \\\&lt;br>
+= \sum_{i=1}^{m} \alpha_i y^{(i)} \langle x^{(i)}, x \rangle + b
+$$&lt;/p>
+&lt;p>根据之前讨论的 KKT 条件，&lt;/p>
+&lt;p>$$
+g_i(w, b) \le 0
+$$&lt;/p>
+&lt;p>$$
+\alpha_i \geq 0
+$$&lt;/p>
+&lt;p>$$
+\alpha_i g_i(w , b ) = 0
+$$&lt;/p>
+&lt;p>当 $g_i(w, b) &amp;lt; 0$，即 $y^{(i)} (w^T x^{(i)} + b) &amp;gt; 1$ 时，$\alpha_i= 0$；
+当 $g_i(w, b) = 0$，即 $y^{(i)} (w^T x^{(i)} + b) = 1$ 时，$\alpha_i &amp;gt; 0$。&lt;/p>
+&lt;p>对于 $\alpha_i = 0$ 的部分，都可以在分类计算中省略，只有 $\alpha_i &amp;gt; 0$ 才参与计算，大大减少了计算量。&lt;/p>
+&lt;figure>
+&lt;img src="images/support.png"/>
+&lt;/figure>
+&lt;p>从图形来看，当 $y^{(i)} (w ^T x^{(i)} + b) = 1，\alpha_i &amp;gt; 0$，对应的实例 $(x^{(i)}, y^{(i)})$ 是距离分类平面最近的点，称作支持向量（这也是支持向量机名字的由来），也只有相应的支持向量参与判别新分类的运算。&lt;/p>
+&lt;h1 id="核方法-kernel-trick">核方法 kernel trick&lt;/h1>
+&lt;p>之前的所有讨论，假设限定于所有实例完全线性可分。存在一些情况，在实例空间下，所有实例不能完全线性可分。
+这时可以通过空间的映射 $\phi(x)$，将原空间映射到新空间，在新空间里，实例也许就完全线性可分了。
+在新空间计算得到分类平面后，将其逆向转换回来，在原空间就得到了非线性的分类平面。&lt;/p>
+&lt;figure>
+&lt;img src="images/phi.png"/>
+&lt;/figure>
+&lt;p>假如将所有实例映射到新空间，进行分类平面的求解。
+观察最优化的求解过程，将 $x^{(i)} \rightarrow \phi(x^{(i)})$，并不影响求解过程（因为求解的变量为 $w, b, \alpha$, 而 $x^{(i)}$ 看作常量），只需要将所有的 $x^{(i)} $ 进行替换。&lt;/p>
+&lt;p>相应的在新实例的分类计算中，$ \langle x^{(i)}, x \rangle \rightarrow \langle \phi(x^{(i)}), \phi(x) \rangle$。&lt;/p>
+&lt;p>对于新实例的分类结果，只涉及到 $\langle x^{(i)}, x \rangle$ 的计算，而不涉及 $x^{(i)}$ 单个值的计算。&lt;/p>
+&lt;p>定义核函数来提取这种共性&lt;/p>
+&lt;p>$$
+K(x, z) = \phi(x)^T\phi(z)
+$$&lt;/p>
+&lt;p>原先所有 $\langle x^{(i)}, x^{(j)} \rangle$ 的地方就用 $K(x^{(i)}, x^{(j)} )$ 来代替。&lt;/p>
+&lt;p>$K(x, z)$ 可以是一个显性表示，比如通过具体的 $\phi(x)^T\phi(z)$ 来得到，也可以是一个隐性表示，比如高斯核，&lt;/p>
+&lt;p>$$
+K(x, z) = e^{- ||x-z||^2 / 2 d^2}
+$$&lt;/p>
+&lt;p>并非可以显性的得到 $\phi(x), \phi(z)$ 的表示，但是 $K(x, z)$ 一定是可以分解的，因此它是一个有效的核函数。&lt;/p>
+&lt;p>如何判定一个隐性的核函数是否有效？&lt;/p>
+&lt;p>根据 Mercer 定理，K 是有效的核函数，当且仅当 Kernal matrix 是对称半正定的&lt;/p>
+&lt;p>Kernal martix 是一个矩阵 $K$，$K_{ij} = K(x^{(i)}, x^{(j)})$&lt;/p>
+&lt;p>虽然使用核方法，SVM 可以进行非线性判别，但是并没有明确的准则来决定如何选择一个恰当的空间映射 $\phi(x)$，以及在相应映射下使用什么参数，并不确定哪一种映射可以反映问题的本质。&lt;/p>
+&lt;p>所以在实际中，通常使用 &lt;a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">GridSearch&lt;/a> 来遍历搜索，选择效果最好的核函数和参数。&lt;/p>
+&lt;h1 id="soft-margin-svm">soft margin SVM&lt;/h1>
+&lt;p>之前讨论的方法，假定所有的实例是完全线性可分的，但是也存在不完全线性可分的情况。
+比如，&lt;/p>
+&lt;figure>
+&lt;img src="images/nonlinear.png"/>
+&lt;/figure>
+&lt;p>在这种情况下，可以使用核方法，得到非线性分类．
+但是总体上看，实例还是线性分类的，如果只因为少量的分类错误就使用非线性的方法，代价太大了。&lt;/p>
+&lt;figure>
+&lt;img src="images/soft.png"/>
+&lt;/figure>
+&lt;p>之前假定实例完全线性可分，使用的是*硬间隔(hard margin)&lt;em>的判别方法。
+现在引入一种&lt;/em>软间隔(soft margin)*的判别方法，使分类可以容忍部分错误。&lt;/p>
+&lt;p>引入松弛变量 $\xi$，由软间隔定义的优化问题如下，&lt;/p>
+&lt;p>$$
+\begin{align}
+&amp;amp; \min_{w,b,\xi}\ \frac 1 2 ||w||^2 + C \sum_{i=1}^{m} \xi^{(i)}\&lt;br>
+\text{s.t.} \ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq 1 - \xi^{(i)},\ i=1,&amp;hellip;,m\&lt;br>
+&amp;amp; \xi^{(i)} \geq 0 \&lt;br>
+\end{align}
+$$&lt;/p>
+&lt;p>相比于之前的硬间隔问题，允许间隔 $&amp;lt; 1$ ，但是计入相应的惩罚，由 $C$ 控制了惩罚的权重，$C$ 越大，对分类错误的容忍度越低。&lt;/p>
+&lt;h2 id="求解最优化">求解最优化&lt;/h2>
+&lt;p>软间隔最优化求解的过程大体和硬间隔相似。&lt;/p>
+&lt;p>$$
+g_i(w, b, \xi) = - y^{(i)} * (w ^T x^{(i)} + b) + 1 - \xi^{(i)} \leq 0
+$$&lt;/p>
+&lt;p>写出拉格朗日函数，&lt;/p>
+&lt;p>$$
+\mathcal{L} (w, b, \xi, \alpha, \beta) = \frac 1 2 ||w||^2 + C \sum_{i=1}^{m} \xi^{(i)} +
+\sum_{i=1}^{m} \alpha_i (1 - \xi^{(i)} - y^{(i)} * (w ^T x^{(i)} + b) + \sum_{i=1}^{m} - \beta_i \xi^{(i)} \&lt;br>
+$$&lt;/p>
+&lt;p>满足 KKT 条件，&lt;/p>
+&lt;p>$$
+g_i(w, b, \xi) \le 0 \&lt;br>
+\alpha_i \geq 0 \&lt;br>
+\alpha_i g_i(w, b, \xi) = 0 \&lt;br>
+-\xi^{(i)} \le 0 \&lt;br>
+\beta_i \geq 0 \&lt;br>
+\beta_i \xi^{(i)} = 0 \&lt;br>
+$$&lt;/p>
+&lt;p>求解对偶问题，&lt;/p>
+&lt;p>$$
+\triangledown _w \mathcal{L} (w, b, \xi, \alpha, \beta) = 0
+$$&lt;/p>
+&lt;p>$$
+w = \sum_{i=1}^{m} \alpha_i y^{(i)} x^{(i)}
+$$&lt;/p>
+&lt;p>$$
+\triangledown _b \mathcal{L} (w, b, \xi, \alpha, \beta) = 0
+$$&lt;/p>
+&lt;p>$$
+\sum_{i=1}^{m} \alpha_i y^{(i)} = 0
+$$&lt;/p>
+&lt;p>$$
+\triangledown _{\xi^{(i)}} \mathcal{L} (w, b, \xi, \alpha, \beta) = 0
+$$&lt;/p>
+&lt;p>$$
+C - \alpha_i - \beta_i = 0
+$$&lt;/p>
+&lt;p>$$
+\alpha_i + \beta_i = C
+$$&lt;/p>
+&lt;p>将求导得到的上式代入 $\mathcal{L} (w, b, \xi, \alpha, \beta)$，消去 $w, b, \xi$，&lt;/p>
+&lt;p>$$
+\begin{align}
+\max \limits_{\alpha} \ &amp;amp; \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\&lt;br>
+\text{s.t.} \ &amp;amp; 0 \leq \alpha_i \leq C \ (\text{because } \alpha_i \ge 0, \beta_i \ge 0, \alpha_i + \beta_i = C) \\\&lt;br>
+&amp;amp; \sum_{i=1}^{m} \alpha_i y^{(i)} = 0
+\end{align}
+$$&lt;/p>
+&lt;p>令人惊奇的是，最终结果没有大的改变，只是对 $\alpha^{(i)}$ 多了约束 $\le C$。&lt;/p>
+&lt;p>根据 KKT 条件，&lt;/p>
+&lt;ul>
+&lt;li>当 $\alpha_i = 0,\ \beta_i = C$ 时，$\xi^{(i)} = 0,\ g_i(w, b, \xi) &amp;lt; 0,\ y^{(i)} * (w ^T x^{(i)} + b) &amp;gt; 1$，实例在最大间隔外；&lt;/li>
+&lt;li>当 $\alpha_i = C,\ \beta_i = 0$ 时，$\xi^{(i)} &amp;gt; 0,\ g_i(w, b, \xi) = 0,\ y^{(i)} * (w ^T x^{(i)} + b) = 1 - \xi^{(i)} &amp;lt; 1$，实例落在最大间隔内，当 $\xi^{(i)} &amp;gt; 1$ 时被错误分类；&lt;/li>
+&lt;li>当 $0 &amp;lt; \alpha_i &amp;lt; C,\ 0 &amp;lt; \beta_i &amp;lt; C$ 时，$\xi^{(i)} = 0,\ g_i(w, b, \xi) = 0,\ y^{(i)} * (w ^T x^{(i)} + b) = 1$，实例是支持向量。&lt;/li>
+&lt;/ul>
+&lt;p>至于 $\xi$ 的值，有多种不同的损失函数来计量，这里不讨论。&lt;/p>
+&lt;h1 id="smo-算法">SMO 算法&lt;/h1>
+&lt;p>SMO 算法用来求解上面最优化得到的 $\max \limits_{\alpha}\ &amp;hellip;$ 问题。&lt;/p>
+&lt;p>SMO 启发于坐标上升方法。&lt;/p>
+&lt;p>一个简单的示例，对于一个二维凸函数，每次固定一个维度，选取另一个维度作为变量，进行最大化求解。&lt;/p>
+&lt;p>由等高线来看，在固定一个维度的前提下，找到函数的最大值，即与等高线相切的点，&lt;/p>
+&lt;figure>
+&lt;img src="images/contour.png"/>
+&lt;/figure>
+&lt;p>由三维立体来看，逐个维度取最大值，最终会慢慢接近极值点。&lt;/p>
+&lt;figure>
+&lt;img src="images/contour-3d.png"/>
+&lt;/figure>
+&lt;p>下面类比的来看，用 SMO 求解软间隔的最优化问题，&lt;/p>
+&lt;p>$$
+\begin{align}
+&amp;amp; \max \limits_{\alpha} \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\&lt;br>
+\text{s.t.} \ &amp;amp; 0 \leq \alpha_i \leq C \\\&lt;br>
+&amp;amp; \sum_{i=1}^{m} \alpha_i y^{(i)} = 0
+\end{align}
+$$&lt;/p>
+&lt;p>使用同样的思路，不过在这里维度有所增加，变成了 m 维。
+逐个 $\alpha_i $ 作为变量，进行坐标上升求极值。&lt;/p>
+&lt;p>但是因为有等式关系存在，&lt;/p>
+&lt;p>$$
+\alpha_1 y^{(1)} = -\sum_{i=2}^{m} \alpha_i y^{(i)}
+$$&lt;/p>
+&lt;p>$\alpha_i $ 受到等式的约束，所以不能通过逐个调整 $\alpha_i $ 来调优。&lt;/p>
+&lt;p>可以变通的同时选择两个 $\alpha_i, \alpha_j $ 作为变量，用 $\alpha_j $ 表示 $\alpha_i $，代入原方程消去 $\alpha_j$，这样问题就符合约束条件，可以在 $\alpha_i$ 维度上进行坐标上升优化。&lt;/p>
+&lt;p>化简后的问题是关于 $\alpha_i$ 的一元二次问题，在相应的范围内求极值，是一个简单的问题。&lt;/p>
+&lt;p>比如对于 $\alpha_1, \alpha_2$，&lt;/p>
+&lt;p>$$
+0 \le \alpha_1 \le 0
+$$&lt;/p>
+&lt;p>$$
+0 \le \alpha_2 \le 0
+$$&lt;/p>
+&lt;p>$$
+\alpha_2 y^{(2)} = - \sum_{i=3}^{m} \alpha_i y^{(i)} - \alpha_1 y^{(1)}
+$$&lt;/p>
+&lt;figure>
+&lt;img src="images/aiaj.png"/>
+&lt;/figure>
+&lt;p>对于不同的情况，$\alpha_i$ 取值范围会受到不同的影响。&lt;/p>
+&lt;p>对于硬间隔问题，没有 $\alpha_i \le C$ 的条件，但是思路是一样的。&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/CS229%20Lecture%20note%203.pdf">CS229 Lecture note 3&lt;/a> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2" role="doc-endnote">
+&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/A%20Gentle%20Introduction%20to%20Support%20Vector%20Machines%20in%20Biomedicine.pdf">Gentle Introduction to Support Vector Machines in Biomedicine&lt;/a> &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:3" role="doc-endnote">
+&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/CS229%20Lecture%20Review%20note%204.pdf">CS229 Lecture Review note 4&lt;/a> &lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:4" role="doc-endnote">
+&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20%28Com%20S%20477%20577%20Notes%29.pdf">Lagrange Multipliers (Com S 477 577 Notes)&lt;/a> &lt;a href="#fnref:4" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:5" role="doc-endnote">
+&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20without%20Permanent%20Scarring.pdf">Lagrange Multipliers without Permanent Scarring&lt;/a> &lt;a href="#fnref:5" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:6" role="doc-endnote">
+&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20for%20Inequality%20Constraints.pdf">Lagrange Multipliers for Inequality Constraints&lt;/a> &lt;a href="#fnref:6" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:7" role="doc-endnote">
+&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20and%20the%20Karush-Kuhn-Tucker%20conditions.pdf">Lagrange Multipliers and the Karush-Kuhn-Tucker conditions&lt;/a> &lt;a href="#fnref:7" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:8" role="doc-endnote">
+&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/CS229%20Lecture%20Review%20note%203.pdf">CS229 Lecture Review note 3&lt;/a> &lt;a href="#fnref:8" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>- https://dreamanddead.github.io/post/support-vector-machine/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>python virtual env with conda</title><link>https://dreamanddead.github.io/post/pipenv-with-conda/</link><pubDate>Fri, 20 Sep 2019 09:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/pipenv-with-conda/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/pipenv-with-conda/ -&lt;p>Anaconda 是一个非常流行的 python 集成环境，用于科学计算，机器学习等。
+它主要的优势在于，新的包管理器 conda 比 pip 更容易管理 numpy scipy 之类的工具包（安装涉及 C 代码编译）。&lt;/p>
+&lt;p>另外在开发过程中，保持不同项目使用各自独立的开发环境是一个良好的习惯。
+在 python 世界，virtualenv 是最广泛的选择，pipenv 的底层使用的也是它。
+conda 内部也有 env 的概念（默认是 base），可以针对不同的项目进行环境的分离，并且对一些开发工具有良好的支持（比如 VS Code 中的 Anaconda 插件）。&lt;/p>
+&lt;p>最近在配置 emacs 下的 python 开发环境，相比之下在 Anaconda 方面的插件还没有那么成熟，经过搜索发现，
+存在可以集成 pipenv&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> 和 conda env 的方案&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ pipenv --python=&lt;span style="color:#8b008b;font-weight:bold">$(&lt;/span>conda run which python&lt;span style="color:#8b008b;font-weight:bold">)&lt;/span> --site-packages
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令，可以将 conda env 作为 pipenv virtualenv 来使用，集成了所有 Anaconda 集成的开发库！&lt;/p>
+&lt;p>更可贵的是，在使用 conda 升级开发库之后，可以再次重建 virtualenv 获得更新带来的好处。
+并且，virtualenv 环境更容易被其它编码工具支持，比如 emacs :)。&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>&lt;a href="https://pipenv.readthedocs.io/en/latest/advanced/#pipenv-and-other-python-distributions">https://pipenv.readthedocs.io/en/latest/advanced/#pipenv-and-other-python-distributions&lt;/a> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2" role="doc-endnote">
+&lt;p>&lt;a href="https://stackoverflow.com/questions/50546339/pipenv-with-conda">https://stackoverflow.com/questions/50546339/pipenv-with-conda&lt;/a> &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>
+- https://dreamanddead.github.io/post/pipenv-with-conda/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>KD Tree</title><link>https://dreamanddead.github.io/post/kd-tree/</link><pubDate>Thu, 22 Aug 2019 15:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/kd-tree/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/kd-tree/ -&lt;p>之前了解学习了机器学习中的 KNN 算法，它的本质是从“已有经验”中找出最相似的案例，来“预测”新的未出现过的情况。&lt;/p>
 &lt;p>在 sklearn 的 KNN 算法描述中，其中提到使用 KD Tree 结构可以加速 nearest neighbors 的查找，从而提高 KNN 算法的效率。&lt;/p>
 &lt;p>这里就来讨论一下 KD Tree 数据结构。&lt;/p>
 &lt;h1 id="intro">intro&lt;/h1>
@@ -696,7 +1122,507 @@ alt="单位圆中的三角函数值"/> &lt;figcaption>
 &lt;/tbody>
 &lt;/table>
 &lt;p>所以，三角函数重要的是比例关系，这张图就清晰的表达了一点。&lt;/p>
-&lt;p>co means complementary 表示余角。所以也就有了弦，切，割的正，余值，以及图中优雅的对应关系。&lt;/p>- https://dreamanddead.github.io/post/triangle-math/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>understanding euler angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/understanding-euler-angles/ -&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
+&lt;p>co means complementary 表示余角。所以也就有了弦，切，割的正，余值，以及图中优雅的对应关系。&lt;/p>- https://dreamanddead.github.io/post/triangle-math/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Deferred Shading Method in DirectX9</title><link>https://dreamanddead.github.io/post/deferred-shading/</link><pubDate>Fri, 26 Apr 2019 14:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/deferred-shading/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/deferred-shading/ -&lt;p>In the latest work, we need the engine to support large number of lights.
+As we all know, the classic way built in DirectX9 is not a reasonable method to do that because of
+efficiency, so deferred shading way becomes the choice.&lt;/p>
+&lt;p>Adding new features in an existent system is never an easy thing. You&amp;rsquo;ll encounter tons of ceilings
+and pits.
+After the feature finished I decided to build a simple project just for deferred shading method itself. That why this blog is here.&lt;/p>
+&lt;p>ps. The project example is &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">on the github&lt;/a>, enjoy it with the blog. :)&lt;/p>
+&lt;h1 id="choice">Choice&lt;/h1>
+&lt;p>Deferred shading has become the choice for our need. What is deferred shading and why we use it?
+That&amp;rsquo;s what this section is for.&lt;/p>
+&lt;h2 id="rendering-pipeline">Rendering pipeline&lt;/h2>
+&lt;p>The rendering pipeline provided by DirectX9 is not unfamiliar for most developers.&lt;/p>
+&lt;figure>
+&lt;img src="images/rendering-pipeline.png"
+alt="rendering pipeline"/> &lt;figcaption>
+&lt;p>rendering pipeline&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Lighting phase is ahead of Clipping phase.
+Assuming the scene contains lots of objects, then the light work is heavy even the camera sees nothing.&lt;/p>
+&lt;p>In pseudo code, lighting work is done between each object and each light.&lt;/p>
+&lt;pre>&lt;code>for object in all_objects:
+for light in all_lights:
+Lighting(object, light)
+&lt;/code>&lt;/pre>&lt;p>That&amp;rsquo;s not an efficient way and it&amp;rsquo;s impossible to place innumerable lights in a scene.&lt;/p>
+&lt;h2 id="deferred-pipeline">Deferred pipeline&lt;/h2>
+&lt;figure>
+&lt;img src="images/deferred-pipeline.png"
+alt="deferred pipeline"/> &lt;figcaption>
+&lt;p>deferred pipeline&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>In deferred shading, there&amp;rsquo;s a geometry stage to store all objects information in G-buffer in advance.
+Then lighting stage reads data from G-buffer and lights pixels(not objects).&lt;/p>
+&lt;p>In pseudo code, those two stages are separated.&lt;/p>
+&lt;pre>&lt;code>for object in all_objects:
+StoreInGBuffer(object)
+for light in all_lights:
+Lighting(GBuffer, light)
+&lt;/code>&lt;/pre>&lt;p>The pixel number is determined by window size and resolution, and it&amp;rsquo;s a constant.
+So the complexity is lower than the old way.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>Efficiency is a main reason to choose deferred shading method,
+but there is also weakness in deferred way.&lt;/p>
+&lt;p>The fatal one is that it doesn&amp;rsquo;t support scene with transparency because a transparent pixel is composed by more than one point in different view depth.
+But in G-buffer, we only store one point with the least depth.&lt;/p>
+&lt;h1 id="architect">Architect&lt;/h1>
+&lt;p>Let&amp;rsquo;s talk about more details about deferred shading.&lt;/p>
+&lt;figure>
+&lt;img src="images/deferred-pipeline.png"
+alt="deferred pipeline"/> &lt;figcaption>
+&lt;p>deferred pipeline&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Clearly, there are 4 distinct stages in deferred shading: geometry stage, lighting stage, post-processing stage and final stage.
+The first 2 stages are the main topic in this blog.&lt;/p>
+&lt;p>Each stage uses shaders and communicates with the other ones through a shared
+memory area - the G-buffer.&lt;/p>
+&lt;h2 id="geometry-stage">Geometry Stage&lt;/h2>
+&lt;p>The geometry stage mainly draws all the objects in scene and makes perspective projection,
+and feeds the G-buffer with related information to be used in the later stages.&lt;/p>
+&lt;p>Usually, G-buffer contains 4 texture areas to store the data for later use.
+The textures have got the same size with the frame buffer.&lt;/p>
+&lt;ul>
+&lt;li>normal vector&lt;/li>
+&lt;li>depth&lt;/li>
+&lt;li>diffuse material information&lt;/li>
+&lt;li>specular material information&lt;/li>
+&lt;/ul>
+&lt;p>Normal vector and depth are values in view space.
+Diffuse material and specular material are the object properties.&lt;/p>
+&lt;h2 id="lighting-stage">Lighting Stage&lt;/h2>
+&lt;p>Lighting stage reads data from the G-buffer and does the lighting calculation.
+In this stage, the G-buffer is as input for the lighting shaders.
+It looks like in the lighting stage, we input 4 &amp;ldquo;images&amp;rdquo; and get 1 lighting &amp;ldquo;image&amp;rdquo; out.&lt;/p>
+&lt;p>A frequent question here is, all the data is stored in 2d screen space, how do we do
+the lighting work?
+I mean, lighting is a 3d world thing, related with distance, angles and something.&lt;/p>
+&lt;p>In the later section, we will see a method that recover the 3d space coordinate from the data
+we have got.&lt;/p>
+&lt;h2 id="post-processing-and-final-stage">Post-Processing and Final Stage&lt;/h2>
+&lt;p>This 2 stages are performed in order to enhance the image generated by lighting stage.
+Those are long stories and not involved in this blog.&lt;/p>
+&lt;h1 id="light-theory">Light Theory&lt;/h1>
+&lt;p>Before we get into the implementation details, light theory is necessary for us.&lt;/p>
+&lt;p>In deferred shading, the lighting thing is on our own shoulder.
+It&amp;rsquo;s free to define any light effect as we like, but here we still stick on the traditional light model.&lt;/p>
+&lt;h2 id="light-type">Light Type&lt;/h2>
+&lt;p>Commonly, there&amp;rsquo;re &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/light-types">3 different kind of lights&lt;/a>:&lt;/p>
+&lt;ul>
+&lt;li>directional light&lt;/li>
+&lt;li>point light&lt;/li>
+&lt;li>spot light&lt;/li>
+&lt;/ul>
+&lt;h3 id="directional-light">Directional Light&lt;/h3>
+&lt;p>Imaging the directional light as sun light is helpful.&lt;/p>
+&lt;p>Directional light has only color and direction, no position. It emits parallel light.&lt;/p>
+&lt;h3 id="point-light">Point Light&lt;/h3>
+&lt;figure>
+&lt;img src="images/point-light.png"
+alt="point light"/> &lt;figcaption>
+&lt;p>point light&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>In the reality, the light bulb is a good example of point light.&lt;/p>
+&lt;p>Point light has color and position within a scene, but no single direction.
+It gives off light equally in all directions.&lt;/p>
+&lt;h3 id="spot-light">Spot Light&lt;/h3>
+&lt;figure>
+&lt;img src="images/spot-light.png"
+alt="spot light"/> &lt;figcaption>
+&lt;p>spot light&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Thinking of spot light as a streetlight is a good idea.&lt;/p>
+&lt;p>Spot light has color, position and direction and it emits light.
+Light emitted from a spot light is made up of a brighter inner
+cone and a larger outer cone, with the light intensity diminishing between the two.&lt;/p>
+&lt;figure>
+&lt;img src="images/spot-light-area.png"/>
+&lt;/figure>
+&lt;h2 id="lighting-equation">Lighting Equation&lt;/h2>
+&lt;p>It&amp;rsquo;s about math&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> and it&amp;rsquo;s a tedious part but important.&lt;/p>
+&lt;h3 id="symbols">Symbols&lt;/h3>
+&lt;p>First, let&amp;rsquo;s denote the symbols we will use later.&lt;/p>
+&lt;p>$S$ means light $Source$, $I$ means $Illumination$, $M$ means $Material$, $C$ means $Camera$.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">symbol&lt;/th>
+&lt;th style="text-align:center">definition&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">$S_{amb}$&lt;/td>
+&lt;td style="text-align:center">ambient intensity color of light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{diff}$&lt;/td>
+&lt;td style="text-align:center">diffuse intensity color of light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{spec}$&lt;/td>
+&lt;td style="text-align:center">specular intensity color of light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{pos}$&lt;/td>
+&lt;td style="text-align:center">light position, only for point &amp;amp; spot light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{dir}$&lt;/td>
+&lt;td style="text-align:center">vector. light direction, only for directional &amp;amp; spot light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{range}$&lt;/td>
+&lt;td style="text-align:center">float number. denote the max lighting range, only for point &amp;amp; spot light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{falloff}$&lt;/td>
+&lt;td style="text-align:center">float number. denote the falloff parameter, only for spot light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{att_0}$&lt;/td>
+&lt;td style="text-align:center">float number. light attenuation parameter of distance$^0$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{att_1}$&lt;/td>
+&lt;td style="text-align:center">float number. light attenuation parameter of distance$^1$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{att_2}$&lt;/td>
+&lt;td style="text-align:center">float number. light attenuation parameter of distance$^2$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$M_{amb}$&lt;/td>
+&lt;td style="text-align:center">ambient material color&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$M_{diff}$&lt;/td>
+&lt;td style="text-align:center">diffuse material color&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$M_{spec}$&lt;/td>
+&lt;td style="text-align:center">specular material color&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$M_{shi}$&lt;/td>
+&lt;td style="text-align:center">material specular shininess parameter&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$C_{pos}$&lt;/td>
+&lt;td style="text-align:center">camera position&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>These symbols are defined for the simplicity of equations.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">symbol&lt;/th>
+&lt;th style="text-align:center">definition&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">$p$&lt;/td>
+&lt;td style="text-align:center">position of point to be shading&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$\vec{n}$&lt;/td>
+&lt;td style="text-align:center">unit vector. normal vector of point to be shading&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$\vec{l}$&lt;/td>
+&lt;td style="text-align:center">unit vector. denote the direction from point to light.&lt;!-- raw HTML omitted -->for directional light, $\vec{l} = -normalize(S_{dir})$. otherwise, $\vec{l} = normalize(S_{pos} - p)$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$\vec{v}$&lt;/td>
+&lt;td style="text-align:center">unit vector. denote the direction from point to camera.&lt;!-- raw HTML omitted -->$\vec{v} = normalize(C_{pos} - p)$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$\vec{h}$&lt;/td>
+&lt;td style="text-align:center">unit half vector between $\vec{l}$ and $\vec{v}$. used in &lt;a href="https://www.wikiwand.com/en/Phong_reflection_model">Phong shading model&lt;/a>.&lt;!-- raw HTML omitted -->$\vec{h} = \dfrac{\vec{l} + \vec{v}}{length(\vec{l} + \vec{v})}$&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;figure>
+&lt;img src="images/phong-model.png"
+alt="phong model"/> &lt;figcaption>
+&lt;p>phong model&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="i_tot">I_tot&lt;/h3>
+&lt;p>The total illumination equation we will use is:&lt;/p>
+&lt;p>$$
+I_{tot} = I_{amb} + (att \times spot)(I_{diff} + I_{spec})
+$$&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">symbol&lt;/th>
+&lt;th style="text-align:center">definition&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">$I_{tot}$&lt;/td>
+&lt;td style="text-align:center">total illumination&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$I_{amb}$&lt;/td>
+&lt;td style="text-align:center">ambient illumination&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$I_{diff}$&lt;/td>
+&lt;td style="text-align:center">diffuse illumination&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$I_{spec}$&lt;/td>
+&lt;td style="text-align:center">specular illumination&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$att$&lt;/td>
+&lt;td style="text-align:center">light attenuation factor(related to the distance from point to light)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$spot$&lt;/td>
+&lt;td style="text-align:center">spot light intensity factor(equals 1 for directional &amp;amp; point light)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>We will discuss each part in the subsections.&lt;/p>
+&lt;h3 id="i_amb">I_amb&lt;/h3>
+&lt;p>$$ I_{amb} = M_{diff} \otimes S_{amb} $$&lt;/p>
+&lt;p>Where $S_{amb}$ has the purpose of modulating the $M_{diff}$ value so that
+all objects in scene reflect a small part of their diffuse contribution.&lt;/p>
+&lt;p>$\otimes$ means multiplication between two vectors in each element. for example,&lt;/p>
+&lt;p>$$
+\begin{align}
+M_{diff} &amp;amp;= {1.0, 0.0, 0.0} \\\&lt;br>
+S_{amb} &amp;amp;= {0.2, 0.2, 0.2} \\\&lt;br>
+I_{amb} = M_{diff} \otimes S_{amb} &amp;amp;= {0.2, 0.0, 0.0}
+\end{align}
+$$&lt;/p>
+&lt;p>Ambient light is contributed to the whole scene whether the point is in or out the light range.
+Theoretically, every time we add a light, the whole scene will be brighter no matter which kind of light is added.&lt;/p>
+&lt;h3 id="att">att&lt;/h3>
+&lt;p>att is a parameter that control the light intensity influenced by distance.
+In intuition, the closer, the brighter.&lt;/p>
+&lt;p>Directional light has got no position, so the att always equal 1.&lt;/p>
+&lt;p>For point and spot light, if a point is off the light range, it can&amp;rsquo;t be lighted.
+Within the range, light intensity is inversely proportional to the binomial of the distance.&lt;/p>
+&lt;p>$$
+\begin{align}
+d &amp;amp;= length(S_{pos} - p) \\\&lt;br>
+att &amp;amp;=
+\begin{cases}
+0 &amp;amp; \text{if point or spot light, and } d &amp;gt; S_{range} \\\&lt;br>
+\dfrac{1}{ S_{att_0} + S_{att_1} \times d + S_{att_2} \times d^2 } &amp;amp; \text{if point or spot light, and } d \leqslant S_{range} \\\&lt;br>
+1 &amp;amp; \text{if directional light} \\\&lt;br>
+\end{cases}
+\end{align}
+$$&lt;/p>
+&lt;h3 id="spot">spot&lt;/h3>
+&lt;p>&lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/attenuation-and-spotlight-factor">spot parameter&lt;/a> is only for spot light.
+It&amp;rsquo;s always 1 for directional and point light.&lt;/p>
+&lt;figure>
+&lt;img src="images/spot-light.png"
+alt="spot light"/> &lt;figcaption>
+&lt;p>spot light&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The affected area of spot light is a cone in 3d space.
+This factor marks the light intensity in 3 different areas split by $\theta$ and $\phi$.&lt;/p>
+&lt;p>$$
+\begin{align}
+rho &amp;amp;= normalize(S_{dir}) \cdot \vec{l} \\\&lt;br>
+spot &amp;amp;=
+\begin{cases}
+1 &amp;amp; \text{if non spot lights or } rho &amp;gt; cos(\frac{theta}2). \text{[ in area 1 ]} \\\&lt;br>
+0 &amp;amp; \text{if } rho \leqslant cos(\frac{phi}2). \text{[ in area 3 ]} \\\&lt;br>
+\Bigg [ \dfrac{ rho - cos(\frac{phi}2) }{ cos(\frac{theta}2) - cos(\frac{phi}2) } \Bigg ]^{M_{falloff}} &amp;amp; \text{otherwise. [ in area 2 ]} \\\&lt;br>
+\end{cases}
+\end{align}
+$$&lt;/p>
+&lt;h3 id="i_diff">I_diff&lt;/h3>
+&lt;p>$$
+I_{diff} = MAX(0, \vec{l} \cdot \vec{n}) M_{diff} \otimes S_{diff}
+$$&lt;/p>
+&lt;p>This equation is based on &lt;a href="https://www.wikiwand.com/en/Lambert%27s_cosine_law">Lambert&amp;rsquo;s Law&lt;/a>, the reflected light is determined by the cosine
+between surface normal and light vector.&lt;/p>
+&lt;h3 id="i_spec">I_spec&lt;/h3>
+&lt;p>$$
+I_{spec} = MAX(0, \vec{h} \cdot \vec{n})^{M_{shi}} M_{spec} \otimes S_{spec}
+$$&lt;/p>
+&lt;p>It&amp;rsquo;s the famous &lt;a href="https://www.wikiwand.com/en/Phong_reflection_model">Phong reflection model&lt;/a>.&lt;/p>
+&lt;h1 id="implementation-in-directx9">Implementation in DirectX9&lt;/h1>
+&lt;p>This section focuses on the core parts in the &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">example project&lt;/a>.&lt;/p>
+&lt;p>The implementation project is &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">here&lt;/a>. You&amp;rsquo;d better download it and
+run it so you can see the whole picture and more details.&lt;/p>
+&lt;h2 id="geometry-stage-1">Geometry Stage&lt;/h2>
+&lt;h3 id="g-buffer">G-buffer&lt;/h3>
+&lt;p>G-buffer contains 4 textures storing the data for all pipeline stages.
+Using api &lt;code>D3DXCreateTexture()&lt;/code> to create textures of &lt;code>RENDERTARGET&lt;/code> type and holding their pointers.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=58:69">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=104:126">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=145:161">&lt;/script>
+&lt;h3 id="feed-g-buffer">Feed G-buffer&lt;/h3>
+&lt;p>You&amp;rsquo;d better have got good understanding about shaders to read the content below.
+If you don&amp;rsquo;t, this book&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup> is good mentor for you.&lt;/p>
+&lt;p>DirectX9 supports &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/multiple-render-targets">MRT(multiple render target)&lt;/a>.
+It refers to the ability to render to multiple surface with a single draw call.&lt;/p>
+&lt;p>Normally, we only set &lt;code>COLOR0&lt;/code> value in pixel shader and that will be the final frame buffer color
+showing on screen.&lt;/p>
+&lt;p>&lt;code>0&lt;/code> in &lt;code>COLOR0&lt;/code> means shader write the value to render target 0. It&amp;rsquo;s frame buffer by default.
+If we change the render target 0 or add more render targets, writing to &lt;code>COLOR0&lt;/code> &lt;code>COLOR1&lt;/code> means different things.&lt;/p>
+&lt;p>We have created 4 textures in G-buffer. In geometry stage we set this 4 textures as the render target.
+So all the information will store in G-buffer.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=223:233">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/GBuffer.hlsl?footer=minimal&amp;slice=22:29">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/GBuffer.hlsl?footer=minimal&amp;slice=52:69">&lt;/script>
+&lt;h2 id="lighting-stage-1">Lighting Stage&lt;/h2>
+&lt;p>In this stage, we use 4 &amp;ldquo;images&amp;rdquo; to develop 1 final lighting &amp;ldquo;image&amp;rdquo;.&lt;/p>
+&lt;h3 id="read-g-buffer">Read G-buffer&lt;/h3>
+&lt;p>Object data is feed in G-buffer in geometry stage and we need to fetch data from G-buffer in lighting stage.&lt;/p>
+&lt;p>Inputting textures into shader is easy. It&amp;rsquo;s textbook.&lt;/p>
+&lt;ol>
+&lt;li>cancel the MRT binding&lt;/li>
+&lt;li>set textures as shader parameters&lt;/li>
+&lt;li>use &lt;code>tex2D()&lt;/code> to fetch data from textures in shader&lt;/li>
+&lt;/ol>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=234:242">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=403:414">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=38:81">&lt;/script>
+&lt;h3 id="recover-3d-coordinate">Recover 3d coordinate&lt;/h3>
+&lt;p>In rendering pipeline, we input 3d object vertex list and project them into 2d screen.
+Recover 3d coordinate from 2d screen coordinate is a reverse process.&lt;/p>
+&lt;p>In this section, we only discuss recovering 3d coordinate in view space. It&amp;rsquo;s simple and understandable.&lt;/p>
+&lt;p>Before we start, we must know how 3d coordinate in view space is projected.&lt;/p>
+&lt;figure>
+&lt;img src="images/d3d-view-frustum.png"
+alt="view frustum"/> &lt;figcaption>
+&lt;p>view frustum&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>In view space, camera coordinate is $(0, 0)$ and facing the $z$ axis.
+Projection window coincides with plane $z = 1$. Its size is determined by $fov$
+and $ratio$.
+$fov$ is the camera view angle in y direction. $ratio$ is the ratio of screen width to screen height.&lt;/p>
+&lt;figure>
+&lt;img src="images/d3d-view-frustum-yz-plane.png"/>
+&lt;/figure>
+&lt;p>In &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/viewports-and-clipping">viewing frustum&lt;/a>, there&amp;rsquo;re 2 clipping plane, front clipping plane and back clipping plane.
+Usually, we set the front clipping plane to coincide with plane $z = 1$ too.&lt;/p>
+&lt;p>For a point $d$ in view frustum, we pick its $z$ value as the point depth after the projection.
+And this $z$ value is stored in the G-buffer depth texture.&lt;/p>
+&lt;p>The point $d$ is projected to the point $d'$ in projection window.
+Assuming the coordinate of $d$ is $(x, y, z)$, so the coordinate of $d'$ is $(x/z, y/z, 1)$.&lt;/p>
+&lt;p>If we have the 2d coordinate in projection window and depth, we know the 3d coordinate in 3d view space.&lt;/p>
+&lt;p>All those camera parameters are defined in api &lt;code>D3DXMatrixPerspectiveFovLH()&lt;/code>.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=490:497">&lt;/script>
+&lt;h3 id="draw-viewport-quad">Draw viewport quad&lt;/h3>
+&lt;p>So all things' ready, how do we start?
+We have got G-buffer, light theory, recovering 3d coordinate method, how do we get the final lighting image?&lt;/p>
+&lt;p>We used to just throw all object vertex list into pipeline let it go.
+So what is the vertex list for our final image?&lt;/p>
+&lt;p>Here is the answer, drawing a quad directly on the viewport skipping the local/world/camera/perspective transformation and get the image exactly equal to the viewport size.&lt;/p>
+&lt;p>Viewport coordinate system is arranged from $(-1, -1)$ to $(1, 1)$.&lt;/p>
+&lt;figure>
+&lt;img src="images/viewport-coordinate.png"
+alt="viewport coordinate"/> &lt;figcaption>
+&lt;p>viewport coordinate&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>So we draw 2 triangles with vertexes $(-1, -1), (-1, 1), (1, -1), (1, 1)$ to form a quad.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=163:211">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=243:249">&lt;/script>
+&lt;p>&lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/texture-coordinates">Texture coordinate system&lt;/a> is a little different from the viewport coordinate.
+We need transform it before using &lt;code>tex2D&lt;/code> fetch data from the texture.&lt;/p>
+&lt;figure>
+&lt;img src="images/texture-coordinate.jpg"
+alt="texture coordinate"/> &lt;figcaption>
+&lt;p>texture coordinate&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>As to the projection window coordinate, we have seen it in the view frustum.
+The coordinates are stretched 1-to-1 to viewport coordinates.&lt;/p>
+&lt;figure>
+&lt;img src="images/projection-coordinate.png"/>
+&lt;/figure>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=157:167">&lt;/script>
+&lt;p>What the &lt;code>+ 0.5 / screenSize&lt;/code> is for? Check this &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/directly-mapping-texels-to-pixels">article&lt;/a> and you will see.&lt;/p>
+&lt;h3 id="lighting">Lighting&lt;/h3>
+&lt;p>Loop all the lights and accumulate each light intensity together.
+Using the light equations above, it&amp;rsquo;s math.&lt;/p>
+&lt;h2 id="post-processing-and-final-stage-1">Post-Processing and Final Stage&lt;/h2>
+&lt;p>Not discussed in this example.&lt;/p>
+&lt;h1 id="optimization">Optimization&lt;/h1>
+&lt;p>Deferred shading is an efficiency boost, yet there&amp;rsquo;s room for optimization.&lt;/p>
+&lt;p>For each light, we have to loop on all the pixels to calculate the light intensity.
+But usually point/spot light has limited range and can&amp;rsquo;t light the whole scene.
+If we skip the pixels not in light range, that&amp;rsquo;s a big dent in calculation.&lt;/p>
+&lt;p>That&amp;rsquo;s how the &lt;a href="https://kayru.org/articles/deferred-stencil/">stencil culling algorithm&lt;/a> works.&lt;/p>
+&lt;h2 id="theory">Theory&lt;/h2>
+&lt;p>Taking point light as example.&lt;/p>
+&lt;p>This time we draw the light range mesh as a object in scene instead of drawing the viewport quad.
+We use 2 passes to distinguish the lighting area and no lighting area,
+then do the lighting work in lighting area as usual.&lt;/p>
+&lt;p>Pass 1 creates a Stencil mask for the areas of the light volume that are not occluded by scene geometry.&lt;/p>
+&lt;p>Pass 1:&lt;/p>
+&lt;ul>
+&lt;li>Front (near) faces only&lt;/li>
+&lt;li>Color write is disabled&lt;/li>
+&lt;li>Z-write is disabled&lt;/li>
+&lt;li>Z function is &amp;lsquo;Less/Equal&amp;rsquo;&lt;/li>
+&lt;li>Z-Fail writes value 1 to Stencil buffer (Stencil ref = 1)&lt;/li>
+&lt;li>Stencil test result does not modify Stencil buffer&lt;/li>
+&lt;/ul>
+&lt;p>Pass 2 determines where lighting actually happens. Every pixel that passes Z and Stencil tests is then added to light pixel shader.&lt;/p>
+&lt;p>Pass 2:&lt;/p>
+&lt;ul>
+&lt;li>Back (far) faces only&lt;/li>
+&lt;li>Color write enabled&lt;/li>
+&lt;li>Z-write is disabled&lt;/li>
+&lt;li>Z function is &amp;lsquo;Greater/Equal&amp;rsquo;&lt;/li>
+&lt;li>Stencil function is &amp;lsquo;Equal&amp;rsquo; (Stencil ref = zero)&lt;/li>
+&lt;li>Always clears Stencil to zero&lt;/li>
+&lt;/ul>
+&lt;figure>
+&lt;img src="images/stencil-culling-algorithm.png"/>
+&lt;/figure>
+&lt;p>Light 1 has both near and far faces in front of all world geometry. It will pass Z test for near face, but will fail Z test for far face. Therefore pixel shader will not run.&lt;/p>
+&lt;p>Light 2 will fail Z test for near face, write non-zero value to Stencil and then fail Stencil test for far face. Again, no pixels will get through.&lt;/p>
+&lt;p>Light 3 will behave like Light 2 in the bottom part, but top part will pass both Z and Stencil tests and therefore will get rendered.&lt;/p>
+&lt;p>This method works well even the camera is in the light range. Brilliant!&lt;/p>
+&lt;h2 id="implementation">Implementation&lt;/h2>
+&lt;p>Let&amp;rsquo;s focus on the difference between optimization method and plain method in implementation.&lt;/p>
+&lt;p>drawing light range sphere mesh instead of drawing viewport quad.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=427:441">&lt;/script>
+&lt;p>And accordingly, the vertex shader get changes.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=230:249">&lt;/script>
+&lt;p>Optimization has 2 passes just as the theory said. Plain method has 1 pass.
+But they share the same lighting functions in pixel shader &lt;code>PS_Main&lt;/code>.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=250:297">&lt;/script>
+&lt;h1 id="the-end">The End&lt;/h1>
+&lt;p>Again, I suggest you&amp;rsquo;d better download the &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">project&lt;/a> and run it.&lt;/p>
+&lt;p>For now, we only get a simple &amp;ldquo;image&amp;rdquo; that deferred shading produces.
+There are post-processing stages such as Anti-Alias and Bloom and etc to make
+the result better. They are not discussed here but they&amp;rsquo;re worth a shot.&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>Policarpo, F., Fonseca, F. and Games, C. (2005) ‘Deferred shading tutorial’, Pontifical Catholic University of Rio de Janeiro, 31, p. 32. &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2" role="doc-endnote">
+&lt;p>Luna, F. D. (2003) Introduction to 3D Game Programing with Direct Programming 9.0, Wordware Publishing, Inc. &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>- https://dreamanddead.github.io/post/deferred-shading/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>understanding euler angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/understanding-euler-angles/ -&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
 have to understand the underlying math things.&lt;/p>
 &lt;p>I have known about Euler angles for a while, and today we talk about some more details about it.&lt;/p>
 &lt;h1 id="direction-vs-orientation">Direction vs Orientation&lt;/h1>
@@ -790,7 +1716,99 @@ I_z I_{y'} I_{x''} &amp;amp;= I_z I_{y'} (I_z I_{y'})^{-1} E_x (I_z I_{y'}) \&lt
 $$&lt;/p>
 &lt;h1 id="the-end">The end&lt;/h1>
 &lt;p>In &lt;a href="https://www.wikiwand.com/en/Euler_angles">wikipedia&lt;/a>, I know more about &lt;a href="https://www.wikiwand.com/en/Euler_angles">euler angles&lt;/a> including extrinsic/intrinsic and Proper/Tait-Bryan.&lt;/p>
-&lt;p>I first see the conversion between extrinsic and intrinsic in &lt;a href="http://www.cnitblog.com/luckydmz/archive/2010/09/07/68674.html">this blog&lt;/a> and that shocked me. There&amp;rsquo;s &lt;a href="https://www.wikiwand.com/en/Davenport_chained_rotations#/Conversion_between_intrinsic_and_extrinsic_rotations">another proof in wikipedia&lt;/a> and a enlightening answer about &lt;a href="https://math.stackexchange.com/a/1155951">relativity&lt;/a>.&lt;/p>- https://dreamanddead.github.io/post/understanding-euler-angles/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>A simple way to draw a circle always facing you</title><link>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</link><pubDate>Wed, 17 Apr 2019 13:24:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ -&lt;p>In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light,
+&lt;p>I first see the conversion between extrinsic and intrinsic in &lt;a href="http://www.cnitblog.com/luckydmz/archive/2010/09/07/68674.html">this blog&lt;/a> and that shocked me. There&amp;rsquo;s &lt;a href="https://www.wikiwand.com/en/Davenport_chained_rotations#/Conversion_between_intrinsic_and_extrinsic_rotations">another proof in wikipedia&lt;/a> and a enlightening answer about &lt;a href="https://math.stackexchange.com/a/1155951">relativity&lt;/a>.&lt;/p>- https://dreamanddead.github.io/post/understanding-euler-angles/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>a matrix det puzzle</title><link>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</link><pubDate>Mon, 22 Apr 2019 08:39:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/a-matrix-det-puzzle/ -&lt;p>求解行列式&lt;/p>
+&lt;p>$$
+\newcommand\iddots{\mathinner{
+\kern1mu\raise1pt{.}
+\kern2mu\raise4pt{.}
+\kern2mu\raise7pt{\Rule{0pt}{7pt}{0pt}.}
+\kern1mu
+}}
+$$&lt;/p>
+&lt;p>$$
+D_{2n} = \begin{vmatrix}
+a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n}
+$$&lt;/p>
+&lt;h1 id="解法1">解法1&lt;/h1>
+&lt;p>将第 $n+1, n+2, \dotsm, 2n$ 行分别加到第 $ n, n-1, \dotsm, 1$ 行，再提取公因式 $(a+b)$，得&lt;/p>
+&lt;p>$$
+D_{2n} = (a+b)^n
+\begin{vmatrix}
+1 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; 1 \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; 1 &amp;amp; 1 &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n} =
+(a+b)^n
+\begin{vmatrix}
+1 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; 1 \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; 1 &amp;amp; 1 &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; 0 &amp;amp; a-b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+0 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a-b
+\end{vmatrix}_{2n} =
+(a+b)^n \cdot (a-b)^n = (a^2 - b^2)^n
+$$&lt;/p>
+&lt;h1 id="解法2">解法2&lt;/h1>
+&lt;p>用递推法，按第一行展开，得&lt;/p>
+&lt;p>$$
+D_{2n} = (-1)^{1+1} \cdot a \cdot
+\begin{vmatrix}
+a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b &amp;amp; 0 \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a &amp;amp; \\\&lt;br>
+0 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n-1}
++
+(-1)^{1+2n} \cdot b \cdot
+\begin{vmatrix}
+0 &amp;amp; a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
+&amp;amp; &amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+&amp;amp; b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; 0
+\end{vmatrix}_{2n-1}
+$$&lt;/p>
+&lt;p>再按最后一行展开&lt;/p>
+&lt;p>$$
+D_{2n} = (-1)^{1+1} \cdot a \cdot (-1)^{2n-1+2n-1} \cdot a \cdot
+\begin{vmatrix}
+a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n-2}
++
+(-1)^{1+2n} \cdot b \cdot (-1)^{2n-1+1} \cdot b \cdot
+\begin{vmatrix}
+a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n-2}
+$$&lt;/p>
+&lt;p>化简为递推式&lt;/p>
+&lt;p>$$
+D_{2n} = a^2 D_{2n-2} - b^2 D_{2n-2} = (a^2 - b^2)D_{2n-2} = (a^2 - b^2)^2 D_{2n-4} = \dotsm = (a^2 - b^2)^{n-1}D_2 = (a^2 - b^2)^n
+$$&lt;/p>- https://dreamanddead.github.io/post/a-matrix-det-puzzle/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>A simple way to draw a circle always facing you</title><link>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</link><pubDate>Wed, 17 Apr 2019 13:24:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ -&lt;p>In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light,
 so that user can easily tune the parameters about the light.&lt;/p>
 &lt;p>The idea is simple.
 Imaging a point light lighting range is a ball bubble, you will see a round transparent circle wherever you look at it.
@@ -872,375 +1890,4 @@ And it can be use to solve more similar problems.&lt;/p>
 &lt;li>how to rotate two vectors together? (rotating the first vector to z axis and rotating back to the second vector)&lt;/li>
 &lt;li>etc&lt;/li>
 &lt;/ol>
-&lt;p>Trust you could find more. :)&lt;/p>- https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Recover mysql table structure from frm file</title><link>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</link><pubDate>Thu, 27 Sep 2018 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ -&lt;p>mysql 正常运行的时候，&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/show-create-table.html">查看 table 的结构&lt;/a>并不是困难的事。
-但是有时 mysql 发生故障，这种方法便不再可行。&lt;/p>
-&lt;p>当遇到故障，通常使用新的 mysql 实例来恢复当前的数据。
-建表是非常重要的步骤，我们必须有其它的方法来寻找 table 的结构。&lt;/p>
-&lt;h1 id="table-结构定义在哪里">table 结构定义在哪里&lt;/h1>
-&lt;p>通常关注的用户数据，底层都实际存储在 mysql 数据目录。
-其它的元数据也不例外，比如 table 表结构的定义。&lt;/p>
-&lt;p>mysql 数据目录文件结构是非常清晰的，&lt;/p>
-&lt;ul>
-&lt;li>目录对应数据库&lt;/li>
-&lt;li>frm 文件存储了 table 结构的定义&lt;/li>
-&lt;li>ibdata 文件存储了 mysql 的元数据及其它&lt;/li>
-&lt;/ul>
-&lt;p>table 定义的结构，就存在于 frm 文件中，当然管理元数据的 ibdata 也会有记录。&lt;/p>
-&lt;p>当存在 frm 文件的时候，恢复表结构相对容易；
-但是如果执行了 drop table，便删除了 frm 文件，本文所提供的方法就爱莫能助了。
-这种情况下，可以尝试从 ibdata 恢复表结构，这暂时不在下面的讨论范围内。&lt;/p>
-&lt;h1 id="解析-table-结构">解析 table 结构&lt;/h1>
-&lt;p>下面介绍 3 种方式，从 frm 文件中，解析得到 &lt;code>create table&lt;/code> 命令。&lt;/p>
-&lt;h2 id="mysqlfrm">mysqlfrm&lt;/h2>
-&lt;p>mysqlfrm 是 &lt;a href="https://downloads.mysql.com/archives/utilities/">mysql utilities 工具集&lt;/a> 中的其中之一，
-用于分析 frm 文件生成 create table 命令。
-目前已经不再更新，部分功能并入了新版本的 mysql shell（version 8 及以后）。&lt;/p>
-&lt;p>mysql utilities 需要 python2 环境，安装非常简单。&lt;/p>
-&lt;pre>&lt;code>$ tar -xvzf mysql-utilities-1.6.5.tar.gz
-$ cd mysql-utilities-1.6.5
-$ python setup.py build
-$ python setup.py install
-&lt;/code>&lt;/pre>&lt;p>mysqlfrm 支持两类模式来解读 frm：&lt;/p>
-&lt;h3 id="直接分析">直接分析&lt;/h3>
-&lt;p>这种模式比较直接，逐个字节分析 frm 文件，尽可能的提取信息。&lt;/p>
-&lt;p>这种模式下，需要使用 &lt;code>--diagnostic&lt;/code> 参数。&lt;/p>
-&lt;pre>&lt;code>$ mysqlfrm --diagnostic /data/sakila/actor.frm
-&lt;/code>&lt;/pre>&lt;h3 id="借助-mysql-实例分析">借助 mysql 实例分析&lt;/h3>
-&lt;p>这种模式，借助新的 mysql 实例，从中完成 frm 的分析工作。
-可以用两种方式来指定，如何开启新的 mysql 实例。&lt;/p>
-&lt;p>一，从当前的 mysql 服务中 spawn，使用 &lt;code>--server&lt;/code> 指定 mysql 服务&lt;/p>
-&lt;pre>&lt;code>$ mysqlfrm --server=root:pass@localhost:3306 --port=3310 /data/sakila/actor.frm
-&lt;/code>&lt;/pre>&lt;p>二，启动新的 mysql 实例，使用 &lt;code>--basedir&lt;/code> 指定 mysql 程序路径&lt;/p>
-&lt;pre>&lt;code>$ mysqlfrm --basedir=/usr/local/bin/mysql --port=3310 /data/sakila/actor.frm
-&lt;/code>&lt;/pre>&lt;p>&lt;code>--port&lt;/code> 给新的实例指定端口，是为了避免与当前的 3306 端口出现冲突。&lt;/p>
-&lt;h2 id="dbsake">dbsake&lt;/h2>
-&lt;p>这是偶然发现的一个工具，文档中它这样介绍自己：&lt;/p>
-&lt;blockquote>
-&lt;p>dbsake - a (s)wiss-(a)rmy-(k)nif(e) for MySQL&lt;/p>
-&lt;/blockquote>
-&lt;p>作者一定是一个对 mysql 很有心得的人，
-工具从下载，安装到使用，简单，利落。&lt;/p>
-&lt;pre>&lt;code>$ curl -s get.dbsake.net &amp;gt; dbsake
-$ chmod u+x dbsake
-$ ./dbsake frmdump [frm-file-path]
-&lt;/code>&lt;/pre>&lt;h2 id="online-service">online service&lt;/h2>
-&lt;p>有一些在线的服务，也关注这样的问题。
-使用过的&lt;a href="https://recovery.twindb.com/">twindb online&lt;/a>，体验非常好，相关的工具集也很棒。&lt;/p>
-&lt;p>从 &lt;code>Recover Structure -&amp;gt; from .frm file&lt;/code> 入口，上传 frm，就可以得到 &lt;code>create table&lt;/code> 命令。&lt;/p>
-&lt;h1 id="写在最后">写在最后&lt;/h1>
-&lt;p>在使用上，可以多个工具都测试一下，对比哪个工具恢复的命令更为完善可取，选择最佳的。&lt;/p>
-&lt;p>参考：&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://docs.oracle.com/cd/E17952_01/mysql-utilities-1.6-en/mysqlfrm.html">mysqlfrm official doc&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://dbsake.readthedocs.io/en/latest/commands/frmdump.html">dbsake project doc&lt;/a>&lt;/li>
-&lt;/ul>- https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>mysql table suddenly doesn't exists</title><link>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</link><pubDate>Thu, 27 Sep 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ -&lt;p>最近内部的 mysql 数据库发生了一件奇怪的事，其中有一个表 users625 突然出现问题，
-所有对它的操作都报错误 &lt;code>数据表不存在&lt;/code>。&lt;/p>
-&lt;pre>&lt;code>mysql&amp;gt; select count(*) from users625;
-ERROR 1146 (42S02): Table 'km8.users625' doesn't exist
-&lt;/code>&lt;/pre>&lt;p>&lt;code>show tables&lt;/code> 它还显示在列表里，在 mysql 数据目录中也可以找到对应的表文件，也没有
-进行过删除操作，突然出现这样的错误非常奇怪。&lt;/p>
-&lt;p>内部运行环境：&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align:center">名称&lt;/th>
-&lt;th style="text-align:center">值&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align:center">OS&lt;/td>
-&lt;td style="text-align:center">Debian Squeeze x64&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">mysql 版本&lt;/td>
-&lt;td style="text-align:center">5.1&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">mysql 引擎&lt;/td>
-&lt;td style="text-align:center">innodb&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h1 id="发生了什么">发生了什么&lt;/h1>
-&lt;p>突然出现这种情况，第一反应必定是想办法将表中的用户数据找回，但是目前发生问题的情况与原因都不明晰，
-不能轻举妄动。&lt;/p>
-&lt;p>查看 mysql 日志，在操作出错的时候，日志这样显示：&lt;/p>
-&lt;pre>&lt;code>mysqld: 180926 11:10:53 InnoDB: cannot calculate statistics for table km8/users625
-mysqld: InnoDB: because the .ibd file is missing. For help, please refer to
-mysqld: InnoDB: http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html
-mysqld: 180926 11:10:53 [ERROR] MySQL is trying to open a table handle but the .ibd file for
-mysqld: table km8/users625 does not exist.
-mysqld: Have you deleted the .ibd file from the database directory under
-mysqld: the MySQL datadir, or have you used DISCARD TABLESPACE?
-mysqld: See http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html
-mysqld: how you can resolve the problem.
-&lt;/code>&lt;/pre>&lt;p>其中提到3个可追溯的点：&lt;/p>
-&lt;ul>
-&lt;li>ibd file&lt;/li>
-&lt;li>DISCARD TABLESPACE&lt;/li>
-&lt;li>&lt;a href="http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html">http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>了解这3点提到的内容，应该对判断情况有很好的帮助。&lt;/p>
-&lt;h2 id="ibd-file">ibd file&lt;/h2>
-&lt;p>日志中提问，是否丢失了 ibd 文件？先到 mysql 数据目录下查找，&lt;/p>
-&lt;pre>&lt;code>.
-├── ibdata1
-├── .......
-├── .......
-└── km8
-├── ............
-├── ............
-├── users625.frm
-├── users625.ibd
-├── ............
-└── ............
-&lt;/code>&lt;/pre>&lt;p>users625 的 ibd 文件是存在的，与之一起的还有文件 users625.frm 。&lt;/p>
-&lt;p>根据官方文档&lt;a href="https://dev.mysql.com/doc/internals/en/frm-file-format.html">对 frm 文件的描述&lt;/a>，frm 文件是用来保存 table 表结构（即 table 的定义）的，无论使用什么存储引擎。&lt;/p>
-&lt;p>与之相对的，ibd 文件是用来存储表数据（即行数据）的，通常情况下，所有数据都会存储在系统的 ibd 文件，
-但是当开启选项 &lt;a href="https://dev.mysql.com/doc/refman/5.5/en/innodb-parameters.html#sysvar_innodb_file_per_table">innodb_file_per_table&lt;/a> 的时候，每个表的数据会使用单独的 ibd 文件来存储。&lt;/p>
-&lt;p>当前的 mysql 就开启了这个选项，&lt;/p>
-&lt;pre>&lt;code>[mysqld]
-innodb_file_per_table=1
-&lt;/code>&lt;/pre>&lt;p>目前 frm 与 ibd 文件都存在，从中恢复数据便存在一些希望。&lt;/p>
-&lt;h2 id="discard-tablespace">DISCARD TABLESPACE&lt;/h2>
-&lt;p>日志中提到的 &lt;code>DISCARD TABLESPACE&lt;/code> 其实是在猜测导致 ibd 文件丢失的原因，因为它会删除相应 table 的 ibd 文件（所谓 tablespace）。&lt;/p>
-&lt;pre>&lt;code>&amp;gt; ALTER TABLE km8.users625 DISCARD TABLESPACE;
-&lt;/code>&lt;/pre>&lt;p>底层的 users625.ibd 文件就会被删除，丢失所有表数据。&lt;/p>
-&lt;p>根据目前情况来看， ibd 文件还存在，所以它不是导致错误的原因。&lt;/p>
-&lt;h2 id="trouble-shooting-doc">trouble shooting doc&lt;/h2>
-&lt;p>&lt;a href="http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html">日志中提到的参考链接&lt;/a>，其中列举了多种情况，和当前问题相关的是一个&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-troubleshooting-datadict.html">子链接&lt;/a>，
-按照它提供的方法，尝试进行数据恢复。&lt;/p>
-&lt;h1 id="数据恢复">数据恢复&lt;/h1>
-&lt;p>官方文档提到的&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-troubleshooting-datadict.html">恢复数据&lt;/a>的方法，思路很清晰：&lt;/p>
-&lt;ol>
-&lt;li>启用相同版本的 mysql 实例（启用选项 innodb_file_per_table）&lt;/li>
-&lt;li>建立同样结构的数据表&lt;/li>
-&lt;li>替换 ibd 文件（保持文件权限一致）&lt;/li>
-&lt;li>导入 ibd 文件中的数据&lt;/li>
-&lt;li>使用 mysqldump，导出数据&lt;/li>
-&lt;li>将导出的数据导入原数据库&lt;/li>
-&lt;/ol>
-&lt;p>我按照这种方式尝试恢复数据，并不是那么顺利：&lt;/p>
-&lt;h2 id="如何获得-table-表结构">如何获得 table 表结构？&lt;/h2>
-&lt;p>在第2步，需要建立同样结构的数据表，目前只有 frm 和 ibd 文件，怎么样得到 &lt;code>create table&lt;/code> 命令？&lt;/p>
-&lt;p>根据底层数据存储的理解，table 表结构存储在 frm 文件中，而目前已经有&lt;a href="https://www.cnblogs.com/dreamanddead/p/recover-mysql-table-structure-from-frm-file.html">相应的方法&lt;/a>从中提取出 &lt;code>create table&lt;/code> 命令，
-这样就可以用于在新的 mysql 实例中建立 table 。&lt;/p>
-&lt;h2 id="tablespace-id-不对应">tablespace id 不对应？&lt;/h2>
-&lt;p>在第4步，尝试导入数据的时候，&lt;/p>
-&lt;pre>&lt;code>&amp;gt; ALTER TABLE km8.users625 IMPORT TABLESPACE;
-ERROR 1030 (HY000): Got error -1 from storage engine
-&lt;/code>&lt;/pre>&lt;p>总是出现失败，同时在 mysql 新实例的日志中发现这样的错误：&lt;/p>
-&lt;pre>&lt;code>mysqld: InnoDB: Error: tablespace id in file './km8/users625.ibd' is 18446744073709551615, but in the InnoDB
-mysqld: InnoDB: data dictinary it is 1.
-&lt;/code>&lt;/pre>&lt;p>原来在内部，ibd 文件本身有一个 id，必须和 mysql innodb 内部的 table 元数据相对应，才可以进行导入。&lt;/p>
-&lt;p>根据错误信息搜索到&lt;a href="http://www.chriscalender.com/recovering-an-innodb-table-from-only-an-ibd-file/">一篇文章&lt;/a>，其中提到两种办法：&lt;/p>
-&lt;ol>
-&lt;li>重复建表，因为 mysql 内部的 tablespace id 是累计递增的，预先建立 （18446744073709551615 - 1）张表，再建立
-users625 表，就可以对应 id，并进行导入。&lt;/li>
-&lt;li>修改 ibd 文件，因为 tablespace id 存储于 ibd 文件，找到它并将其修改为 1，使之与内部的 id 对应，就可以进行导入。&lt;/li>
-&lt;/ol>
-&lt;p>考虑第 1 种方法，要预先建立上亿张空表？！这根本不可能。&lt;/p>
-&lt;p>于是尝试第 2 种方法，研究 ibd 的文件格式，修改对应 id。&lt;/p>
-&lt;p>用二进制编辑器打开 users625.ibd 文件，&lt;/p>
-&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-27/5492997.jpg" alt="users625-ibd-hexdump">&lt;/p>
-&lt;pre>&lt;code>18:26:08 UTC - mysqld got signal 6. This could be because you hit a bug. It is also possible that this
-binary or one of the libraries it was linked against is corrupt, improperly built or misconfigured.
-This error can also be cuased by malfunctioning hardware.
-&lt;/code>&lt;/pre>&lt;p>不敢相信自己的眼睛，居然有错误 log 在二进制文件里？！ibd 的文件格式可没有这么说明过。&lt;/p>
-&lt;p>随便找一个邻居表正常的 ibd 文件作对比，&lt;/p>
-&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-27/50479657.jpg" alt="normal-ibd-hexdump">&lt;/p>
-&lt;p>看来是出现了 bug ，崩溃的环境直接将数据文件给毁了，这也解释了为什么 tablespace id 会那么大，因为 log
-覆盖了原本的 id 字段，使 mysql 解读出了一个好笑的数字。&lt;/p>
-&lt;h2 id="暂时放弃">暂时放弃&lt;/h2>
-&lt;p>这种情况下，还没有办法将数据恢复回来，只能暂时将表删除，新建空表，保证上层应用程序可以运行。
-将 ibd 文件备份下来，看后续还没有其它的办法将其恢复。&lt;/p>
-&lt;h1 id="检测所有-table-状态">检测所有 table 状态&lt;/h1>
-&lt;p>当前只发现一个出现问题的 table ，可能同时也有其它的 table 出现问题。对此需要做一个全面的检测，
-检测有没有其它的表受到牵连。&lt;/p>
-&lt;pre>&lt;code>$ mysqlcheck --all-databases
-&lt;/code>&lt;/pre>&lt;h1 id="写在最后">写在最后&lt;/h1>
-&lt;p>数据库的备份是非常重要的！直接导入备份数据，是解决问题最保险最便捷的办法。
-如果没有备份，遇到 bug 丢失数据，只能怪时运不济。&lt;/p>
-&lt;p>同时数据库也最好选择稳定的版本，降低出现 bug 的概率。&lt;/p>- https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Configure apt rightly for debian squeeze</title><link>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</link><pubDate>Wed, 26 Sep 2018 16:50:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ -&lt;p>本想在 Debian Squeeze 上安装一些依赖，没想到刚执行 &lt;code>apt-get update&lt;/code> ，就出现这样的错误信息。&lt;/p>
-&lt;pre>&lt;code>W: GPG error: http://mirrors.163.com squeeze Release: The following signatures were invalid: KEYEXPIRED 1520281423 KEYEXPIRED 1501892461
-E: Release file expired, ignoring http://mirrors.163.com/debian-archive/dists/squeeze-lts/Release (invalid since 923d 19h 26min 3s)
-&lt;/code>&lt;/pre>&lt;h1 id="问题出在哪里">问题出在哪里&lt;/h1>
-&lt;p>Debian Squeeze 6.0 版本对于当前最新的 9.5 版本来说，是过于陈旧了。
-错误信息表示，证书过期，也不是太意外的事。&lt;/p>
-&lt;p>以 &lt;code>The following signatures were invalid&lt;/code> 为关键字进行搜索，大体有两种方案：&lt;/p>
-&lt;h2 id="缓存原因">缓存原因？&lt;/h2>
-&lt;p>搜索到的大多数结果给出这样的解答，&lt;a href="https://www.cnblogs.com/arrongao/archive/2012/12/13/2815614.html">比如这里&lt;/a>&lt;/p>
-&lt;pre>&lt;code>sudo apt-get clean
-cd /var/lib/apt
-sudo mv lists lists.old
-sudo mkdir -p lists/partial
-sudo apt-get clean
-sudo apt-get update
-&lt;/code>&lt;/pre>&lt;p>他们认为原因是 apt 系统出现临时性的缓存故障，所以用 clean 的方式来清除。
-我不知道在当时是否真的有效，毕竟那篇博客写在 2012 年，当时 Debian 6.0 也才发布一年，决不至于密钥出现过期，怀疑到缓存身上也
-情有可原。&lt;/p>
-&lt;p>但是当前我的密钥是真的过期了，invalid since 923d(ays)，我尝试了这种 clean 的方法，并不能生效。看来解决方案也有保持期啊。&lt;/p>
-&lt;h2 id="密钥续期">密钥续期？&lt;/h2>
-&lt;p>另一种方案是续期密钥，&lt;a href="https://askubuntu.com/a/837004">比如这里&lt;/a>&lt;/p>
-&lt;pre>&lt;code>sudo apt-key list | grep &amp;quot;expired: &amp;quot;
-sudo apt-key adv --keyserver keys.gnupg.net --recv-keys [KEY]
-&lt;/code>&lt;/pre>&lt;p>这种方案想为过期的密钥续期，使其可用。
-我先在系统里查看了密钥的情况，确实过期的太久。&lt;/p>
-&lt;pre>&lt;code>$ sudo apt-key list
-/etc/apt/trusted.gpg
---------------------
-..........................
-..........................
-..........................
-pub 2048R/6D849617 2009-01-24 [expired: 2013-01-23]
-uid Debian-Volatile Archive Automatic Signing Key (5.0/lenny)
-pub 4096R/B98321F9 2010-08-07 [expired: 2014-08-05]
-uid Squeeze Stable Release Key &amp;lt;debian-release@lists.debian.org&amp;gt;
-..........................
-..........................
-..........................
-&lt;/code>&lt;/pre>&lt;p>于是用 &lt;code>apt-key adv&lt;/code> 进行续期，再次查看密钥情况，发现并没有多少改观，
-时间确实前进更新了几个月，但是依旧保持着 expired 状态，毕竟还差很多年。&lt;/p>
-&lt;p>我想可能和第一种方案是一样的问题，“方案过期”。在当时版本还支持的时候，应该是有效果的，但是当前情况已经
-发生了变化，错误信息是一样的，但是问题本身已经出现了本质的变化。&lt;/p>
-&lt;h1 id="当前的正确方案">当前的正确方案&lt;/h1>
-&lt;p>于是继续搜索，在&lt;a href="https://wiki.debian.org/DebianSqueeze">官方文档的FAQ部分&lt;/a>，找到了官方解答。&lt;/p>
-&lt;p>1.修改 source.list&lt;/p>
-&lt;pre>&lt;code>deb http://archive.debian.org/debian squeeze main
-deb http://archive.debian.org/debian squeeze-lts main
-&lt;/code>&lt;/pre>&lt;p>2.同时配置 apt，添加以下内容到 /etc/apt/apt.conf(没有则新建)&lt;/p>
-&lt;pre>&lt;code>Acquire::Check-Valid-Until false;
-&lt;/code>&lt;/pre>&lt;p>其中特别提到了 &lt;code>The second line will fail with an &amp;quot;expired&amp;quot; type message, so you also need to ...&lt;/code>，so sweet！&lt;/p>
-&lt;p>既然 Debian Squeeze 已经不再更新，apt source 也划入了 archive，这个方案应该是最“长治久安”的。&lt;/p>- https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>How uri match nginx location</title><link>https://dreamanddead.github.io/post/nginx-location/</link><pubDate>Mon, 28 May 2018 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/nginx-location/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/nginx-location/ -&lt;p>location 是 nginx 配置中出现最频繁的配置项，一个 uri 是如何与多个 location 进行匹配的？
-在有多个 location 都匹配的情况下，如何决定使用哪一个 location 作为匹配结果？&lt;/p>
-&lt;p>清晰内部机制之后，疑问自然迎刃而解。&lt;/p>
-&lt;h1 id="location-规则类型">location 规则类型&lt;/h1>
-&lt;p>根据&lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location">官方文档&lt;/a>，location 配置语法如下&lt;/p>
-&lt;pre>&lt;code>Syntax: location [ = | ~ | ~* | ^~ ] uri { ... }
-location @name { ... }
-Default: —
-Context: server, location
-&lt;/code>&lt;/pre>&lt;p>其语法对应了 location 规则的 5 种类型：&lt;/p>
-&lt;h2 id="prefix">prefix&lt;/h2>
-&lt;p>前缀匹配规则，如果 uri 包含相应的前缀，则匹配成功。&lt;/p>
-&lt;p>语法上， location 之后单纯跟上 uri，没有任何操作符。&lt;/p>
-&lt;pre>&lt;code>location /api/v1 {
-....
-}
-&lt;/code>&lt;/pre>&lt;h2 id="exact-uri">exact uri&lt;/h2>
-&lt;p>完全匹配规则，如果 uri 和规则完全相同，则匹配成功。&lt;/p>
-&lt;p>语法上，使用 = 操作符。&lt;/p>
-&lt;pre>&lt;code>location = /api/v1 {
-....
-}
-&lt;/code>&lt;/pre>&lt;h2 id="case-sensitive-regex">case-sensitive regex&lt;/h2>
-&lt;p>区分大小写的正则表达式匹配规则，如果 uri 与正则表达式相匹配，则匹配成功。
-正则表达式使用 &lt;a href="https://www.pcre.org/">pcre library&lt;/a>，语法和 perl 兼容。&lt;/p>
-&lt;p>语法上，使用 ~ 操作符。&lt;/p>
-&lt;p>这里有一个细节，uri 作为一个 string，只要 regex 匹配其中的一部分，即可算作匹配。
-比如有如下的规则，&lt;/p>
-&lt;pre>&lt;code>location ~ /api/v1 {
-....
-}
-&lt;/code>&lt;/pre>&lt;p>可以匹配 uri&lt;/p>
-&lt;ul>
-&lt;li>/api/v1/login&lt;/li>
-&lt;li>/pod/api/v1&lt;/li>
-&lt;/ul>
-&lt;p>如果想要匹配整个 string，则要使用 &lt;code>^ $&lt;/code>。
-比如，&lt;/p>
-&lt;pre>&lt;code>location ~ ^/api/v1.*$ {
-....
-}
-&lt;/code>&lt;/pre>&lt;p>可以匹配 uri&lt;/p>
-&lt;ul>
-&lt;li>/api/v1/login&lt;/li>
-&lt;/ul>
-&lt;p>不可以匹配&lt;/p>
-&lt;ul>
-&lt;li>/pod/api/v1&lt;/li>
-&lt;/ul>
-&lt;h2 id="case-insensitive-regex">case-insensitive regex&lt;/h2>
-&lt;p>规则同上，区别只在于，正则表达式不区分大小写。
-&lt;strong>不&lt;/strong>区分大小写的正则表达式匹配规则，如果 uri 与正则表达式相匹配，则匹配成功。&lt;/p>
-&lt;p>语法上，使用 &lt;code>~*&lt;/code> 操作符。&lt;/p>
-&lt;pre>&lt;code>location ~* /api/v1 {
-....
-}
-&lt;/code>&lt;/pre>&lt;h2 id="disable-regex-prefix">disable regex prefix&lt;/h2>
-&lt;p>匹配流程与 prefix 规则相同，有一点区别在于，如果最长匹配是当前规则，则之后不进行 正则表达式 规则的搜索。
-这一点可能有些难以理解，后面会详细讲解。&lt;/p>
-&lt;p>语法上，使用 &lt;code>^~&lt;/code> 操作符。&lt;/p>
-&lt;pre>&lt;code>location ^~ /api/v1 {
-....
-}
-&lt;/code>&lt;/pre>&lt;h1 id="uri-如何选择-location">uri 如何选择 location&lt;/h1>
-&lt;p>前面讲到，location 规则有 5 种类型，那么 uri 如何在多种不同类型的 location 规则之间，
-最终选择到唯一的 location 规则呢？&lt;/p>
-&lt;p>根据&lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location">官方文档&lt;/a>的描述，详细规则如下：&lt;/p>
-&lt;ol>
-&lt;li>如果存在 exact uri 规则与 uri 匹配，至步骤 6&lt;/li>
-&lt;li>在所有 prefix 规则和 disable regex prefix 规则中进行匹配（&lt;strong>与这些规则定义的顺序无关&lt;/strong>），
-如果没有匹配到规则，至步骤 3；如果存在匹配的规则，选择出最长匹配 uri 的规则：
-&lt;ul>
-&lt;li>如果规则是 disable regex prefix 类型，至步骤 6&lt;/li>
-&lt;li>如果规则是 prefix 类型，记住当前匹配的 prefix 规则，选为待定，至步骤 3&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>逐个遍历 case-sensitive regex 规则和 case-insensitive regex 规则（&lt;strong>按照这些规则定义的前后顺序&lt;/strong>）:
-&lt;ul>
-&lt;li>如果规则匹配，则遍历终止，至步骤 6&lt;/li>
-&lt;li>如果规则没有匹配，则继续&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>如果之前有 prefix 规则条目被选择为待定，至步骤 6&lt;/li>
-&lt;li>匹配失败，返回404，结束&lt;/li>
-&lt;li>选择当前规则，使用其配置，结束&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-28/21577003.jpg" alt="">&lt;/p>
-&lt;h1 id="faq">FAQ&lt;/h1>
-&lt;p>有人可能会困惑，如果 prefix 与 disable regex prefix 规则相同，比如，&lt;/p>
-&lt;pre>&lt;code>location /static/ {
-....
-}
-location ^~ /static/ {
-....
-}
-&lt;/code>&lt;/pre>&lt;p>最终会匹配哪一条规则？是否应该继续查找 regex 规则？&lt;/p>
-&lt;p>实际上，这种情况 nginx 会报错，&lt;code>nginx: [emerg] duplicate location &amp;quot;/static/&amp;quot; in /etc/nginx/conf.d/location.conf&lt;/code>，
-所以这种情况是不用考虑的。&lt;/p>
-&lt;h1 id="示例">示例&lt;/h1>
-&lt;p>示例项目在 &lt;a href="https://github.com/DreamAndDead/nginx-example">nginx example&lt;/a>，
-参考 readme 文件，在本地启动 nginx server。&lt;/p>
-&lt;p>其中对 nginx 的配置如下，使用 curl 进行检测。&lt;/p>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/nginx-example/blob/master/location/conf.d/location.conf?footer=minimal&amp;slice=0:34">&lt;/script>
-&lt;p>exact uri 规则先于所有规则（与规则定义的顺序无关），所以这里匹配了 &lt;code>= /&lt;/code> exact uri 规则而不是 &lt;code>/&lt;/code> prefix 规则。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/
-uri &amp;quot;/&amp;quot;: exact match &amp;quot;location = /&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>exact uri 规则先于所有规则（与规则定义的顺序无关），所以这里没有匹配 &lt;code>^~ /static/&lt;/code> disable regex prefix 和 &lt;code>~* \.PNG$&lt;/code>，&lt;code>~ \.png$&lt;/code> regex 规则。&lt;/p>
-&lt;p>正是因为 exact uri 规则的这种属性，如果有高频率使用的 uri，建议使用 exact uri 匹配，加快匹配速度。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/static/logo.png
-uri &amp;quot;/static/logo.png&amp;quot;: exact uri match &amp;quot;location = /static/logo.png&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>prefix 规则中，匹配 uri 长度最长的规则会选中，所以没有选中 &lt;code>/&lt;/code> prefix 规则。同样的，从这一点来看，&lt;code>/api&lt;/code> 和 &lt;code>/api/&lt;/code> 是不一样的。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/api
-uri &amp;quot;/api&amp;quot;: prefix match &amp;quot;location /api&amp;quot;
-$ curl http://localhost:8080/api/
-uri &amp;quot;/api/&amp;quot;: prefix match &amp;quot;location /api/&amp;quot;
-$ curl http://localhost:8080/api/v1
-uri &amp;quot;/api/v1&amp;quot;: prefix match &amp;quot;location /api/&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>如果匹配了 &lt;code>^~ /static/&lt;/code> disable regex prefix 规则，则不再去搜索之后的 regex 规则。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/static/thinkpad.png
-uri &amp;quot;/static/thinkpad.png&amp;quot;: disable regex prefix match &amp;quot;location ^~ /static/&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>在 regex 规则的匹配中，定义的先后顺序是重要的，所以 &lt;code>~ \.png$&lt;/code> case-sensitive 规则永远不会被匹配。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/files/large.png
-uri &amp;quot;/files/large.png&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
-$ curl http://localhost:8080/files/large.PNG
-uri &amp;quot;/files/large.PNG&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>即使先匹配了 &lt;code>/api/&lt;/code> prefix 规则作为待定，但是也匹配了 regex 规则，优先使用 regex 规则。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/api/v1/file/logo.png
-uri &amp;quot;/api/v1/file/logo.png&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>存在 &lt;code>/&lt;/code> prefix 规则是有益的，收容所有未明确定位的 uri，再做错误处理。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/no-where
-uri &amp;quot;/no-where&amp;quot;: prefix match &amp;quot;location /&amp;quot;
-&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/nginx-location/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item></channel></rss>
+&lt;p>Trust you could find more. :)&lt;/p>- https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item></channel></rss>

@@ -1,0 +1,21 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{myblog}
+
+\begin{document}
+\begin{tikzpicture}
+  %\helpline;
+  \axis[x label=$z$, y label=$g(z)$, x origin=-10, y origin=-8, y length=8];
+
+  \coordinate (p) at (0, 5);
+  \coordinate (pe) at (8, 5);
+  \coordinate (n) at (0, -5);
+  \coordinate (ne) at (-8, -5);
+  
+  \draw (p) node[left] {$+1$} -- (pe);
+  \node[circle, draw=black, fill=white, inner sep=0cm, minimum size=0.2cm] at (p) {};
+  \draw (n) node[right] {$-1$} -- (ne);
+  \node[circle, draw=black, fill=white, inner sep=0cm, minimum size=0.2cm] at (n) {};
+  
+\end{tikzpicture}
+\end{document}

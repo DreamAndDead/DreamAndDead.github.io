@@ -1,0 +1,178 @@
+<!doctype html><html><head><title>简明 SVM</title><meta charset=utf-8><meta name=X-UA-Compatible content="IE=edge"><meta name=google-site-verification content><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name=viewport><meta content="telephone=no" name=format-detection><meta name=description content><meta name=renderer content="webkit"><meta name=theme-color content="#ffffff"><meta property="og:title" content="简明 SVM"><meta property="og:description" content="最近研究了 SVM 算法1 2，发现它本身的推导过程真是充满了美感！
+在这里梳理其中的逻辑关系，记录下自己的理解。"><meta property="og:type" content="article"><meta property="og:url" content="https://dreamanddead.github.io/post/support-vector-machine/"><meta property="article:published_time" content="2019-10-14T14:03:00+00:00"><meta property="article:modified_time" content="2019-10-14T14:03:00+00:00"><meta property="og:site_name" content="Brain=f(X)?"><meta name=twitter:card content="summary"><meta name=twitter:title content="简明 SVM"><meta name=twitter:description content="最近研究了 SVM 算法1 2，发现它本身的推导过程真是充满了美感！
+在这里梳理其中的逻辑关系，记录下自己的理解。"><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-93899485-1','auto');ga('send','pageview');}</script><script src=/vendor/js/jquery.min.js></script><script src=/vendor/js/popper.min.js></script><script src=/vendor/js/bootstrap.min.js></script><script src=/vendor/js/smooth-scroll.polyfills.min.js></script><link type=text/css rel=stylesheet href=/vendor/css/bootstrap.min.css><script src=/vendor/js/vue.min.js></script><link rel=stylesheet href=https://dreamanddead.github.io/scss/journal.min.c116bc90d171283f099f173854157ec8f183f9073b93443b2c8ad82899ee9025.css integrity="sha256-wRa8kNFxKD8Jnxc4VBV+yPGD+Qc7k0Q7LIrYKJnukCU=" media=screen><link rel=stylesheet href=https://dreamanddead.github.io/scss/dark-mode.min.552aae4638a84aa57cf0b195750a49ea9131d3bb621d1ed3ebc9b14b18166536.css integrity="sha256-VSquRjioSqV88LGVdQpJ6pEx07tiHR7T68mxSxgWZTY=" media=screen><script src=https://dreamanddead.github.io/js/loadCSS.js></script><script>loadCSS("https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons");</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}};</script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js>MathJax.Hub.Queue(function(){var all=MathJax.Hub.getAllJax(),i;for(i=0;i<all.length;i+=1){all[i].SourceElement().parentNode.className+=' has-jax';}});</script><style>code.has-jax{font:inherit;font-size:100%;background:inherit;border:inherit;color:#515151}</style><script src=https://dreamanddead.github.io/js/toc.js></script><script src=https://cdn.jsdelivr.net/npm/vue-disqus@3/dist/vue-disqus.js></script></head><body><div id=app><div ref=sideContainer class=side-container><a class="a-block nav-head false" href=https://dreamanddead.github.io><div class=nav-title>Brain=f(X)?</div><div class=nav-subtitle>Can machine think?</div></a><div class=nav-link-list><a class="a-block nav-link-item false" href=/categories>Categories</a>
+<a class="a-block nav-link-item false" href=/tags>Tags</a>
+<a class="a-block nav-link-item false" href=/index.xml>RSS Feed</a></div><div class=nav-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+Attribution-NonCommercial-ShareAlike 4.0 International</div></div><div ref=extraContainer class=extra-container><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc-content><center>- CATALOG -</center><ul><li><a href=#%e9%97%b4%e9%9a%94-margin onclick="onNavClick(`#间隔-margin-nav`)" id=间隔-margin-nav>间隔 Margin</a></li><ul class=collapse data-toggle=collapse><li><a href=#%e5%90%af%e5%8f%91-intuition onclick="onNavClick(`#启发-intuition-nav`)" id=启发-intuition-nav>启发 Intuition</a></li><li><a href=#%e9%87%8f%e5%8c%96%e9%97%b4%e9%9a%94 onclick="onNavClick(`#量化间隔-nav`)" id=量化间隔-nav>量化间隔</a></li></ul><li><a href=#%e6%9c%80%e4%bc%98%e5%88%86%e7%b1%bb onclick="onNavClick(`#最优分类-nav`)" id=最优分类-nav>最优分类</a></li><ul class=collapse data-toggle=collapse><li><a href=#%e8%ae%a1%e7%ae%97%e6%9c%80%e4%bc%98%e5%8c%96 onclick="onNavClick(`#计算最优化-nav`)" id=计算最优化-nav>计算最优化</a></li><li><a href=#%e6%94%af%e6%8c%81%e5%90%91%e9%87%8f onclick="onNavClick(`#支持向量-nav`)" id=支持向量-nav>支持向量</a></li></ul><li><a href=#%e6%a0%b8%e6%96%b9%e6%b3%95-kernel-trick onclick="onNavClick(`#核方法-kernel-trick-nav`)" id=核方法-kernel-trick-nav>核方法 kernel trick</a></li><li><a href=#soft-margin-svm onclick="onNavClick(`#soft-margin-svm-nav`)" id=soft-margin-svm-nav>soft margin SVM</a></li><ul class=collapse data-toggle=collapse><li><a href=#%e6%b1%82%e8%a7%a3%e6%9c%80%e4%bc%98%e5%8c%96 onclick="onNavClick(`#求解最优化-nav`)" id=求解最优化-nav>求解最优化</a></li></ul><li><a href=#smo-%e7%ae%97%e6%b3%95 onclick="onNavClick(`#smo-算法-nav`)" id=smo-算法-nav>SMO 算法</a></li></ul></div></div><div class=pagination><a id=globalBackToTop class="pagination-action animated-visibility" href=#top :class="{ invisible: scrollY == 0 }"><i class="material-icons pagination-action-icon">keyboard_arrow_up</i></a>
+<a class=pagination-action v-on:click=toggleDarkMode><i class="material-icons pagination-action-icon" v-if=isDarkMode>brightness_4</i>
+<i class="material-icons pagination-action-icon" v-else=isDarkMode>brightness_7</i></a></div></div><div class=single-column-drawer-container ref=drawer v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }"><div class=drawer-content><div class=drawer-menu><a class="a-block drawer-menu-item false" href=/categories>Categories</a>
+<a class="a-block drawer-menu-item false" href=/tags>Tags</a>
+<a class="a-block drawer-menu-item false" href=/index.xml>RSS Feed</a><div class=toc><div class=toc-content><center>- CATALOG -</center><ul><li><a href=#%e9%97%b4%e9%9a%94-margin onclick="onNavClick(`#间隔-margin-nav`)" id=间隔-margin-nav>间隔 Margin</a></li><ul class=collapse data-toggle=collapse><li><a href=#%e5%90%af%e5%8f%91-intuition onclick="onNavClick(`#启发-intuition-nav`)" id=启发-intuition-nav>启发 Intuition</a></li><li><a href=#%e9%87%8f%e5%8c%96%e9%97%b4%e9%9a%94 onclick="onNavClick(`#量化间隔-nav`)" id=量化间隔-nav>量化间隔</a></li></ul><li><a href=#%e6%9c%80%e4%bc%98%e5%88%86%e7%b1%bb onclick="onNavClick(`#最优分类-nav`)" id=最优分类-nav>最优分类</a></li><ul class=collapse data-toggle=collapse><li><a href=#%e8%ae%a1%e7%ae%97%e6%9c%80%e4%bc%98%e5%8c%96 onclick="onNavClick(`#计算最优化-nav`)" id=计算最优化-nav>计算最优化</a></li><li><a href=#%e6%94%af%e6%8c%81%e5%90%91%e9%87%8f onclick="onNavClick(`#支持向量-nav`)" id=支持向量-nav>支持向量</a></li></ul><li><a href=#%e6%a0%b8%e6%96%b9%e6%b3%95-kernel-trick onclick="onNavClick(`#核方法-kernel-trick-nav`)" id=核方法-kernel-trick-nav>核方法 kernel trick</a></li><li><a href=#soft-margin-svm onclick="onNavClick(`#soft-margin-svm-nav`)" id=soft-margin-svm-nav>soft margin SVM</a></li><ul class=collapse data-toggle=collapse><li><a href=#%e6%b1%82%e8%a7%a3%e6%9c%80%e4%bc%98%e5%8c%96 onclick="onNavClick(`#求解最优化-nav`)" id=求解最优化-nav>求解最优化</a></li></ul><li><a href=#smo-%e7%ae%97%e6%b3%95 onclick="onNavClick(`#smo-算法-nav`)" id=smo-算法-nav>SMO 算法</a></li></ul></div></div></div></div></div><transition name=fade><div v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if=isDrawerOpen v-on:click=toggleDrawer></div></transition><nav ref=navBar class="navbar sticky-top navbar-light single-column-nav-container"><div ref=navBackground class=nav-background></div><div class="container container-narrow nav-content"><button id=nav_dropdown_btn class=nav-dropdown-toggle type=button v-on:click=toggleDrawer>
+<i class=material-icons>menu</i></button>
+<a ref=navTitle class=navbar-brand href=https://dreamanddead.github.io>Brain=f(X)?</a>
+<button type=button class=nav-darkmode-toggle v-on:click=toggleDarkMode>
+<i class=material-icons v-if=isDarkMode>brightness_4</i>
+<i class=material-icons v-else=isDarkMode>brightness_7</i></button></div></nav><div class=single-column-header-container ref=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }"><a href=https://dreamanddead.github.io><div class=single-column-header-title>Brain=f(X)?</div><div class=single-column-header-subtitle>Can machine think?</div></a></div><div id=content><div ref=streamContainer class=stream-container><div class="post-list-container post-list-container-shadow"><div class=post><div class=post-head-wrapper style=background-image:url(https://dreamanddead.github.io/post/support-vector-machine/images/featured.png)><div class=post-title>简明 SVM<div class=post-meta><time itemprop=datePublished>2019-10-14 14:03</time>
+<i class=material-icons>folder</i>
+<a href=/categories/>[Algorithm]</a>
+&nbsp;
+<i class=material-icons>label</i>
+<a href=/tags/algorithm>algorithm</a>
+&nbsp;
+<a href=/tags/machine-learning>machine-learning</a>
+&nbsp;
+<i class=material-icons>schedule</i>
+22 min
+12 s.</div></div></div><div class=post-body-wrapper><div class=post-body v-pre><p>最近研究了 SVM 算法<sup id=fnref:1><a href=#fn:1 class=footnote-ref role=doc-noteref>1</a></sup> <sup id=fnref:2><a href=#fn:2 class=footnote-ref role=doc-noteref>2</a></sup>，发现它本身的推导过程真是充满了美感！
+在这里梳理其中的逻辑关系，记录下自己的理解。</p><h1 id=间隔-margin>间隔 Margin</h1><h2 id=启发-intuition>启发 Intuition</h2><p>考虑一个简单的二分类问题，实例的特征(feature)空间有两个维度，实例分类目标值(target)为正例和反例。</p><p>假如所有实例<strong>完全线性可分</strong>（存在超平面将正反实例完全分开），</p><figure><img src=images/intuition.png alt="x 代表正例，o 代表反例"><figcaption><p>x 代表正例，o 代表反例</p></figcaption></figure><p>上图实线直线（在高维度也称超平面 hyper plane，后面统一简称平面）就是一种可能的分类方法。</p><p>在当前分类下，直观上看，正例 A 距离分类平面比正例 B 要”远“很多。
+相比之下，我们更容易相信正例 A 在当前分类方法下“更可能”是正确的，因为正例 B 距离平面”太近“了，分类方法稍微有一些参数的调整，比如变成了虚线表示的分类，正例 B 很可能就被划分为反例。</p><p>根据这个示例，直觉上猜想，实例距离分类平面”越远“，它”更可能“被分类正确。</p><h2 id=量化间隔>量化间隔</h2><p>在直觉的基础上，需要进一步量化所谓“远近”这个概念。
+以下使用 <strong>间隔(margin)</strong> 表示实例与平面之间的距离。</p><p>在继续之前，先完整定义上面示例的分类问题。</p><p>实例 feature 有两个维度，用向量 $x$ 表示，$x \in \mathbb{R}^2 $，
+分类 target 分为正例和反例，用整数 $y$ 表示， $ y \in { +1, -1 } $，
+并且假设所有实例完全线性可分。</p><p>因此分类平面可以用下式来表示，</p><p>$$ w ^T x + b = 0 $$</p><p>$w, b$ 是分类平面的参数，$w \in \mathbb{R}^2, b \in \mathbb{R}$。</p><figure><img src=images/classify.png></figure><p>可以计算，对于所有正例，$ w ^T x + b > 0 $，对于反例，$ w ^T x + b &lt; 0 $，正反例有明显的符号区别。</p><p>根据符号的不同，就可以构建一个简单的分类假设，</p><p>$$
+h(x) = g(w ^T x + b)
+$$</p><p>$$
+g(z) = \begin{cases}
++1, \text{ when $z > 0$ } \\\<br>-1, \text{ when $z &lt; 0$ }
+\end{cases}
+$$</p><figure><img src=images/gz.png></figure><p>在具体公式的基础上，应用最先关于“远近”的直觉，如果一个正例， $w ^T x ^{(i)} + b \gg 0$，则可以认为间隔很大，当前分类正确的可能性更高。</p><p>这个间隔称其为 <em>函数间隔(functional margin)</em>，因为它只关心函数计算得到的结果，符号表示为 $\hat \gamma$。</p><p>$$
+\hat \gamma ^{(i)}= w ^T x ^{(i)} + b
+$$</p><p>仔细思考会发现，使用函数间隔存在一个问题，对于 $w = [1, 1] ^T, b = 1$ 和 $w = [100, 100]^T, b = 100$，两者表示的是相同的分类平面 $w ^T x + b = 0$，但是后者计算得到的函数间隔是前者的 100 倍，这就有些不合理。</p><p>从另一个角度来看待间隔，直接在几何平面上考虑实例点到分类平面的距离。这样就克服了上述问题，无论 $w, b$ 怎样放缩变化，只要分类平面不变，间隔就是不变的。</p><p>这个间隔称为 <em>几何间隔(geometric margin)</em>，符号定义为 $\gamma$。容易发现，在 $||w|| = 1$ 的情况下，函数间隔和几何间隔相同。</p><p>$$
+\gamma ^{(i)} = \frac{w ^T x ^{(i)} + b}{||w||}
+$$</p><p>推导过程主要应用了，向量 $PA$ 长度为单位向量 $\dfrac{w}{||w||}$ 的 $\gamma$ 倍。</p><figure><img src=images/geometry-distance.png></figure><p>$$
+w ^T (A - \gamma \frac{w}{||w||} ) + b = 0
+$$</p><p>$$
+w ^T A - \gamma \frac{w^T w}{||w||} + b = 0
+$$</p><p>$$
+\gamma ||w|| = w ^T A + b
+$$</p><p>$$
+\gamma = \frac{w^T A + b}{||w||}
+$$</p><h1 id=最优分类>最优分类</h1><p>对全部实例应用最开始得到的直觉，最优的分类平面，应该使所有实例到平面的间隔尽可能的远。
+具体的说，就是使所有实例中到平面的最小间隔最大化。</p><p>给定实例集合，</p><p>$$
+S = { (x ^{(i)}, y ^{(i)}); i=1,&mldr;,m }
+$$</p><p>定义 $S$ 到分类平面的间隔为所有实例到平面的最小几何间隔，</p><p>$$
+||w|| = 1
+$$</p><p>$$
+\gamma^{(i)} = y^{(i)} * (w ^T x^{(i)} + b)
+$$</p><p>$$
+\gamma = \min \gamma^{(i)}\ \ \ i=1,&mldr;,m
+$$</p><p><em>间隔永远是正值，对于正例，$y^{(i)} = +1, w ^T x^{(i)} + b > 0$，对于反例，$y^{(i)} = -1, w ^T x^{(i)} + b &lt; 0$</em></p><p>最优的分类，就是使 $\gamma$ 最大的分类。</p><p>$$
+\begin{align}
+& max_{\gamma,w,b}\ \gamma\<br>s.t.\ & y^{(i)} * (w ^T x^{(i)} + b) \geq \gamma,\ i=1,&mldr;,m\<br>& ||w|| = 1
+\end{align}
+$$</p><p>根据凸优化理论<sup id=fnref:3><a href=#fn:3 class=footnote-ref role=doc-noteref>3</a></sup>，$||w|| = 1$ 在这里不是一个仿射函数，优化问题不符合 QCQP 的求解条件。</p><p>变通地，使用函数间隔改写方程，</p><p>$$
+\begin{align}
+& max_{\hat \gamma,w,b}\ \frac{\hat \gamma}{||w||}\<br>s.t.\ & y^{(i)} * (w ^T x^{(i)} + b) \geq \hat \gamma,\ i=1,&mldr;,m
+\end{align}
+$$</p><p>前面讨论过使用函数间隔遇到的问题，在保持分类平面不变的情况下，函数间隔可以随着 $ w, b $ 的放缩而放缩。
+同样地，在最优解情况，总可以放缩 $w, b$，使得 $\hat \gamma = 1$。</p><p>于是问题就转化为</p><p>$$
+\begin{align}
+& max_{w,b}\ \frac{1}{||w||} \<br>s.t.\ & y^{(i)} * (w ^T x^{(i)} + b) \geq 1,\ i=1,&mldr;,m
+\end{align}
+$$</p><p>将 $||w||$ 取倒数平方，$max \rightarrow min$，问题就转化成了 QCQP 的形式，可以应用已知的凸优化方法进行求解。</p><p>$$
+\begin{align}
+& min_{w,b}\ \frac 1 2 ||w||^2 \<br>s.t.\ & y^{(i)} * (w ^T x^{(i)} + b) \geq 1,\ i=1,&mldr;,m
+\end{align}
+$$</p><p>求解得到 $w, b$，其参数构成的超平面就是之前假设的最优分类。</p><h2 id=计算最优化>计算最优化</h2><p>这个问题是一个经典的凸优化问题，</p><p>$$
+\begin{align}
+& min_{w,b}\ \frac 1 2 ||w||^2 \<br>s.t.\ & y^{(i)} * (w ^T x^{(i)} + b) \geq 1,\ i=1,&mldr;,m
+\end{align}
+$$</p><p>将条件转化为 $\leq$ 的形式，</p><p>$$
+g_i(w, b) = - y^{(i)} * (w ^T x^{(i)} + b) + 1 \leq 0
+$$</p><p>使用拉格朗日乘子法<sup id=fnref:4><a href=#fn:4 class=footnote-ref role=doc-noteref>4</a></sup> <sup id=fnref:5><a href=#fn:5 class=footnote-ref role=doc-noteref>5</a></sup> <sup id=fnref:6><a href=#fn:6 class=footnote-ref role=doc-noteref>6</a></sup>，转化为拉格朗日函数(lagrangian)，</p><p>$$
+\mathcal{L} (w, b, \alpha) = \frac 1 2 ||w||^2 + \sum_{i=1}^{m} \alpha_i \left[- y^{(i)} * (w ^T x^{(i)} + b) + 1 \right]
+$$</p><p>根据不等式约束的 KKT 条件<sup id=fnref:7><a href=#fn:7 class=footnote-ref role=doc-noteref>7</a></sup>，在极值处 $w, b$，存在 $\alpha$ 满足</p><p>$$
+\triangledown _w \mathcal{L} (w, b, \alpha) = 0
+$$</p><p>$$
+\triangledown _b \mathcal{L} (w, b, \alpha) = 0
+$$</p><p>$$
+g_i(w , b ) \le 0
+$$</p><p>$$
+\alpha_i \geq 0
+$$</p><p>$$
+\alpha_i g_i(w , b ) = 0
+$$</p><p>从另外的角度<sup id=fnref:8><a href=#fn:8 class=footnote-ref role=doc-noteref>8</a></sup> <sup id=fnref:3><a href=#fn:3 class=footnote-ref role=doc-noteref>3</a></sup>来观察拉格朗日函数，
+$\min\limits_{w, b} \max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$ 和约束条件下的 $\min\limits_{w, b} \dfrac 1 2 ||w||^2$ 问题是等价的。</p><p>假如存在 $g_i > 0$ 脱离了约束，则可以使对应的 $\alpha_i = \infty$，相应的 $\max\limits_{\alpha} \mathcal{L} (w, b, \alpha) = \infty$；
+如果所有 $g_i \le 0$ 满足约束，则只有 $\alpha_i = 0\ (\text{unless } g_i = 0)$ 才能确保 $\max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$ 取最大值，此时 $\max\limits_{\alpha} \mathcal{L} (w, b, \alpha) = \dfrac 1 2 ||w||^2$。</p><p>所以对于 $\min\limits_{w, b} \max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$，必定在满足 $g_i \le 0$ 的约束时才能取到最小值（表面上没有约束，其实过滤了不满足约束的值）。</p><p>假设原(primal)问题最优解为 $p^* = \min\limits_{w, b} \max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$，
+考虑其对偶(dual)问题，$d^* = \max\limits_{\alpha} \min\limits_{w, b} \mathcal{L} (w, b, \alpha)$，</p><p>根据弱对偶性(weak duality)，始终满足</p><p>$$
+d^* \le p^*
+$$</p><p>因为，假如原问题最优解取值为 $w_p, b_p, \alpha_p$，对偶问题最优解取值为 $w_d, b_d, \alpha_d$，则</p><p>$$
+d^* = \mathcal{L} (w_d, b_d, \alpha_d) \le \mathcal{L} (w_p, b_p, \alpha_d) \le \mathcal{L} (w_p, b_p, \alpha_p) = p^*
+$$</p><p>在这里，问题满足 Slater 条件（<em>充分条件，暂时不讨论</em>），故问题满足强对偶性(strong duality)，$d^* = p^*$。</p><p>所以可以通过求解对偶问题，得到原问题的解，以下先求解 $\min\limits_{w, b} \mathcal{L} (w, b, \alpha)$，将 $\alpha$ 看作常量。</p><p>$$
+\triangledown _w \mathcal{L} (w, b, \alpha) = 0
+$$</p><p>$$
+w + \sum_{i=1}^{m} \alpha_i (-y ^{(i)} x ^{(i)}) = 0
+$$</p><p>$$
+w = \sum_{i=1}^{m} \alpha_i y ^{(i)} x ^{(i)}
+$$</p><p>$$
+\triangledown _b \mathcal{L} (w, b, \alpha) = 0
+$$</p><p>$$
+\sum_{i=1}^{m} \alpha_i y ^{(i)} = 0
+$$</p><p>根据上面求得的公式，代入 $\mathcal{L} (w, b, \alpha)$，消去 $w, b$，</p><p>$$
+\begin{align}
+\mathcal{L} (w, b, \alpha) & = \frac{1}{2} w^T w + \sum_{i=1}^{m} (-w^T \alpha_i y^{(i)} x^{(i)} - \alpha_i y^{(i)} b + \alpha_i) \\\<br>& = \frac{1}{2} w^T w + \sum_{i=1}^{m} -w^T \alpha_i y^{(i)} x^{(i)} + \sum_{i=1}^{m} - \alpha_i y^{(i)} b + \sum_{i=1}^{m} \alpha_i \\\<br>& = \frac{1}{2} w^T w - w^T w + 0 + \sum_{i=1}^{m} \alpha_i \\\<br>& = - \frac{1}{2} w^T w + \sum_{i=1}^{m} \alpha_i \\\<br>& = \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\<br>\end{align}
+$$</p><p>现在问题转化为对称问题的最大值问题（之后使用 SMO 算法<sup id=fnref:1><a href=#fn:1 class=footnote-ref role=doc-noteref>1</a></sup>来求解）。</p><p>$$
+\begin{align}
+\max \limits_{\alpha} \ & \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\<br>\text{s.t.} \ & \alpha_i \geq 0 \\\<br>& \sum_{i=1}^{m} \alpha_i y^{(i)} = 0
+\end{align}
+$$</p><h2 id=支持向量>支持向量</h2><p>假如已经通过最优化方法求得 $w, b, \alpha$，得到分类平面 $ {w} ^T x + b = 0$，
+对于新的未知分类的实例，可以通过计算 ${w} ^T x + b$，根据符号的正负来进行分类其是正例还是反例。</p><p>$$
+{w} ^T x + b = \sum_{i=1}^{m} \alpha_i y^{(i)} {x^{(i)}} ^T x + b \\\<br>= \sum_{i=1}^{m} \alpha_i y^{(i)} \langle x^{(i)}, x \rangle + b
+$$</p><p>根据之前讨论的 KKT 条件，</p><p>$$
+g_i(w, b) \le 0
+$$</p><p>$$
+\alpha_i \geq 0
+$$</p><p>$$
+\alpha_i g_i(w , b ) = 0
+$$</p><p>当 $g_i(w, b) &lt; 0$，即 $y^{(i)} (w^T x^{(i)} + b) > 1$ 时，$\alpha_i= 0$；
+当 $g_i(w, b) = 0$，即 $y^{(i)} (w^T x^{(i)} + b) = 1$ 时，$\alpha_i > 0$。</p><p>对于 $\alpha_i = 0$ 的部分，都可以在分类计算中省略，只有 $\alpha_i > 0$ 才参与计算，大大减少了计算量。</p><figure><img src=images/support.png></figure><p>从图形来看，当 $y^{(i)} (w ^T x^{(i)} + b) = 1，\alpha_i > 0$，对应的实例 $(x^{(i)}, y^{(i)})$ 是距离分类平面最近的点，称作支持向量（这也是支持向量机名字的由来），也只有相应的支持向量参与判别新分类的运算。</p><h1 id=核方法-kernel-trick>核方法 kernel trick</h1><p>之前的所有讨论，假设限定于所有实例完全线性可分。存在一些情况，在实例空间下，所有实例不能完全线性可分。
+这时可以通过空间的映射 $\phi(x)$，将原空间映射到新空间，在新空间里，实例也许就完全线性可分了。
+在新空间计算得到分类平面后，将其逆向转换回来，在原空间就得到了非线性的分类平面。</p><figure><img src=images/phi.png></figure><p>假如将所有实例映射到新空间，进行分类平面的求解。
+观察最优化的求解过程，将 $x^{(i)} \rightarrow \phi(x^{(i)})$，并不影响求解过程（因为求解的变量为 $w, b, \alpha$, 而 $x^{(i)}$ 看作常量），只需要将所有的 $x^{(i)} $ 进行替换。</p><p>相应的在新实例的分类计算中，$ \langle x^{(i)}, x \rangle \rightarrow \langle \phi(x^{(i)}), \phi(x) \rangle$。</p><p>对于新实例的分类结果，只涉及到 $\langle x^{(i)}, x \rangle$ 的计算，而不涉及 $x^{(i)}$ 单个值的计算。</p><p>定义核函数来提取这种共性</p><p>$$
+K(x, z) = \phi(x)^T\phi(z)
+$$</p><p>原先所有 $\langle x^{(i)}, x^{(j)} \rangle$ 的地方就用 $K(x^{(i)}, x^{(j)} )$ 来代替。</p><p>$K(x, z)$ 可以是一个显性表示，比如通过具体的 $\phi(x)^T\phi(z)$ 来得到，也可以是一个隐性表示，比如高斯核，</p><p>$$
+K(x, z) = e^{- ||x-z||^2 / 2 d^2}
+$$</p><p>并非可以显性的得到 $\phi(x), \phi(z)$ 的表示，但是 $K(x, z)$ 一定是可以分解的，因此它是一个有效的核函数。</p><p>如何判定一个隐性的核函数是否有效？</p><p>根据 Mercer 定理，K 是有效的核函数，当且仅当 Kernal matrix 是对称半正定的</p><p>Kernal martix 是一个矩阵 $K$，$K_{ij} = K(x^{(i)}, x^{(j)})$</p><p>虽然使用核方法，SVM 可以进行非线性判别，但是并没有明确的准则来决定如何选择一个恰当的空间映射 $\phi(x)$，以及在相应映射下使用什么参数，并不确定哪一种映射可以反映问题的本质。</p><p>所以在实际中，通常使用 <a href=https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html>GridSearch</a> 来遍历搜索，选择效果最好的核函数和参数。</p><h1 id=soft-margin-svm>soft margin SVM</h1><p>之前讨论的方法，假定所有的实例是完全线性可分的，但是也存在不完全线性可分的情况。
+比如，</p><figure><img src=images/nonlinear.png></figure><p>在这种情况下，可以使用核方法，得到非线性分类．
+但是总体上看，实例还是线性分类的，如果只因为少量的分类错误就使用非线性的方法，代价太大了。</p><figure><img src=images/soft.png></figure><p>之前假定实例完全线性可分，使用的是*硬间隔(hard margin)<em>的判别方法。
+现在引入一种</em>软间隔(soft margin)*的判别方法，使分类可以容忍部分错误。</p><p>引入松弛变量 $\xi$，由软间隔定义的优化问题如下，</p><p>$$
+\begin{align}
+& \min_{w,b,\xi}\ \frac 1 2 ||w||^2 + C \sum_{i=1}^{m} \xi^{(i)}\<br>\text{s.t.} \ & y^{(i)} * (w ^T x^{(i)} + b) \geq 1 - \xi^{(i)},\ i=1,&mldr;,m\<br>& \xi^{(i)} \geq 0 \<br>\end{align}
+$$</p><p>相比于之前的硬间隔问题，允许间隔 $&lt; 1$ ，但是计入相应的惩罚，由 $C$ 控制了惩罚的权重，$C$ 越大，对分类错误的容忍度越低。</p><h2 id=求解最优化>求解最优化</h2><p>软间隔最优化求解的过程大体和硬间隔相似。</p><p>$$
+g_i(w, b, \xi) = - y^{(i)} * (w ^T x^{(i)} + b) + 1 - \xi^{(i)} \leq 0
+$$</p><p>写出拉格朗日函数，</p><p>$$
+\mathcal{L} (w, b, \xi, \alpha, \beta) = \frac 1 2 ||w||^2 + C \sum_{i=1}^{m} \xi^{(i)} +
+\sum_{i=1}^{m} \alpha_i (1 - \xi^{(i)} - y^{(i)} * (w ^T x^{(i)} + b) + \sum_{i=1}^{m} - \beta_i \xi^{(i)} \<br>$$</p><p>满足 KKT 条件，</p><p>$$
+g_i(w, b, \xi) \le 0 \<br>\alpha_i \geq 0 \<br>\alpha_i g_i(w, b, \xi) = 0 \<br>-\xi^{(i)} \le 0 \<br>\beta_i \geq 0 \<br>\beta_i \xi^{(i)} = 0 \<br>$$</p><p>求解对偶问题，</p><p>$$
+\triangledown _w \mathcal{L} (w, b, \xi, \alpha, \beta) = 0
+$$</p><p>$$
+w = \sum_{i=1}^{m} \alpha_i y^{(i)} x^{(i)}
+$$</p><p>$$
+\triangledown _b \mathcal{L} (w, b, \xi, \alpha, \beta) = 0
+$$</p><p>$$
+\sum_{i=1}^{m} \alpha_i y^{(i)} = 0
+$$</p><p>$$
+\triangledown _{\xi^{(i)}} \mathcal{L} (w, b, \xi, \alpha, \beta) = 0
+$$</p><p>$$
+C - \alpha_i - \beta_i = 0
+$$</p><p>$$
+\alpha_i + \beta_i = C
+$$</p><p>将求导得到的上式代入 $\mathcal{L} (w, b, \xi, \alpha, \beta)$，消去 $w, b, \xi$，</p><p>$$
+\begin{align}
+\max \limits_{\alpha} \ & \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\<br>\text{s.t.} \ & 0 \leq \alpha_i \leq C \ (\text{because } \alpha_i \ge 0, \beta_i \ge 0, \alpha_i + \beta_i = C) \\\<br>& \sum_{i=1}^{m} \alpha_i y^{(i)} = 0
+\end{align}
+$$</p><p>令人惊奇的是，最终结果没有大的改变，只是对 $\alpha^{(i)}$ 多了约束 $\le C$。</p><p>根据 KKT 条件，</p><ul><li>当 $\alpha_i = 0,\ \beta_i = C$ 时，$\xi^{(i)} = 0,\ g_i(w, b, \xi) &lt; 0,\ y^{(i)} * (w ^T x^{(i)} + b) > 1$，实例在最大间隔外；</li><li>当 $\alpha_i = C,\ \beta_i = 0$ 时，$\xi^{(i)} > 0,\ g_i(w, b, \xi) = 0,\ y^{(i)} * (w ^T x^{(i)} + b) = 1 - \xi^{(i)} &lt; 1$，实例落在最大间隔内，当 $\xi^{(i)} > 1$ 时被错误分类；</li><li>当 $0 &lt; \alpha_i &lt; C,\ 0 &lt; \beta_i &lt; C$ 时，$\xi^{(i)} = 0,\ g_i(w, b, \xi) = 0,\ y^{(i)} * (w ^T x^{(i)} + b) = 1$，实例是支持向量。</li></ul><p>至于 $\xi$ 的值，有多种不同的损失函数来计量，这里不讨论。</p><h1 id=smo-算法>SMO 算法</h1><p>SMO 算法用来求解上面最优化得到的 $\max \limits_{\alpha}\ &mldr;$ 问题。</p><p>SMO 启发于坐标上升方法。</p><p>一个简单的示例，对于一个二维凸函数，每次固定一个维度，选取另一个维度作为变量，进行最大化求解。</p><p>由等高线来看，在固定一个维度的前提下，找到函数的最大值，即与等高线相切的点，</p><figure><img src=images/contour.png></figure><p>由三维立体来看，逐个维度取最大值，最终会慢慢接近极值点。</p><figure><img src=images/contour-3d.png></figure><p>下面类比的来看，用 SMO 求解软间隔的最优化问题，</p><p>$$
+\begin{align}
+& \max \limits_{\alpha} \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\<br>\text{s.t.} \ & 0 \leq \alpha_i \leq C \\\<br>& \sum_{i=1}^{m} \alpha_i y^{(i)} = 0
+\end{align}
+$$</p><p>使用同样的思路，不过在这里维度有所增加，变成了 m 维。
+逐个 $\alpha_i $ 作为变量，进行坐标上升求极值。</p><p>但是因为有等式关系存在，</p><p>$$
+\alpha_1 y^{(1)} = -\sum_{i=2}^{m} \alpha_i y^{(i)}
+$$</p><p>$\alpha_i $ 受到等式的约束，所以不能通过逐个调整 $\alpha_i $ 来调优。</p><p>可以变通的同时选择两个 $\alpha_i, \alpha_j $ 作为变量，用 $\alpha_j $ 表示 $\alpha_i $，代入原方程消去 $\alpha_j$，这样问题就符合约束条件，可以在 $\alpha_i$ 维度上进行坐标上升优化。</p><p>化简后的问题是关于 $\alpha_i$ 的一元二次问题，在相应的范围内求极值，是一个简单的问题。</p><p>比如对于 $\alpha_1, \alpha_2$，</p><p>$$
+0 \le \alpha_1 \le 0
+$$</p><p>$$
+0 \le \alpha_2 \le 0
+$$</p><p>$$
+\alpha_2 y^{(2)} = - \sum_{i=3}^{m} \alpha_i y^{(i)} - \alpha_1 y^{(1)}
+$$</p><figure><img src=images/aiaj.png></figure><p>对于不同的情况，$\alpha_i$ 取值范围会受到不同的影响。</p><p>对于硬间隔问题，没有 $\alpha_i \le C$ 的条件，但是思路是一样的。</p><section class=footnotes role=doc-endnotes><hr><ol><li id=fn:1 role=doc-endnote><p><a href=http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/CS229%20Lecture%20note%203.pdf>CS229 Lecture note 3</a> <a href=#fnref:1 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:2 role=doc-endnote><p><a href=http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/A%20Gentle%20Introduction%20to%20Support%20Vector%20Machines%20in%20Biomedicine.pdf>Gentle Introduction to Support Vector Machines in Biomedicine</a> <a href=#fnref:2 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:3 role=doc-endnote><p><a href=http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/CS229%20Lecture%20Review%20note%204.pdf>CS229 Lecture Review note 4</a> <a href=#fnref:3 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:4 role=doc-endnote><p><a href=http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20%28Com%20S%20477%20577%20Notes%29.pdf>Lagrange Multipliers (Com S 477 577 Notes)</a> <a href=#fnref:4 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:5 role=doc-endnote><p><a href=http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20without%20Permanent%20Scarring.pdf>Lagrange Multipliers without Permanent Scarring</a> <a href=#fnref:5 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:6 role=doc-endnote><p><a href=http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20for%20Inequality%20Constraints.pdf>Lagrange Multipliers for Inequality Constraints</a> <a href=#fnref:6 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:7 role=doc-endnote><p><a href=http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20and%20the%20Karush-Kuhn-Tucker%20conditions.pdf>Lagrange Multipliers and the Karush-Kuhn-Tucker conditions</a> <a href=#fnref:7 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:8 role=doc-endnote><p><a href=http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/CS229%20Lecture%20Review%20note%203.pdf>CS229 Lecture Review note 3</a> <a href=#fnref:8 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li></ol></section><hr width=100% id=EOF><p style=color:#777>Last modified on 2019-10-14</p></div></div><nav class=post-pagination><a class=newer-posts href=https://dreamanddead.github.io/post/decision-trees/>Next<br>简明 Decision Trees</a>
+<a class=older-posts href=https://dreamanddead.github.io/post/pipenv-with-conda/>Previous<br>python virtual env with conda</a></nav><div class=post-comment-wrapper><div class=comments><vue-disqus shortname=dreamanddead></vue-disqus></div><noscript><noscript>Please activate JavaScript to view comments.</noscript></noscript><a href=https://disqus.com/ class=dsq-brlink>Comments powered by <span class=logo-disqus>Disqus</span></a></div></div></div></div></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+Attribution-NonCommercial-ShareAlike 4.0 International</div></div><script>let app;app=new Vue({el:'#app',data:{scrollY:0,navOpacity:0,isDrawerOpen:false,mounted:false,isDarkMode:false},methods:{sgn(t,x){let k=1./(1.-2*t);if(x<=t)return 0;else if(x>=1-t)return 1;else{return k*(x-t);}},handleScroll(){this.scrollY=window.scrollY;this.navOpacity=this.sgn(.0,Math.min(1,Math.max(0,window.scrollY/(this.pageHeadHeight()-this.navBarHeight()*0.8))));const{navBar,navBackground,navTitle,extraContainer,streamContainer}=this.$refs;if(this.navOpacity>=1){navBackground.style.opacity=1;navTitle.style.opacity=1;}else{navBackground.style.opacity=0;navTitle.style.opacity=0;}},handleResize(){const{navBar,navBackground,navTitle,extraContainer,streamContainer}=this.$refs;extraContainer.style.left=(streamContainer.offsetWidth-extraContainer.offsetWidth)+'px';},navBarHeight(){return this.$refs.navBar.offsetHeight;},pageHeadHeight(){return this.$refs.pageHead.offsetHeight;},toggleDrawer(){this.isDrawerOpen=!this.isDrawerOpen;document.getElementsByTagName('html')[0].style.overflow=this.isDrawerOpen?'hidden':'unset';},closeDrawer(){this.isDrawerOpen=false;document.getElementsByTagName('html')[0].style.overflow=this.isDrawerOpen?'hidden':'unset';},toggleDarkMode(){this.isDarkMode=!this.isDarkMode;if(this.isDarkMode==true){document.cookie="night=1;path=/";document.body.classList.add("night");}else{document.cookie="night=0;path=/";document.body.classList.remove("night");}}},created(){window.addEventListener('scroll',this.handleScroll);window.addEventListener('resize',this.handleResize);window._nonDesktop=function(){let check=false;(function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4)))check=true;})(navigator.userAgent||navigator.vendor||window.opera);return check;};var night=document.cookie.replace(/(?:(?:^|.*;\s*)night\s*\=\s*([^;]*).*$)|^.*$/,"$1");if(night==""){if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){}}else{if(night=="1"){this.toggleDarkMode();}}},mounted(){this.handleScroll();this.handleResize();this.mounted=true;},destroyed(){window.removeEventListener('scroll',this.handleScroll);window.removeEventListener('resize',this.handleResize);}});</script><script src=https://dreamanddead.github.io/js/journal.js></script></body></html>

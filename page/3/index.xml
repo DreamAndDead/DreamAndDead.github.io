@@ -1,4 +1,375 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Attribution-NonCommercial-ShareAlike 4.0 International</copyright><lastBuildDate>Mon, 26 Oct 2020 09:10:00 +0000</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>记一次 Jmeter 分布式测试故障调试过程</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</link><pubDate>Fri, 25 May 2018 02:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ -&lt;p>之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Attribution-NonCommercial-ShareAlike 4.0 International</copyright><lastBuildDate>Mon, 26 Oct 2020 09:10:00 +0000</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Recover mysql table structure from frm file</title><link>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</link><pubDate>Thu, 27 Sep 2018 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ -&lt;p>mysql 正常运行的时候，&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/show-create-table.html">查看 table 的结构&lt;/a>并不是困难的事。
+但是有时 mysql 发生故障，这种方法便不再可行。&lt;/p>
+&lt;p>当遇到故障，通常使用新的 mysql 实例来恢复当前的数据。
+建表是非常重要的步骤，我们必须有其它的方法来寻找 table 的结构。&lt;/p>
+&lt;h1 id="table-结构定义在哪里">table 结构定义在哪里&lt;/h1>
+&lt;p>通常关注的用户数据，底层都实际存储在 mysql 数据目录。
+其它的元数据也不例外，比如 table 表结构的定义。&lt;/p>
+&lt;p>mysql 数据目录文件结构是非常清晰的，&lt;/p>
+&lt;ul>
+&lt;li>目录对应数据库&lt;/li>
+&lt;li>frm 文件存储了 table 结构的定义&lt;/li>
+&lt;li>ibdata 文件存储了 mysql 的元数据及其它&lt;/li>
+&lt;/ul>
+&lt;p>table 定义的结构，就存在于 frm 文件中，当然管理元数据的 ibdata 也会有记录。&lt;/p>
+&lt;p>当存在 frm 文件的时候，恢复表结构相对容易；
+但是如果执行了 drop table，便删除了 frm 文件，本文所提供的方法就爱莫能助了。
+这种情况下，可以尝试从 ibdata 恢复表结构，这暂时不在下面的讨论范围内。&lt;/p>
+&lt;h1 id="解析-table-结构">解析 table 结构&lt;/h1>
+&lt;p>下面介绍 3 种方式，从 frm 文件中，解析得到 &lt;code>create table&lt;/code> 命令。&lt;/p>
+&lt;h2 id="mysqlfrm">mysqlfrm&lt;/h2>
+&lt;p>mysqlfrm 是 &lt;a href="https://downloads.mysql.com/archives/utilities/">mysql utilities 工具集&lt;/a> 中的其中之一，
+用于分析 frm 文件生成 create table 命令。
+目前已经不再更新，部分功能并入了新版本的 mysql shell（version 8 及以后）。&lt;/p>
+&lt;p>mysql utilities 需要 python2 环境，安装非常简单。&lt;/p>
+&lt;pre>&lt;code>$ tar -xvzf mysql-utilities-1.6.5.tar.gz
+$ cd mysql-utilities-1.6.5
+$ python setup.py build
+$ python setup.py install
+&lt;/code>&lt;/pre>&lt;p>mysqlfrm 支持两类模式来解读 frm：&lt;/p>
+&lt;h3 id="直接分析">直接分析&lt;/h3>
+&lt;p>这种模式比较直接，逐个字节分析 frm 文件，尽可能的提取信息。&lt;/p>
+&lt;p>这种模式下，需要使用 &lt;code>--diagnostic&lt;/code> 参数。&lt;/p>
+&lt;pre>&lt;code>$ mysqlfrm --diagnostic /data/sakila/actor.frm
+&lt;/code>&lt;/pre>&lt;h3 id="借助-mysql-实例分析">借助 mysql 实例分析&lt;/h3>
+&lt;p>这种模式，借助新的 mysql 实例，从中完成 frm 的分析工作。
+可以用两种方式来指定，如何开启新的 mysql 实例。&lt;/p>
+&lt;p>一，从当前的 mysql 服务中 spawn，使用 &lt;code>--server&lt;/code> 指定 mysql 服务&lt;/p>
+&lt;pre>&lt;code>$ mysqlfrm --server=root:pass@localhost:3306 --port=3310 /data/sakila/actor.frm
+&lt;/code>&lt;/pre>&lt;p>二，启动新的 mysql 实例，使用 &lt;code>--basedir&lt;/code> 指定 mysql 程序路径&lt;/p>
+&lt;pre>&lt;code>$ mysqlfrm --basedir=/usr/local/bin/mysql --port=3310 /data/sakila/actor.frm
+&lt;/code>&lt;/pre>&lt;p>&lt;code>--port&lt;/code> 给新的实例指定端口，是为了避免与当前的 3306 端口出现冲突。&lt;/p>
+&lt;h2 id="dbsake">dbsake&lt;/h2>
+&lt;p>这是偶然发现的一个工具，文档中它这样介绍自己：&lt;/p>
+&lt;blockquote>
+&lt;p>dbsake - a (s)wiss-(a)rmy-(k)nif(e) for MySQL&lt;/p>
+&lt;/blockquote>
+&lt;p>作者一定是一个对 mysql 很有心得的人，
+工具从下载，安装到使用，简单，利落。&lt;/p>
+&lt;pre>&lt;code>$ curl -s get.dbsake.net &amp;gt; dbsake
+$ chmod u+x dbsake
+$ ./dbsake frmdump [frm-file-path]
+&lt;/code>&lt;/pre>&lt;h2 id="online-service">online service&lt;/h2>
+&lt;p>有一些在线的服务，也关注这样的问题。
+使用过的&lt;a href="https://recovery.twindb.com/">twindb online&lt;/a>，体验非常好，相关的工具集也很棒。&lt;/p>
+&lt;p>从 &lt;code>Recover Structure -&amp;gt; from .frm file&lt;/code> 入口，上传 frm，就可以得到 &lt;code>create table&lt;/code> 命令。&lt;/p>
+&lt;h1 id="写在最后">写在最后&lt;/h1>
+&lt;p>在使用上，可以多个工具都测试一下，对比哪个工具恢复的命令更为完善可取，选择最佳的。&lt;/p>
+&lt;p>参考：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://docs.oracle.com/cd/E17952_01/mysql-utilities-1.6-en/mysqlfrm.html">mysqlfrm official doc&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://dbsake.readthedocs.io/en/latest/commands/frmdump.html">dbsake project doc&lt;/a>&lt;/li>
+&lt;/ul>- https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>mysql table suddenly doesn't exists</title><link>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</link><pubDate>Thu, 27 Sep 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ -&lt;p>最近内部的 mysql 数据库发生了一件奇怪的事，其中有一个表 users625 突然出现问题，
+所有对它的操作都报错误 &lt;code>数据表不存在&lt;/code>。&lt;/p>
+&lt;pre>&lt;code>mysql&amp;gt; select count(*) from users625;
+ERROR 1146 (42S02): Table 'km8.users625' doesn't exist
+&lt;/code>&lt;/pre>&lt;p>&lt;code>show tables&lt;/code> 它还显示在列表里，在 mysql 数据目录中也可以找到对应的表文件，也没有
+进行过删除操作，突然出现这样的错误非常奇怪。&lt;/p>
+&lt;p>内部运行环境：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">名称&lt;/th>
+&lt;th style="text-align:center">值&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">OS&lt;/td>
+&lt;td style="text-align:center">Debian Squeeze x64&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">mysql 版本&lt;/td>
+&lt;td style="text-align:center">5.1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">mysql 引擎&lt;/td>
+&lt;td style="text-align:center">innodb&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h1 id="发生了什么">发生了什么&lt;/h1>
+&lt;p>突然出现这种情况，第一反应必定是想办法将表中的用户数据找回，但是目前发生问题的情况与原因都不明晰，
+不能轻举妄动。&lt;/p>
+&lt;p>查看 mysql 日志，在操作出错的时候，日志这样显示：&lt;/p>
+&lt;pre>&lt;code>mysqld: 180926 11:10:53 InnoDB: cannot calculate statistics for table km8/users625
+mysqld: InnoDB: because the .ibd file is missing. For help, please refer to
+mysqld: InnoDB: http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html
+mysqld: 180926 11:10:53 [ERROR] MySQL is trying to open a table handle but the .ibd file for
+mysqld: table km8/users625 does not exist.
+mysqld: Have you deleted the .ibd file from the database directory under
+mysqld: the MySQL datadir, or have you used DISCARD TABLESPACE?
+mysqld: See http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html
+mysqld: how you can resolve the problem.
+&lt;/code>&lt;/pre>&lt;p>其中提到3个可追溯的点：&lt;/p>
+&lt;ul>
+&lt;li>ibd file&lt;/li>
+&lt;li>DISCARD TABLESPACE&lt;/li>
+&lt;li>&lt;a href="http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html">http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>了解这3点提到的内容，应该对判断情况有很好的帮助。&lt;/p>
+&lt;h2 id="ibd-file">ibd file&lt;/h2>
+&lt;p>日志中提问，是否丢失了 ibd 文件？先到 mysql 数据目录下查找，&lt;/p>
+&lt;pre>&lt;code>.
+├── ibdata1
+├── .......
+├── .......
+└── km8
+├── ............
+├── ............
+├── users625.frm
+├── users625.ibd
+├── ............
+└── ............
+&lt;/code>&lt;/pre>&lt;p>users625 的 ibd 文件是存在的，与之一起的还有文件 users625.frm 。&lt;/p>
+&lt;p>根据官方文档&lt;a href="https://dev.mysql.com/doc/internals/en/frm-file-format.html">对 frm 文件的描述&lt;/a>，frm 文件是用来保存 table 表结构（即 table 的定义）的，无论使用什么存储引擎。&lt;/p>
+&lt;p>与之相对的，ibd 文件是用来存储表数据（即行数据）的，通常情况下，所有数据都会存储在系统的 ibd 文件，
+但是当开启选项 &lt;a href="https://dev.mysql.com/doc/refman/5.5/en/innodb-parameters.html#sysvar_innodb_file_per_table">innodb_file_per_table&lt;/a> 的时候，每个表的数据会使用单独的 ibd 文件来存储。&lt;/p>
+&lt;p>当前的 mysql 就开启了这个选项，&lt;/p>
+&lt;pre>&lt;code>[mysqld]
+innodb_file_per_table=1
+&lt;/code>&lt;/pre>&lt;p>目前 frm 与 ibd 文件都存在，从中恢复数据便存在一些希望。&lt;/p>
+&lt;h2 id="discard-tablespace">DISCARD TABLESPACE&lt;/h2>
+&lt;p>日志中提到的 &lt;code>DISCARD TABLESPACE&lt;/code> 其实是在猜测导致 ibd 文件丢失的原因，因为它会删除相应 table 的 ibd 文件（所谓 tablespace）。&lt;/p>
+&lt;pre>&lt;code>&amp;gt; ALTER TABLE km8.users625 DISCARD TABLESPACE;
+&lt;/code>&lt;/pre>&lt;p>底层的 users625.ibd 文件就会被删除，丢失所有表数据。&lt;/p>
+&lt;p>根据目前情况来看， ibd 文件还存在，所以它不是导致错误的原因。&lt;/p>
+&lt;h2 id="trouble-shooting-doc">trouble shooting doc&lt;/h2>
+&lt;p>&lt;a href="http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html">日志中提到的参考链接&lt;/a>，其中列举了多种情况，和当前问题相关的是一个&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-troubleshooting-datadict.html">子链接&lt;/a>，
+按照它提供的方法，尝试进行数据恢复。&lt;/p>
+&lt;h1 id="数据恢复">数据恢复&lt;/h1>
+&lt;p>官方文档提到的&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-troubleshooting-datadict.html">恢复数据&lt;/a>的方法，思路很清晰：&lt;/p>
+&lt;ol>
+&lt;li>启用相同版本的 mysql 实例（启用选项 innodb_file_per_table）&lt;/li>
+&lt;li>建立同样结构的数据表&lt;/li>
+&lt;li>替换 ibd 文件（保持文件权限一致）&lt;/li>
+&lt;li>导入 ibd 文件中的数据&lt;/li>
+&lt;li>使用 mysqldump，导出数据&lt;/li>
+&lt;li>将导出的数据导入原数据库&lt;/li>
+&lt;/ol>
+&lt;p>我按照这种方式尝试恢复数据，并不是那么顺利：&lt;/p>
+&lt;h2 id="如何获得-table-表结构">如何获得 table 表结构？&lt;/h2>
+&lt;p>在第2步，需要建立同样结构的数据表，目前只有 frm 和 ibd 文件，怎么样得到 &lt;code>create table&lt;/code> 命令？&lt;/p>
+&lt;p>根据底层数据存储的理解，table 表结构存储在 frm 文件中，而目前已经有&lt;a href="https://www.cnblogs.com/dreamanddead/p/recover-mysql-table-structure-from-frm-file.html">相应的方法&lt;/a>从中提取出 &lt;code>create table&lt;/code> 命令，
+这样就可以用于在新的 mysql 实例中建立 table 。&lt;/p>
+&lt;h2 id="tablespace-id-不对应">tablespace id 不对应？&lt;/h2>
+&lt;p>在第4步，尝试导入数据的时候，&lt;/p>
+&lt;pre>&lt;code>&amp;gt; ALTER TABLE km8.users625 IMPORT TABLESPACE;
+ERROR 1030 (HY000): Got error -1 from storage engine
+&lt;/code>&lt;/pre>&lt;p>总是出现失败，同时在 mysql 新实例的日志中发现这样的错误：&lt;/p>
+&lt;pre>&lt;code>mysqld: InnoDB: Error: tablespace id in file './km8/users625.ibd' is 18446744073709551615, but in the InnoDB
+mysqld: InnoDB: data dictinary it is 1.
+&lt;/code>&lt;/pre>&lt;p>原来在内部，ibd 文件本身有一个 id，必须和 mysql innodb 内部的 table 元数据相对应，才可以进行导入。&lt;/p>
+&lt;p>根据错误信息搜索到&lt;a href="http://www.chriscalender.com/recovering-an-innodb-table-from-only-an-ibd-file/">一篇文章&lt;/a>，其中提到两种办法：&lt;/p>
+&lt;ol>
+&lt;li>重复建表，因为 mysql 内部的 tablespace id 是累计递增的，预先建立 （18446744073709551615 - 1）张表，再建立
+users625 表，就可以对应 id，并进行导入。&lt;/li>
+&lt;li>修改 ibd 文件，因为 tablespace id 存储于 ibd 文件，找到它并将其修改为 1，使之与内部的 id 对应，就可以进行导入。&lt;/li>
+&lt;/ol>
+&lt;p>考虑第 1 种方法，要预先建立上亿张空表？！这根本不可能。&lt;/p>
+&lt;p>于是尝试第 2 种方法，研究 ibd 的文件格式，修改对应 id。&lt;/p>
+&lt;p>用二进制编辑器打开 users625.ibd 文件，&lt;/p>
+&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-27/5492997.jpg" alt="users625-ibd-hexdump">&lt;/p>
+&lt;pre>&lt;code>18:26:08 UTC - mysqld got signal 6. This could be because you hit a bug. It is also possible that this
+binary or one of the libraries it was linked against is corrupt, improperly built or misconfigured.
+This error can also be cuased by malfunctioning hardware.
+&lt;/code>&lt;/pre>&lt;p>不敢相信自己的眼睛，居然有错误 log 在二进制文件里？！ibd 的文件格式可没有这么说明过。&lt;/p>
+&lt;p>随便找一个邻居表正常的 ibd 文件作对比，&lt;/p>
+&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-27/50479657.jpg" alt="normal-ibd-hexdump">&lt;/p>
+&lt;p>看来是出现了 bug ，崩溃的环境直接将数据文件给毁了，这也解释了为什么 tablespace id 会那么大，因为 log
+覆盖了原本的 id 字段，使 mysql 解读出了一个好笑的数字。&lt;/p>
+&lt;h2 id="暂时放弃">暂时放弃&lt;/h2>
+&lt;p>这种情况下，还没有办法将数据恢复回来，只能暂时将表删除，新建空表，保证上层应用程序可以运行。
+将 ibd 文件备份下来，看后续还没有其它的办法将其恢复。&lt;/p>
+&lt;h1 id="检测所有-table-状态">检测所有 table 状态&lt;/h1>
+&lt;p>当前只发现一个出现问题的 table ，可能同时也有其它的 table 出现问题。对此需要做一个全面的检测，
+检测有没有其它的表受到牵连。&lt;/p>
+&lt;pre>&lt;code>$ mysqlcheck --all-databases
+&lt;/code>&lt;/pre>&lt;h1 id="写在最后">写在最后&lt;/h1>
+&lt;p>数据库的备份是非常重要的！直接导入备份数据，是解决问题最保险最便捷的办法。
+如果没有备份，遇到 bug 丢失数据，只能怪时运不济。&lt;/p>
+&lt;p>同时数据库也最好选择稳定的版本，降低出现 bug 的概率。&lt;/p>- https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Configure apt rightly for debian squeeze</title><link>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</link><pubDate>Wed, 26 Sep 2018 16:50:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ -&lt;p>本想在 Debian Squeeze 上安装一些依赖，没想到刚执行 &lt;code>apt-get update&lt;/code> ，就出现这样的错误信息。&lt;/p>
+&lt;pre>&lt;code>W: GPG error: http://mirrors.163.com squeeze Release: The following signatures were invalid: KEYEXPIRED 1520281423 KEYEXPIRED 1501892461
+E: Release file expired, ignoring http://mirrors.163.com/debian-archive/dists/squeeze-lts/Release (invalid since 923d 19h 26min 3s)
+&lt;/code>&lt;/pre>&lt;h1 id="问题出在哪里">问题出在哪里&lt;/h1>
+&lt;p>Debian Squeeze 6.0 版本对于当前最新的 9.5 版本来说，是过于陈旧了。
+错误信息表示，证书过期，也不是太意外的事。&lt;/p>
+&lt;p>以 &lt;code>The following signatures were invalid&lt;/code> 为关键字进行搜索，大体有两种方案：&lt;/p>
+&lt;h2 id="缓存原因">缓存原因？&lt;/h2>
+&lt;p>搜索到的大多数结果给出这样的解答，&lt;a href="https://www.cnblogs.com/arrongao/archive/2012/12/13/2815614.html">比如这里&lt;/a>&lt;/p>
+&lt;pre>&lt;code>sudo apt-get clean
+cd /var/lib/apt
+sudo mv lists lists.old
+sudo mkdir -p lists/partial
+sudo apt-get clean
+sudo apt-get update
+&lt;/code>&lt;/pre>&lt;p>他们认为原因是 apt 系统出现临时性的缓存故障，所以用 clean 的方式来清除。
+我不知道在当时是否真的有效，毕竟那篇博客写在 2012 年，当时 Debian 6.0 也才发布一年，决不至于密钥出现过期，怀疑到缓存身上也
+情有可原。&lt;/p>
+&lt;p>但是当前我的密钥是真的过期了，invalid since 923d(ays)，我尝试了这种 clean 的方法，并不能生效。看来解决方案也有保持期啊。&lt;/p>
+&lt;h2 id="密钥续期">密钥续期？&lt;/h2>
+&lt;p>另一种方案是续期密钥，&lt;a href="https://askubuntu.com/a/837004">比如这里&lt;/a>&lt;/p>
+&lt;pre>&lt;code>sudo apt-key list | grep &amp;quot;expired: &amp;quot;
+sudo apt-key adv --keyserver keys.gnupg.net --recv-keys [KEY]
+&lt;/code>&lt;/pre>&lt;p>这种方案想为过期的密钥续期，使其可用。
+我先在系统里查看了密钥的情况，确实过期的太久。&lt;/p>
+&lt;pre>&lt;code>$ sudo apt-key list
+/etc/apt/trusted.gpg
+--------------------
+..........................
+..........................
+..........................
+pub 2048R/6D849617 2009-01-24 [expired: 2013-01-23]
+uid Debian-Volatile Archive Automatic Signing Key (5.0/lenny)
+pub 4096R/B98321F9 2010-08-07 [expired: 2014-08-05]
+uid Squeeze Stable Release Key &amp;lt;debian-release@lists.debian.org&amp;gt;
+..........................
+..........................
+..........................
+&lt;/code>&lt;/pre>&lt;p>于是用 &lt;code>apt-key adv&lt;/code> 进行续期，再次查看密钥情况，发现并没有多少改观，
+时间确实前进更新了几个月，但是依旧保持着 expired 状态，毕竟还差很多年。&lt;/p>
+&lt;p>我想可能和第一种方案是一样的问题，“方案过期”。在当时版本还支持的时候，应该是有效果的，但是当前情况已经
+发生了变化，错误信息是一样的，但是问题本身已经出现了本质的变化。&lt;/p>
+&lt;h1 id="当前的正确方案">当前的正确方案&lt;/h1>
+&lt;p>于是继续搜索，在&lt;a href="https://wiki.debian.org/DebianSqueeze">官方文档的FAQ部分&lt;/a>，找到了官方解答。&lt;/p>
+&lt;p>1.修改 source.list&lt;/p>
+&lt;pre>&lt;code>deb http://archive.debian.org/debian squeeze main
+deb http://archive.debian.org/debian squeeze-lts main
+&lt;/code>&lt;/pre>&lt;p>2.同时配置 apt，添加以下内容到 /etc/apt/apt.conf(没有则新建)&lt;/p>
+&lt;pre>&lt;code>Acquire::Check-Valid-Until false;
+&lt;/code>&lt;/pre>&lt;p>其中特别提到了 &lt;code>The second line will fail with an &amp;quot;expired&amp;quot; type message, so you also need to ...&lt;/code>，so sweet！&lt;/p>
+&lt;p>既然 Debian Squeeze 已经不再更新，apt source 也划入了 archive，这个方案应该是最“长治久安”的。&lt;/p>- https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>How uri match nginx location</title><link>https://dreamanddead.github.io/post/nginx-location/</link><pubDate>Mon, 28 May 2018 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/nginx-location/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/nginx-location/ -&lt;p>location 是 nginx 配置中出现最频繁的配置项，一个 uri 是如何与多个 location 进行匹配的？
+在有多个 location 都匹配的情况下，如何决定使用哪一个 location 作为匹配结果？&lt;/p>
+&lt;p>清晰内部机制之后，疑问自然迎刃而解。&lt;/p>
+&lt;h1 id="location-规则类型">location 规则类型&lt;/h1>
+&lt;p>根据&lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location">官方文档&lt;/a>，location 配置语法如下&lt;/p>
+&lt;pre>&lt;code>Syntax: location [ = | ~ | ~* | ^~ ] uri { ... }
+location @name { ... }
+Default: —
+Context: server, location
+&lt;/code>&lt;/pre>&lt;p>其语法对应了 location 规则的 5 种类型：&lt;/p>
+&lt;h2 id="prefix">prefix&lt;/h2>
+&lt;p>前缀匹配规则，如果 uri 包含相应的前缀，则匹配成功。&lt;/p>
+&lt;p>语法上， location 之后单纯跟上 uri，没有任何操作符。&lt;/p>
+&lt;pre>&lt;code>location /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h2 id="exact-uri">exact uri&lt;/h2>
+&lt;p>完全匹配规则，如果 uri 和规则完全相同，则匹配成功。&lt;/p>
+&lt;p>语法上，使用 = 操作符。&lt;/p>
+&lt;pre>&lt;code>location = /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h2 id="case-sensitive-regex">case-sensitive regex&lt;/h2>
+&lt;p>区分大小写的正则表达式匹配规则，如果 uri 与正则表达式相匹配，则匹配成功。
+正则表达式使用 &lt;a href="https://www.pcre.org/">pcre library&lt;/a>，语法和 perl 兼容。&lt;/p>
+&lt;p>语法上，使用 ~ 操作符。&lt;/p>
+&lt;p>这里有一个细节，uri 作为一个 string，只要 regex 匹配其中的一部分，即可算作匹配。
+比如有如下的规则，&lt;/p>
+&lt;pre>&lt;code>location ~ /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;p>可以匹配 uri&lt;/p>
+&lt;ul>
+&lt;li>/api/v1/login&lt;/li>
+&lt;li>/pod/api/v1&lt;/li>
+&lt;/ul>
+&lt;p>如果想要匹配整个 string，则要使用 &lt;code>^ $&lt;/code>。
+比如，&lt;/p>
+&lt;pre>&lt;code>location ~ ^/api/v1.*$ {
+....
+}
+&lt;/code>&lt;/pre>&lt;p>可以匹配 uri&lt;/p>
+&lt;ul>
+&lt;li>/api/v1/login&lt;/li>
+&lt;/ul>
+&lt;p>不可以匹配&lt;/p>
+&lt;ul>
+&lt;li>/pod/api/v1&lt;/li>
+&lt;/ul>
+&lt;h2 id="case-insensitive-regex">case-insensitive regex&lt;/h2>
+&lt;p>规则同上，区别只在于，正则表达式不区分大小写。
+&lt;strong>不&lt;/strong>区分大小写的正则表达式匹配规则，如果 uri 与正则表达式相匹配，则匹配成功。&lt;/p>
+&lt;p>语法上，使用 &lt;code>~*&lt;/code> 操作符。&lt;/p>
+&lt;pre>&lt;code>location ~* /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h2 id="disable-regex-prefix">disable regex prefix&lt;/h2>
+&lt;p>匹配流程与 prefix 规则相同，有一点区别在于，如果最长匹配是当前规则，则之后不进行 正则表达式 规则的搜索。
+这一点可能有些难以理解，后面会详细讲解。&lt;/p>
+&lt;p>语法上，使用 &lt;code>^~&lt;/code> 操作符。&lt;/p>
+&lt;pre>&lt;code>location ^~ /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h1 id="uri-如何选择-location">uri 如何选择 location&lt;/h1>
+&lt;p>前面讲到，location 规则有 5 种类型，那么 uri 如何在多种不同类型的 location 规则之间，
+最终选择到唯一的 location 规则呢？&lt;/p>
+&lt;p>根据&lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location">官方文档&lt;/a>的描述，详细规则如下：&lt;/p>
+&lt;ol>
+&lt;li>如果存在 exact uri 规则与 uri 匹配，至步骤 6&lt;/li>
+&lt;li>在所有 prefix 规则和 disable regex prefix 规则中进行匹配（&lt;strong>与这些规则定义的顺序无关&lt;/strong>），
+如果没有匹配到规则，至步骤 3；如果存在匹配的规则，选择出最长匹配 uri 的规则：
+&lt;ul>
+&lt;li>如果规则是 disable regex prefix 类型，至步骤 6&lt;/li>
+&lt;li>如果规则是 prefix 类型，记住当前匹配的 prefix 规则，选为待定，至步骤 3&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>逐个遍历 case-sensitive regex 规则和 case-insensitive regex 规则（&lt;strong>按照这些规则定义的前后顺序&lt;/strong>）:
+&lt;ul>
+&lt;li>如果规则匹配，则遍历终止，至步骤 6&lt;/li>
+&lt;li>如果规则没有匹配，则继续&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>如果之前有 prefix 规则条目被选择为待定，至步骤 6&lt;/li>
+&lt;li>匹配失败，返回404，结束&lt;/li>
+&lt;li>选择当前规则，使用其配置，结束&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-28/21577003.jpg" alt="">&lt;/p>
+&lt;h1 id="faq">FAQ&lt;/h1>
+&lt;p>有人可能会困惑，如果 prefix 与 disable regex prefix 规则相同，比如，&lt;/p>
+&lt;pre>&lt;code>location /static/ {
+....
+}
+location ^~ /static/ {
+....
+}
+&lt;/code>&lt;/pre>&lt;p>最终会匹配哪一条规则？是否应该继续查找 regex 规则？&lt;/p>
+&lt;p>实际上，这种情况 nginx 会报错，&lt;code>nginx: [emerg] duplicate location &amp;quot;/static/&amp;quot; in /etc/nginx/conf.d/location.conf&lt;/code>，
+所以这种情况是不用考虑的。&lt;/p>
+&lt;h1 id="示例">示例&lt;/h1>
+&lt;p>示例项目在 &lt;a href="https://github.com/DreamAndDead/nginx-example">nginx example&lt;/a>，
+参考 readme 文件，在本地启动 nginx server。&lt;/p>
+&lt;p>其中对 nginx 的配置如下，使用 curl 进行检测。&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/nginx-example/blob/master/location/conf.d/location.conf?footer=minimal&amp;slice=0:34">&lt;/script>
+&lt;p>exact uri 规则先于所有规则（与规则定义的顺序无关），所以这里匹配了 &lt;code>= /&lt;/code> exact uri 规则而不是 &lt;code>/&lt;/code> prefix 规则。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/
+uri &amp;quot;/&amp;quot;: exact match &amp;quot;location = /&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>exact uri 规则先于所有规则（与规则定义的顺序无关），所以这里没有匹配 &lt;code>^~ /static/&lt;/code> disable regex prefix 和 &lt;code>~* \.PNG$&lt;/code>，&lt;code>~ \.png$&lt;/code> regex 规则。&lt;/p>
+&lt;p>正是因为 exact uri 规则的这种属性，如果有高频率使用的 uri，建议使用 exact uri 匹配，加快匹配速度。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/static/logo.png
+uri &amp;quot;/static/logo.png&amp;quot;: exact uri match &amp;quot;location = /static/logo.png&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>prefix 规则中，匹配 uri 长度最长的规则会选中，所以没有选中 &lt;code>/&lt;/code> prefix 规则。同样的，从这一点来看，&lt;code>/api&lt;/code> 和 &lt;code>/api/&lt;/code> 是不一样的。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/api
+uri &amp;quot;/api&amp;quot;: prefix match &amp;quot;location /api&amp;quot;
+$ curl http://localhost:8080/api/
+uri &amp;quot;/api/&amp;quot;: prefix match &amp;quot;location /api/&amp;quot;
+$ curl http://localhost:8080/api/v1
+uri &amp;quot;/api/v1&amp;quot;: prefix match &amp;quot;location /api/&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>如果匹配了 &lt;code>^~ /static/&lt;/code> disable regex prefix 规则，则不再去搜索之后的 regex 规则。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/static/thinkpad.png
+uri &amp;quot;/static/thinkpad.png&amp;quot;: disable regex prefix match &amp;quot;location ^~ /static/&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>在 regex 规则的匹配中，定义的先后顺序是重要的，所以 &lt;code>~ \.png$&lt;/code> case-sensitive 规则永远不会被匹配。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/files/large.png
+uri &amp;quot;/files/large.png&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
+$ curl http://localhost:8080/files/large.PNG
+uri &amp;quot;/files/large.PNG&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>即使先匹配了 &lt;code>/api/&lt;/code> prefix 规则作为待定，但是也匹配了 regex 规则，优先使用 regex 规则。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/api/v1/file/logo.png
+uri &amp;quot;/api/v1/file/logo.png&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>存在 &lt;code>/&lt;/code> prefix 规则是有益的，收容所有未明确定位的 uri，再做错误处理。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/no-where
+uri &amp;quot;/no-where&amp;quot;: prefix match &amp;quot;location /&amp;quot;
+&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/nginx-location/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>记一次 Jmeter 分布式测试故障调试过程</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</link><pubDate>Fri, 25 May 2018 02:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ -&lt;p>之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。&lt;/p>
 &lt;p>至于为什么要这么做，源于这一次 debug 的过程。&lt;/p>
 &lt;h1 id="运行环境">运行环境&lt;/h1>
 &lt;p>mint, ubuntu 两台主机作为 master 节点，一台 win server 作为 slave 节点，采用分布式的方式，
@@ -858,2316 +1229,4 @@ Flags: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 c
 &lt;p>不过目前一直使用外接显示器，这一点也可以接受。&lt;/p>
 &lt;h1 id="电池">电池&lt;/h1>
 &lt;p>使用电脑的时间这么多年，电池的续航能力也变差了。&lt;/p>
-&lt;p>直接在网上搜索对应型号，买原装的可以，简单有效。&lt;/p>- https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Comfortable way when testing HTTPS site</title><link>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</link><pubDate>Wed, 11 Apr 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ -&lt;p>网站初期一直使用http，近期购买了ssl证书，预期将网站全面升级使用https。&lt;/p>
-&lt;p>当部署https后，居然出现了这种问题&amp;hellip;&lt;/p>
-&lt;h1 id="测试https">测试HTTPS&lt;/h1>
-&lt;h2 id="部署环境">部署环境&lt;/h2>
-&lt;p>在线网实施之前，定要先在内部环境进行测试，确保无误。&lt;/p>
-&lt;p>因为内部有其它服务依赖网站http服务，所以要将http与https同时保留，
-于是简单的在nginx配置了https，也保留了http&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">server&lt;/span> {
-&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">80&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">443&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl&lt;/span> &lt;span style="color:#00688b">on&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.crt&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate_key&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.key&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">location&lt;/span> &lt;span style="color:#cd5555">/&lt;/span> {
-&lt;span style="color:#8b008b;font-weight:bold">include&lt;/span> &lt;span style="color:#cd5555">proxy_params&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">proxy_pass&lt;/span> &lt;span style="color:#cd5555">http://10.28.18.6:8000&lt;/span>;
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="主要问题">主要问题&lt;/h2>
-&lt;p>有人可能会想，理论上，只是变更协议而已，不会引发什么问题，而实际中，有多种限制。&lt;/p>
-&lt;p>对于刚迁移到https的网站，最可能出现的问题就是 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content">mixed content&lt;/a>&lt;/p>
-&lt;blockquote>
-&lt;p>mixed content是一种安全策略，本着http协议是不安全的前提，浏览器https环境下限制对http资源的引用。&lt;/p>
-&lt;/blockquote>
-&lt;p>而很多时候，很多静态链接固定写在html中，这样在https环境下加载就会受到限制&lt;/p>
-&lt;p>详细来说，混合内容（mixed content）分为&lt;/p>
-&lt;ul>
-&lt;li>被动混合内容&lt;/li>
-&lt;li>主动混合内容&lt;/li>
-&lt;/ul>
-&lt;p>假如在https环境下，加载http资源，而所有http资源都可能被黑客从中替换，被动混合内容指的就是即使被恶意替换，也不会
-引起过分安全问题的资源，如&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>&amp;lt;img&amp;gt;&lt;/code>&lt;/li>
-&lt;li>&lt;code>&amp;lt;audio&amp;gt;&lt;/code>&lt;/li>
-&lt;li>&lt;code>&amp;lt;video&amp;gt;&lt;/code>&lt;/li>
-&lt;li>etc&lt;/li>
-&lt;/ul>
-&lt;p>主动混合内容就是相对可能会引发危险的一类，如&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>&amp;lt;script&amp;gt;&lt;/code>&lt;/li>
-&lt;li>&lt;code>&amp;lt;link&amp;gt;&lt;/code>&lt;/li>
-&lt;li>&lt;code>&amp;lt;iframe&amp;gt;&lt;/code>&lt;/li>
-&lt;li>XMLHttpRequest&lt;/li>
-&lt;li>fetch()&lt;/li>
-&lt;li>etc&lt;/li>
-&lt;/ul>
-&lt;p>详细可参考 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content">MDN&lt;/a>&lt;/p>
-&lt;p>对于被动混合内容，浏览器会报warning，但不会阻止加载；
-而主动混合内容，浏览器则直接阻止加载。&lt;/p>
-&lt;p>于是，对于一个新迁移https的网站，就有可能出现网站脚本加载不正常，ajax请求没有返回值之类的问题。&lt;/p>
-&lt;h2 id="strict-mixed-content">strict mixed-content&lt;/h2>
-&lt;p>对于网站的测试，自然是用更严格的要求，正是取乎其上，得乎其中。&lt;/p>
-&lt;p>借助&lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">Content-Security-Policy&lt;/a>其中的&lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy__by_cnvoid/block-all-mixed-content">block-all-mixed-content&lt;/a>规则，禁止所有混合内容的加载。
-可以在nginx中，添加response header来实践&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">server&lt;/span> {
-&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">80&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">443&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl&lt;/span> &lt;span style="color:#00688b">on&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.crt&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate_key&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.key&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">location&lt;/span> &lt;span style="color:#cd5555">/&lt;/span> {
-&lt;span style="color:#8b008b;font-weight:bold">include&lt;/span> &lt;span style="color:#cd5555">proxy_params&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">proxy_pass&lt;/span> &lt;span style="color:#cd5555">http://10.28.18.6:8000&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">add_header&lt;/span> &lt;span style="color:#cd5555">Content-Security-Policy&lt;/span> &lt;span style="color:#cd5555">block-all-mixed-content&lt;/span>;
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="auto-secure-urls">auto secure urls&lt;/h2>
-&lt;p>测试难免会出现有遗漏的情况，如果mixed content的问题被发布到线网，可不是一件开心的事情。&lt;/p>
-&lt;p>好在&lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">Content-Security-Policy&lt;/a> 还提供了 &lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy/upgrade-insecure-requests">upgrade-insecure-requests&lt;/a> 选项，
-告知浏览器自动将不安全的http url替换为https来访问。&lt;/p>
-&lt;p>对于庞大的网站，可以不用重改代码，非常方便。
-对于我们，可以将其作为线网的配置，为网站的正常使用加保险。
-可以在nginx中配置&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">add_header&lt;/span> &lt;span style="color:#cd5555">Content-Security-Policy&lt;/span> &lt;span style="color:#cd5555">upgrade-insecure-requests&lt;/span>;
-&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="hsts">HSTS&lt;/h1>
-&lt;h2 id="http-failed">http failed&lt;/h2>
-&lt;p>目前网站同时开启http与https，
-本以为两协议不同，单独访问并不相关，
-但是在测试时，加载ajax，出现问题&lt;code>Response for preflight is invalid (redirect)&lt;/code>&lt;/p>
-&lt;figure>
-&lt;img src="images/response-for-preflight.png"/>
-&lt;/figure>
-&lt;p>再观察数据包情况&lt;/p>
-&lt;figure>
-&lt;img src="images/307-internal-redirect.png"/>
-&lt;/figure>
-&lt;p>http请求自动重定向为https请求，wired。&lt;/p>
-&lt;p>响应头中有提到，想必它就是导致问题的原因。&lt;/p>
-&lt;pre>&lt;code>Non-Authoritative-Reason: HSTS
-&lt;/code>&lt;/pre>&lt;h2 id="whats-hsts">what&amp;rsquo;s HSTS&lt;/h2>
-&lt;p>全名HTTP Strict Transport Security，是一种技术，目的是为了用户访问网站的安全。&lt;/p>
-&lt;p>网站即使部署https，旧有http入口也应当保留，将其合理的引导到更安全的https网站中，
-一般情况下使用301重定向。&lt;/p>
-&lt;p>严格来讲，这是不够安全的，因为到达https需要一次http的引导，而这唯一一次http访问，可能被黑客利用。
-这也就是HSTS所解决的问题，服务器设置头Strict-Transport-Security，告知浏览器，只使用https来请求网站，省去了用来引导重定向的http请求，
-使访问更加安全。&lt;/p>
-&lt;p>以weibo示例&lt;/p>
-&lt;ul>
-&lt;li>网站开启https，同时保持旧有http服务入口&lt;/li>
-&lt;li>使用301永久重定向，引导至https&lt;/li>
-&lt;li>第一次的引导，是不可避免的，如果没有HSTS，每一次到达https，都会使用http进行重定向，增加安全风险&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ curl -v http://weibo.com
-&amp;gt; GET / HTTP/1.1
-&amp;gt; Host: weibo.com
-&amp;gt; User-Agent: curl/7.47.0
-&amp;gt; Accept: */*
-&amp;gt;
-&amp;lt; HTTP/1.1 301 Moved Permanently
-&amp;lt; Server: WeiBo
-&amp;lt; Date: Wed, 11 Apr 2018 00:22:41 GMT
-&amp;lt; Content-Type: text/html
-&amp;lt; Content-Length: 276
-&amp;lt; Connection: keep-alive
-&amp;lt; Location: https://weibo.com/
-&amp;lt; LB_HEADER: venus50
-&amp;lt;
-&amp;lt;!DOCTYPE HTML PUBLIC &amp;quot;-//IETF//DTD HTML 2.0//EN&amp;quot;&amp;gt;
-&amp;lt;html&amp;gt;
-&amp;lt;head&amp;gt;&amp;lt;title&amp;gt;301 Moved Permanently&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt;
-&amp;lt;body bgcolor=&amp;quot;white&amp;quot;&amp;gt;
-&amp;lt;h1&amp;gt;301 Moved Permanently&amp;lt;/h1&amp;gt;
-&amp;lt;p&amp;gt;The requested resource has been assigned a new permanent URI.&amp;lt;/p&amp;gt;
-&amp;lt;hr/&amp;gt;Powered by WeiBo&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code>&lt;/pre>&lt;p>一旦用户访问了https，HSTS就会发挥作用，设置 Strict-Transport-Security，浏览器缓存HSTS策略，直到过期。
-之后所有http的访问，都会由浏览器主动修改为https，避免了重定向这一步&lt;/p>
-&lt;pre>&lt;code>$ curl -I https://weibo.com
-&amp;gt; GET / HTTP/1.1
-&amp;gt; Host: weibo.com
-&amp;gt; User-Agent: curl/7.47.0
-&amp;gt; Accept: */*
-&amp;gt;
-&amp;lt; HTTP/1.1 302 Moved Temporarily
-&amp;lt; Server: WeiBo/LB
-&amp;lt; Date: Wed, 11 Apr 2018 00:21:38 GMT
-&amp;lt; Content-Type: text/html
-&amp;lt; Transfer-Encoding: chunked
-&amp;lt; Connection: keep-alive
-&amp;lt; Expires: Mon, 26 Jul 1997 05:00:00 GMT
-&amp;lt; Last-Modified: Wed, 11 Apr 2018 00:21:38 GMT
-&amp;lt; Pramga: no-cache
-&amp;lt; Content-Security-Policy: block-all-mixed-content;
-&amp;lt; Cache-Control: no-cache, no-store
-&amp;lt; Location: https://passport.weibo.com/visitor/visitor?entry=miniblog&amp;amp;a=enter&amp;amp;url=https%3A%2F%2Fweibo.com%2F&amp;amp;domain=.weibo.com&amp;amp;ua=php-sso_sdk_client-0.6.23&amp;amp;_rand=1523406098.2996
-&amp;lt; DPOOL_HEADER: dagda26
-&amp;lt; Set-Cookie: YF-Ugrow-G0=57484c7c1ded49566c905773d5d00f82;Path=/
-&amp;lt; LB_HEADER: venus242
-&amp;lt; Strict-Transport-Security: max-age=31536000; preload
-&lt;/code>&lt;/pre>&lt;h2 id="hsts-works">HSTS works&lt;/h2>
-&lt;p>测试时，访问https是这样的&lt;/p>
-&lt;figure>
-&lt;img src="images/upgrade-insecure-requests.png"/>
-&lt;/figure>
-&lt;p>看到来自服务器设置的HSTS&lt;/p>
-&lt;pre>&lt;code>Strict-Transport-Security: max-age=31536000
-&lt;/code>&lt;/pre>&lt;p>浏览器在某个地方保存了这个策略，只需要删除它，就可以临时解决我们的问题。&lt;/p>
-&lt;p>删除之前，仔细观察数据包，在request头部，有一个之前没出现过的字段&lt;/p>
-&lt;pre>&lt;code>Upgrade-Insecure-Requests: 1
-&lt;/code>&lt;/pre>&lt;p>这个字段和mixed content中的upgrade-insecure-requests很像，但是没有绝对关系。&lt;/p>
-&lt;p>作为request的字段，
-浏览器用来告知服务器，自己倾向于使用更安全的方式来使用服务，
-于是在https环境下，服务器设置Strict-Transport-Security。
-具体见&lt;a href="https://stackoverflow.com/questions/31950470/what-is-the-upgrade-insecure-requests-http-header?utm_medium=organic&amp;amp;utm_source=google_rich_qa&amp;amp;utm_campaign=google_rich_qa">stackoverflow&lt;/a>&lt;/p>
-&lt;h2 id="clear-hsts-cache">clear HSTS cache&lt;/h2>
-&lt;p>HSTS有时间周期，在时间内浏览器会应用安全规则。
-浏览器可以清理cookie，自然也可以清理HSTS cache&lt;/p>
-&lt;p>就chrome来说&lt;/p>
-&lt;ol>
-&lt;li>访问链接 &lt;a href="chrome://net-internals/#hsts">chrome://net-internals/#hsts&lt;/a>&lt;/li>
-&lt;li>在&lt;code>Query HSTS/PKP domain&lt;/code>设置里，输入域名进行搜索&lt;/li>
-&lt;li>在&lt;code>Delete domain security policies&lt;/code>设置里，输入域名进行删除&lt;/li>
-&lt;li>再次搜索域名，验证HSTS cache是否已经被删除&lt;/li>
-&lt;/ol>
-&lt;p>firefox删除方法参考&lt;a href="https://www.thesslstore.com/blog/clear-hsts-settings-chrome-firefox/">这里&lt;/a>&lt;/p>
-&lt;h1 id="end">End&lt;/h1>
-&lt;p>清理cache可以临时解决http不可使用的问题，如果每次都需要清理，过于笨拙，不如直接在nginx层面将HSTS删除（&lt;strong>只在内部测试环境！&lt;/strong>）&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">server&lt;/span> {
-&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">80&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">443&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl&lt;/span> &lt;span style="color:#00688b">on&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.crt&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate_key&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.key&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">location&lt;/span> &lt;span style="color:#cd5555">/&lt;/span> {
-&lt;span style="color:#8b008b;font-weight:bold">include&lt;/span> &lt;span style="color:#cd5555">proxy_params&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">proxy_pass&lt;/span> &lt;span style="color:#cd5555">http://10.28.18.6:8000&lt;/span>;
-&lt;span style="color:#228b22"># strict mixed content rule in test environment
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">add_header&lt;/span> &lt;span style="color:#cd5555">Content-Security-Policy&lt;/span> &lt;span style="color:#cd5555">block-all-mixed-content&lt;/span>;
-&lt;span style="color:#228b22"># no HSTS in test environment
-&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">proxy_hide_header&lt;/span> &lt;span style="color:#cd5555">Strict-Transport-Security&lt;/span>;
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里的配置，对于 ssl 的支持有一些瑕疵，在&lt;a href="https://dreamanddead.github.io/2018/05/17/serve-http-https-same-time.html">这篇文章&lt;/a>里，做了相关修正。
-Remember to check it :)&lt;/p>- https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Play curl with http</title><link>https://dreamanddead.github.io/post/play-curl-with-http/</link><pubDate>Mon, 09 Apr 2018 10:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/play-curl-with-http/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/play-curl-with-http/ -&lt;p>curl是一款强大的网络传输工具，支持多种协议，在HTTP的支持方面尤其为人称道。
-对curl的使用越深入，对HTTP也会有更深的理解。&lt;/p>
-&lt;h1 id="a-little-http">a little http&lt;/h1>
-&lt;p>http是应用层协议，其设计非常简单，灵活。请求与响应是HTTP概念的核心，从本质上讲，
-请求与响应也极其简单。更多可参考&lt;a href="http://liuwangshu.cn/application/network/1-http.html">HTTP协议原理&lt;/a>&lt;/p>
-&lt;h2 id="请求报文">请求报文&lt;/h2>
-&lt;p>通常，一个HTTP请求报文由请求行、请求报头、空行、和请求数据4个部分组成。&lt;/p>
-&lt;figure>
-&lt;img src="images/http-request-format.png"
-alt="http request format"/> &lt;figcaption>
-&lt;p>http request format&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;ul>
-&lt;li>请求行
-&lt;ul>
-&lt;li>Method：请求方法，如GET，POST&lt;/li>
-&lt;li>URI：请求地址&lt;/li>
-&lt;li>HTTP Version：协议版本&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>请求报头
-&lt;ul>
-&lt;li>key/value组成的键值对，非常有拓展性&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>请求数据
-&lt;ul>
-&lt;li>client向server传输的数据&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="响应报文">响应报文&lt;/h2>
-&lt;p>HTTP的响应报文由状态行、消息报头、空行、响应正文组成。
-响应正文是服务器返回的资源的内容。&lt;/p>
-&lt;figure>
-&lt;img src="images/http-response-format.png"
-alt="http response format"/> &lt;figcaption>
-&lt;p>http response format&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;ul>
-&lt;li>状态行
-&lt;ul>
-&lt;li>HTTP Version：协议版本&lt;/li>
-&lt;li>Status Code： 状态码，常见的如200，404&lt;/li>
-&lt;li>Reason Phrase：状态码的描述，如200对应OK&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>消息报头
-&lt;ul>
-&lt;li>key/value组成的键值对&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>响应正文
-&lt;ul>
-&lt;li>server返回client的数据&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="简单示例">简单示例&lt;/h2>
-&lt;p>访问baidu，观察HTTP协议请求与响应&lt;/p>
-&lt;pre>&lt;code>$ curl -v http://baidu.com
-&amp;gt; GET / HTTP/1.1
-&amp;gt; Host: baidu.com
-&amp;gt; User-Agent: curl/7.47.0
-&amp;gt; Accept: */*
-&amp;gt;
-&amp;lt; HTTP/1.1 200 OK
-&amp;lt; Date: Sun, 08 Apr 2018 06:01:23 GMT
-&amp;lt; Server: Apache
-&amp;lt; Last-Modified: Tue, 12 Jan 2010 13:48:00 GMT
-&amp;lt; ETag: &amp;quot;51-47cf7e6ee8400&amp;quot;
-&amp;lt; Accept-Ranges: bytes
-&amp;lt; Content-Length: 81
-&amp;lt; Cache-Control: max-age=86400
-&amp;lt; Expires: Mon, 09 Apr 2018 06:01:23 GMT
-&amp;lt; Connection: Keep-Alive
-&amp;lt; Content-Type: text/html
-&amp;lt;
-&amp;lt;html&amp;gt;
-&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code>&lt;/pre>&lt;p>分析请求&lt;/p>
-&lt;ul>
-&lt;li>使用GET Method，请求/ URI，协议版本HTTP/1.1&lt;/li>
-&lt;li>请求报头，键值数据&lt;/li>
-&lt;li>空行&lt;/li>
-&lt;li>没有请求数据&lt;/li>
-&lt;/ul>
-&lt;p>分析响应&lt;/p>
-&lt;ul>
-&lt;li>协议版本HTTP/1.1，状态码200，状态OK&lt;/li>
-&lt;li>消息报头，键值数据&lt;/li>
-&lt;li>空行&lt;/li>
-&lt;li>响应正文：文本数据，以text/html的格式来解析&lt;/li>
-&lt;/ul>
-&lt;p>简单易懂&lt;/p>
-&lt;h1 id="play-curl">play curl&lt;/h1>
-&lt;h2 id="fetch-data">fetch data&lt;/h2>
-&lt;p>curl最基础的功能，获取url资源，打印到stdout。&lt;/p>
-&lt;p>这里所输出的内容，只是HTTP响应正文的数据，也通常是我们最关心的&lt;/p>
-&lt;pre>&lt;code>$ curl http://baidu.com
-&amp;lt;html&amp;gt;
-&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code>&lt;/pre>&lt;p>url内容，可存储于文件（即下载）&lt;/p>
-&lt;p>可以使用重定向的方式&lt;/p>
-&lt;pre>&lt;code>$ curl http://www.baidu.com &amp;gt; baidu.index.html
-&lt;/code>&lt;/pre>&lt;p>或者使用-o选项&lt;/p>
-&lt;pre>&lt;code>$ curl -o manual.html http://www.gnu.org/software/gettext/manual/gettext.html
-&lt;/code>&lt;/pre>&lt;p>有时url只返回重定向，真正的内容在重定向的链接中&lt;/p>
-&lt;p>&lt;em>&lt;code>-L, --location&lt;/code>，跟随重定向，获取重定向url的内容&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl -L http://httpbin.org/redirect-to?url=http://baidu.com
-&amp;lt;html&amp;gt;
-&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code>&lt;/pre>&lt;p>有两种重定向方式是浏览器支持而curl不支持的&lt;/p>
-&lt;ul>
-&lt;li>html包含meta refresh标签，如&lt;code>&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;&lt;/code>&lt;/li>
-&lt;li>js代码实现重定向&lt;/li>
-&lt;/ul>
-&lt;p>上面输出的都是响应正文，curl也可以输出响应头信息&lt;/p>
-&lt;p>&lt;em>&lt;code>-i, --include&lt;/code>, 将响应头与响应正文一并输出&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl -i http://www.example.com
-HTTP/1.1 200 OK
-Cache-Control: max-age=604800
-Content-Type: text/html
-Date: Sun, 08 Apr 2018 08:00:09 GMT
-Etag: &amp;quot;1541025663+ident&amp;quot;
-Expires: Sun, 15 Apr 2018 08:00:09 GMT
-Last-Modified: Fri, 09 Aug 2013 23:54:35 GMT
-Server: ECS (sjc/4F91)
-Vary: Accept-Encoding
-X-Cache: HIT
-Content-Length: 1270
-&amp;lt;!doctype html&amp;gt;
-&amp;lt;html&amp;gt;
-&amp;lt;head&amp;gt;
-&amp;lt;title&amp;gt;Example Domain&amp;lt;/title&amp;gt;
-&amp;lt;meta charset=&amp;quot;utf-8&amp;quot; /&amp;gt;
-&amp;lt;meta http-equiv=&amp;quot;Content-type&amp;quot; content=&amp;quot;text/html; charset=utf-8&amp;quot; /&amp;gt;
-&amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1&amp;quot; /&amp;gt;
-.................................
-.................................
-.................................
-.................................
-.................................
-&lt;/code>&lt;/pre>&lt;p>使用HEAD Method，只请求响应头。
-虽然同样输出了响应头，但是同&lt;code>-i&lt;/code>的本质不同。&lt;/p>
-&lt;p>&lt;em>&lt;code>-I, --head&lt;/code>, 用HEAD Method进行请求并输出&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl -I http://www.example.com
-HTTP/1.1 200 OK
-Content-Encoding: gzip
-Accept-Ranges: bytes
-Cache-Control: max-age=604800
-Content-Type: text/html
-Date: Sun, 08 Apr 2018 07:59:29 GMT
-Etag: &amp;quot;1541025663&amp;quot;
-Expires: Sun, 15 Apr 2018 07:59:29 GMT
-Last-Modified: Fri, 09 Aug 2013 23:54:35 GMT
-Server: ECS (sjc/4E44)
-X-Cache: HIT
-Content-Length: 606
-&lt;/code>&lt;/pre>&lt;p>curl还可以提取其它有意思的信息。&lt;/p>
-&lt;p>&lt;em>&lt;code>-w, --write-out &amp;lt;format&amp;gt;&lt;/code>，在一次传输之后，输出其它的信息至stdout。format 可包含\n，\t，变量用%{var_name}标识&lt;/em>&lt;/p>
-&lt;p>比如，提取响应头的content type&lt;/p>
-&lt;pre>&lt;code>$ curl -o $(mktemp) -s -w 'content type is %{content_type}\n' www.baidu.com
-content type is text/html
-&lt;/code>&lt;/pre>&lt;p>常用的变量列表&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>var name&lt;/th>
-&lt;th>description&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>content_type&lt;/td>
-&lt;td>响应头中的Content-Type&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>http_code&lt;/td>
-&lt;td>响应状态码&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>redirect_url&lt;/td>
-&lt;td>没有-L选项时，输出实际重定向的地址&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>url_effective&lt;/td>
-&lt;td>当使用-L选项，最终重定向所访问的地址&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>local_ip&lt;/td>
-&lt;td>client ip，此次请求中的客户端IP（IP层）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>local_port&lt;/td>
-&lt;td>client port，此次请求中的客户端端口（tcp层）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>remote_ip&lt;/td>
-&lt;td>server ip，服务器端IP（IP层）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>remote_port&lt;/td>
-&lt;td>server port，服务器端端口（tcp层）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>size_download&lt;/td>
-&lt;td>响应正文的总字节数&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>size_upload&lt;/td>
-&lt;td>请求正文的总字节数&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>size_header&lt;/td>
-&lt;td>响应头的总字节数&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>size_request&lt;/td>
-&lt;td>请求头的总字节数&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>time_total&lt;/td>
-&lt;td>传输耗费的总时间&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>speed_download&lt;/td>
-&lt;td>数据传输的下行速度&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>speed_upload&lt;/td>
-&lt;td>上行速度&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h2 id="progress-bar">progress bar&lt;/h2>
-&lt;p>如果curl没有将url内容输出到stdout（比如另存为文件），就会输出progress信息到stderr&lt;/p>
-&lt;p>默认样式如下&lt;/p>
-&lt;pre>&lt;code>$ curl -o index.html http://baidu.com
-% Total % Received % Xferd Average Speed Time Time Time Current
-Dload Upload Total Spent Left Speed
-100 81 100 81 0 0 17 0 0:00:04 0:00:04 --:--:-- 17
-&lt;/code>&lt;/pre>&lt;p>可以用&lt;code>-&lt;/code> &lt;code>#&lt;/code>组成的progress bar来代替默认样式&lt;/p>
-&lt;pre>&lt;code>$ curl -o index.html -# http://baidu.com
-######################################################################## 100.0%
-&lt;/code>&lt;/pre>&lt;p>不显示任何progress信息&lt;/p>
-&lt;p>&lt;em>&lt;code>-s, --silent&lt;/code>, silent mode&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl -o index.html -s http://baidu.com
-&lt;/code>&lt;/pre>&lt;h2 id="debug">debug&lt;/h2>
-&lt;h3 id="which-interface">which interface&lt;/h3>
-&lt;p>多网卡情况下，指定特定网卡进行传输&lt;/p>
-&lt;pre>&lt;code>$ curl --interface eth0 http://www.example.com
-&lt;/code>&lt;/pre>&lt;h3 id="limit-band-width">limit band width&lt;/h3>
-&lt;p>手动限制网络传输速度，借此观察传输情况&lt;/p>
-&lt;pre>&lt;code>$ curl --limit-rate 1000B http://www.gnu.org/software/gettext/manual/gettext.html
-&lt;/code>&lt;/pre>&lt;h3 id="proxy">proxy&lt;/h3>
-&lt;p>使用代理&lt;/p>
-&lt;p>&lt;code>-x, --proxy &amp;lt;[protocol://][user:password@]proxyhost[:port]&amp;gt;&lt;/code>&lt;/p>
-&lt;pre>&lt;code>$ curl -x socks5://10.27.2.200:2024 http://google.com
-&lt;/code>&lt;/pre>&lt;h3 id="dns">dns&lt;/h3>
-&lt;p>自定义域名dns解析的ip地址&lt;/p>
-&lt;p>&lt;code>--resolve host:port:address&lt;/code>&lt;/p>
-&lt;p>当curl访问host:port，host就解析为address，最终访问的地址是address:port。
-如果访问的host:port其中一个不对应，则host就不会解析为address&lt;/p>
-&lt;pre>&lt;code>$ curl --resolve www.example.com:5000:127.0.0.1 http://www.example.com:5000
-# 最终访问的地址是127.0.0.1:5000
-&lt;/code>&lt;/pre>&lt;p>使用其它dns服务器&lt;/p>
-&lt;pre>&lt;code>$ curl --dns-servers 8.8.8.8,1.1.1.1 http://www.example.com
-&lt;/code>&lt;/pre>&lt;h3 id="verbose">verbose&lt;/h3>
-&lt;p>verbose option， 输出HTTP请求与响应交互的所有内容&lt;/p>
-&lt;pre>&lt;code>$ curl -v http://www.baidu.com
-* Rebuilt URL to: http://www.baidu.com/
-* Trying 14.215.177.39...
-* Connected to www.baidu.com (14.215.177.39) port 80 (#0)
-&amp;gt; GET / HTTP/1.1
-&amp;gt; Host: www.baidu.com
-&amp;gt; User-Agent: curl/7.47.0
-&amp;gt; Accept: */*
-&amp;gt;
-&amp;lt; HTTP/1.1 200 OK
-&amp;lt; Server: bfe/1.0.8.18
-&amp;lt; Date: Thu, 29 Mar 2018 08:54:41 GMT
-&amp;lt; Content-Type: text/html
-&amp;lt; Content-Length: 2381
-......
-......
-&lt;/code>&lt;/pre>&lt;h3 id="trace">trace&lt;/h3>
-&lt;p>trace option, 更加详细地输出HTTP交互的所有内容&lt;/p>
-&lt;p>&lt;em>&lt;code>--trace &amp;lt;file&amp;gt;&lt;/code>，dump所有交互数据&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --trace - http://www.example.com
-== Info: Rebuilt URL to: http://www.baidu.com/
-== Info: Trying 14.215.177.38...
-== Info: Connected to www.baidu.com (14.215.177.38) port 80 (#0)
-=&amp;gt; Send header, 77 bytes (0x4d)
-0000: 47 45 54 20 2f 20 48 54 54 50 2f 31 2e 31 0d 0a GET / HTTP/1.1..
-0010: 48 6f 73 74 3a 20 77 77 77 2e 62 61 69 64 75 2e Host: www.baidu.
-.........................
-.........................
-&lt;/code>&lt;/pre>&lt;p>&lt;em>&lt;code>--trace-ascii &amp;lt;file&amp;gt;&lt;/code>，不显示hex部分&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --trace-ascii - http://www.example.com
-== Info: Rebuilt URL to: http://www.example.com/
-== Info: Trying 93.184.216.34...
-== Info: Connected to www.example.com (93.184.216.34) port 80 (#0)
-=&amp;gt; Send header, 79 bytes (0x4f)
-0000: GET / HTTP/1.1
-0010: Host: www.example.com
-0027: User-Agent: curl/7.47.0
-.........................
-.........................
-&lt;/code>&lt;/pre>&lt;p>&lt;em>&lt;code>--trace-time&lt;/code>，同&lt;code>-v/--trace&lt;/code>一起使用，打印出每一行trace的时间戳&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl -v --trace-time http://www.example.com
-15:44:37.251685 * Rebuilt URL to: http://www.example.com/
-15:44:37.524262 * Connected to www.example.com (93.184.216.34) port 80 (#0)
-15:44:37.524415 &amp;gt; GET / HTTP/1.1
-15:44:37.524415 &amp;gt; Host: www.example.com
-................
-................
-&lt;/code>&lt;/pre>&lt;h2 id="custom-headers">custom headers&lt;/h2>
-&lt;h3 id="referer">referer&lt;/h3>
-&lt;p>referer代表的意思是，当前请求是从哪一个页面链接过来。
-一些网站用此来判断来自外部网站的链接，进行防盗链的保护&lt;/p>
-&lt;p>&lt;em>&lt;code>-e, --referer&lt;/code>，修改请求头referer字段&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --referer http://www.I.come http://httpbin.org/get
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;Referer&amp;quot;: &amp;quot;http://www.I.come&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="user-agent">user agent&lt;/h3>
-&lt;p>user agent在HTTP头部中，标识浏览器类型，修改此header可以隐藏真实浏览器的类型&lt;/p>
-&lt;p>&lt;em>&lt;code>--user-agent&lt;/code>，修改user-agent头部&lt;/em>&lt;/p>
-&lt;p>将curl扮演为Internet Explorer 5&lt;/p>
-&lt;pre>&lt;code>$ curl --user-agent &amp;quot;Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)&amp;quot; http://httpbin.org/get
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="cookie">cookie&lt;/h3>
-&lt;p>自定义要传输的cookie&lt;/p>
-&lt;p>&lt;em>&lt;code>--cookie [&amp;lt;file&amp;gt;]&lt;/code>，设置传输cookie&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --cookie &amp;quot;name=Daniel&amp;quot; http://httpbin.org/get
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Cookie&amp;quot;: &amp;quot;name=Daniel&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>一般自定义cookie的情况是很少的，通常由服务器设置cookie，浏览器每次连接都带上所设置的cookie，用于标识session&lt;/p>
-&lt;p>&lt;em>&lt;code>--cookie-jar &amp;lt;file&amp;gt;&lt;/code>，存储cookie至文件&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --cookie-jar cookies.txt http://httpbin.org/cookies/set?from=httpbin
-$ cat cookies.txt
-# Netscape HTTP Cookie File
-# http://curl.haxx.se/docs/http-cookies.html
-# This file was generated by libcurl! Edit at your own risk.
-httpbin.org FALSE / FALSE 0 from httpbin
-$ curl --cookie cookies.txt http://httpbin.org/get
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Cookie&amp;quot;: &amp;quot;from=httpbin&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="all-in-one">all in one&lt;/h3>
-&lt;p>可以设置所有header，包括上面提到的几种，是万能的方法。&lt;/p>
-&lt;p>&lt;em>&lt;code>-H, --header&lt;/code>，设置HTTP请求头信息，可同时设置多个&lt;/em>&lt;/p>
-&lt;p>自定义数据类型为json&lt;/p>
-&lt;pre>&lt;code>$ curl -H &amp;quot;Content-type: application/json&amp;quot; -H &amp;quot;Accept: application/json&amp;quot; --data '{&amp;quot;user&amp;quot;: &amp;quot;who&amp;quot;}' http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;{\&amp;quot;user\&amp;quot;: \&amp;quot;who\&amp;quot;}&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;application/json&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;15&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/json&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: {
-&amp;quot;user&amp;quot;: &amp;quot;who&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h2 id="restful-api">RESTful api&lt;/h2>
-&lt;p>通常RESTful api使用POST，DELETE，GET，PUT Method代表增删查改，四种对资源的操作。&lt;/p>
-&lt;p>每种操作都可以携带参数，
-参数可以通过两种方式传递&lt;/p>
-&lt;ul>
-&lt;li>query： 一般在URI之后，以key=value的形式组织，多个用&amp;amp;相连接&lt;/li>
-&lt;li>body： HTTP请求报文的数据部分，参数可组织为任何形式，服务器通过Content-Type来解读参数&lt;/li>
-&lt;/ul>
-&lt;p>通常情况下&lt;/p>
-&lt;ul>
-&lt;li>四种Method都可以使用query传递参数&lt;/li>
-&lt;li>POST，PUT，DELETE可以使用body传递参数，GET不使用body&lt;/li>
-&lt;li>query，body两种方式可以同时使用&lt;/li>
-&lt;/ul>
-&lt;h3 id="post">POST&lt;/h3>
-&lt;h4 id="post-with-body">post with body&lt;/h4>
-&lt;p>&lt;em>&lt;code>-d, --data&lt;/code>, 默认使用POST Method，Content-type=application/x-www-form-urlencoded，进行HTTP请求&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --data 'tool=curl' --data 'os=linux' http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
-&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;18&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;183.240.202.4&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>&lt;code>--data&lt;/code>不会对数据进行url encode，如果传递的参数为&lt;code>tool=curl and linux&lt;/code>，其中的空格就需要url encode为%20，
-再进行请求。
-好在curl提供了&lt;code>--data-urlencode&lt;/code>选项来帮助我们做这件事&lt;/p>
-&lt;p>&lt;em>&lt;code>--data-urlencode&lt;/code>，与&lt;code>--data&lt;/code>功能相似，对value进行url encode，再进行传输。
-当Content-Type=application/x-www-form-urlencoded，推荐使用此选项&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --data-urlencode 'tool=curl and linux' http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;23&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;183.240.202.4&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h4 id="different-content-type">different content type&lt;/h4>
-&lt;p>Content-Type的意义在于&lt;/p>
-&lt;ul>
-&lt;li>对于client，form数据用哪一种方式存储到请求body中&lt;/li>
-&lt;li>对于server，取到请求body的时候，如何解读其中的数据&lt;/li>
-&lt;/ul>
-&lt;p>当Content-Type=application/x-www-form-urlencoded，所有key/value数据组织为类似url query的形式&lt;/p>
-&lt;ul>
-&lt;li>以key=value存储，并进行url encode&lt;/li>
-&lt;li>多个key=value用&amp;amp;来连接&lt;/li>
-&lt;/ul>
-&lt;p>如果用来传输二进制文件，对所有非alphanumeric字符进行url encode编码，单字节需要用三个字节来存储，效率非常低。
-于是标准提出了新的Content-Type，multipart/form-data，来解决这个问题。更多可参考&lt;a href="https://stackoverflow.com/questions/4007969/application-x-www-form-urlencoded-or-multipart-form-data">form-urlencode-or-form-data&lt;/a>&lt;/p>
-&lt;p>具体两种方式的存储方式有什么区别，我们用&lt;code>--trace&lt;/code>来看清楚&lt;/p>
-&lt;p>application/x-www-form-urlencoded，参数以类似query的形式，存储在body中，POST到服务器&lt;/p>
-&lt;pre>&lt;code>$ curl --trace - --data 'tool=curl' --data 'os=linux' http://httpbin.org/post
-................
-................
-=&amp;gt; Send header, 149 bytes (0x95)
-0000: 50 4f 53 54 20 2f 70 6f 73 74 20 48 54 54 50 2f POST /post HTTP/
-0010: 31 2e 31 0d 0a 48 6f 73 74 3a 20 68 74 74 70 62 1.1..Host: httpb
-0020: 69 6e 2e 6f 72 67 0d 0a 55 73 65 72 2d 41 67 65 in.org..User-Age
-0030: 6e 74 3a 20 63 75 72 6c 2f 37 2e 34 37 2e 30 0d nt: curl/7.47.0.
-0040: 0a 41 63 63 65 70 74 3a 20 2a 2f 2a 0d 0a 43 6f .Accept: */*..Co
-0050: 6e 74 65 6e 74 2d 4c 65 6e 67 74 68 3a 20 31 38 ntent-Length: 18
-0060: 0d 0a 43 6f 6e 74 65 6e 74 2d 54 79 70 65 3a 20 ..Content-Type:
-0070: 61 70 70 6c 69 63 61 74 69 6f 6e 2f 78 2d 77 77 application/x-ww
-0080: 77 2d 66 6f 72 6d 2d 75 72 6c 65 6e 63 6f 64 65 w-form-urlencode
-0090: 64 0d 0a 0d 0a d....
-=&amp;gt; Send data, 18 bytes (0x12)
-0000: 74 6f 6f 6c 3d 63 75 72 6c 26 6f 73 3d 6c 69 6e tool=curl&amp;amp;os=lin
-0010: 75 78 ux
-== Info: upload completely sent off: 18 out of 18 bytes
-................
-................
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
-&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;18&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>multipart/form-data则使用了不同的方式，其中定义一个boundary，所有form字段以
-boundary分隔开来，每一段都有&lt;code>Content-Disposition&lt;/code>，&lt;code>name&lt;/code>头部，内容不进行url encode处理&lt;/p>
-&lt;pre>&lt;code>$ curl --trace - --form 'tool=curl' --form 'os=linux' http://httpbin.org/post
-................
-................
-0000: 50 4f 53 54 20 2f 70 6f 73 74 20 48 54 54 50 2f POST /post HTTP/
-0010: 31 2e 31 0d 0a 48 6f 73 74 3a 20 68 74 74 70 62 1.1..Host: httpb
-0020: 69 6e 2e 6f 72 67 0d 0a 55 73 65 72 2d 41 67 65 in.org..User-Age
-0030: 6e 74 3a 20 63 75 72 6c 2f 37 2e 34 37 2e 30 0d nt: curl/7.47.0.
-0040: 0a 41 63 63 65 70 74 3a 20 2a 2f 2a 0d 0a 43 6f .Accept: */*..Co
-0050: 6e 74 65 6e 74 2d 4c 65 6e 67 74 68 3a 20 32 33 ntent-Length: 23
-0060: 39 0d 0a 45 78 70 65 63 74 3a 20 31 30 30 2d 63 9..Expect: 100-c
-0070: 6f 6e 74 69 6e 75 65 0d 0a 43 6f 6e 74 65 6e 74 ontinue..Content
-0080: 2d 54 79 70 65 3a 20 6d 75 6c 74 69 70 61 72 74 -Type: multipart
-0090: 2f 66 6f 72 6d 2d 64 61 74 61 3b 20 62 6f 75 6e /form-data; boun
-00a0: 64 61 72 79 3d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d dary=-----------
-00b0: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 -------------800
-00c0: 66 32 31 62 37 32 65 33 38 35 30 30 39 0d 0a 0d f21b72e385009...
-00d0: 0a .
-=&amp;gt; Send data, 239 bytes (0xef)
-0000: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d ----------------
-0010: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 66 32 31 ----------800f21
-0020: 62 37 32 65 33 38 35 30 30 39 0d 0a 43 6f 6e 74 b72e385009..Cont
-0030: 65 6e 74 2d 44 69 73 70 6f 73 69 74 69 6f 6e 3a ent-Disposition:
-0040: 20 66 6f 72 6d 2d 64 61 74 61 3b 20 6e 61 6d 65 form-data; name
-0050: 3d 22 74 6f 6f 6c 22 0d 0a 0d 0a 63 75 72 6c 0d =&amp;quot;tool&amp;quot;....curl.
-0060: 0a 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d .---------------
-0070: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 66 32 -----------800f2
-0080: 31 62 37 32 65 33 38 35 30 30 39 0d 0a 43 6f 6e 1b72e385009..Con
-0090: 74 65 6e 74 2d 44 69 73 70 6f 73 69 74 69 6f 6e tent-Disposition
-00a0: 3a 20 66 6f 72 6d 2d 64 61 74 61 3b 20 6e 61 6d : form-data; nam
-00b0: 65 3d 22 6f 73 22 0d 0a 0d 0a 6c 69 6e 75 78 0d e=&amp;quot;os&amp;quot;....linux.
-00c0: 0a 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d .---------------
-00d0: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 66 32 -----------800f2
-00e0: 31 62 37 32 65 33 38 35 30 30 39 2d 2d 0d 0a 1b72e385009--..
-......................
-......................
-......................
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
-&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;239&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------800f21b72e385009&amp;quot;,
-&amp;quot;Expect&amp;quot;: &amp;quot;100-continue&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h4 id="upload-file">upload file&lt;/h4>
-&lt;p>利用Content-Type=multipart/form-data，上传文件&lt;/p>
-&lt;p>&lt;em>&lt;code>-F, --form&lt;/code>，默认以Content-Type=multipart/form-data，POST Method进行HTTP请求。&lt;code>--data&lt;/code>不支持文件上传，
-&lt;code>--form&lt;/code>可以用&lt;code>@&amp;lt;filename&amp;gt;&lt;/code>进行文件上传&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --form source=@test.c --form lang=c http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {
-&amp;quot;source&amp;quot;: &amp;quot;#include &amp;lt;stdio.h&amp;gt;\n\nint main(void) {\n return 0;\n}\n&amp;quot;
-},
-&amp;quot;form&amp;quot;: {
-&amp;quot;lang&amp;quot;: &amp;quot;c&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;347&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------5c6f4eef4965c408&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;183.240.198.140&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>上传文件时，可以同时标明文件MIME，供服务器参考&lt;/p>
-&lt;pre>&lt;code>$ curl --form &amp;quot;page=@index.html;type=text/html&amp;quot; http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {
-&amp;quot;page&amp;quot;: &amp;quot;&amp;lt;html&amp;gt;\n&amp;lt;meta http-equiv=\&amp;quot;refresh\&amp;quot; content=\&amp;quot;0;url=http://www.baidu.com/\&amp;quot;&amp;gt;\n&amp;lt;/html&amp;gt;\n&amp;quot;
-},
-&amp;quot;form&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;268&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------c3339e8e79db4cb4&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;183.240.202.4&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h4 id="post-with-query">post with query&lt;/h4>
-&lt;p>如果POST想使用query来传递参数，必须自己手动输入在URI之后，curl没有选项来做这一件事。
-POST使用query的麻烦之处在于，要求我们注意URL的编码&lt;/p>
-&lt;pre>&lt;code>$ curl --data-urlencode 'tool=curl and linux' http://httpbin.org/post?reverse%20order=linux%20and%20curl
-{
-&amp;quot;args&amp;quot;: {
-&amp;quot;reverse order&amp;quot;: &amp;quot;linux and curl&amp;quot;
-},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;23&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post?reverse order=linux and curl&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>可以使用其它辅助命令来帮助我们做url encode。&lt;/p>
-&lt;p>urlencode命令来自于包 gridsite-clients，或者使用&lt;a href="https://stackoverflow.com/questions/296536/how-to-urlencode-data-for-curl-command">其它相同功能的工具&lt;/a>&lt;/p>
-&lt;pre>&lt;code>$ curl --data-urlencode 'tool=curl and linux' http://httpbin.org/post?$(urlencode 'reverse order')=$(urlencode 'linux and curl')
-{
-&amp;quot;args&amp;quot;: {
-&amp;quot;reverse order&amp;quot;: &amp;quot;linux and curl&amp;quot;
-},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;23&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post?reverse order=linux and curl&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="put">PUT&lt;/h3>
-&lt;p>PUT与POST相似，只不过Method不同&lt;/p>
-&lt;p>&lt;em>&lt;code>-X Method&lt;/code>，指定curl请求所使用的方法&lt;/em>&lt;/p>
-&lt;p>application/x-www-form-urlencoded示例&lt;/p>
-&lt;pre>&lt;code>$ curl -X PUT --data 'tool=curl' --data 'os=linux' http://httpbin.org/put
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
-&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;18&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/put&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>multipart/form-data示例&lt;/p>
-&lt;pre>&lt;code>$ curl -X PUT --form source=@test.c --form lang=c http://httpbin.org/put
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {
-&amp;quot;source&amp;quot;: &amp;quot;#include &amp;lt;stdio.h&amp;gt;\n\nint main(void) {\n return 0;\n}\n&amp;quot;
-},
-&amp;quot;form&amp;quot;: {
-&amp;quot;lang&amp;quot;: &amp;quot;c&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;347&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------e73fa892cfebd218&amp;quot;,
-&amp;quot;Expect&amp;quot;: &amp;quot;100-continue&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/put&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="delete">DELETE&lt;/h3>
-&lt;p>DELETE同POST，PUT，只是Method不同。
-使用&lt;code>-X DELETE&lt;/code>即可&lt;/p>
-&lt;h3 id="get">GET&lt;/h3>
-&lt;p>GET只使用query来传递参数&lt;/p>
-&lt;p>&lt;em>&lt;code>-G, --get&lt;/code>，这个选项会使所有&lt;code>-d, --data, --data-urlencode&lt;/code>的数据附加在URL之后作为query，而不是POST body，默认使用GET Method&lt;/em>&lt;/p>
-&lt;p>参考&lt;a href="https://stackoverflow.com/a/14284519/9167165">curl url param&lt;/a>&lt;/p>
-&lt;pre>&lt;code>$ curl -G --data-urlencode 'tool=curl and linux' http://httpbin.org/get
-{
-&amp;quot;args&amp;quot;: {
-&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get?tool=curl and linux&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="json">JSON&lt;/h3>
-&lt;p>通常使用RESTful api，配合使用的Content-Type都为application/json。
-结合自定义header的功能，修改Content-Type，用json进行C/S交互&lt;/p>
-&lt;pre>&lt;code>$ curl -H &amp;quot;Content-type: application/json&amp;quot; -H &amp;quot;Accept: application/json&amp;quot; --data '{&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;, &amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;}' http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;{\&amp;quot;tool\&amp;quot;: \&amp;quot;curl\&amp;quot;, \&amp;quot;os\&amp;quot;: \&amp;quot;linux\&amp;quot;}&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;application/json&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;31&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/json&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: {
-&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
-&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h1 id="more-help">more help&lt;/h1>
-&lt;p>command line&lt;/p>
-&lt;pre>&lt;code>$ man curl
-$ curl --help
-$ curl --manual
-&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://curl.haxx.se/docs/httpscripting.html">curl docs online&lt;/a>&lt;/p>- https://dreamanddead.github.io/post/play-curl-with-http/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Git Internals</title><link>https://dreamanddead.github.io/post/git-internals/</link><pubDate>Wed, 03 Jan 2018 08:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/git-internals/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/git-internals/ -&lt;p>这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。&lt;/p>
-&lt;p>所有示例使用git版本 2.7.4，
-示例仓库可见于github: &lt;a href="https://github.com/DreamAndDead/git-internals-example">https://github.com/DreamAndDead/git-internals-example&lt;/a>&lt;/p>
-&lt;h1 id="git-folder">.git folder&lt;/h1>
-&lt;p>git仓库所有数据都存储在工作区目录的.git文件夹&lt;/p>
-&lt;p>在空目录，init初始化仓库&lt;/p>
-&lt;pre>&lt;code>mkdir git-internals-example
-cd git-internals-example
-git init
-&lt;/code>&lt;/pre>&lt;p>.git/结构如下&lt;/p>
-&lt;pre>&lt;code>.git/
-├── branches/
-├── config
-├── description
-├── HEAD
-├── hooks/
-│ ├── applypatch-msg.sample
-│ ├── commit-msg.sample
-│ ├── post-update.sample
-│ ├── pre-applypatch.sample
-│ ├── pre-commit.sample
-│ ├── prepare-commit-msg.sample
-│ ├── pre-push.sample
-│ ├── pre-rebase.sample
-│ └── update.sample
-├── info/
-│ └── exclude
-├── objects/
-│ ├── info/
-│ └── pack/
-└── refs/
-├── heads/
-└── tags/
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>branches/ TODO，暂时不清楚&lt;/li>
-&lt;li>config 本地仓库配置&lt;/li>
-&lt;li>description 只用于gitweb&lt;/li>
-&lt;li>&lt;em>HEAD 标识当前所在commit&lt;/em>&lt;/li>
-&lt;li>hooks/ git钩子&lt;/li>
-&lt;li>info/ 目前只有exclude文件，效果同.gitignore&lt;/li>
-&lt;li>&lt;em>objects/ 存储对象&lt;/em>&lt;/li>
-&lt;li>&lt;em>refs/ 引用&lt;/em>&lt;/li>
-&lt;/ul>
-&lt;p>标注的条目，是本文主要关注的&lt;/p>
-&lt;h1 id="key-objects">key objects&lt;/h1>
-&lt;p>git有4类关键对象，它们是git设计的核心。&lt;/p>
-&lt;p>层次由低到高为blob，tree，commit，tag，它们都以文件的形式存储在.git目录下。&lt;/p>
-&lt;p>git命令分为两类，高层(porcelain)命令与底层(plumbing)命令。&lt;/p>
-&lt;p>高层命令是我们通常使用
-git时使用的命令如add，commit等，底层命令则不常用。高层命令完成的操作是由一系列底层
-命令协作完成的。底层命令的操作内容更简单，更专一，每个关键对象，都有对应的底层命令。&lt;/p>
-&lt;h2 id="blob">blob&lt;/h2>
-&lt;p>最简单的理解，一个blob对应于一个文件，将一个文件压缩存储便是一个blob。&lt;/p>
-&lt;p>没有高层命令只用于生成blob，而有相应的底层命令来做这件事，hash-object。&lt;/p>
-&lt;ul>
-&lt;li>在工作区新建makefile文件，内容是一行注释。&lt;/li>
-&lt;li>hash-object以文件为参数，-w 写入blob。
-返回值是一个哈希值，ce616eb8c060404bb253822921a12aab81ed1ae0&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ echo '# makefile' &amp;gt; makefile
-$ git hash-object -w makefile
-ce616eb8c060404bb253822921a12aab81ed1ae0
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>blob存储在.git/objects/，哈希值前两个字符为子文件夹名，后续字符为文件名。&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ find .git/objects -type f
-.git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>git用zlib压缩文件生成blob，直接查看blob文件是乱码。&lt;/li>
-&lt;li>git有相应的底层命令查看对象，cat-file，-p means pretty，参数为哈希值而不是blob文件路径。
-这里输出的就是makefile文件的内容。&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ cat .git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
-.....messive output....
-$ git cat-file -p ce616eb8c060404bb253822921a12aab81ed1ae0
-# makefile
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>blob是压缩过的文件，自然可以解压缩。
-pigz命令针对zlib进行压缩与解压缩，-d means解压缩。
-hexdump -C 以单字节解码，以16进制标识地址。&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ pigz -d &amp;lt; .git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0 | hexdump -c
-00000000 62 6c 6f 62 20 31 31 00 23 20 6d 61 6b 65 66 69 |blob 11.# makefi|
-00000010 6c 65 0a |le.|
-00000013
-&lt;/code>&lt;/pre>&lt;p>从hexdump输出，可以清楚的看到blob中不只存储了文件内容，还附加了其它一些信息。&lt;/p>
-&lt;p>blob解压后内容，字节由前至后：&lt;/p>
-&lt;ul>
-&lt;li>4byte：blob 4个字符&lt;/li>
-&lt;li>1byte：空格&lt;/li>
-&lt;li>未知byte：解析为10进制数字，表示原文件内容的字节长度&lt;/li>
-&lt;li>1byte：\0&lt;/li>
-&lt;li>剩余byte：原文件内容&lt;/li>
-&lt;/ul>
-&lt;p>那么blob文件名是如何生成的呢？看起来像是随机的一串字符，实际是用SHA1哈希算法生成的。
-算法的输入就是blob解压的内容。&lt;/p>
-&lt;pre>&lt;code>$ pigz -d &amp;lt; .git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0 | sha1sum
-ce616eb8c060404bb253822921a12aab81ed1ae0 -
-&lt;/code>&lt;/pre>&lt;p>由此blob生成的过程就非常清晰：&lt;/p>
-&lt;ul>
-&lt;li>读取文件内容，计算内容字节长度&lt;/li>
-&lt;li>&amp;ldquo;blob&amp;rdquo;，字节长度信息，文件内容，组合为blob原始内容&lt;/li>
-&lt;li>计算SHA1哈希值&lt;/li>
-&lt;li>以哈希值前2个字符与剩余字符为名称，在.git/objects/下新建文件夹与文件&lt;/li>
-&lt;li>将原始内容用zlib压缩，存储路径为上一步的文件路径&lt;/li>
-&lt;/ul>
-&lt;h2 id="tree">tree&lt;/h2>
-&lt;p>blob只存储内容信息，那么文件名信息存储在哪里呢？如果只有blob对象，文件名是肯定找不到的，
-事实上它们存储在tree对象中。&lt;/p>
-&lt;p>形象的比喻，如果blob代表文件，tree就代表文件夹。文件夹包含子文件夹与其它文件，同样的，
-tree对象也“包含”其它tree对象与其它blob。&lt;/p>
-&lt;p>因为tree对象是由git index暂存区的内容生成的，在深入tree对象之前，先了解下index暂存区&lt;/p>
-&lt;h3 id="index">index&lt;/h3>
-&lt;p>index默认存储于.git/index文件，git init并没有生成它。添加文件到暂存区时，git才会生成
-.git/index并存储暂存区内容。&lt;/p>
-&lt;ul>
-&lt;li>借助git高层命令add，将makefile加入index&lt;/li>
-&lt;li>用hexdump查看index内容&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ git add makefile
-$ hexdump -C .git/index
-00000000 44 49 52 43 00 00 00 02 00 00 00 01 5a 4c 75 73 |DIRC........ZLus|
-00000010 21 0f 5c 21 5a 4c 75 73 21 0f 5c 21 00 00 08 0b |!.\!ZLus!.\!....|
-00000020 00 50 34 54 00 00 81 a4 00 00 03 e8 00 00 03 e8 |.P4T............|
-00000030 00 00 00 0b ce 61 6e b8 c0 60 40 4b b2 53 82 29 |.....an..`@K.S.)|
-00000040 21 a1 2a ab 81 ed 1a e0 00 08 6d 61 6b 65 66 69 |!.*.......makefi|
-00000050 6c 65 00 00 38 0a 9e 35 0e c7 cb c0 4d 17 b6 06 |le..8..5....M...|
-00000060 06 f1 3d 84 2f e4 c9 13 |..=./...|
-00000068
-&lt;/code>&lt;/pre>&lt;p>index文件没有被压缩，以2进制存储，网络字节序。
-具体分析其内容，需要借助&lt;a href="https://github.com/git/git/blob/v2.7.4/Documentation/technical/index-format.txt">官方文档&lt;/a>。&lt;/p>
-&lt;p>针对目前index的内容，用下面的表格来解读：&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>行\列&lt;/th>
-&lt;th>0&lt;/th>
-&lt;th>4&lt;/th>
-&lt;th>8&lt;/th>
-&lt;th>c&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>00&lt;/td>
-&lt;td>DIRC&lt;/td>
-&lt;td>version&lt;/td>
-&lt;td>index entries number&lt;/td>
-&lt;td>ctime seconds&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>10&lt;/td>
-&lt;td>ctime nanosecond fractions&lt;/td>
-&lt;td>mtime seconds&lt;/td>
-&lt;td>mtime nanosecond fractions&lt;/td>
-&lt;td>dev&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>20&lt;/td>
-&lt;td>ino&lt;/td>
-&lt;td>mode&lt;/td>
-&lt;td>uid&lt;/td>
-&lt;td>gid&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>30&lt;/td>
-&lt;td>file size&lt;/td>
-&lt;td>entry SHA1&amp;hellip;.&lt;/td>
-&lt;td>&amp;hellip;.&lt;/td>
-&lt;td>&amp;hellip;.&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>40&lt;/td>
-&lt;td>&amp;hellip;.&lt;/td>
-&lt;td>&amp;hellip;.&lt;/td>
-&lt;td>flags(2 byte) entry path..&lt;/td>
-&lt;td>&amp;hellip;.&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>50&lt;/td>
-&lt;td>.. padding to multiple of 8 bytes&lt;/td>
-&lt;td>index SHA1&amp;hellip;.&lt;/td>
-&lt;td>&amp;hellip;.&lt;/td>
-&lt;td>&amp;hellip;.&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>60&lt;/td>
-&lt;td>&amp;hellip;.&lt;/td>
-&lt;td>&amp;hellip;.&lt;/td>
-&lt;td>&lt;/td>
-&lt;td>&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;ul>
-&lt;li>00，0： DIRC，4个字符，标识文件类型&lt;/li>
-&lt;li>00，4： index格式版本，可取2，3，4。00 00 00 02， 当前版本为2&lt;/li>
-&lt;li>00，8： index entries number，index存储条目的数量。00 00 00 01， 只有一条index entry，是上面添加的
-makefile。此后的所有字节都由index entry组成&lt;/li>
-&lt;li>index entry:
-&lt;ul>
-&lt;li>00，c： ctime，通过stat -c &amp;ldquo;%z&amp;rdquo; makefile获得其10进制表示。 5a 4c 75 73，转换为10进制并用date解析，date &amp;ndash;date=&amp;quot;@$(printf &amp;ldquo;%d&amp;rdquo; &amp;ldquo;0x5a4c7573&amp;rdquo;)&amp;quot;&lt;/li>
-&lt;li>10，0： ctime精确到微秒&lt;/li>
-&lt;li>10，4： mtime，通过stat -c &amp;ldquo;%w&amp;rdquo; makefile获得其10进制表示。计算同上&lt;/li>
-&lt;li>10，8： mtime精确到微秒&lt;/li>
-&lt;li>10，c： device number，通过stat -c &amp;ldquo;%d&amp;rdquo; makefile获得其10进制表示&lt;/li>
-&lt;li>20，0： inode number，通过stat -c &amp;ldquo;%i&amp;rdquo; makefile获得其10进制表示&lt;/li>
-&lt;li>20，4： 文件类型与权限。占用32bit，只需解读后16bit。 81 a4 =&amp;gt; 1000 0001 1010 0100，前4bit 1000代表文件为regular file，其后3bit不使用，最后9bit
-代表文件权限 110 100 100 =&amp;gt; 0644&lt;/li>
-&lt;li>20，8： uid，state -c &amp;ldquo;%u&amp;rdquo; makefile获得其10进制表示&lt;/li>
-&lt;li>20，c： gid，state -c &amp;ldquo;%g&amp;rdquo; makefile获得其10进制表示&lt;/li>
-&lt;li>30，0： file size，state -c &amp;ldquo;%s&amp;rdquo; makefile获得其10进制表示， 00 00 00 0b =&amp;gt; 11，正是blob所存储的&lt;/li>
-&lt;li>30，4 - 40，4： blob SHA1，和blob一节计算的相同，ce616eb8c060404bb253822921a12aab81ed1ae0&lt;/li>
-&lt;li>40，8： flags，16bit， 00 08 =&amp;gt; 0000 1000
-&lt;ul>
-&lt;li>1bit，assume valid flag (? TODO)&lt;/li>
-&lt;li>1bit，版本2中一定为0&lt;/li>
-&lt;li>2bit，stage (during merge) (? TODO)&lt;/li>
-&lt;li>12bit，16进制数，表示文件名长度。08 =&amp;gt; 8，m a k e f i l e&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>40，8 - 50，0： file name，从40，8的后16bit开始，存储文件名。最后部分用00 byte补齐为8 byte倍数&lt;/li>
-&lt;li>50，4 - last： index SHA1，对index已经存储的内容计算SHA1，并附加到index最后。 head -c -20 .git/index | sha1sum 计算得
-380a9e350ec7cbc04d17b60606f13d842fe4c913&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>index内存储了相当多的除了文件内容外，关于文件的其它信息。
-后续tree对象的生成，信息都是从这里提取。&lt;/p>
-&lt;h3 id="tree-object">tree object&lt;/h3>
-&lt;p>了解index以后，回到tree对象来。&lt;/p>
-&lt;ul>
-&lt;li>使用git底层命令，write-tree，由当前index生成tree对象&lt;/li>
-&lt;li>tree对象和blob相同，也存储在objects目录下&lt;/li>
-&lt;li>cat-file查看tree对象，显示blob信息&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ git write-tree
-5e35decc375ba1d3d14511b6341f2827943aa42f
-$ find .git/objects -type f
-.git/objects/5e/35decc375ba1d3d14511b6341f2827943aa42f
-.git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
-$ git cat-file -p 5e35decc375ba1d3d14511b6341f2827943aa42f
-100644 blob ce616eb8c060404bb253822921a12aab81ed1ae0 makefile
-&lt;/code>&lt;/pre>&lt;p>tree对象存储了什么内容呢？&lt;/p>
-&lt;ul>
-&lt;li>其它tree对象也使用zlib压缩存储，解压来看内容&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ pigz -d &amp;lt; .git/objects/5e/35decc375ba1d3d14511b6341f2827943aa42f | hexdump -C
-00000000 74 72 65 65 20 33 36 00 31 30 30 36 34 34 20 6d |tree 36.100644 m|
-00000010 61 6b 65 66 69 6c 65 00 ce 61 6e b8 c0 60 40 4b |akefile..an..`@K|
-00000020 b2 53 82 29 21 a1 2a ab 81 ed 1a e0 |.S.)!.*.....|
-0000002c
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>4byte： tree，4个字符&lt;/li>
-&lt;li>1byte： 空格&lt;/li>
-&lt;li>未知byte： 解读为10进制数，这里为36，表示tree字节内容长度为36&lt;/li>
-&lt;li>1byte： \0。之后所有字节为tree对象内容&lt;/li>
-&lt;li>6byte： 100644代表blob&lt;/li>
-&lt;li>1byte： 空格&lt;/li>
-&lt;li>未知byte： 存储文件名&lt;/li>
-&lt;li>1byte： \0&lt;/li>
-&lt;li>20byte： blob hash值，ce616eb8c060404bb253822921a12aab81ed1ae0&lt;/li>
-&lt;/ul>
-&lt;p>与cat-file返回的信息保持一致。&lt;/p>
-&lt;p>可见tree对象包含的信息也很少，仅说明它下层包含了哪些blob与其它tree，更具体的如文件权限，写入时间
-之类的信息要从index中寻找。所以index暂存区并不仅仅是“暂存”的文件，它也会随着git push/pull在本地/远程
-之间流转。&lt;/p>
-&lt;p>这里有个疑问，工作区并没有目录，为什么会有tree对象？&lt;/p>
-&lt;p>其实这个tree对象代表的就是工作区根目录，makefile就是在
-根目录下。工作区目录就像linux中的/目录，存在于每一个仓库。&lt;/p>
-&lt;h2 id="commit">commit&lt;/h2>
-&lt;p>commit是日常使用git接触的最多的概念，一个commit具体代表什么？这就是本节所要讨论的。&lt;/p>
-&lt;ul>
-&lt;li>借助git底层命令，commit-tree，生成commit对象。创建commit的时候，需要指定tree对象hash值与comments信息
-&lt;ul>
-&lt;li>git中所有commit组织为有向无环图的结构，每一个提交都有一/多个parent commit，除了第1个commit。
-&lt;code>commit-tree -p &amp;lt;hash&amp;gt;&lt;/code>可以在创建commit时指定parent commit，因为这里就是第1个commit，所以不需要指定parent commit。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>同样的，commit对象也存储在objects目录下&lt;/li>
-&lt;li>cat-file查看commit，其中存储了：
-&lt;ul>
-&lt;li>tree对象hash&lt;/li>
-&lt;li>因为没有parent commit，这里没有显示parent commit&lt;/li>
-&lt;li>author&lt;/li>
-&lt;li>committer
-&lt;ul>
-&lt;li>当前commit的author committer信息来自于git config中的user.name与user.email&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>提交时的message&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ echo 'first commit' | git commit-tree 5e35decc375ba1d3d14511b6341f2827943aa42f
-409eed957ae86ad7a1ef1eb0ea4a299395d4457d
-$ find .git/objects -type f
-.git/objects/5e/35decc375ba1d3d14511b6341f2827943aa42f
-.git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
-.git/objects/40/9eed957ae86ad7a1ef1eb0ea4a299395d4457d
-$ git cat-file -p 409eed957ae86ad7a1ef1eb0ea4a299395d4457d
-tree 5e35decc375ba1d3d14511b6341f2827943aa42f
-author DreamAndDead &amp;lt;favorofife@yeah.net&amp;gt; 1515037063 +0800
-committer DreamAndDead &amp;lt;favorofife@yeah.net&amp;gt; 1515037063 +0800
-first commit
-&lt;/code>&lt;/pre>&lt;p>具体看commit对象的存储，完全是字符串&lt;/p>
-&lt;pre>&lt;code>$ pigz -d &amp;lt; .git/objects/40/9eed957ae86ad7a1ef1eb0ea4a299395d4457d | hexdump -C
-00000000 63 6f 6d 6d 69 74 20 31 38 31 00 74 72 65 65 20 |commit 181.tree |
-00000010 35 65 33 35 64 65 63 63 33 37 35 62 61 31 64 33 |5e35decc375ba1d3|
-00000020 64 31 34 35 31 31 62 36 33 34 31 66 32 38 32 37 |d14511b6341f2827|
-00000030 39 34 33 61 61 34 32 66 0a 61 75 74 68 6f 72 20 |943aa42f.author |
-00000040 44 72 65 61 6d 41 6e 64 44 65 61 64 20 3c 66 61 |DreamAndDead &amp;lt;fa|
-00000050 76 6f 72 6f 66 69 66 65 40 79 65 61 68 2e 6e 65 |vorofife@yeah.ne|
-00000060 74 3e 20 31 35 31 35 30 33 37 30 36 33 20 2b 30 |t&amp;gt; 1515037063 +0|
-00000070 38 30 30 0a 63 6f 6d 6d 69 74 74 65 72 20 44 72 |800.committer Dr|
-00000080 65 61 6d 41 6e 64 44 65 61 64 20 3c 66 61 76 6f |eamAndDead &amp;lt;favo|
-00000090 72 6f 66 69 66 65 40 79 65 61 68 2e 6e 65 74 3e |rofife@yeah.net&amp;gt;|
-000000a0 20 31 35 31 35 30 33 37 30 36 33 20 2b 30 38 30 | 1515037063 +080|
-000000b0 30 0a 0a 66 69 72 73 74 20 63 6f 6d 6d 69 74 0a |0..first commit.|
-000000c0
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>6byte：commit，6个字符&lt;/li>
-&lt;li>1byte：空格&lt;/li>
-&lt;li>未知byte：解析为10进制数字，表示commit内容长度&lt;/li>
-&lt;li>1byte：\0&lt;/li>
-&lt;li>4byte：tree，4个字符&lt;/li>
-&lt;li>1byte：空格&lt;/li>
-&lt;li>40byte：ascii表示的tree hash，不同于之前用2进制来存储&lt;/li>
-&lt;li>1byte：\n&lt;/li>
-&lt;li>author info：
-&lt;ul>
-&lt;li>6byte：author，6个字符&lt;/li>
-&lt;li>1byte：空格&lt;/li>
-&lt;li>未知byte：author name&lt;/li>
-&lt;li>1byte：空格&lt;/li>
-&lt;li>未知byte：author email&lt;/li>
-&lt;li>1byte：空格&lt;/li>
-&lt;li>未知byte：解析为10进制数字，编写patch的时间，用 date &amp;ndash;date=&amp;quot;@1515037063&amp;quot; 解读&lt;/li>
-&lt;li>1byte：空格&lt;/li>
-&lt;li>未知byte：时区&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>1byte：\n&lt;/li>
-&lt;li>committer info： 格式同author info&lt;/li>
-&lt;li>2byte：\n\n&lt;/li>
-&lt;li>未知byte：提交时输入的message信息&lt;/li>
-&lt;/ul>
-&lt;p>可见commit的本质在于，指定某一时刻由index生成的tree对象。而某个tree对象，就对应于工作区所有内容的一个快照，是
-永远不变的（除非你修改git历史）。每个commit对应于一个版本的内容，这就是git版本控制的基础。&lt;/p>
-&lt;h2 id="tag">tag&lt;/h2>
-&lt;p>tag在git中，使用也很频繁，通常用于标定一个提交，且设定后不轻易修改。&lt;/p>
-&lt;p>从某种意义上，tag和refs很像，虽然refs不是对象。在了解tag之前，先来看一下refs。&lt;/p>
-&lt;h3 id="branch-ref">branch ref&lt;/h3>
-&lt;p>通常我们会使用&lt;code>git log &amp;lt;parameter&amp;gt;&lt;/code>来查看commit log，但是一直记住一个hash作为参数值还是很困难的，
-尤其是commit会越来越多。&lt;/p>
-&lt;p>refs可以理解为，是用来指定commit的指针。
-git中的分支，就是一种refs，比如我们通过master这样简单好记的名称来引用commit。&lt;/p>
-&lt;ul>
-&lt;li>git关于refs的底层命令是update-ref&lt;/li>
-&lt;li>几乎所有仓库都有master分支。这里创建一个master引用，指向唯一一个commit。
-引用不是git对象，引用存储在.git/refs/目录下&lt;/li>
-&lt;li>引用的存储方式很简单，单纯记录指定commit的hash值&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ git update-ref refs/heads/master 409eed957ae86ad7a1ef1eb0ea4a299395d4457d
-$ find .git/refs/heads/ -type f
-.git/refs/heads/master
-$ cat .git/refs/heads/master
-409eed957ae86ad7a1ef1eb0ea4a299395d4457d
-&lt;/code>&lt;/pre>&lt;p>创建master引用之后，git log的操作就简单了&lt;/p>
-&lt;pre>&lt;code>$ git log master
-&lt;/code>&lt;/pre>&lt;p>这就是git分支的本质&lt;/p>
-&lt;h3 id="tag-ref">tag ref&lt;/h3>
-&lt;ul>
-&lt;li>tag也是commit的引用，也可以用相同的方式创建。不同的是，tags存储在.git/refs/tags目录下&lt;/li>
-&lt;li>这样就创建了一个标签引用，本质同master一样&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ git update-ref refs/tags/v1.0 409eed957ae86ad7a1ef1eb0ea4a299395d4457d
-$ git tag -l
-v1.0
-$ cat .git/refs/tags/v1.0
-409eed957ae86ad7a1ef1eb0ea4a299395d4457d
-&lt;/code>&lt;/pre>&lt;p>这样的话，tag怎么会算作一个对象呢？对象都应该存储在objects目录下才对。&lt;/p>
-&lt;p>实际上，这只是一种简单的tag形式。通常我们在使用tag的时候，还会加上附注等
-其它的信息，这不是单单一个refs文件所存储的。&lt;/p>
-&lt;h3 id="tag-object">tag object&lt;/h3>
-&lt;ul>
-&lt;li>用git高层命令tag创建tag对象，版本号v1.1&lt;/li>
-&lt;li>refs中指向的值是 d879e38d57885a2728e0fd7281c1c1ff701b5042， 而不是 409eed957ae86ad7a1ef1eb0ea4a299395d4457d&lt;/li>
-&lt;li>objects目录下多了新文件，标明的正是tag对象&lt;/li>
-&lt;li>cat-file，tag对象存储的信息也很明了，一眼可看明&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ git tag -a v1.1 409eed957ae86ad7a1ef1eb0ea4a299395d4457d -m 'minor version update'
-$ cat .git/refs/tags/v1.1
-d879e38d57885a2728e0fd7281c1c1ff701b5042
-$ find .git/objects -type f
-.git/objects/5e/35decc375ba1d3d14511b6341f2827943aa42f
-.git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
-.git/objects/d8/79e38d57885a2728e0fd7281c1c1ff701b5042
-.git/objects/40/9eed957ae86ad7a1ef1eb0ea4a299395d4457d
-$ git cat-file -p d879e38d57885a2728e0fd7281c1c1ff701b5042
-object 409eed957ae86ad7a1ef1eb0ea4a299395d4457d
-type commit
-tag v1.1
-tagger DreamAndDead &amp;lt;favorofife@yeah.net&amp;gt; 1515050557 +0800
-minor version update
-&lt;/code>&lt;/pre>&lt;p>解析原理同之前的几节，查看tag对象的存储&lt;/p>
-&lt;pre>&lt;code>$ pigz -d &amp;lt; .git/objects/d8/79e38d57885a2728e0fd7281c1c1ff701b5042 | hexdump -C
-00000000 74 61 67 20 31 35 30 00 6f 62 6a 65 63 74 20 34 |tag 150.object 4|
-00000010 30 39 65 65 64 39 35 37 61 65 38 36 61 64 37 61 |09eed957ae86ad7a|
-00000020 31 65 66 31 65 62 30 65 61 34 61 32 39 39 33 39 |1ef1eb0ea4a29939|
-00000030 35 64 34 34 35 37 64 0a 74 79 70 65 20 63 6f 6d |5d4457d.type com|
-00000040 6d 69 74 0a 74 61 67 20 76 31 2e 31 0a 74 61 67 |mit.tag v1.1.tag|
-00000050 67 65 72 20 44 72 65 61 6d 41 6e 64 44 65 61 64 |ger DreamAndDead|
-00000060 20 3c 66 61 76 6f 72 6f 66 69 66 65 40 79 65 61 | &amp;lt;favorofife@yea|
-00000070 68 2e 6e 65 74 3e 20 31 35 31 35 30 35 30 35 35 |h.net&amp;gt; 151505055|
-00000080 37 20 2b 30 38 30 30 0a 0a 6d 69 6e 6f 72 20 76 |7 +0800..minor v|
-00000090 65 72 73 69 6f 6e 20 75 70 64 61 74 65 0a |ersion update.|
-0000009e
-&lt;/code>&lt;/pre>&lt;p>存储内容也是字符串，同cat-file输出是一致的&lt;/p>
-&lt;p>这里的tag只是unsigned tag，如果是signed tag，可能有所不同，这里讨论未涉及&lt;/p>
-&lt;h1 id="more-about-refs">more about refs&lt;/h1>
-&lt;p>在git对象的解析中，提到了branch ref与tag ref。还有其它的refs值得关注&lt;/p>
-&lt;h2 id="head">HEAD&lt;/h2>
-&lt;p>HEAD引用起的作用非常简单，标识当前所在的commit。&lt;/p>
-&lt;ul>
-&lt;li>存储在.git/HEAD文件中，内容很简单，标明当前的HEAD是一个ref，再通过解引用master ref，就可以定位到当前提交&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ cat .git/HEAD
-ref: refs/heads/master
-&lt;/code>&lt;/pre>&lt;p>git底层命令symbolic-ref可以用来修改HEAD&lt;/p>
-&lt;ul>
-&lt;li>新建分支dev&lt;/li>
-&lt;li>修改HEAD，指向dev ref&lt;/li>
-&lt;li>此时HEAD指向dev，等同于git checkout切换分支&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ git branch dev
-$ git symbolic-ref HEAD refs/heads/dev
-$ cat .git/HEAD
-ref: refs/heads/dev
-&lt;/code>&lt;/pre>&lt;p>如果指定checkout参数为某个历史提交的hash值，git会提示我们，当前处于deteched HEAD状态。
-意思是当前commit没有被任何分支refs引用。相应的，.git/HEAD中仅仅存储了当前所在commit的hash值。&lt;/p>
-&lt;h2 id="remote-ref">remote ref&lt;/h2>
-&lt;p>目前的git仓库仅仅是本地仓库，如果添加服务器版本库地址并进行推送，git会记录相应refs信息到.git/refs/remotes/目录下。&lt;/p>
-&lt;p>比如&lt;/p>
-&lt;ul>
-&lt;li>切换回master分支&lt;/li>
-&lt;li>添加远程git地址&lt;/li>
-&lt;li>推送master分支至远程git服务器&lt;/li>
-&lt;li>.git/refs/remotes/下生成origin/master文件&lt;/li>
-&lt;li>文件内容为一个hash值，记录的是远程服务器git仓库master ref所指向的commit hash值&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ git checkout master
-$ git remote add origin git@github.com:DreamAndDead/git-internals-example.git
-$ git push origin master
-对象计数中: 3, 完成.
-写入对象中: 100% (3/3), 223 bytes | 0 bytes/s, 完成.
-Total 3 (delta 0), reused 0 (delta 0)
-To git@github.com:DreamAndDead/git-internals-example.git
-* [new branch] master -&amp;gt; master
-$ find .git/refs/remotes/ -type f
-.git/refs/remotes/origin/master
-$ cat .git/refs/remotes/origin/master
-409eed957ae86ad7a1ef1eb0ea4a299395d4457d
-&lt;/code>&lt;/pre>&lt;p>如果服务器master分支领先于本地，可以使用git fetch来获取远程仓库内容，同时更新remotes/origin/master引用。&lt;/p>
-&lt;p>远程引用与本地引用最主要的区别在于，远程引用是只读的。虽然可以checkout到远程引用，但是git并不会更新HEAD，所以不能
-直接在远程引用上创建新commit，只能将本地引用与远程引用相关联，使用push来更新远程引用。&lt;/p>
-&lt;h1 id="objects-relation">objects relation&lt;/h1>
-&lt;p>从之前对git对象的分析（refs不是对象，但是也放在这里讨论），它们之间的关系非常明确。
-由层次的包含关系，从下至上，如图所示：&lt;/p>
-&lt;figure>
-&lt;img src="images/git-object-relation.png"
-alt="git object relation"/> &lt;figcaption>
-&lt;p>git object relation&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;ul>
-&lt;li>blob对应单个文件单元&lt;/li>
-&lt;li>tree包含blob与tree，形成层次关系。最上层的tree为工作区目录对应的tree，向下可遍历到所有的子tree与blob&lt;/li>
-&lt;li>commit指定一个tree（一般都是最上层的tree），此tree向下遍历的所有tree与blob，是当前commit对应的所有文件内容&lt;/li>
-&lt;li>tag用于标识一个commit，通常用于标识代码版本。tag通常不轻易改变，指定对应commit，间接指定了对应的tree，再间接索引了
-某个时刻所有文件内容的快照。如果不修改git commit历史，快照永远不变&lt;/li>
-&lt;li>refs，非对象，和tag的作用类似，间接指定某个commit，方便git操作&lt;/li>
-&lt;/ul>
-&lt;h1 id="more-commits">more commits&lt;/h1>
-&lt;h2 id="commits-tree">commits tree&lt;/h2>
-&lt;p>目前只有一个commit，结构非常简单。任何项目都会有成百上千数量的commit，如此多个commit的情况下，
-底层对象是怎样组织的呢？&lt;/p>
-&lt;p>我们先生成一些新的commit。&lt;/p>
-&lt;ul>
-&lt;li>创建新目录src&lt;/li>
-&lt;li>创建新文件src/main.c&lt;/li>
-&lt;li>加入index&lt;/li>
-&lt;li>生成第2个commit&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ mkdir src
-$ cat &amp;gt; src/main.c &amp;lt;&amp;lt;EOF
-int main(int argc, char** argv) {
-return 0;
-}
-EOF
-$ git add .
-$ git commit -m 'add main.c source file'
-[master ade93a8] add main.c source file
-1 file changed, 3 insertions(+)
-create mode 100644 src/main.c
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>修改makefile内容，可以正常编译main.c&lt;/li>
-&lt;li>更新index&lt;/li>
-&lt;li>生成第3个commit&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ TAB=&amp;quot;$(printf '\t')&amp;quot;
-$ cat &amp;gt;&amp;gt; makefile &amp;lt;&amp;lt;EOF
-all:
-${TAB}gcc src/main.c
-EOF
-$ git add .
-$ git commit -m 'makefile: compile main.c'
-[master f15d0db] makefile: compile main.c
-1 file changed, 2 insertions(+)
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>这时再看一下objects/目录，已经有11个对象&lt;/li>
-&lt;li>依照对git对象关系的理解，用shell脚本，打印出对象之间的组织结构。
-打印内容分为3部分，每部分都是一个commit，按parent指针遍历。
-每个commit部分具体输出
-&lt;ul>
-&lt;li>commit对象信息hash&lt;/li>
-&lt;li>commit所指向的tree对象hash&lt;/li>
-&lt;li>tree对象包含的所有blob对象与tree对象hash&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>一共只有10个对象，还有一个tag对象，最后也列出来&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ find .git/objects -type f
-.git/objects/5e/35decc375ba1d3d14511b6341f2827943aa42f
-.git/objects/ce/616eb8c060404bb253822921a12aab81ed1ae0
-.git/objects/ad/e93a829fdc058506eab8511e3925ce588bde2d
-.git/objects/b1/d1b69671a4d54e36adbfec34d268aeeb997164
-.git/objects/d1/419c98aa74222a057e961b65935e67398129bf
-.git/objects/9b/130982db52fca0d9c7bdeacf62800794cc3c06
-.git/objects/01/6a4b40ad7446aa80fc5967fdbcbb9e93ad563a
-.git/objects/d8/79e38d57885a2728e0fd7281c1c1ff701b5042
-.git/objects/40/9eed957ae86ad7a1ef1eb0ea4a299395d4457d
-.git/objects/f1/5d0db34f6043bf79800105cb7fbf9abd7074fa
-.git/objects/6a/04ac96c2dd07c1c034c575a17be4deef9f9970
-$ git rev-list --all |
-&amp;gt; while read commit; do
-&amp;gt; tree=$(git cat-file -p $commit | head -n 1 | awk '{print $2}')
-&amp;gt; echo &amp;quot;commit: $commit $(git show -s --format=%s $commit)&amp;quot;
-&amp;gt; echo &amp;quot;tree: $tree&amp;quot;
-&amp;gt; echo
-&amp;gt; git ls-tree -tr $tree
-&amp;gt; echo
-&amp;gt; echo
-&amp;gt; done
-commit: f15d0db34f6043bf79800105cb7fbf9abd7074fa makefile: compile main.c
-tree: 6a04ac96c2dd07c1c034c575a17be4deef9f9970
-100644 blob b1d1b69671a4d54e36adbfec34d268aeeb997164 makefile
-040000 tree 016a4b40ad7446aa80fc5967fdbcbb9e93ad563a src
-100644 blob 9b130982db52fca0d9c7bdeacf62800794cc3c06 src/main.c
-commit: ade93a829fdc058506eab8511e3925ce588bde2d add main.c source file
-tree: d1419c98aa74222a057e961b65935e67398129bf
-100644 blob ce616eb8c060404bb253822921a12aab81ed1ae0 makefile
-040000 tree 016a4b40ad7446aa80fc5967fdbcbb9e93ad563a src
-100644 blob 9b130982db52fca0d9c7bdeacf62800794cc3c06 src/main.c
-commit: 409eed957ae86ad7a1ef1eb0ea4a299395d4457d first commit
-tree: 5e35decc375ba1d3d14511b6341f2827943aa42f
-100644 blob ce616eb8c060404bb253822921a12aab81ed1ae0 makefile
-$ git cat-file -p d879e38d57885a2728e0fd7281c1c1ff701b5042
-object 409eed957ae86ad7a1ef1eb0ea4a299395d4457d
-type commit
-tag v1.1
-tagger DreamAndDead &amp;lt;favorofife@yeah.net&amp;gt; 1515050557 +0800
-minor version update
-&lt;/code>&lt;/pre>&lt;p>依照输出分析，所有对象间关系如图：&lt;/p>
-&lt;figure>
-&lt;img src="images/git-log-internal.png"
-alt="relations between git objects"/> &lt;figcaption>
-&lt;p>relations between git objects&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>到这里，我们对git已经有比较深刻地理解：&lt;/p>
-&lt;ul>
-&lt;li>通常情况，tree与blob对用户不可见，commit是理解git的基本单元&lt;/li>
-&lt;li>所有commit，按照 有向无环图 的形式来组织。每一个新提交，都指向当前commit作为parent&lt;/li>
-&lt;li>每次创建commit的本质没有根本性的变化&lt;/li>
-&lt;li>git对tree与blob的存储是十分紧凑的，相同内容的tree与blob在多个commit之间复用&lt;/li>
-&lt;/ul>
-&lt;h2 id="remote-commits">remote commits&lt;/h2>
-&lt;p>使用git，不免使用服务器来与其它人进行远程项目开发与协作。&lt;/p>
-&lt;p>假设目前的工作流：&lt;/p>
-&lt;ul>
-&lt;li>你在本地master分支建立了A B两个commit，push到服务器&lt;/li>
-&lt;li>甲 pull服务器的代码，建立commit C，push到服务器&lt;/li>
-&lt;li>乙 pull服务器代码，基于commit A，建立新分支，创建了commit E F。切换至master分支，合并分支生成提交D。
-push到服务器&lt;/li>
-&lt;/ul>
-&lt;p>在这段时间内，你并不清楚甲乙进行了什么样的操作。使用git fetch获取服务器仓库内容，
-对你而言，整个仓库的commit结构是这样的：&lt;/p>
-&lt;figure>
-&lt;img src="images/git-remote-ref.png"
-alt="git commits structure"/> &lt;figcaption>
-&lt;p>git commits structure&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;ul>
-&lt;li>本地master指向的最新提交还是B，由parent遍历，只有A B两个提交对自己可见&lt;/li>
-&lt;li>git fetch从服务器取得新的commit/tree/blob对象，更新remote/origin/master引用
-服务器所拥有的commit，本地存在一份完整相同的备份！&lt;/li>
-&lt;li>假如在master分支，git merge合并origin/master，master会指向提交D，这时提交A B C D E F都会对本地可见&lt;/li>
-&lt;/ul>
-&lt;p>这里的合并是一个fast-forward，没有考虑合并冲突等情况，但是多人远程协作工作流的本质是类似的。&lt;/p>
-&lt;h1 id="pack">pack&lt;/h1>
-&lt;p>git默认存储对象的格式被称为松散（loose）对象格式，各个对象分布在.git/objects/子目录中。
-git提供了pack机制，将所有松散对象打包整理为一个二进制包文件packfile，使用delta compression
-差量压缩的方式，文件更为紧凑，体积更小。&lt;/p>
-&lt;h2 id="create-pack">create pack&lt;/h2>
-&lt;p>先来执行pack过程将松散对象打包为packfile。&lt;/p>
-&lt;ul>
-&lt;li>git gc命令，垃圾回收的同时，进行对象pack&lt;/li>
-&lt;li>打包之后，所有之前的松散对象消失了。在.git/objects/pack/与info/目录下，生成了3个新文件&lt;/li>
-&lt;li>还有一个新文件.git/packed-refs&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ git gc
-对象计数中: 11, 完成.
-Delta compression using up to 8 threads.
-压缩对象中: 100% (7/7), 完成.
-写入对象中: 100% (11/11), 完成.
-Total 11 (delta 0), reused 11 (delta 0)
-$ find .git/objects/ -type f
-.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack
-.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx
-.git/objects/info/packs
-$ ls .git/packed-refs
-.git/packed-refs
-&lt;/code>&lt;/pre>&lt;p>下面的章节详细解释这4个文件相关内容。&lt;/p>
-&lt;h2 id="packed-refs">packed-refs&lt;/h2>
-&lt;p>如果执行了pack，git会将原有的refs都移动到packed-refs文件中。
-如果创建新的引用，新的引用会在.git/refs下新生成，不会更改packed-refs文件。&lt;/p>
-&lt;ul>
-&lt;li>原有的refs消失了&lt;/li>
-&lt;li>查看文件内容
-&lt;ul>
-&lt;li>每一行内容，hash对应refs&lt;/li>
-&lt;li>最后一行以^开头，说明其上一行是tag对象，最后一行代表上一行tag对象指向的commit hash&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ find .git/refs/ -type f
-$ cat .git/packed-refs
-# pack-refs with: peeled fully-peeled
-409eed957ae86ad7a1ef1eb0ea4a299395d4457d refs/heads/dev
-f15d0db34f6043bf79800105cb7fbf9abd7074fa refs/heads/master
-f15d0db34f6043bf79800105cb7fbf9abd7074fa refs/remotes/origin/master
-409eed957ae86ad7a1ef1eb0ea4a299395d4457d refs/tags/v1.0
-d879e38d57885a2728e0fd7281c1c1ff701b5042 refs/tags/v1.1
-^409eed957ae86ad7a1ef1eb0ea4a299395d4457d
-&lt;/code>&lt;/pre>&lt;p>使用packed-refs文件，是为了效率。
-因为为了获取指定引用的hash值，git会先在refs中查找，再到packed-refs文件中查找，
-而不是再解析packfile去查找。&lt;/p>
-&lt;h2 id="infopack">info/pack&lt;/h2>
-&lt;p>TODO，虽然文件内容很简单，但是不清楚这个文件的准确作用，没有找到官方文档记载&lt;/p>
-&lt;ul>
-&lt;li>查看文件内容&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ cat .git/objects/info/packs
-P pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack
-&lt;/code>&lt;/pre>&lt;p>看内容的话，像是只用于记录已打包的包文件名。&lt;/p>
-&lt;p>如果你找到准确的文档记载，please tell me :)&lt;/p>
-&lt;h2 id="pack-file-index">pack file index&lt;/h2>
-&lt;p>packfile内部的结构是非常有意思的，详细参阅 &lt;a href="https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-format.txt">官方文档&lt;/a>&lt;/p>
-&lt;p>在pack过程中，除了生成packfile，同时会生成pack index文件。同packed-refs一样，pack index
-也是为了效率，可以快速定位packfile中所需要的对象。&lt;/p>
-&lt;ul>
-&lt;li>verify-pack底层命令可用于解析pack index file。一共11个对象，同pack前是一致的。
-verify-pack的输出分为5列：
-&lt;ul>
-&lt;li>对象hash&lt;/li>
-&lt;li>对象类型&lt;/li>
-&lt;li>对象解压后大小&lt;/li>
-&lt;li>对象在packfile中的大小&lt;/li>
-&lt;li>对象在packfile中的起始偏移位置&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>最后一行输出，“非 delta”，说明packfile中没有存储delta。delta也是一个比较复杂的话题，后面再研究&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ git verify-pack -v .git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx
-f15d0db34f6043bf79800105cb7fbf9abd7074fa commit 241 165 12
-ade93a829fdc058506eab8511e3925ce588bde2d commit 239 161 177
-409eed957ae86ad7a1ef1eb0ea4a299395d4457d commit 181 124 338
-d879e38d57885a2728e0fd7281c1c1ff701b5042 tag 150 134 462
-6a04ac96c2dd07c1c034c575a17be4deef9f9970 tree 66 77 596
-016a4b40ad7446aa80fc5967fdbcbb9e93ad563a tree 34 45 673
-d1419c98aa74222a057e961b65935e67398129bf tree 66 76 718
-5e35decc375ba1d3d14511b6341f2827943aa42f tree 36 47 794
-b1d1b69671a4d54e36adbfec34d268aeeb997164 blob 32 42 841
-9b130982db52fca0d9c7bdeacf62800794cc3c06 blob 50 55 883
-ce616eb8c060404bb253822921a12aab81ed1ae0 blob 11 20 938
-非 delta：11 个对象
-.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack: ok
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>查看pack index本身，输出内容有些长，be patient&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ hexdump -C .git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx
-00000000 ff 74 4f 63 00 00 00 02 00 00 00 00 00 00 00 01 |.tOc............|
-00000010 00 00 00 01 00 00 00 01 00 00 00 01 00 00 00 01 |................|
-*
-00000100 00 00 00 01 00 00 00 01 00 00 00 02 00 00 00 02 |................|
-00000110 00 00 00 02 00 00 00 02 00 00 00 02 00 00 00 02 |................|
-*
-00000180 00 00 00 03 00 00 00 03 00 00 00 03 00 00 00 03 |................|
-*
-000001b0 00 00 00 04 00 00 00 04 00 00 00 04 00 00 00 04 |................|
-*
-00000270 00 00 00 04 00 00 00 05 00 00 00 05 00 00 00 05 |................|
-00000280 00 00 00 05 00 00 00 05 00 00 00 05 00 00 00 05 |................|
-*
-000002b0 00 00 00 05 00 00 00 05 00 00 00 05 00 00 00 06 |................|
-000002c0 00 00 00 06 00 00 00 06 00 00 00 06 00 00 00 07 |................|
-000002d0 00 00 00 07 00 00 00 07 00 00 00 07 00 00 00 07 |................|
-*
-00000340 00 00 00 08 00 00 00 08 00 00 00 08 00 00 00 09 |................|
-00000350 00 00 00 09 00 00 00 09 00 00 00 09 00 00 00 09 |................|
-00000360 00 00 00 09 00 00 00 09 00 00 00 0a 00 00 00 0a |................|
-00000370 00 00 00 0a 00 00 00 0a 00 00 00 0a 00 00 00 0a |................|
-*
-000003c0 00 00 00 0a 00 00 00 0a 00 00 00 0a 00 00 00 0b |................|
-000003d0 00 00 00 0b 00 00 00 0b 00 00 00 0b 00 00 00 0b |................|
-*
-00000400 00 00 00 0b 00 00 00 0b 01 6a 4b 40 ad 74 46 aa |.........jK@.tF.|
-00000410 80 fc 59 67 fd bc bb 9e 93 ad 56 3a 40 9e ed 95 |..Yg......V:@...|
-00000420 7a e8 6a d7 a1 ef 1e b0 ea 4a 29 93 95 d4 45 7d |z.j......J)...E}|
-00000430 5e 35 de cc 37 5b a1 d3 d1 45 11 b6 34 1f 28 27 |^5..7[...E..4.('|
-00000440 94 3a a4 2f 6a 04 ac 96 c2 dd 07 c1 c0 34 c5 75 |.:./j........4.u|
-00000450 a1 7b e4 de ef 9f 99 70 9b 13 09 82 db 52 fc a0 |.{.....p.....R..|
-00000460 d9 c7 bd ea cf 62 80 07 94 cc 3c 06 ad e9 3a 82 |.....b....&amp;lt;...:.|
-00000470 9f dc 05 85 06 ea b8 51 1e 39 25 ce 58 8b de 2d |.......Q.9%.X..-|
-00000480 b1 d1 b6 96 71 a4 d5 4e 36 ad bf ec 34 d2 68 ae |....q..N6...4.h.|
-00000490 eb 99 71 64 ce 61 6e b8 c0 60 40 4b b2 53 82 29 |..qd.an..`@K.S.)|
-000004a0 21 a1 2a ab 81 ed 1a e0 d1 41 9c 98 aa 74 22 2a |!.*......A...t&amp;quot;*|
-000004b0 05 7e 96 1b 65 93 5e 67 39 81 29 bf d8 79 e3 8d |.~..e.^g9.)..y..|
-000004c0 57 88 5a 27 28 e0 fd 72 81 c1 c1 ff 70 1b 50 42 |W.Z'(..r....p.PB|
-000004d0 f1 5d 0d b3 4f 60 43 bf 79 80 01 05 cb 7f bf 9a |.]..O`C.y.......|
-000004e0 bd 70 74 fa 2c 66 bb 82 0c ff 79 90 ce 00 7b 86 |.pt.,f....y...{.|
-000004f0 b9 6f 6a bd ac d3 e5 f9 25 29 01 fa af 5e b3 e0 |.oj.....%)...^..|
-00000500 61 73 a7 c1 a8 56 9c af 04 55 c6 f8 f0 2e 58 76 |as...V...U....Xv|
-00000510 00 00 02 a1 00 00 01 52 00 00 03 1a 00 00 02 54 |.......R.......T|
-00000520 00 00 03 73 00 00 00 b1 00 00 03 49 00 00 03 aa |...s.......I....|
-00000530 00 00 02 ce 00 00 01 ce 00 00 00 0c 74 05 8f fa |............t...|
-00000540 32 d6 4f 25 25 e6 9a ef 0f df 5b a3 f9 5e 24 df |2.O%%.....[..^$.|
-00000550 a5 74 df 44 c3 8a e3 5d 83 8c 9e 93 c8 e2 34 f2 |.t.D...]......4.|
-00000560 ec 72 9f 78 |.r.x|
-00000564
-&lt;/code>&lt;/pre>&lt;p>同之前讲到的，pack index并不存储对象，只是为了更方便的在packfile中索引对象。&lt;/p>
-&lt;p>一图胜千言，借用 &lt;a href="http://shafiulazam.com/gitbook/7_the_packfile.html%0A">git community book 的插图&lt;/a>&lt;/p>
-&lt;figure>
-&lt;img src="images/git-packfile-index-structure.jpg"
-alt="图解pack index file存储结构"/> &lt;figcaption>
-&lt;p>图解pack index file存储结构&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>index file一般都使用version 2，对照上面index file内容，逐字节解析：&lt;/p>
-&lt;ul>
-&lt;li>4byte：ff 74 4f 63，magic number&lt;/li>
-&lt;li>4byte：00 00 00 02，标明版本号&lt;/li>
-&lt;li>256*4byte：fanout table，很有趣的结构，下面单独章节说明，00：8 - 400：8&lt;/li>
-&lt;li>对象个数*20byte：所有对象的hash值，按ascii排序。400：8 - 4e0：4部分，11个SHA1顺序排列&lt;/li>
-&lt;li>对象个数*4byte：在packfile中每个对象的crc checksums。4e0：4 - 510：0&lt;/li>
-&lt;li>对象个数*4byte：在packfile中每个对象的起始偏移位置。510：0 - 530：c&lt;/li>
-&lt;li>0byte：只有packfile大小超过2G才会存在，这里不追究&lt;/li>
-&lt;li>2*20byte： packfile SHA1与pack index file SHA1。530：c - end&lt;/li>
-&lt;/ul>
-&lt;h3 id="fanout-table">fanout table&lt;/h3>
-&lt;p>pack file index存储结构一目了然，其它块表示的意思很明确。
-fanout table不是一行可以讲完的，这里单独分出一个章节来。&lt;/p>
-&lt;p>fanout table的作用也是在于提高查询效率，用于在pack index file中快速查询SHA1。
-下面来详细解析下它是如何做到这一点的。&lt;/p>
-&lt;ul>
-&lt;li>单独截取pack index file中fanout table部分&lt;/li>
-&lt;li>单独截取对象SHA1列表部分&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ dd status=none ibs=1 skip=$((0x08)) count=$((0x400)) if=.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx | hexdump -C
-00000000 00 00 00 00 00 00 00 01 00 00 00 01 00 00 00 01 |................|
-00000010 00 00 00 01 00 00 00 01 00 00 00 01 00 00 00 01 |................|
-*
-00000100 00 00 00 02 00 00 00 02 00 00 00 02 00 00 00 02 |................|
-*
-00000170 00 00 00 02 00 00 00 02 00 00 00 03 00 00 00 03 |................|
-00000180 00 00 00 03 00 00 00 03 00 00 00 03 00 00 00 03 |................|
-*
-000001a0 00 00 00 03 00 00 00 03 00 00 00 04 00 00 00 04 |................|
-000001b0 00 00 00 04 00 00 00 04 00 00 00 04 00 00 00 04 |................|
-*
-00000260 00 00 00 04 00 00 00 04 00 00 00 04 00 00 00 05 |................|
-00000270 00 00 00 05 00 00 00 05 00 00 00 05 00 00 00 05 |................|
-*
-000002b0 00 00 00 05 00 00 00 06 00 00 00 06 00 00 00 06 |................|
-000002c0 00 00 00 06 00 00 00 07 00 00 00 07 00 00 00 07 |................|
-000002d0 00 00 00 07 00 00 00 07 00 00 00 07 00 00 00 07 |................|
-*
-00000330 00 00 00 07 00 00 00 07 00 00 00 08 00 00 00 08 |................|
-00000340 00 00 00 08 00 00 00 09 00 00 00 09 00 00 00 09 |................|
-00000350 00 00 00 09 00 00 00 09 00 00 00 09 00 00 00 09 |................|
-00000360 00 00 00 0a 00 00 00 0a 00 00 00 0a 00 00 00 0a |................|
-*
-000003c0 00 00 00 0a 00 00 00 0b 00 00 00 0b 00 00 00 0b |................|
-000003d0 00 00 00 0b 00 00 00 0b 00 00 00 0b 00 00 00 0b |................|
-*
-00000400
-$ dd status=none ibs=1 skip=$((0x400+0x08)) count=$((0x0b*20)) if=.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx | hexdump -C
-00000000 01 6a 4b 40 ad 74 46 aa 80 fc 59 67 fd bc bb 9e |.jK@.tF...Yg....|
-00000010 93 ad 56 3a 40 9e ed 95 7a e8 6a d7 a1 ef 1e b0 |..V:@...z.j.....|
-00000020 ea 4a 29 93 95 d4 45 7d 5e 35 de cc 37 5b a1 d3 |.J)...E}^5..7[..|
-00000030 d1 45 11 b6 34 1f 28 27 94 3a a4 2f 6a 04 ac 96 |.E..4.('.:./j...|
-00000040 c2 dd 07 c1 c0 34 c5 75 a1 7b e4 de ef 9f 99 70 |.....4.u.{.....p|
-00000050 9b 13 09 82 db 52 fc a0 d9 c7 bd ea cf 62 80 07 |.....R.......b..|
-00000060 94 cc 3c 06 ad e9 3a 82 9f dc 05 85 06 ea b8 51 |..&amp;lt;...:........Q|
-00000070 1e 39 25 ce 58 8b de 2d b1 d1 b6 96 71 a4 d5 4e |.9%.X..-....q..N|
-00000080 36 ad bf ec 34 d2 68 ae eb 99 71 64 ce 61 6e b8 |6...4.h...qd.an.|
-00000090 c0 60 40 4b b2 53 82 29 21 a1 2a ab 81 ed 1a e0 |.`@K.S.)!.*.....|
-000000a0 d1 41 9c 98 aa 74 22 2a 05 7e 96 1b 65 93 5e 67 |.A...t&amp;quot;*.~..e.^g|
-000000b0 39 81 29 bf d8 79 e3 8d 57 88 5a 27 28 e0 fd 72 |9.)..y..W.Z'(..r|
-000000c0 81 c1 c1 ff 70 1b 50 42 f1 5d 0d b3 4f 60 43 bf |....p.PB.]..O`C.|
-000000d0 79 80 01 05 cb 7f bf 9a bd 70 74 fa |y........pt.|
-000000dc
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>SHA1列表每20byte为一项，共11项，对应11个对象&lt;/li>
-&lt;li>fanout table每4byte为一项，共256项
-&lt;ul>
-&lt;li>第1项，代表所有SHA1中以 01 开始的最小的SHA1在SHA1列表中的索引值。00 00 00 00 表示索引值为0，对应SHA1列表中的
-016a4b40ad7446aa80fc5967fdbcbb9e93ad563a。为什么不是代表以 00 开始的SHA1呢？因为 00 开始的最小的SHA1无论是否存在，必定
-是从索引值0开始的，不需要存储&lt;/li>
-&lt;li>第2项，代表所有SHA1中以 02 开始的最小的SHA1在SHA1列表中的索引值。00 00 00 01 表示索引值为1，因为索引0已经存储1个 01 开始SHA1，
-所以 02 开始的SHA1至少从索引1开始。而索引1对应SHA1列表中的409eed957ae86ad7a1ef1eb0ea4a299395d4457d，以 40 而非以 02 开始，所以
-不存在SHA1以 02 为起始的对象&lt;/li>
-&lt;li>第3项，代表所有SHA1中以 03 开始的最小的SHA1在SHA1列表中的索引值。00 00 00 01，理解同上，不存在SHA1以 03 起始的对象&lt;/li>
-&lt;li>&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;..&lt;/li>
-&lt;li>第255项，代表所有SHA1中以 ff 开始的最小的SHA1在SHA1列表中的索引值。00 00 00 0b，已经超出了SHA1表的范围，所以不存在 ff 起始的SHA1&lt;/li>
-&lt;li>第256项，代表所有对象的个数。00 00 00 0b，共11个对象。第256项代表的索引总是超出SHA1表且指向SHA1表的末尾&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>所以在查询一个SHA1值，比如 29afa901，先在fanout table找到 29 对应的索引，再找到 2a 对应的索引，所查找的SHA1必定在这两个索引之间。
-如果两个索引相同，说明SHA1不存在于index file中；如果不相同，用二分法查找SHA1，非常快速。&lt;/p>
-&lt;p>这就是fanout table提高查询效率的方式。&lt;/p>
-&lt;h2 id="pack-file">pack file&lt;/h2>
-&lt;p>pack index file存储对象的SHA1，crc等信息，packfile存储对象的内容。&lt;/p>
-&lt;ul>
-&lt;li>查看packfile内容，输出内容过多，中间部分用&amp;hellip;&amp;hellip;.省略输出&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ hexdump -C .git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack
-00000000 50 41 43 4b 00 00 00 02 00 00 00 0b 91 0f 78 9c |PACK..........x.|
-00000010 9d cc 41 6a c3 30 10 46 e1 bd 4e a1 7d 21 8c 6c |..Aj.0.F..N.}!.l|
-00000020 8f 25 95 50 52 f0 45 c6 33 bf 88 69 65 07 a1 06 |.%.PR.E.3..ie...|
-00000030 7a fb f8 0c d9 bd cd f7 7a 03 fc 2c 34 89 e6 59 |z.......z..,4..Y|
-..............................................................................
-..............................................................................
-..............................................................................
-..............................................................................
-00000390 9c 32 4d 85 6a 2e 05 20 28 4a 2d 29 2d ca 53 30 |.2M.j.. (J-)-.S0|
-000003a0 b0 e6 aa e5 02 00 a4 a5 0f 59 3b 78 9c 53 56 c8 |.........Y;x.SV.|
-000003b0 4d cc 4e 4d cb cc 49 e5 02 00 14 ae 03 8c 74 05 |M.NM..I.......t.|
-000003c0 8f fa 32 d6 4f 25 25 e6 9a ef 0f df 5b a3 f9 5e |..2.O%%.....[..^|
-000003d0 24 df |$.|
-000003d2
-&lt;/code>&lt;/pre>&lt;p>packfile的格式非常简单清晰，同样借用 &lt;a href="http://shafiulazam.com/gitbook/7_the_packfile.html%0A">git community book 插图&lt;/a>&lt;/p>
-&lt;figure>
-&lt;img src="images/git-packfile-structure.jpg"
-alt="图解packfile格式"/> &lt;figcaption>
-&lt;p>图解packfile格式&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;ul>
-&lt;li>4byte： PACK 4个字符&lt;/li>
-&lt;li>4byte： 版本号&lt;/li>
-&lt;li>4byte： 存储对象的个数，00 00 00 0b，11个对象&lt;/li>
-&lt;li>objects，所有对象内容列表：
-&lt;ul>
-&lt;li>head info，占用多少byte不固定，取决于每个byte的第1个bit:
-&lt;ul>
-&lt;li>1byte： 0x91 =&amp;gt; 1001 0001
-&lt;ul>
-&lt;li>1bit： 如果为1，说明其后的1个byte还是head部分；如果为0，说明其后的byte就是对象数据。这里为1&lt;/li>
-&lt;li>3bit： 标明对象的类型， 001 标明对象为 commit&lt;/li>
-&lt;li>4bit： 对象解压缩后字节大小（需要多部分组合计算）&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>1byte： 0x0f =&amp;gt; 0000 1111，因为上一个byte 第1bit为1，所以这个byte也属于head的一部分
-&lt;ul>
-&lt;li>1bit： 如果为1，说明其后的1个byte还是head部分；如果为0，说明其后的byte就是对象数据。这里为0&lt;/li>
-&lt;li>7bit： 对象解压缩后字节大小（需要多部分组合计算）&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>data，对象压缩内容&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>借用图解来解释head部分对象解压缩大小的计算，thanks &lt;a href="http://shafiulazam.com/gitbook/7_the_packfile.html%0A">git community book&lt;/a>&lt;/p>
-&lt;figure>
-&lt;img src="images/git-packfile-object-head-structure.jpg"
-alt="如何计算对象size"/> &lt;figcaption>
-&lt;p>如何计算对象size&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;ul>
-&lt;li>第一个byte低4bit，为对象解压缩size的最低4bit&lt;/li>
-&lt;li>其后每个byte的低7bit，按照移位规则，最终组合成的数字代表对象解压缩的size数值&lt;/li>
-&lt;/ul>
-&lt;p>接下来从packfile中提取压缩对象&lt;/p>
-&lt;ul>
-&lt;li>从packfile index中，提取出所有对象在packfile中的偏移信息。最后一个对象的偏移最小，0x0c，对应SHA1列表中的最后一个，f15d0db34f6043bf79800105cb7fbf9abd7074fa&lt;/li>
-&lt;li>上面讲到，head之后才是属于对象内容，那对象内容的大小是多少？并没有告诉我们。这里先在所有对象偏移信息中，找到
-第2小的偏移，0xb1，可以认定从0x0c - 0xb1中的内容，就是压缩对象的内容。果不其然，解压出一个commit对象&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ dd status=none ibs=1 skip=$((0x400+0x08+0x0b*20+0x0b*4)) count=$((0x0b*4)) if=.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.idx | hexdump -C
-00000000 00 00 02 a1 00 00 01 52 00 00 03 1a 00 00 02 54 |.......R.......T|
-00000010 00 00 03 73 00 00 00 b1 00 00 03 49 00 00 03 aa |...s.......I....|
-00000020 00 00 02 ce 00 00 01 ce 00 00 00 0c |............|
-0000002c
-$ dd status=none ibs=1 skip=$((0x0c+2)) count=$((0xb1-0x0c-2)) if=.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack | pigz -d | hexdump -C
-00000000 74 72 65 65 20 36 61 30 34 61 63 39 36 63 32 64 |tree 6a04ac96c2d|
-00000010 64 30 37 63 31 63 30 33 34 63 35 37 35 61 31 37 |d07c1c034c575a17|
-00000020 62 65 34 64 65 65 66 39 66 39 39 37 30 0a 70 61 |be4deef9f9970.pa|
-00000030 72 65 6e 74 20 61 64 65 39 33 61 38 32 39 66 64 |rent ade93a829fd|
-00000040 63 30 35 38 35 30 36 65 61 62 38 35 31 31 65 33 |c058506eab8511e3|
-00000050 39 32 35 63 65 35 38 38 62 64 65 32 64 0a 61 75 |925ce588bde2d.au|
-00000060 74 68 6f 72 20 44 72 65 61 6d 41 6e 64 44 65 61 |thor DreamAndDea|
-00000070 64 20 3c 66 61 76 6f 72 6f 66 69 66 65 40 79 65 |d &amp;lt;favorofife@ye|
-00000080 61 68 2e 6e 65 74 3e 20 31 35 31 35 30 35 37 30 |ah.net&amp;gt; 15150570|
-00000090 38 38 20 2b 30 38 30 30 0a 63 6f 6d 6d 69 74 74 |88 +0800.committ|
-000000a0 65 72 20 44 72 65 61 6d 41 6e 64 44 65 61 64 20 |er DreamAndDead |
-000000b0 3c 66 61 76 6f 72 6f 66 69 66 65 40 79 65 61 68 |&amp;lt;favorofife@yeah|
-000000c0 2e 6e 65 74 3e 20 31 35 31 35 30 35 37 30 38 38 |.net&amp;gt; 1515057088|
-000000d0 20 2b 30 38 30 30 0a 0a 6d 61 6b 65 66 69 6c 65 | +0800..makefile|
-000000e0 3a 20 63 6f 6d 70 69 6c 65 20 6d 61 69 6e 2e 63 |: compile main.c|
-000000f0 0a |.|
-000000f1
-&lt;/code>&lt;/pre>&lt;p>这里存在一个疑问，如果只能确定对象在packfile中的偏移，不能确定对象在packfile中的大小，如果每次都像上面的做法一样，找到其次的偏移再进行减法，
-无疑是非常低效的。&lt;/p>
-&lt;p>事实上，对象内容的范围由zlib压缩算法就可以确定。&lt;/p>
-&lt;ul>
-&lt;li>比如我们从对象偏移处截取的数据多于对象本身（250byte），再进行解压缩，
-最后还是解析出了对象，不过pigz stderr输出了warnning信息，trailing junk，说明多余的数据并没有参与解压运算。&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ dd status=none ibs=1 skip=$((0x0c+2)) count=250 if=.git/objects/pack/pack-74058ffa32d64f2525e69aef0fdf5ba3f95e24df.pack | pigz -d | hexdump -C
-00000000 74 72 65 65 20 36 61 30 34 61 63 39 36 63 32 64 |tree 6a04ac96c2d|
-00000010 64 30 37 63 31 63 30 33 34 63 35 37 35 61 31 37 |d07c1c034c575a17|
-00000020 62 65 34 64 65 65 66 39 66 39 39 37 30 0a 70 61 |be4deef9f9970.pa|
-00000030 72 65 6e 74 20 61 64 65 39 33 61 38 32 39 66 64 |rent ade93a829fd|
-pigz: &amp;lt;stdin&amp;gt; OK, has trailing junk which was ignored00000040 63 30 35 38 35 30 36 65 61 62 38 35 31 31 65 33 |c058506eab8511e3|
-00000050 39 32 35 63 65 35 38 38 62 64 65 32 64 0a 61 75 |925ce588bde2d.au|
-00000060 74 68 6f 72 20 44 72 65 61 6d 41 6e 64 44 65 61 |thor DreamAndDea|
-00000070 64 20 3c 66 61 76 6f 72 6f 66 69 66 65 40 79 65 |d &amp;lt;favorofife@ye|
-00000080 61 68 2e 6e 65 74 3e 20 31 35 31 35 30 35 37 30 |ah.net&amp;gt; 15150570|
-00000090 38 38 20 2b 30 38 30 30 0a 63 6f 6d 6d 69 74 74 |88 +0800.committ|
-000000a0 65 72 20 44 72 65 61 6d 41 6e 64 44 65 61 64 20 |er DreamAndDead |
-000000b0 3c 66 61 76 6f 72 6f 66 69 66 65 40 79 65 61 68 |&amp;lt;favorofife@yeah|
-000000c0 2e 6e 65 74 3e 20 31 35 31 35 30 35 37 30 38 38 |.net&amp;gt; 1515057088|
-000000d0 20 2b 30 38 30 30 0a 0a 6d 61 6b 65 66 69 6c 65 | +0800..makefile|
-000000e0 3a 20 63 6f 6d 70 69 6c 65 20 6d 61 69 6e 2e 63 |: compile main.c|
-000000f0 0a |.|
-000000f1
-&lt;/code>&lt;/pre>&lt;p>可以确定，只需要对象数据的开始，就可以解压缩出对象本身。至于具体压缩大小是如何计算的，我还不得而知。Please inform me if you know how :)&lt;/p>
-&lt;h2 id="delta-in-pack-file">delta in pack file&lt;/h2>
-&lt;p>前面解读了packfile中内容，所有对象经过zlib压缩，排列在一起，聚合为packfile。好像没什么新鲜的，因为每个松散对象
-也是经过zlib压缩的，packfile好像不过是把大家聚集在一个文件中而已，并没有带来什么空间利用率上的提升。&lt;/p>
-&lt;p>这也是为什么需要delta机制的原因，delta是packfile得以压缩空间的关键所在。packfile采用了一种名为delta compression的机制，
-将多个对象中重复部分单独存储，其它部分差量存储。&lt;/p>
-&lt;p>先来构建一个可以产生delta的环境。&lt;/p>
-&lt;ul>
-&lt;li>编译main.c，生成a.out可执行文件&lt;/li>
-&lt;li>添加a.out&lt;/li>
-&lt;li>创建新的commit&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ make
-$ git add .
-$ git commit -m 'add a.out binary file'
-[master 3d58afd] add a.out binary file
-1 file changed, 0 insertions(+), 0 deletions(-)
-create mode 100755 a.out
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>强制在a.out文件后续添加9个字符（包括0x0a）。a.out有8k的大小，9个字符相对其来说不值一提。
-两个文件有8k内容是相同的，只有9个字符的区别，如果将两个文件分别全部存储，那就有8k的冗余数据啊&lt;/li>
-&lt;li>添加新的a.out&lt;/li>
-&lt;li>创建新commit&lt;/li>
-&lt;li>再次执行pack，输出和之前不同的在 Total 17 (delta 1)，有一个差量存储（果不其然，生成了delta）&lt;/li>
-&lt;li>生成了新的packfile，同之前的不同&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ echo '12345678' &amp;gt;&amp;gt; a.out
-$ git add .
-$ git commit -m 'add trailing junk to a.out'
-[master cfaf867] add trailing junk to a.out
-1 file changed, 0 insertions(+), 0 deletions(-)
-$ git gc
-对象计数中: 17, 完成.
-Delta compression using up to 8 threads.
-压缩对象中: 100% (13/13), 完成.
-写入对象中: 100% (17/17), 完成.
-Total 17 (delta 1), reused 11 (delta 0)
-$ find .git/objects/ -type f
-.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.idx
-.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack
-.git/objects/info/packs
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>先来找到两个版本a.out的blob SHA1值
-&lt;ul>
-&lt;li>git log，最新的两个commit包含a.out文件&lt;/li>
-&lt;li>最新commit包含的a.out blob SHA1为 0a323ebc526b357580590d6d7a884d1dd473321b，对应的为append多余字符的a.out&lt;/li>
-&lt;li>parent commit包含的a.out blob SHA1为 0ec8e3e23234ba10a9822951812ba37f391da114，对应的是make生成的a.out&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>再次执行verify-pack来解析下packfile，有一行的输出比较特别，有7列内容
-&lt;ul>
-&lt;li>前5列同之前的解析是相同的&lt;/li>
-&lt;li>第6列，delta chain的深度，TODO，具体不清楚其含义&lt;/li>
-&lt;li>第7列，delta对应的base对象SHA1。delta要构建在base对象上，才可以生成新的对象&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ git log --oneline
-cfaf867 add trailing junk to a.out
-3d58afd add a.out binary file
-f15d0db makefile: compile main.c
-ade93a8 add main.c source file
-409eed9 first commit
-$ git ls-tree -tr cfaf867
-100755 blob 0a323ebc526b357580590d6d7a884d1dd473321b a.out
-100644 blob b1d1b69671a4d54e36adbfec34d268aeeb997164 makefile
-040000 tree 016a4b40ad7446aa80fc5967fdbcbb9e93ad563a src
-100644 blob 9b130982db52fca0d9c7bdeacf62800794cc3c06 src/main.c
-$ git ls-tree -tr 3d58afd
-100755 blob 0ec8e3e23234ba10a9822951812ba37f391da114 a.out
-100644 blob b1d1b69671a4d54e36adbfec34d268aeeb997164 makefile
-040000 tree 016a4b40ad7446aa80fc5967fdbcbb9e93ad563a src
-100644 blob 9b130982db52fca0d9c7bdeacf62800794cc3c06 src/main.c
-$ git verify-pack -v .git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.idx
-cfaf8679609f0d2bce01944f58b509db50d371a0 commit 243 167 12
-3d58afd50b5b4211be1850255a3411dd2cc70bae commit 238 160 179
-f15d0db34f6043bf79800105cb7fbf9abd7074fa commit 241 165 339
-ade93a829fdc058506eab8511e3925ce588bde2d commit 239 161 504
-409eed957ae86ad7a1ef1eb0ea4a299395d4457d commit 181 124 665
-d879e38d57885a2728e0fd7281c1c1ff701b5042 tag 150 134 789
-c0649f8482ba4535cb5b662757bd81018b3c21e4 tree 99 110 923
-016a4b40ad7446aa80fc5967fdbcbb9e93ad563a tree 34 45 1033
-9d82ecb86dcde3221b4815505d185791a1a657c7 tree 99 112 1078
-6a04ac96c2dd07c1c034c575a17be4deef9f9970 tree 66 77 1190
-d1419c98aa74222a057e961b65935e67398129bf tree 66 76 1267
-5e35decc375ba1d3d14511b6341f2827943aa42f tree 36 47 1343
-0a323ebc526b357580590d6d7a884d1dd473321b blob 8561 2331 1390
-0ec8e3e23234ba10a9822951812ba37f391da114 blob 7 18 3721 1 0a323ebc526b357580590d6d7a884d1dd473321b
-b1d1b69671a4d54e36adbfec34d268aeeb997164 blob 32 42 3739
-9b130982db52fca0d9c7bdeacf62800794cc3c06 blob 50 55 3781
-ce616eb8c060404bb253822921a12aab81ed1ae0 blob 11 20 3836
-非 delta：16 个对象
-链长 = 1: 1 对象
-.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack: ok
-&lt;/code>&lt;/pre>&lt;p>这里有个疑问，0ec8对应的是make生成的a.out，0a32对应的是append字符的a.out。为什么0a32是base，0ec8不是base？
-这样做可能还是因为效率，因为最新的对象，被引用的机率要大于历史对象，将最新的a.out完整存储，方便快速取出对象。&lt;/p>
-&lt;p>下面根据verify-pack输出的偏移值，来仔细查看base与delta&lt;/p>
-&lt;ul>
-&lt;li>base对象的前16个字节，0xb1 97 04，head info占用了3个字节&lt;/li>
-&lt;li>3个字节之后就是base a.out blob的内容。内容过长，中间用&amp;hellip;&amp;hellip;..省略&lt;/li>
-&lt;li>delta对象偏移的前16个字节
-&lt;ul>
-&lt;li>0x67 =&amp;gt; 0110 0111
-&lt;ul>
-&lt;li>0 表示 后续字节不属于head信息&lt;/li>
-&lt;li>110 表示 存储类型为 OBJ_OFS_DELTA&lt;/li>
-&lt;li>0111 表示 存储数据解压后大小为 7 字节&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>0x91 1b，解析为一个负的offset值 =&amp;gt; 1001 0001 0001 1011
-&lt;ul>
-&lt;li>1 表示后续字节为offset字段的一部分&lt;/li>
-&lt;li>001 0001， offset的一部分，需组合计算，运算规则同对象size的计算，同样的应用移位&lt;/li>
-&lt;li>0 表示后续字节为delta数据部分&lt;/li>
-&lt;li>001 1011，offset的一部分，需组合计算，运算规则同对象size的计算，同样的应用移位&lt;/li>
-&lt;li>组合offset的内容为 00 1101 1001 0001 =&amp;gt; 0xd91&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>delta data，用zlib解压缩，内容为 0xf1 42 e8 42 b0 68 21&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ dd status=none ibs=1 skip=$((1390)) if=.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack | hexdump -C | head -n 1
-00000000 b1 97 04 78 9c ed 59 6f 6c 5b 57 15 bf cf ce df |...x..Yol[W.....|
-$ dd status=none ibs=1 skip=$((1390+3)) if=.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack | pigz -d | hexdump -C
-00000000 7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 |.ELF............|
-00000010 02 00 3e 00 01 00 00 00 e0 03 40 00 00 00 00 00 |..&amp;gt;.......@.....|
-pigz: 00000020 40 00 00 00 00 00 00 00 a8 19 00 00 00 00 00 00 |@...............|
-&amp;lt;stdin&amp;gt; OK, has trailing junk which was ignored
-00000030 00 00 00 00 40 00 38 00 09 00 40 00 1f 00 1c 00 |....@.8...@.....|
-00000040 06 00 00 00 05 00 00 00 40 00 00 00 00 00 00 00 |........@.......|
-00000050 40 00 40 00 00 00 00 00 40 00 40 00 00 00 00 00 |@.@.....@.@.....|
-..............................................................................
-..............................................................................
-..............................................................................
-00002140 98 16 00 00 00 00 00 00 01 02 00 00 00 00 00 00 |................|
-00002150 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 |................|
-00002160 00 00 00 00 00 00 00 00 31 32 33 34 35 36 37 38 |........12345678|
-00002170 0a |.|
-00002171
-$ dd status=none ibs=1 skip=$((3721)) if=.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack | hexdump -C | head -n 1
-00000000 67 91 1b 78 9c fb e8 f4 c2 69 43 86 22 00 10 bb |g..x.....iC.&amp;quot;...|
-$ dd status=none ibs=1 skip=$((3721+3)) if=.git/objects/pack/pack-dcb9339ef1f0cd8395021b7e50d7457a340b5519.pack | pigz -d | hexdump -C
-pigz: &amp;lt;stdin&amp;gt; OK, has trailing junk which was ignored
-00000000 f1 42 e8 42 b0 68 21 |.B.B.h!|
-00000007
-&lt;/code>&lt;/pre>&lt;p>可见两个版本的a.out并没有存储两份，delta部分数据量尤其的小，节省了50%的空间。&lt;/p>
-&lt;p>不幸的是，虽然按照 &lt;a href="https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-format.txt#L112">官方文档&lt;/a> 的方式解开了OBJ_OFS_DELTA的内容，
-但是我却不知道如何解读，这方面并没有详细的记载，只有找到唯一 &lt;a href="https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-heuristics.txt">官方又有些诙谐的文档&lt;/a> ，可以读一下，very funny。&lt;/p>
-&lt;p>希望后续有时间深入源码，再来详细的解释delta(dark corner of git)部分。&lt;/p>- https://dreamanddead.github.io/post/git-internals/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Understanding ssh port forwarding</title><link>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</link><pubDate>Wed, 13 Dec 2017 00:00:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/understanding-ssh-tunnel/ -&lt;p>这篇文件旨在理好的理解ssh隧道的原理与用法。&lt;/p>
-&lt;h1 id="port-forwarding">Port forwarding&lt;/h1>
-&lt;p>端口转发是ssh内建的机制，在已经建立的ssh通道之上，转发应用层的流量。
-大家也形象地称之为ssh隧道（ssh tunnel）。&lt;/p>
-&lt;p>端口转发分为3类：&lt;/p>
-&lt;ul>
-&lt;li>local forwarding，将client端口流量转发到server端&lt;/li>
-&lt;li>remote forwarding，与local forwarding相反，将server端口流量转发到client端&lt;/li>
-&lt;li>dynamic forwarding，本质与前两类相同，流量转发地址由流量访问地址动态决定，和proxy有相似的效果&lt;/li>
-&lt;/ul>
-&lt;p>server是运行sshd服务的主机，client是ssh远程连接server的主机&lt;/p>
-&lt;h1 id="local-forwarding">Local Forwarding&lt;/h1>
-&lt;h2 id="meaning">meaning&lt;/h2>
-&lt;p>举一个简单的例子相对容易理解。&lt;/p>
-&lt;p>比如server主机运行web服务，端口80，client使用ssh远程连接server&lt;/p>
-&lt;pre>&lt;code>ssh -L 7000:127.0.0.1:80 root@server_ip
-&lt;/code>&lt;/pre>&lt;p>和普通的ssh连接一样，开启一个新的shell，控制server主机，与此同时，ssh也在client主机监听7000端口。&lt;/p>
-&lt;pre>&lt;code>curl -X GET http://localhost:7000
-&lt;/code>&lt;/pre>&lt;p>在client访问7000端口，流量会通过与server建立的ssh通道，转发至server的127.0.0.1:80，
-等同于访问了server的web服务，amazing！&lt;/p>
-&lt;p>先来解释下示例的命令&lt;/p>
-&lt;ul>
-&lt;li>root@server_ip，server ip与用户，与常规使用ssh是一样的&lt;/li>
-&lt;li>-L，L means Local，local forwarding&lt;/li>
-&lt;li>7000，本地端口，访问此端口的流量会被转发&lt;/li>
-&lt;li>127.0.0.1:80，重点，127.0.0.1:80是相对于server而言，也就是server_ip:80&lt;/li>
-&lt;/ul>
-&lt;h2 id="usage">usage&lt;/h2>
-&lt;p>from man page&lt;/p>
-&lt;pre>&lt;code>-L [bind_address:]port:host:hostport
--L [bind_address:]port:remote_socket
--L local_socket:host:hostport
--L local_socket:remote_socket
-&lt;/code>&lt;/pre>&lt;p>参数分为4类，从中看到，端口不仅可以是tcp socket，也可以是unix socket。&lt;/p>
-&lt;p>对参数的理解要清晰&lt;/p>
-&lt;ol>
-&lt;li>bind_address，可以为以下值
-&lt;ul>
-&lt;li>localhost：client主机的port为转发端口，但是，client_ip:port不能转发来自client LAN其它主机的流量&lt;/li>
-&lt;li>忽略：效果同localhost&lt;/li>
-&lt;li>*：端口绑定没有变化，区别在于，client_ip:port可以转发来自client LAN其它主机的流量&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>host:hostport，转发流量所至的端口。host:hostport是相对于server_ip而言，这点非常重要，比如
-&lt;ul>
-&lt;li>参数为localhost:80，意味着转发至server_ip:80&lt;/li>
-&lt;li>参数为another_ip:80，如果another_ip:80对于server_ip是可以访问的，最终会将client_ip:port的流量转发至another_ip:80,server只是作为流量中转。
-another_ip通常取server局域网内其它主机的ip 或 server内其它网桥的ip（如docker）&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>local_socket,remote_socket，socket文件路径，分别相对于client主机与server主机&lt;/li>
-&lt;/ol>
-&lt;h2 id="example">example&lt;/h2>
-&lt;figure>
-&lt;img src="images/ssh-tunnel-local-forwarding.png"
-alt="网络示意图"/> &lt;figcaption>
-&lt;p>网络示意图&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>假如，存在Client LAN与Server LAN，
-Client LAN内有两台主机&lt;/p>
-&lt;ul>
-&lt;li>192.168.0.2，ssh与server连接&lt;/li>
-&lt;li>192.168.0.3
-Server LAN有两台主机&lt;/li>
-&lt;li>10.27.0.2，运行sshd服务，自身有公网ip 47.52.20.34，同时
-&lt;ul>
-&lt;li>主机内运行dockerd服务，使用/var/run/docker.sock进程间通信&lt;/li>
-&lt;li>运行nginx容器，容器ip 172.168.0.2，web端口80&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>10.27.0.3
-&lt;ul>
-&lt;li>主机运行ElasticSearch服务，端口9200，可供LAN其它主机连接&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>注：以下所有的ssh连接都是在client_A执行&lt;/p>
-&lt;h3 id="访问nginx">访问nginx&lt;/h3>
-&lt;p>因为nginx运行在docker网桥，属于内部网络，没有端口映射到主机，不能通过47.52.20.24:80访问。&lt;/p>
-&lt;pre>&lt;code>ssh -L *:7000:172.168.0.2:80 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>将在client_A主机7000端口，对client LAN提供server_A的nginx服务。&lt;/p>
-&lt;p>client_B也从中受益，借助client_A访问nginx&lt;/p>
-&lt;pre>&lt;code>curl -X GET http://192.168.0.2:7000
-&lt;/code>&lt;/pre>&lt;h3 id="访问elasticsearch">访问ElasticSearch&lt;/h3>
-&lt;p>因为server_B没有公网ip，所以访问要借助server_A作为跳板&lt;/p>
-&lt;pre>&lt;code>ssh -L 9200:10.27.0.3:9200 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>仅仅可以在client_A内部的9200访问server_B的ES，不对client LAN分享&lt;/p>
-&lt;h3 id="访问docker">访问docker&lt;/h3>
-&lt;p>server_A本身运行dockerd服务，但是使用unix socket，只限于在主机内部docker command才可以通信。&lt;/p>
-&lt;pre>&lt;code>ssh -L 6112:/var/run/docker.sock root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>这时在client_A主机上，运行&lt;/p>
-&lt;pre>&lt;code>docker -H localhost:6112 ps
-&lt;/code>&lt;/pre>&lt;p>可以查看server_A的docker容器情况！&lt;/p>
-&lt;p>如果client也使用unix socket&lt;/p>
-&lt;pre>&lt;code>ssh -L /tmp/docker.sock:/var/run/docker.sock root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>路径要使用unix://，达到同样的效果&lt;/p>
-&lt;pre>&lt;code>docker -H unix:///tmp/docker.sock ps
-&lt;/code>&lt;/pre>&lt;h1 id="remote-forwarding">Remote Forwarding&lt;/h1>
-&lt;h2 id="meaning-1">meaning&lt;/h2>
-&lt;p>Remote Forwarding与Local Forwarding是相对的，区别仅仅在于，
-Local Forwarding将client端口流量转发至server，而Remote Forwarding将
-server端口流量转发至client。&lt;/p>
-&lt;p>假如在client主机执行&lt;/p>
-&lt;pre>&lt;code>ssh -R 7000:127.0.0.1:80 root@server_ip
-&lt;/code>&lt;/pre>&lt;p>将会在server主机开启7000端口，并将所有流向server_ip:7000的流量转发至client_ip:80，
-达到内网穿透的效果。
-同样的类比，127.0.0.1:80是相对client主机来说的。&lt;/p>
-&lt;h2 id="usage-1">usage&lt;/h2>
-&lt;pre>&lt;code>-R [bind_address:]port:host:hostport
--R [bind_address:]port:local_socket
--R remote_socket:host:hostport
--R remote_socket:local_socket
--R [bind_address:]port
-&lt;/code>&lt;/pre>&lt;p>参数整体与Local Forwarding是相似的，主要是以下区别&lt;/p>
-&lt;ul>
-&lt;li>-R的参数与-L是相反的，bind_address:port对应的是server主机，而host:hostport与local_socket对应的
-是client主机&lt;/li>
-&lt;li>bind_address对于LAN的可见性与Local Forwarding相同&lt;/li>
-&lt;li>第5类用法是Local Forwarding中没有的，到&lt;a href="#dynamic-forwarding">Dynamic Forwarding&lt;/a>中再做提及&lt;/li>
-&lt;/ul>
-&lt;p>需要注意的是，当bind_address要使用0.0.0.0/*时，需要在sshd_config中&lt;a href="https://serverfault.com/questions/666532/remote-port-forwarding-not-working">配置选项&lt;/a>并重启sshd&lt;/p>
-&lt;pre>&lt;code>GatewayPorts yes
-&lt;/code>&lt;/pre>&lt;h2 id="example-1">example&lt;/h2>
-&lt;figure>
-&lt;img src="images/ssh-tunnel-remote-forwarding.png"
-alt="网络示意图"/> &lt;figcaption>
-&lt;p>网络示意图&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>网络结构同Local Forwarding，区别在于之前在server LAN中的服务，现在运行于client LAN。
-通过Remote Forwarding，可以在外网访问到内网的服务，达到网络穿透的效果。&lt;/p>
-&lt;p>注：以下所有的ssh连接都是在client_A执行&lt;/p>
-&lt;h3 id="访问nginx-1">访问nginx&lt;/h3>
-&lt;p>server_A并没有运行web服务，下面命令将内网client_A主机的web服务暴露至外网访问&lt;/p>
-&lt;pre>&lt;code>ssh -R *:80:172.168.0.2:80 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>server LAN中的server_B可以通过10.27.0.2:80访问，其它用户可通过公网ip 47.52.20.34:80访问&lt;/p>
-&lt;h3 id="访问elasticsearch-1">访问ElasticSearch&lt;/h3>
-&lt;pre>&lt;code>ssh -R *:9200:192.168.0.3:9200 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>将client_B主机的ES服务暴露于外网访问&lt;/p>
-&lt;h3 id="访问docker-1">访问docker&lt;/h3>
-&lt;p>使用unix socket参数，访问内网client_A主机的dockerd服务&lt;/p>
-&lt;pre>&lt;code>ssh -R 6112:/var/run/docker.sock root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>在server_A通过&lt;/p>
-&lt;pre>&lt;code>docker -H localhost:6112 ps
-&lt;/code>&lt;/pre>&lt;p>查看client_A主机docker容器情况&lt;/p>
-&lt;p>如果使用unix socket&lt;/p>
-&lt;pre>&lt;code>ssh -R /tmp/docker.sock:/var/run/docker.sock root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>在server_A通过&lt;/p>
-&lt;pre>&lt;code>docker -H unix:///tmp/docker.sock ps
-&lt;/code>&lt;/pre>&lt;p>达到同样的效果&lt;/p>
-&lt;h1 id="dynamic-forwarding">Dynamic Forwarding&lt;/h1>
-&lt;h2 id="meaning-2">meaning&lt;/h2>
-&lt;p>Dynamic Forwarding望名生义，动态的端口转发。
-动态体现在它可以由来源流量所流向的地址决定转发的地址。
-在这种意义上，它有些像一个proxy。&lt;/p>
-&lt;p>举例来看，网络结构同Local Forwarding章节&lt;/p>
-&lt;figure>
-&lt;img src="images/ssh-tunnel-dynamic-local-forwarding.png"
-alt="网络示意图"/> &lt;figcaption>
-&lt;p>网络示意图&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>在client_A执行&lt;/p>
-&lt;pre>&lt;code>ssh -D *:1080 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>将会在client_A运行一个socks服务器，监听1080端口，转发访问1080的流量&lt;/p>
-&lt;pre>&lt;code>export http{s,}_proxy=socks5://127.0.0.1:1080
-curl -X GET http://172.168.0.2
-curl -X GET https://google.com
-&lt;/code>&lt;/pre>&lt;p>设置http代理为127.0.0.1:1080&lt;/p>
-&lt;ul>
-&lt;li>访问172.168.0.2，即代理至server_A的web服务&lt;/li>
-&lt;li>访问google.com，便达到了翻墙的效果！&lt;/li>
-&lt;/ul>
-&lt;h2 id="usage-2">usage&lt;/h2>
-&lt;pre>&lt;code>-D [bind_address:]port
--R [bind_address:]port
-&lt;/code>&lt;/pre>&lt;p>-D表示Local Dynamic Forwarding，-R表示Remote Dynamic Forwarding。
-至于为什么不用-L而用-D，不得而知。&lt;/p>
-&lt;p>虽然称为Dynamic Forwarding，但是端口转发的本质并没有变化&lt;/p>
-&lt;ul>
-&lt;li>Local/Remote Forwarding只可以限定某个特定的socket，Dynamic Forwarding可以转发至多个tcp socket&lt;/li>
-&lt;li>Dynamic Forwarding不可以转发至unix socket&lt;/li>
-&lt;/ul>
-&lt;p>Dynamic Forwarding使用socks协议，在相应端口运行一个socks服务器，进行动态转发&lt;/p>
-&lt;ul>
-&lt;li>Local Dynamic Forwarding是在client端开启socks服务器，将流量转发至server&lt;/li>
-&lt;li>Remote Dynamic Forwarding与之相反，在server端开启socks服务器，将流量转发至client&lt;/li>
-&lt;/ul>
-&lt;p>socks协议工作在传输层之上，应用层之下，所以可以转发所有应用层的流量，而对于下层则无能为力。&lt;/p>
-&lt;p>注：以下所有的ssh连接都是在client_A执行&lt;/p>
-&lt;h2 id="example-2">example&lt;/h2>
-&lt;h3 id="cross-the-wall">cross the wall&lt;/h3>
-&lt;figure>
-&lt;img src="images/ssh-tunnel-dynamic-local-forwarding.png"
-alt="网络示意图"/> &lt;figcaption>
-&lt;p>网络示意图&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>在client_A运行一个socks服务器，监听1080端口&lt;/p>
-&lt;pre>&lt;code>ssh -D *:1080 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>client LAN主机设置代理地址，达到内网翻墙的效果&lt;/p>
-&lt;pre>&lt;code>export http{s,}_proxy=socks5://192.168.0.2:1080
-curl -X GET https://google.com
-&lt;/code>&lt;/pre>&lt;h3 id="内网穿透">内网穿透&lt;/h3>
-&lt;figure>
-&lt;img src="images/ssh-tunnel-dynamic-remote-forwarding.png"
-alt="网络示意图"/> &lt;figcaption>
-&lt;p>网络示意图&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>在server_A运行一个socks服务器，监听1080端口&lt;/p>
-&lt;pre>&lt;code>ssh -R *:1080 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>设置公网ip代理地址，进行内网穿透&lt;/p>
-&lt;pre>&lt;code>export http_proxy=socks5://47.52.20.34:1080
-curl -X GET http://172.168.0.2:80
-curl -X GET http://192.168.0.3:9200
-&lt;/code>&lt;/pre>&lt;p>访问nginx服务与ES服务&lt;/p>- https://dreamanddead.github.io/post/understanding-ssh-tunnel/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item></channel></rss>
+&lt;p>直接在网上搜索对应型号，买原装的可以，简单有效。&lt;/p>- https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item></channel></rss>
