@@ -25,8 +25,6 @@ After the feature finished I decided to build a simple project just for deferred
 
 ps. The project example is [on the github][project], enjoy it with the blog. :)
 
-{% include video.html url="/deferred-shading/demo.mp4" desc="deferred shading demo" %}
-
 <!--more-->
 
 # Choice

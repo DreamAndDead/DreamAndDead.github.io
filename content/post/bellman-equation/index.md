@@ -9,4 +9,3 @@ draft: true
 
 <!--more-->
 
-{% include pdf.html file="bellman.pdf" %}

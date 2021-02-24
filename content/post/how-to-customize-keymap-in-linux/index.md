@@ -336,7 +336,7 @@ remove 不如 clear 常用，因为一般的修改都直接 clear 相关的 modi
 
 比如我目前用的键盘，配合 emacs，很适合将 caps lock 换成 backSpace 键，右边的 menu 换成 ctrl 键。
 
-{% include image.html url="customize-keymap/penixx-keyboard.jpg" desc="" %}
+{{< figure src="images/penixx-keyboard.jpg" caption="" >}}
 
 	clear lock
 	clear control
