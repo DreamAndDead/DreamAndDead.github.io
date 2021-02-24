@@ -8,9 +8,8 @@ tags:
 - 3D 
 - deferred-shading
 - directx9
-featured_image:
+featured_image: images/featured.png
 enableMathJax: true
-draft: true
 aliases:
 - /2019/04/26/deferred-shading.html
 ---
@@ -36,7 +35,7 @@ That's what this section is for.
 
 The rendering pipeline provided by DirectX9 is not unfamiliar for most developers.
 
-{% include image.html url="deferred-shading/rendering-pipeline.png" desc="rendering pipeline" %}
+{{< figure src="images/rendering-pipeline.png" caption="rendering pipeline" >}}
 
 Lighting phase is ahead of Clipping phase.
 Assuming the scene contains lots of objects, then the light work is heavy even the camera sees nothing.
@@ -53,7 +52,7 @@ That's not an efficient way and it's impossible to place innumerable lights in a
 
 ## Deferred pipeline
 
-{% include image.html url="deferred-shading/deferred-pipeline.png" desc="deferred pipeline" %}
+{{< figure src="images/deferred-pipeline.png" caption="deferred pipeline" >}}
 
 In deferred shading, there's a geometry stage to store all objects information in G-buffer in advance.
 Then lighting stage reads data from G-buffer and lights pixels(not objects).
@@ -82,7 +81,7 @@ But in G-buffer, we only store one point with the least depth.
 
 Let's talk about more details about deferred shading.
 
-{% include image.html url="deferred-shading/deferred-pipeline.png" desc="deferred pipeline" %}
+{{< figure src="images/deferred-pipeline.png" caption="deferred pipeline" >}}
 
 Clearly, there are 4 distinct stages in deferred shading: geometry stage, lighting stage, post-processing stage and final stage.
 The first 2 stages are the main topic in this blog.
@@ -147,7 +146,7 @@ Directional light has only color and direction, no position. It emits parallel l
 
 ### Point Light
 
-{% include image.html url="deferred-shading/point-light.png" desc="point light" %}
+{{< figure src="images/point-light.png" caption="point light" >}}
 
 In the reality, the light bulb is a good example of point light.
 
@@ -156,7 +155,7 @@ It gives off light equally in all directions.
 
 ### Spot Light
 
-{% include image.html url="deferred-shading/spot-light.png" desc="spot light" %}
+{{< figure src="images/spot-light.png" caption="spot light" >}}
 
 Thinking of spot light as a streetlight is a good idea.
 
@@ -164,7 +163,7 @@ Spot light has color, position and direction and it emits light.
 Light emitted from a spot light is made up of a brighter inner
 cone and a larger outer cone, with the light intensity diminishing between the two.
 
-{% include image.html url="deferred-shading/spot-light-area.png" desc="spot light area" %}
+{{< figure src="images/spot-light-area.png" desc="caption light area" >}}
 
 
 ## Lighting Equation
@@ -205,7 +204,7 @@ These symbols are defined for the simplicity of equations.
 |$\vec{v}$|unit vector. denote the direction from point to camera.<br>$\vec{v} = normalize(C_{pos} - p)$|
 |$\vec{h}$|unit half vector between $\vec{l}$ and $\vec{v}$. used in [Phong shading model][phong model].<br>$\vec{h} = \dfrac{\vec{l} + \vec{v}}{length(\vec{l} + \vec{v})}$|
 
-{% include image.html url="deferred-shading/phong-model.png" desc="phong model" %}
+{{< figure src="images/phong-model.png" caption="phong model" >}}
 
 ### I_tot
 
@@ -237,8 +236,8 @@ $\otimes$ means multiplication between two vectors in each element. for example,
 
 $$
 \begin{align}
-M_{diff} &= \{1.0, 0.0, 0.0\} \\
-S_{amb} &= \{0.2, 0.2, 0.2\} \\
+M_{diff} &= \{1.0, 0.0, 0.0\} \\\\\\
+S_{amb} &= \{0.2, 0.2, 0.2\} \\\\\\
 I_{amb} = M_{diff} \otimes S_{amb} &= \{0.2, 0.0, 0.0\}
 \end{align}
 $$
@@ -258,12 +257,12 @@ Within the range, light intensity is inversely proportional to the binomial of t
 
 $$
 \begin{align}
-d   &= length(S_{pos} - p) \\
+d   &= length(S_{pos} - p) \\\\\\
 att &=
 \begin{cases}
-0 & \text{if point or spot light, and } d > S_{range} \\
-\dfrac{1}{ S_{att_0} + S_{att_1} \times d + S_{att_2} \times d^2 } & \text{if point or spot light, and } d \leqslant S_{range} \\
-1 & \text{if directional light} \\
+0 & \text{if point or spot light, and } d > S_{range} \\\\\\
+\dfrac{1}{ S_{att_0} + S_{att_1} \times d + S_{att_2} \times d^2 } & \text{if point or spot light, and } d \leqslant S_{range} \\\\\\
+1 & \text{if directional light} \\\\\\
 \end{cases}
 \end{align}
 $$
@@ -273,19 +272,19 @@ $$
 [spot parameter][spot light factor] is only for spot light.
 It's always 1 for directional and point light.
 
-{% include image.html url="deferred-shading/spot-light.png" desc="spot light" %}
+{{< figure src="images/spot-light.png" caption="spot light" >}}
 
 The affected area of spot light is a cone in 3d space.
 This factor marks the light intensity in 3 different areas split by $\theta$ and $\phi$.
 
 $$
 \begin{align}
-rho  &= normalize(S_{dir}) \cdot \vec{l} \\
+rho  &= normalize(S_{dir}) \cdot \vec{l} \\\\\\
 spot &=
 \begin{cases}
-1 & \text{if non spot lights or } rho > cos(\frac{theta}2). \text{[ in area 1 ]} \\
-0 & \text{if } rho \leqslant cos(\frac{phi}2). \text{[ in area 3 ]} \\
-\Bigg [ \dfrac{ rho - cos(\frac{phi}2) }{ cos(\frac{theta}2) - cos(\frac{phi}2) } \Bigg ]^{M_{falloff}} & \text{otherwise. [ in area 2 ]} \\
+1 & \text{if non spot lights or } rho > cos(\frac{theta}2). \text{[ in area 1 ]} \\\\\\
+0 & \text{if } rho \leqslant cos(\frac{phi}2). \text{[ in area 3 ]} \\\\\\
+\Bigg [ \dfrac{ rho - cos(\frac{phi}2) }{ cos(\frac{theta}2) - cos(\frac{phi}2) } \Bigg ]^{M_{falloff}} & \text{otherwise. [ in area 2 ]} \\\\\\
 \end{cases}
 \end{align}
 $$
@@ -328,12 +327,11 @@ run it so you can see the whole picture and more details.
 G-buffer contains 4 textures storing the data for all pipeline stages.
 Using api `D3DXCreateTexture()` to create textures of `RENDERTARGET` type and holding their pointers.
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=58 end=69 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=58 end=69 >}}
 
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=104 end=126 >}}
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=104 end=126 %}
-
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=145 end=161 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=145 end=161 >}}
 
 ### Feed G-buffer
 
@@ -354,12 +352,11 @@ If we change the render target 0 or add more render targets, writing to `COLOR0`
 We have created 4 textures in G-buffer. In geometry stage we set this 4 textures as the render target.
 So all the information will store in G-buffer.
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=223 end=233 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=223 end=233 >}}
 
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/GBuffer.hlsl" start=22 end=29 >}}
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/GBuffer.hlsl" start=22 end=29 %}
-
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/GBuffer.hlsl" start=52 end=69 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/GBuffer.hlsl" start=52 end=69 >}}
 
 ## Lighting Stage
 
@@ -375,11 +372,11 @@ Inputting textures into shader is easy. It's textbook.
 2. set textures as shader parameters
 3. use `tex2D()` to fetch data from textures in shader
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=234 end=242 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=234 end=242 >}}
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=403 end=414 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=403 end=414 >}}
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl" start=38 end=81 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl" start=38 end=81 >}}
 
 
 ### Recover 3d coordinate
@@ -391,14 +388,14 @@ In this section, we only discuss recovering 3d coordinate in view space. It's si
 
 Before we start, we must know how 3d coordinate in view space is projected.
 
-{% include image.html url="deferred-shading/d3d-view-frustum.png" desc="view frustum" %}
+{{< figure src="images/d3d-view-frustum.png" caption="view frustum" >}}
 
 In view space, camera coordinate is $(0, 0)$ and facing the $z$ axis.
 Projection window coincides with plane $z = 1$. Its size is determined by $fov$
 and $ratio$.
 $fov$ is the camera view angle in y direction. $ratio$ is the ratio of screen width to screen height.
 
-{% include image.html url="deferred-shading/d3d-view-frustum-yz-plane.png" desc="view frustum in side aspect" %}
+{{< figure src="images/d3d-view-frustum-yz-plane.png" desc="view frustum captionide aspect" >}}
 
 In [viewing frustum][viewing frustum], there're 2 clipping plane, front clipping plane and back clipping plane.
 Usually, we set the front clipping plane to coincide with plane $z = 1$ too.
@@ -415,7 +412,7 @@ If we have the 2d coordinate in projection window and depth, we know the 3d coor
 
 All those camera parameters are defined in api `D3DXMatrixPerspectiveFovLH()`.
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=490 end=497 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=490 end=497 >}}
 
 ### Draw viewport quad
 
@@ -429,27 +426,27 @@ Here is the answer, drawing a quad directly on the viewport skipping the local/w
 
 Viewport coordinate system is arranged from $(-1, -1)$ to $(1, 1)$.
 
-{% include image.html url="deferred-shading/viewport-coordinate.png" desc="viewport coordinate" %}
+{{< figure src="images/viewport-coordinate.png" caption="viewport coordinate" >}}
 
 So we draw 2 triangles with vertexes $(-1, -1), (-1, 1), (1, -1), (1, 1)$ to form a quad.
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=163 end=211 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=163 end=211 >}}
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=243 end=249 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=243 end=249 >}}
 
 [Texture coordinate system][texture coordinate] is a little different from the viewport coordinate.
 We need transform it before using `tex2D` fetch data from the texture.
 
 [texture coordinate]: https://docs.microsoft.com/en-us/windows/desktop/direct3d9/texture-coordinates
 
-{% include image.html url="deferred-shading/texture-coordinate.jpg" desc="texture coordinate" %}
+{{< figure src="images/texture-coordinate.jpg" caption="texture coordinate" >}}
 
 As to the projection window coordinate, we have seen it in the view frustum.
 The coordinates are stretched 1-to-1 to viewport coordinates.
 
-{% include image.html url="deferred-shading/projection-coordinate.png" desc="projection window coordinate" %}
+{{< figure src="images/projection-coordinate.png" desc="captionection window coordinate" >}}
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl" start=157 end=167 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl" start=157 end=167 >}}
 
 What the `+ 0.5 / screenSize` is for? Check this [article][map tex to pixel] and you will see.
 
@@ -502,7 +499,7 @@ Pass 2:
 - Stencil function is 'Equal' (Stencil ref = zero)
 - Always clears Stencil to zero
 
-{% include image.html url="deferred-shading/stencil-culling-algorithm.png" desc="stencil culling algorithm" %}
+{{< figure src="images/stencil-culling-algorithm.png" desc="captioncil culling algorithm" >}}
 
 Light 1 has both near and far faces in front of all world geometry. It will pass Z test for near face, but will fail Z test for far face. Therefore pixel shader will not run.
 
@@ -518,16 +515,16 @@ Let's focus on the difference between optimization method and plain method in im
 
 drawing light range sphere mesh instead of drawing viewport quad.
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=427 end=441 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp" start=427 end=441 >}}
 
 And accordingly, the vertex shader get changes.
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl" start=230 end=249 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl" start=230 end=249 >}}
 
 Optimization has 2 passes just as the theory said. Plain method has 1 pass.
 But they share the same lighting functions in pixel shader `PS_Main`.
 
-{% include gist-it.html  path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl" start=250 end=297 %}
+{{< gist-it path="DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl" start=250 end=297 >}}
 
 # The End
 

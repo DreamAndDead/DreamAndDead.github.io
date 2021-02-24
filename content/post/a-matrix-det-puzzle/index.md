@@ -8,7 +8,6 @@ tags:
 - linear-algebra
 featured_image: images/featured.jpg
 enableMathJax: true
-draft: true
 aliases:
 - /2019/04/22/a-matrix-det-puzzle.html
 ---
@@ -26,11 +25,11 @@ $$
 
 $$
 D_{2n} = \begin{vmatrix}
-a & & & & & b \\
-  & \ddots & & & \iddots & \\
-  & & a & b & & \\
-  & & b & a & & \\
-  & \iddots & & & \ddots & \\
+a & & & & & b \\\\\\
+  & \ddots & & & \iddots & \\\\\\
+  & & a & b & & \\\\\\
+  & & b & a & & \\\\\\
+  & \iddots & & & \ddots & \\\\\\
 b & & & & & a
 \end{vmatrix}_{2n}
 $$
@@ -44,20 +43,20 @@ $$
 $$
 D_{2n} = (a+b)^n
 \begin{vmatrix}
-1 & & & & & 1 \\
-  & \ddots & & & \iddots & \\
-  & & 1 & 1 & & \\
-  & & b & a & & \\
-  & \iddots & & & \ddots & \\
+1 & & & & & 1 \\\\\\
+  & \ddots & & & \iddots & \\\\\\
+  & & 1 & 1 & & \\\\\\
+  & & b & a & & \\\\\\
+  & \iddots & & & \ddots & \\\\\\
 b & & & & & a
 \end{vmatrix}_{2n} =
 (a+b)^n
 \begin{vmatrix}
-1 & & & & & 1 \\
-  & \ddots & & & \iddots & \\
-  & & 1 & 1 & & \\
-  & & 0 & a-b & & \\
-  & \iddots & & & \ddots & \\
+1 & & & & & 1 \\\\\\
+  & \ddots & & & \iddots & \\\\\\
+  & & 1 & 1 & & \\\\\\
+  & & 0 & a-b & & \\\\\\
+  & \iddots & & & \ddots & \\\\\\
 0 & & & & & a-b
 \end{vmatrix}_{2n} =
 (a+b)^n \cdot (a-b)^n = (a^2 - b^2)^n
@@ -71,23 +70,23 @@ $$
 $$
 D_{2n} = (-1)^{1+1} \cdot a \cdot
 \begin{vmatrix}
-a & & & & & b & 0 \\
-  & \ddots & & & \iddots & & \\
-  & & a & b & & & \\
-  & & b & a & & & \\
-  & \iddots & & & \ddots & & \\
-b & & & & & a & \\
+a & & & & & b & 0 \\\\\\
+  & \ddots & & & \iddots & & \\\\\\
+  & & a & b & & & \\\\\\
+  & & b & a & & & \\\\\\
+  & \iddots & & & \ddots & & \\\\\\
+b & & & & & a & \\\\\\
 0 & & & & & & a
 \end{vmatrix}_{2n-1}
 +
 (-1)^{1+2n} \cdot b \cdot
 \begin{vmatrix}
-0 & a & & & & & b \\
-  & & \ddots & & & \iddots & \\
-  & & & a & b & & \\
-  & & & b & a & & \\
-  & & \iddots & & & \ddots & \\
-  & b & & & & & a \\
+0 & a & & & & & b \\\\\\
+  & & \ddots & & & \iddots & \\\\\\
+  & & & a & b & & \\\\\\
+  & & & b & a & & \\\\\\
+  & & \iddots & & & \ddots & \\\\\\
+  & b & & & & & a \\\\\\
 b & & & & & & 0
 \end{vmatrix}_{2n-1}
 $$
@@ -97,22 +96,22 @@ $$
 $$
 D_{2n} = (-1)^{1+1} \cdot a \cdot (-1)^{2n-1+2n-1} \cdot a \cdot
 \begin{vmatrix}
-a & & & & & b  \\
-  & \ddots & & & \iddots & \\
-  & & a & b & & \\
-  & & b & a & & \\
-  & \iddots & & & \ddots & \\
-b & & & & & a \\
+a & & & & & b  \\\\\\
+  & \ddots & & & \iddots & \\\\\\
+  & & a & b & & \\\\\\
+  & & b & a & & \\\\\\
+  & \iddots & & & \ddots & \\\\\\
+b & & & & & a
 \end{vmatrix}_{2n-2}
 +
 (-1)^{1+2n} \cdot b \cdot (-1)^{2n-1+1} \cdot b \cdot
 \begin{vmatrix}
-a & & & & & b  \\
-  & \ddots & & & \iddots & \\
-  & & a & b & & \\
-  & & b & a & & \\
-  & \iddots & & & \ddots & \\
-b & & & & & a \\
+a & & & & & b  \\\\\\
+  & \ddots & & & \iddots & \\\\\\
+  & & a & b & & \\\\\\
+  & & b & a & & \\\\\\
+  & \iddots & & & \ddots & \\\\\\
+b & & & & & a
 \end{vmatrix}_{2n-2}
 $$
 
