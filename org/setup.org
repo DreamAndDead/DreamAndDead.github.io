@@ -1,5 +1,5 @@
 #+author: DreamAndDead
-#+hugo_base_dir: ~/project/blog/
+#+hugo_base_dir: ~/project/DreamAndDead.github.io/
 #+hugo_section: post
 #+hugo_front_matter_format: yaml
 #+hugo_auto_set_lastmod: t
