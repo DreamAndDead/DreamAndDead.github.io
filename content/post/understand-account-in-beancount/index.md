@@ -2,20 +2,28 @@
 title: "理解 beancount 中的账户"
 author: ["DreamAndDead"]
 date: 2021-02-28T15:59:00+08:00
-lastmod: 2021-02-28T16:11:49+08:00
+lastmod: 2021-02-28T16:53:26+08:00
 tags: ["beancount", "account"]
 categories: ["Accounting"]
 draft: true
 comment: false
 ---
 
-使用方面，已经有不少珠玉在前
+为什么使用复式记账
+如何使用 beancount
 
-
-## what is double entry accounting {#what-is-double-entry-accounting}
+已经有不少珠玉在前
 
 
 ## 会计恒等式 {#会计恒等式}
+
+会计主体
+
+记录交易
+
+资产 = 负债 + 所有者权益
+
+公司记账
 
 
 ## T 形记录 日记账 {#t-形记录-日记账}
@@ -38,6 +46,11 @@ comment: false
 
 
 ## beancount 的不同 {#beancount-的不同}
+
+个人记账
+
+交易的条目发生变化
+账户名称发生变化
 
 恒等式的变换
 

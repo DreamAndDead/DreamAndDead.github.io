@@ -10,12 +10,21 @@
 #+hugo_draft: true
 #+hugo_custom_front_matter: :comment false
 
+为什么使用复式记账
+如何使用 beancount
 
-使用方面，已经有不少珠玉在前
-
-* what is double entry accounting
+已经有不少珠玉在前
 
 * 会计恒等式
+
+会计主体
+
+记录交易
+
+资产 = 负债 + 所有者权益
+
+公司记账
+
 
 
 
@@ -37,12 +46,17 @@
   
 * beancount 的不同
 
+个人记账
+
+交易的条目发生变化
+账户名称发生变化
+
+  
   恒等式的变换
 
   + - 表示 借 贷 关系
 
   预置的账户
-
 
 
 
