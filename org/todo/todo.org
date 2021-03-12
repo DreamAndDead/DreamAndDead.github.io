@@ -54,3 +54,4 @@
 - book license
 - blog license
 
+- krusader 预览功能的使用
