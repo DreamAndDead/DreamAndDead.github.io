@@ -1,0 +1,70 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: how-to-choose-license
+#+export_file_name: index
+
+#+title: How to choose license for your project
+#+date: <2021-02-25 四 10:36>
+#+hugo_categories: Project
+#+hugo_tags: copyright development
+#+hugo_draft: true
+#+hugo_custom_front_matter: :featured_image :comment false
+
+* how to choose a proper license for you project
+
+
+开源不等于免费，开源也不等于没有约束。
+
+默认拥有所有权利
+
+
+
+
+开源许可证（Open Source License）
+
+
+
+* 软件项目
+
+
+table list key point
+
+  
+
+
+
+
+
+
+
+
+* 非软件项目
+
+
+Creative commons
+
+copyleft GFDL
+
+
+  
+
+
+https://zhuanlan.zhihu.com/p/87855729
+
+
+https://zhuanlan.zhihu.com/p/80075905
+
+
+http://www.ruanyifeng.com/blog/2008/04/copyleft_and_gfdl.html
+
+http://www.ruanyifeng.com/blog/2008/04/creative_commons_licenses.html
+
+
+
+https://www.cnblogs.com/Wayou/p/how_to_choose_a_license.html
+
+
+
+https://choosealicense.com/
+
+

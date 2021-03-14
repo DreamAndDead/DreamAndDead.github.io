@@ -2,13 +2,24 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-03-13T18:55:53+08:00
+lastmod: 2021-03-12T17:57:49+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
 comment: false
 featured_image: "images/featured.jpg"
 ---
+
+-   cf 851b 分析
+    -   <https://blog.csdn.net/zsnowwolfy/article/details/82793414>
+
+-   spent 1 year with javascript, react and etc
+-   did the devops things for the next year
+-   now work about some 3d algorithms
+-   learning about data science
+
+
+## post {#post}
 
 -   cf 851b 分析
     -   <https://blog.csdn.net/zsnowwolfy/article/details/82793414>
@@ -39,3 +50,9 @@ featured_image: "images/featured.jpg"
     -   各种迁移，熟悉工具的配置
     -   fzf
     -   autojump
+-   software license
+-   book license
+-   blog license
+
+-   krusader 预览功能的使用
+
