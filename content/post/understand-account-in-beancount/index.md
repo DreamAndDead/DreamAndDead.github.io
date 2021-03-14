@@ -2,7 +2,7 @@
 title: "理解 beancount 中的账户"
 author: ["DreamAndDead"]
 date: 2021-02-28T15:59:00+08:00
-lastmod: 2021-02-28T16:53:26+08:00
+lastmod: 2021-03-09T17:42:44+08:00
 tags: ["beancount", "account"]
 categories: ["Accounting"]
 draft: true

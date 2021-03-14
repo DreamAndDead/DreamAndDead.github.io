@@ -7,7 +7,7 @@ tags:
 - linux
 - C
 - debug
-featured_image: images/gdb.gif
+featured_image: images/gdb.png
 aliases:
 - /2020/10/26/gdb-pearls.html
 ---

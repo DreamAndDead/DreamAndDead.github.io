@@ -1,5 +1,4 @@
 
-
 what is viewport in mobile browser?
 
 shift + mouse drag  simulate the two finger zoom in mobile
