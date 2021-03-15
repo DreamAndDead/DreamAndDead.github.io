@@ -1,32 +1,26 @@
 ---
-title: "Grub 添加 Win10 启动项"
+title: "记一次 Grub 找回 Win10 启动项的过程"
 author: ["DreamAndDead"]
 date: 2021-03-09T17:42:00+08:00
-lastmod: 2021-03-14T14:59:32+08:00
+lastmod: 2021-03-15T18:08:25+08:00
 tags: ["grub", "boot"]
 categories: ["Linux"]
-draft: true
-comment: false
+draft: false
+featured_image: "images/featured.png"
 ---
 
-双系统而言，win 引导 linux 不如 linux 引导 win 来的简单
+本人的笔记本有两块硬盘，分别安装了 Win10 和 Manjaro 系统，默认使用 grub 进行多系统引导。
 
-比引导更重要的是，安装在两个独立硬盘上，这样不容易出现分区问题
+今天在 Manjaro “常规升级”之后，重启后发现引导项中 Win10 消失了。
 
-
-## 本机的情况 {#本机的情况}
-
-两个硬盘，独立开来[^fn:1]
-
-
-## 情况 {#情况}
-
-manjaro 升级之后，在引导项中 win 10 不见了
+根据 Arch Wiki[^fn:1] 的描述，使用 `os-prober` 工具来检测多系统，Win10 是可以正常检测到的。
 
 ```text
 $ sudo os-prober
 /dev/sda1:Windows 10:Windows:chain
 ```
+
+尝试运行 `grub-mkconfig` 观察引导项的生成结果时，发现了这样一段注释，
 
 ```text
 $ sudo grub-mkconfig
@@ -49,11 +43,15 @@ Check GRUB_DISABLE_OS_PROBER documentation entry.
 ........................
 ```
 
-修改或添加 `/etc/default/grub` 里面的配置项[^fn:2]
+原来 grub 是 **默认运行** `os-prober` 的，新版本之后反而将默认行为修改为 **禁止运行** 了。
+
+根据注释中的提示，修改配置文件 `/etc/default/grub`&nbsp;[^fn:2]，添加配置项
 
 ```text
 GRUB_DISABLE_OS_PROBER=false
 ```
+
+重新执行 `update-grub` ，引导项就恢复正常了
 
 ```text
 $ sudo update-grub
