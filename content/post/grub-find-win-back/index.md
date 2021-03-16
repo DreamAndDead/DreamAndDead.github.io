@@ -2,7 +2,7 @@
 title: "记一次 Grub 找回 Win10 启动项的过程"
 author: ["DreamAndDead"]
 date: 2021-03-09T17:42:00+08:00
-lastmod: 2021-03-15T18:08:25+08:00
+lastmod: 2021-03-16T18:11:32+08:00
 tags: ["grub", "boot"]
 categories: ["Linux"]
 draft: false
@@ -69,6 +69,8 @@ It's output will be used to detect bootable binaries on them and create new boot
 Found memtest86+ image: /boot/memtest86+/memtest.bin
 完成
 ```
+
+{{< license >}}
 
 [^fn:1]: : <https://wiki.archlinux.org/index.php/GRUB#Detecting%5Fother%5Foperating%5Fsystems>
 [^fn:2]: : <https://zhuanlan.zhihu.com/p/341300483>

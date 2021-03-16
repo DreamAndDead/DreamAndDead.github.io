@@ -3,7 +3,7 @@ disablePathToLower = true
 languageCode = "zh-cn"
 title = "Brain=f(X)?"
 theme = "diary"
-copyright = "Attribution-NonCommercial-ShareAlike 4.0 International"
+#copyright = "Attribution-NonCommercial-ShareAlike 4.0 International"
 googleAnalytics = "UA-93899485-1"
 
 # aliyun oss

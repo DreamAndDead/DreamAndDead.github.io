@@ -75,8 +75,12 @@ Found memtest86+ image: /boot/memtest86+/memtest.bin
 #+end_example
 
 
+#+begin_export markdown
+{{< license >}}
+#+end_export
+
+
 [fn:1]: https://wiki.archlinux.org/index.php/GRUB#Detecting_other_operating_systems
 
 [fn:2]: https://zhuanlan.zhihu.com/p/341300483
-
 
