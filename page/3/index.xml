@@ -1,4 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Attribution-NonCommercial-ShareAlike 4.0 International</copyright><lastBuildDate>Tue, 09 Mar 2021 17:42:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>A simple way to draw a circle always facing you</title><link>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</link><pubDate>Wed, 17 Apr 2019 13:24:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ -&lt;p>In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light,
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 09 Mar 2021 17:42:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>A simple way to draw a circle always facing you</title><link>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</link><pubDate>Wed, 17 Apr 2019 13:24:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ -&lt;p>In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light,
 so that user can easily tune the parameters about the light.&lt;/p>
 &lt;p>The idea is simple.
 Imaging a point light lighting range is a ball bubble, you will see a round transparent circle wherever you look at it.
@@ -80,7 +80,7 @@ And it can be use to solve more similar problems.&lt;/p>
 &lt;li>how to rotate two vectors together? (rotating the first vector to z axis and rotating back to the second vector)&lt;/li>
 &lt;li>etc&lt;/li>
 &lt;/ol>
-&lt;p>Trust you could find more. :)&lt;/p>- https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Recover mysql table structure from frm file</title><link>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</link><pubDate>Thu, 27 Sep 2018 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ -&lt;p>mysql 正常运行的时候，&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/show-create-table.html">查看 table 的结构&lt;/a>并不是困难的事。
+&lt;p>Trust you could find more. :)&lt;/p>- https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ -</description></item><item><title>Recover mysql table structure from frm file</title><link>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</link><pubDate>Thu, 27 Sep 2018 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ -&lt;p>mysql 正常运行的时候，&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/show-create-table.html">查看 table 的结构&lt;/a>并不是困难的事。
 但是有时 mysql 发生故障，这种方法便不再可行。&lt;/p>
 &lt;p>当遇到故障，通常使用新的 mysql 实例来恢复当前的数据。
 建表是非常重要的步骤，我们必须有其它的方法来寻找 table 的结构。&lt;/p>
@@ -141,7 +141,7 @@ $ ./dbsake frmdump [frm-file-path]
 &lt;ul>
 &lt;li>&lt;a href="https://docs.oracle.com/cd/E17952_01/mysql-utilities-1.6-en/mysqlfrm.html">mysqlfrm official doc&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://dbsake.readthedocs.io/en/latest/commands/frmdump.html">dbsake project doc&lt;/a>&lt;/li>
-&lt;/ul>- https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>mysql table suddenly doesn't exists</title><link>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</link><pubDate>Thu, 27 Sep 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ -&lt;p>最近内部的 mysql 数据库发生了一件奇怪的事，其中有一个表 users625 突然出现问题，
+&lt;/ul>- https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ -</description></item><item><title>mysql table suddenly doesn't exists</title><link>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</link><pubDate>Thu, 27 Sep 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ -&lt;p>最近内部的 mysql 数据库发生了一件奇怪的事，其中有一个表 users625 突然出现问题，
 所有对它的操作都报错误 &lt;code>数据表不存在&lt;/code>。&lt;/p>
 &lt;pre>&lt;code>mysql&amp;gt; select count(*) from users625;
 ERROR 1146 (42S02): Table 'km8.users625' doesn't exist
@@ -270,7 +270,7 @@ This error can also be cuased by malfunctioning hardware.
 &lt;/code>&lt;/pre>&lt;h1 id="写在最后">写在最后&lt;/h1>
 &lt;p>数据库的备份是非常重要的！直接导入备份数据，是解决问题最保险最便捷的办法。
 如果没有备份，遇到 bug 丢失数据，只能怪时运不济。&lt;/p>
-&lt;p>同时数据库也最好选择稳定的版本，降低出现 bug 的概率。&lt;/p>- https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Configure apt rightly for debian squeeze</title><link>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</link><pubDate>Wed, 26 Sep 2018 16:50:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ -&lt;p>本想在 Debian Squeeze 上安装一些依赖，没想到刚执行 &lt;code>apt-get update&lt;/code> ，就出现这样的错误信息。&lt;/p>
+&lt;p>同时数据库也最好选择稳定的版本，降低出现 bug 的概率。&lt;/p>- https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ -</description></item><item><title>Configure apt rightly for debian squeeze</title><link>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</link><pubDate>Wed, 26 Sep 2018 16:50:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ -&lt;p>本想在 Debian Squeeze 上安装一些依赖，没想到刚执行 &lt;code>apt-get update&lt;/code> ，就出现这样的错误信息。&lt;/p>
 &lt;pre>&lt;code>W: GPG error: http://mirrors.163.com squeeze Release: The following signatures were invalid: KEYEXPIRED 1520281423 KEYEXPIRED 1501892461
 E: Release file expired, ignoring http://mirrors.163.com/debian-archive/dists/squeeze-lts/Release (invalid since 923d 19h 26min 3s)
 &lt;/code>&lt;/pre>&lt;h1 id="问题出在哪里">问题出在哪里&lt;/h1>
@@ -320,7 +320,7 @@ deb http://archive.debian.org/debian squeeze-lts main
 &lt;/code>&lt;/pre>&lt;p>2.同时配置 apt，添加以下内容到 /etc/apt/apt.conf(没有则新建)&lt;/p>
 &lt;pre>&lt;code>Acquire::Check-Valid-Until false;
 &lt;/code>&lt;/pre>&lt;p>其中特别提到了 &lt;code>The second line will fail with an &amp;quot;expired&amp;quot; type message, so you also need to ...&lt;/code>，so sweet！&lt;/p>
-&lt;p>既然 Debian Squeeze 已经不再更新，apt source 也划入了 archive，这个方案应该是最“长治久安”的。&lt;/p>- https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>How uri match nginx location</title><link>https://dreamanddead.github.io/post/nginx-location/</link><pubDate>Mon, 28 May 2018 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/nginx-location/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/nginx-location/ -&lt;p>location 是 nginx 配置中出现最频繁的配置项，一个 uri 是如何与多个 location 进行匹配的？
+&lt;p>既然 Debian Squeeze 已经不再更新，apt source 也划入了 archive，这个方案应该是最“长治久安”的。&lt;/p>- https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ -</description></item><item><title>How uri match nginx location</title><link>https://dreamanddead.github.io/post/nginx-location/</link><pubDate>Mon, 28 May 2018 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/nginx-location/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/nginx-location/ -&lt;p>location 是 nginx 配置中出现最频繁的配置项，一个 uri 是如何与多个 location 进行匹配的？
 在有多个 location 都匹配的情况下，如何决定使用哪一个 location 作为匹配结果？&lt;/p>
 &lt;p>清晰内部机制之后，疑问自然迎刃而解。&lt;/p>
 &lt;h1 id="location-规则类型">location 规则类型&lt;/h1>
@@ -451,7 +451,7 @@ uri &amp;quot;/api/v1/file/logo.png&amp;quot;: case-insesitive regex match &amp;
 &lt;/code>&lt;/pre>&lt;p>存在 &lt;code>/&lt;/code> prefix 规则是有益的，收容所有未明确定位的 uri，再做错误处理。&lt;/p>
 &lt;pre>&lt;code>$ curl http://localhost:8080/no-where
 uri &amp;quot;/no-where&amp;quot;: prefix match &amp;quot;location /&amp;quot;
-&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/nginx-location/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>记一次 Jmeter 分布式测试故障调试过程</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</link><pubDate>Fri, 25 May 2018 02:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ -&lt;p>之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。&lt;/p>
+&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/nginx-location/ -</description></item><item><title>记一次 Jmeter 分布式测试故障调试过程</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</link><pubDate>Fri, 25 May 2018 02:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ -&lt;p>之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。&lt;/p>
 &lt;p>至于为什么要这么做，源于这一次 debug 的过程。&lt;/p>
 &lt;h1 id="运行环境">运行环境&lt;/h1>
 &lt;p>mint, ubuntu 两台主机作为 master 节点，一台 win server 作为 slave 节点，采用分布式的方式，
@@ -548,7 +548,7 @@ at sun.rmi.transport.proxy.RMIMasterSocketFactory.createSocket(Unknown Source) ~
 &lt;p>推而广之，在 jmeter 的所有节点，无论 master/slave，都显示设置自己的 IP 地址。&lt;/p>
 &lt;p>&lt;a href="https://github.com/apache/jmeter/blob/v4_0/bin/system.properties">system.properties&lt;/a> 最后一行添加&lt;/p>
 &lt;pre>&lt;code>java.rmi.server.hostname=&amp;lt;IP addr&amp;gt;
-&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>使用Jmeter进行分布式测试</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing/</link><pubDate>Thu, 24 May 2018 19:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing/ -&lt;p>业务发展初期，关注的更多是功能，直至使用量增加到一定量级，就要考虑高并发，程序性能等问题，
+&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ -</description></item><item><title>使用Jmeter进行分布式测试</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing/</link><pubDate>Thu, 24 May 2018 19:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing/ -&lt;p>业务发展初期，关注的更多是功能，直至使用量增加到一定量级，就要考虑高并发，程序性能等问题，
 因此性能测试就成为重要的一环。&lt;/p>
 &lt;p>Loadrunner 是性能测试工具领域的王者，但是闭源无法自由（free）使用。相较之下，开源的 Jmeter 算是一个
 不错的选择。&lt;/p>
@@ -707,7 +707,7 @@ grafana 看到了一台机器的并发量，其它的好像没有执行。&lt;/p
 &lt;p>所以部署相关的数据文件需要我们自己想办法解决。并且！有时数据文件一模一样也不行，毕竟 Slave 执行的过程是相同的，
 一样的文件必然导致其创建相同的用户，引发冲突，还要为每个 Slave 准备一份数据文件！:no_mouth:。&lt;/p>
 &lt;h1 id="end">End&lt;/h1>
-&lt;p>Jmeter 是一款很赞的软件，thanks apache。&lt;/p>- https://dreamanddead.github.io/post/jmeter-distributed-testing/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Deal with time in programming</title><link>https://dreamanddead.github.io/post/time-in-programming/</link><pubDate>Tue, 22 May 2018 08:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/time-in-programming/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/time-in-programming/ -&lt;p>时间无处不在，在编程中也是如此。
+&lt;p>Jmeter 是一款很赞的软件，thanks apache。&lt;/p>- https://dreamanddead.github.io/post/jmeter-distributed-testing/ -</description></item><item><title>Deal with time in programming</title><link>https://dreamanddead.github.io/post/time-in-programming/</link><pubDate>Tue, 22 May 2018 08:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/time-in-programming/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/time-in-programming/ -&lt;p>时间无处不在，在编程中也是如此。
 比如程序日志，每一行必定包含时间。
 通常不会对时间特别关注，除非日志时间不对，或者编程使用时间，取不到正确结果。&lt;/p>
 &lt;p>其实在编程中只需明确几个简单的概念，就可以正确的使用时间。&lt;/p>
@@ -801,7 +801,7 @@ RTC in local TZ: no
 &lt;/code>&lt;/pre>&lt;p>参考： &lt;a href="https://www.tecmint.com/check-linux-timezone/">如何设置linux timezone&lt;/a>&lt;/p>
 &lt;h1 id="end">End&lt;/h1>
 &lt;p>这里没有具体针对特定编程语言来说明时间，时区的用法，不过本质是不变的。
-相信找到相应接口所针对的时间，可以很快掌握使用。&lt;/p>- https://dreamanddead.github.io/post/time-in-programming/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>SSH X11 Forward</title><link>https://dreamanddead.github.io/post/ssh-x11-forward/</link><pubDate>Thu, 17 May 2018 20:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/ssh-x11-forward/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/ssh-x11-forward/ -&lt;p>一般情况下，操作远程电脑，ssh+console足矣。突然有一天，隔壁项目组
+相信找到相应接口所针对的时间，可以很快掌握使用。&lt;/p>- https://dreamanddead.github.io/post/time-in-programming/ -</description></item><item><title>SSH X11 Forward</title><link>https://dreamanddead.github.io/post/ssh-x11-forward/</link><pubDate>Thu, 17 May 2018 20:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/ssh-x11-forward/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/ssh-x11-forward/ -&lt;p>一般情况下，操作远程电脑，ssh+console足矣。突然有一天，隔壁项目组
 想要检测下，从香港服务器浏览他们的网页，效果是怎么样的。
 背景漆黑语法高亮的控制台好像帮不了忙&amp;hellip;&lt;/p>
 &lt;p>诚然，vnc是一个易用可行的方案，但是这里想探索一下，X Window System本身对远程应用的支持。&lt;/p>
@@ -1109,7 +1109,7 @@ alt="ssh如何处理auth认证 from oreilly"/> &lt;figcaption>
 &lt;li>全部X流量加密&lt;/li>
 &lt;li>如果ssh server不可信，过程中也没有暴露真实的cookie&lt;/li>
 &lt;/ul>
-&lt;p>What a clever way!&lt;/p>- https://dreamanddead.github.io/post/ssh-x11-forward/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Serve http and https at same time with nginx</title><link>https://dreamanddead.github.io/post/serve-http-https-same-time/</link><pubDate>Thu, 17 May 2018 14:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/serve-http-https-same-time/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/serve-http-https-same-time/ -&lt;p>之前讨论过，&lt;a href="https://dreamanddead.github.io/2018/04/11/comfortable-way-when-testing-https-site.html">网站从http迁移到https时，需要注意些什么&lt;/a>。
+&lt;p>What a clever way!&lt;/p>- https://dreamanddead.github.io/post/ssh-x11-forward/ -</description></item><item><title>Serve http and https at same time with nginx</title><link>https://dreamanddead.github.io/post/serve-http-https-same-time/</link><pubDate>Thu, 17 May 2018 14:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/serve-http-https-same-time/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/serve-http-https-same-time/ -&lt;p>之前讨论过，&lt;a href="https://dreamanddead.github.io/2018/04/11/comfortable-way-when-testing-https-site.html">网站从http迁移到https时，需要注意些什么&lt;/a>。
 由于旧有的服务依旧在运行，需要同时保留http与https。
 突然有一天，访问http服务，页面上只出现nginx的错误信息：&lt;/p>
 &lt;pre>&lt;code>400 bad request the plain http request was sent to https port
@@ -1149,4 +1149,4 @@ alt="ssh如何处理auth认证 from oreilly"/> &lt;figcaption>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>所以问题的核心就在于，指令 &lt;code>ssl on&lt;/code>，将所有 listen 的端口，都运行在 ssl 模式，但是对于端口 80，
 这样明显是不对的，也就导致了最开始的报错信息。&lt;/p>
 &lt;pre>&lt;code>400 bad request the plain http request was sent to https port
-&lt;/code>&lt;/pre>&lt;p>这时就推荐使用 listen 加 ssl 参数，更细粒度的控制哪些端口运行在 ssl 模式下。&lt;/p>- https://dreamanddead.github.io/post/serve-http-https-same-time/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;p>这时就推荐使用 listen 加 ssl 参数，更细粒度的控制哪些端口运行在 ssl 模式下。&lt;/p>- https://dreamanddead.github.io/post/serve-http-https-same-time/ -</description></item></channel></rss>

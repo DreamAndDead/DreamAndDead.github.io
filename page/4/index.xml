@@ -1,4 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Attribution-NonCommercial-ShareAlike 4.0 International</copyright><lastBuildDate>Tue, 09 Mar 2021 17:42:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>thinkpad E530c 的升级之路</title><link>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</link><pubDate>Sat, 12 May 2018 20:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ -&lt;p>不知不觉，自己的&lt;a href="http://detail.zol.com.cn/361/360255/param.shtml">Thinkpad E530c&lt;/a>入手5年，期间换过数次系统，如今不觉有些老态龙钟，
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 09 Mar 2021 17:42:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>thinkpad E530c 的升级之路</title><link>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</link><pubDate>Sat, 12 May 2018 20:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ -&lt;p>不知不觉，自己的&lt;a href="http://detail.zol.com.cn/361/360255/param.shtml">Thinkpad E530c&lt;/a>入手5年，期间换过数次系统，如今不觉有些老态龙钟，
 硬件资源已远远不足以支持日常使用的需求，速度慢多次卡顿，十分损伤工作效率。&lt;/p>
 &lt;p>决心升级一下跟随多年的“小黑”，焕发新颜。&lt;/p>
 &lt;h1 id="拆机">拆机&lt;/h1>
@@ -160,7 +160,7 @@ Flags: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 c
 &lt;p>不过目前一直使用外接显示器，这一点也可以接受。&lt;/p>
 &lt;h1 id="电池">电池&lt;/h1>
 &lt;p>使用电脑的时间这么多年，电池的续航能力也变差了。&lt;/p>
-&lt;p>直接在网上搜索对应型号，买原装的可以，简单有效。&lt;/p>- https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Comfortable way when testing HTTPS site</title><link>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</link><pubDate>Wed, 11 Apr 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ -&lt;p>网站初期一直使用http，近期购买了ssl证书，预期将网站全面升级使用https。&lt;/p>
+&lt;p>直接在网上搜索对应型号，买原装的可以，简单有效。&lt;/p>- https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ -</description></item><item><title>Comfortable way when testing HTTPS site</title><link>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</link><pubDate>Wed, 11 Apr 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ -&lt;p>网站初期一直使用http，近期购买了ssl证书，预期将网站全面升级使用https。&lt;/p>
 &lt;p>当部署https后，居然出现了这种问题&amp;hellip;&lt;/p>
 &lt;h1 id="测试https">测试HTTPS&lt;/h1>
 &lt;h2 id="部署环境">部署环境&lt;/h2>
@@ -354,7 +354,7 @@ Flags: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 c
 }
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>这里的配置，对于 ssl 的支持有一些瑕疵，在&lt;a href="https://dreamanddead.github.io/2018/05/17/serve-http-https-same-time.html">这篇文章&lt;/a>里，做了相关修正。
-Remember to check it :)&lt;/p>- https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Play curl with http</title><link>https://dreamanddead.github.io/post/play-curl-with-http/</link><pubDate>Mon, 09 Apr 2018 10:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/play-curl-with-http/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/play-curl-with-http/ -&lt;p>curl是一款强大的网络传输工具，支持多种协议，在HTTP的支持方面尤其为人称道。
+Remember to check it :)&lt;/p>- https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ -</description></item><item><title>Play curl with http</title><link>https://dreamanddead.github.io/post/play-curl-with-http/</link><pubDate>Mon, 09 Apr 2018 10:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/play-curl-with-http/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/play-curl-with-http/ -&lt;p>curl是一款强大的网络传输工具，支持多种协议，在HTTP的支持方面尤其为人称道。
 对curl的使用越深入，对HTTP也会有更深的理解。&lt;/p>
 &lt;h1 id="a-little-http">a little http&lt;/h1>
 &lt;p>http是应用层协议，其设计非常简单，灵活。请求与响应是HTTP概念的核心，从本质上讲，
@@ -1143,7 +1143,7 @@ POST使用query的麻烦之处在于，要求我们注意URL的编码&lt;/p>
 &lt;pre>&lt;code>$ man curl
 $ curl --help
 $ curl --manual
-&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://curl.haxx.se/docs/httpscripting.html">curl docs online&lt;/a>&lt;/p>- https://dreamanddead.github.io/post/play-curl-with-http/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Git Internals</title><link>https://dreamanddead.github.io/post/git-internals/</link><pubDate>Wed, 03 Jan 2018 08:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/git-internals/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/git-internals/ -&lt;p>这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://curl.haxx.se/docs/httpscripting.html">curl docs online&lt;/a>&lt;/p>- https://dreamanddead.github.io/post/play-curl-with-http/ -</description></item><item><title>Git Internals</title><link>https://dreamanddead.github.io/post/git-internals/</link><pubDate>Wed, 03 Jan 2018 08:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/git-internals/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/git-internals/ -&lt;p>这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。&lt;/p>
 &lt;p>所有示例使用git版本 2.7.4，
 示例仓库可见于github: &lt;a href="https://github.com/DreamAndDead/git-internals-example">https://github.com/DreamAndDead/git-internals-example&lt;/a>&lt;/p>
 &lt;h1 id="git-folder">.git folder&lt;/h1>
@@ -2255,7 +2255,7 @@ pigz: &amp;lt;stdin&amp;gt; OK, has trailing junk which was ignored
 &lt;/code>&lt;/pre>&lt;p>可见两个版本的a.out并没有存储两份，delta部分数据量尤其的小，节省了50%的空间。&lt;/p>
 &lt;p>不幸的是，虽然按照 &lt;a href="https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-format.txt#L112">官方文档&lt;/a> 的方式解开了OBJ_OFS_DELTA的内容，
 但是我却不知道如何解读，这方面并没有详细的记载，只有找到唯一 &lt;a href="https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-heuristics.txt">官方又有些诙谐的文档&lt;/a> ，可以读一下，very funny。&lt;/p>
-&lt;p>希望后续有时间深入源码，再来详细的解释delta(dark corner of git)部分。&lt;/p>- https://dreamanddead.github.io/post/git-internals/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item><item><title>Understanding ssh port forwarding</title><link>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</link><pubDate>Wed, 13 Dec 2017 00:00:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/understanding-ssh-tunnel/ -&lt;p>这篇文件旨在理好的理解ssh隧道的原理与用法。&lt;/p>
+&lt;p>希望后续有时间深入源码，再来详细的解释delta(dark corner of git)部分。&lt;/p>- https://dreamanddead.github.io/post/git-internals/ -</description></item><item><title>Understanding ssh port forwarding</title><link>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</link><pubDate>Wed, 13 Dec 2017 00:00:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/understanding-ssh-tunnel/ -&lt;p>这篇文件旨在理好的理解ssh隧道的原理与用法。&lt;/p>
 &lt;h1 id="port-forwarding">Port forwarding&lt;/h1>
 &lt;p>端口转发是ssh内建的机制，在已经建立的ssh通道之上，转发应用层的流量。
 大家也形象地称之为ssh隧道（ssh tunnel）。&lt;/p>
@@ -2472,4 +2472,4 @@ alt="网络示意图"/> &lt;figcaption>
 &lt;pre>&lt;code>export http_proxy=socks5://47.52.20.34:1080
 curl -X GET http://172.168.0.2:80
 curl -X GET http://192.168.0.3:9200
-&lt;/code>&lt;/pre>&lt;p>访问nginx服务与ES服务&lt;/p>- https://dreamanddead.github.io/post/understanding-ssh-tunnel/ - Attribution-NonCommercial-ShareAlike 4.0 International</description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;p>访问nginx服务与ES服务&lt;/p>- https://dreamanddead.github.io/post/understanding-ssh-tunnel/ -</description></item></channel></rss>
