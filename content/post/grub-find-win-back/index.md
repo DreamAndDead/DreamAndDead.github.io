@@ -2,7 +2,7 @@
 title: "记一次 Grub 找回 Win10 启动项的过程"
 author: ["DreamAndDead"]
 date: 2021-03-09T17:42:00+08:00
-lastmod: 2021-03-16T18:11:32+08:00
+lastmod: 2021-03-17T16:15:12+08:00
 tags: ["grub", "boot"]
 categories: ["Linux"]
 draft: false
