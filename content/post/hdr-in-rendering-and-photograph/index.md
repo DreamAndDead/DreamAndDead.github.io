@@ -2,13 +2,15 @@
 title: "HDR"
 author: ["DreamAndDead"]
 date: 2021-03-16T09:04:00+08:00
-lastmod: 2021-03-16T15:04:33+08:00
+lastmod: 2021-03-18T14:27:11+08:00
 tags: ["image", "photograph", "rendering"]
 categories: ["2D"]
 draft: true
 comment: false
 featured_image: "images/featured.jpg"
 ---
+
+没有亲自实践，只是根据看到的不同理论，是写不出东西的！
 
 动态范围
 人眼的适应性非常惊人。我们查看某个场景时，人眼能够看到所有范围内的光线，
@@ -27,4 +29,20 @@ featured_image: "images/featured.jpg"
 
 来自 美国数码摄影教程
 
-亮度，饱和度？
+<https://book.douban.com/subject/4935320/>
+
+1.  HDR - 高动态范围成像
+
+<https://zhuanlan.zhihu.com/p/90093872>
+
+Computational Photography, Fall 2017
+<http://graphics.cs.cmu.edu/courses/15-463/2017%5Ffall/>
+
+HDR （automatic exposure control + Tonemapping + Bloom）
+<https://blog.csdn.net/coldkaweh/article/details/62893076>
+
+HDR 渲染器的实现
+<https://dev.gameres.com/Program/Visual/3D/HDRTutorial/HDRTutorial.htm>
+
+learn opengl
+<https://learnopengl.com/Advanced-Lighting/HDR>

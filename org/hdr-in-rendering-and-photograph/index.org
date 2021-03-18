@@ -12,6 +12,8 @@
 
 
 
+没有亲自实践，只是根据看到的不同理论，是写不出东西的！
+
 
 
 动态范围
@@ -34,14 +36,36 @@
 
 来自 美国数码摄影教程
 
+https://book.douban.com/subject/4935320/
 
 
 
 
+27. HDR - 高动态范围成像
+
+https://zhuanlan.zhihu.com/p/90093872
+
+
+Computational Photography, Fall 2017
+http://graphics.cs.cmu.edu/courses/15-463/2017_fall/
 
 
 
-亮度，饱和度？
+HDR （automatic exposure control + Tonemapping + Bloom）
+https://blog.csdn.net/coldkaweh/article/details/62893076
+
+
+HDR 渲染器的实现
+https://dev.gameres.com/Program/Visual/3D/HDRTutorial/HDRTutorial.htm
+
+
+
+learn opengl
+https://learnopengl.com/Advanced-Lighting/HDR
+
+
+
+
 
 
 

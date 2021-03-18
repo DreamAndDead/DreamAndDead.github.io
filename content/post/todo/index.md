@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-03-16T18:29:04+08:00
+lastmod: 2021-03-18T14:28:13+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -23,6 +23,24 @@ featured_image: "images/featured.jpg"
 
 
 ### 理解 beancount 中的账户 {#理解-beancount-中的账户}
+
+
+#### 复式记账法 {#复式记账法}
+
+
+#### 与 beancount 的公式区别 {#与-beancount-的公式区别}
+
+
+#### 借 贷 {#借-贷}
+
+
+#### 收入 费用 账户 {#收入-费用-账户}
+
+
+### 摄影理论 {#摄影理论}
+
+
+#### 参数 {#参数}
 
 
 ### 音乐与乐器 {#音乐与乐器}
