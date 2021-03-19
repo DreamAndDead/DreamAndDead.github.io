@@ -14,6 +14,16 @@
 ** 如何同步到公众号
 *** 导出 markdown 的方式
 *** 格式化工具
+** 配色理论
+
+https://zhuanlan.zhihu.com/p/52120537
+
+https://www.sohu.com/a/352611094_286880
+
+https://www.sohu.com/a/397541366_100031423
+
+https://zhuanlan.zhihu.com/p/49575075
+
 ** 理解 beancount 中的账户
 *** 复式记账法
 *** 与 beancount 的公式区别
@@ -21,6 +31,7 @@
 *** 收入 费用 账户
 ** 摄影理论
 *** 参数
+*** 纽约
 ** 音乐与乐器
 *** 弦乐器的音高安排
 **** 品丝
@@ -30,9 +41,16 @@
 ** 和弦的命名方式
 *** m7 9
 *** nicechord
+*** 配合 吉他 尤克里里 理解
+*** guitar pro
 ** 单音与和弦的搭配原理
 *** nicechord
-
+** 文本编辑
+*** 正则表达式工具
+**** sed
+**** grep
+**** awk
+     
 - cf 851b 分析
   - https://blog.csdn.net/zsnowwolfy/article/details/82793414
 

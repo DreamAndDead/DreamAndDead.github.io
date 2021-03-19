@@ -2,7 +2,7 @@
 title: "HDR"
 author: ["DreamAndDead"]
 date: 2021-03-16T09:04:00+08:00
-lastmod: 2021-03-18T14:27:11+08:00
+lastmod: 2021-03-19T17:25:23+08:00
 tags: ["image", "photograph", "rendering"]
 categories: ["2D"]
 draft: true

@@ -37,6 +37,7 @@ description = "Can machine think?"  # will set 'og:description'
 [taxonomies]
 tag = "tags"
 category = "categories"
+series = "series"
 
 [[menu.main]]
 url = "/categories"
