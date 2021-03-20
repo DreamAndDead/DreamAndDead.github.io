@@ -1,4 +1,96 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 09 Mar 2021 17:42:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>A simple way to draw a circle always facing you</title><link>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</link><pubDate>Wed, 17 Apr 2019 13:24:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ -&lt;p>In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light,
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 19 Mar 2021 17:26:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>a matrix det puzzle</title><link>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</link><pubDate>Mon, 22 Apr 2019 08:39:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/a-matrix-det-puzzle/ -&lt;p>求解行列式&lt;/p>
+&lt;p>$$
+\newcommand\iddots{\mathinner{
+\kern1mu\raise1pt{.}
+\kern2mu\raise4pt{.}
+\kern2mu\raise7pt{\Rule{0pt}{7pt}{0pt}.}
+\kern1mu
+}}
+$$&lt;/p>
+&lt;p>$$
+D_{2n} = \begin{vmatrix}
+a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n}
+$$&lt;/p>
+&lt;h1 id="解法1">解法1&lt;/h1>
+&lt;p>将第 $n+1, n+2, \dotsm, 2n$ 行分别加到第 $ n, n-1, \dotsm, 1$ 行，再提取公因式 $(a+b)$，得&lt;/p>
+&lt;p>$$
+D_{2n} = (a+b)^n
+\begin{vmatrix}
+1 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; 1 \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; 1 &amp;amp; 1 &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n} =
+(a+b)^n
+\begin{vmatrix}
+1 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; 1 \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; 1 &amp;amp; 1 &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; 0 &amp;amp; a-b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+0 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a-b
+\end{vmatrix}_{2n} =
+(a+b)^n \cdot (a-b)^n = (a^2 - b^2)^n
+$$&lt;/p>
+&lt;h1 id="解法2">解法2&lt;/h1>
+&lt;p>用递推法，按第一行展开，得&lt;/p>
+&lt;p>$$
+D_{2n} = (-1)^{1+1} \cdot a \cdot
+\begin{vmatrix}
+a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b &amp;amp; 0 \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a &amp;amp; \\\&lt;br>
+0 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n-1}
++
+(-1)^{1+2n} \cdot b \cdot
+\begin{vmatrix}
+0 &amp;amp; a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
+&amp;amp; &amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+&amp;amp; b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; 0
+\end{vmatrix}_{2n-1}
+$$&lt;/p>
+&lt;p>再按最后一行展开&lt;/p>
+&lt;p>$$
+D_{2n} = (-1)^{1+1} \cdot a \cdot (-1)^{2n-1+2n-1} \cdot a \cdot
+\begin{vmatrix}
+a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n-2}
++
+(-1)^{1+2n} \cdot b \cdot (-1)^{2n-1+1} \cdot b \cdot
+\begin{vmatrix}
+a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
+&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
+&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
+b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
+\end{vmatrix}_{2n-2}
+$$&lt;/p>
+&lt;p>化简为递推式&lt;/p>
+&lt;p>$$
+D_{2n} = a^2 D_{2n-2} - b^2 D_{2n-2} = (a^2 - b^2)D_{2n-2} = (a^2 - b^2)^2 D_{2n-4} = \dotsm = (a^2 - b^2)^{n-1}D_2 = (a^2 - b^2)^n
+$$&lt;/p>- https://dreamanddead.github.io/post/a-matrix-det-puzzle/ -</description></item><item><title>A simple way to draw a circle always facing you</title><link>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</link><pubDate>Wed, 17 Apr 2019 13:24:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/a-simple-way-to-draw-a-circle-always-facing-you/ -&lt;p>In the latest work about deferred shading light, I need to figure out a way to demonstrate the light range of point light,
 so that user can easily tune the parameters about the light.&lt;/p>
 &lt;p>The idea is simple.
 Imaging a point light lighting range is a ball bubble, you will see a round transparent circle wherever you look at it.
@@ -1109,44 +1201,4 @@ alt="ssh如何处理auth认证 from oreilly"/> &lt;figcaption>
 &lt;li>全部X流量加密&lt;/li>
 &lt;li>如果ssh server不可信，过程中也没有暴露真实的cookie&lt;/li>
 &lt;/ul>
-&lt;p>What a clever way!&lt;/p>- https://dreamanddead.github.io/post/ssh-x11-forward/ -</description></item><item><title>Serve http and https at same time with nginx</title><link>https://dreamanddead.github.io/post/serve-http-https-same-time/</link><pubDate>Thu, 17 May 2018 14:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/serve-http-https-same-time/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/serve-http-https-same-time/ -&lt;p>之前讨论过，&lt;a href="https://dreamanddead.github.io/2018/04/11/comfortable-way-when-testing-https-site.html">网站从http迁移到https时，需要注意些什么&lt;/a>。
-由于旧有的服务依旧在运行，需要同时保留http与https。
-突然有一天，访问http服务，页面上只出现nginx的错误信息：&lt;/p>
-&lt;pre>&lt;code>400 bad request the plain http request was sent to https port
-&lt;/code>&lt;/pre>&lt;p>这让我觉得非常奇怪，按照之前的理解，这样设置应该是没有问题的。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">server&lt;/span> {
-&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">80&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">443&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl&lt;/span> &lt;span style="color:#00688b">on&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.crt&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate_key&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.key&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">.........&lt;/span>
-&lt;span style="color:#cd5555">.........&lt;/span>
-&lt;span style="color:#cd5555">.........&lt;/span>
-&lt;span style="color:#a61717;background-color:#e3d2d2">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>后来按照错误信息进行一番搜索，还是漏掉了一些细节。&lt;/p>
-&lt;h1 id="trouble-shoot">trouble shoot&lt;/h1>
-&lt;p>从 &lt;a href="https://stackoverflow.com/questions/8768946/dealing-with-nginx-400-the-plain-http-request-was-sent-to-https-port-error">stackoverflow&lt;/a> 上搜索得到的结果，
-发现自己对于 ssl 的配置理解还不够充分。&lt;/p>
-&lt;p>一般在nginx配置中，ssl 可能出现在两个地方&lt;/p>
-&lt;ul>
-&lt;li>在 listen 指令之后，作为参数&lt;/li>
-&lt;li>在 server 块下，作为指令，参数为 on/off&lt;/li>
-&lt;/ul>
-&lt;p>对于 ssl 指令，&lt;a href="http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl">官方文档&lt;/a> 已经不推荐使用，而是推荐使用 listen 指令加 ssl 参数的格式。&lt;/p>
-&lt;p>listen 指令的 &lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#listen">ssl 参数&lt;/a> 的作用是，标明 listen 的端口应该运行 ssl 模式。
-同时托管 http 与 https时，推荐&lt;a href="http://nginx.org/en/docs/http/configuring_https_servers.html#single_http_https_server">使用如下配置&lt;/a>：&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">server&lt;/span> {
-&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">80&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">443&lt;/span> &lt;span style="color:#cd5555">ssl&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl&lt;/span> &lt;span style="color:#00688b">off&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.crt&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate_key&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.key&lt;/span>;
-&lt;span style="color:#8b008b;font-weight:bold">.........&lt;/span>
-&lt;span style="color:#cd5555">.........&lt;/span>
-&lt;span style="color:#cd5555">.........&lt;/span>
-&lt;span style="color:#a61717;background-color:#e3d2d2">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>所以问题的核心就在于，指令 &lt;code>ssl on&lt;/code>，将所有 listen 的端口，都运行在 ssl 模式，但是对于端口 80，
-这样明显是不对的，也就导致了最开始的报错信息。&lt;/p>
-&lt;pre>&lt;code>400 bad request the plain http request was sent to https port
-&lt;/code>&lt;/pre>&lt;p>这时就推荐使用 listen 加 ssl 参数，更细粒度的控制哪些端口运行在 ssl 模式下。&lt;/p>- https://dreamanddead.github.io/post/serve-http-https-same-time/ -</description></item></channel></rss>
+&lt;p>What a clever way!&lt;/p>- https://dreamanddead.github.io/post/ssh-x11-forward/ -</description></item></channel></rss>
