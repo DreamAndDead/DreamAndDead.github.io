@@ -51,6 +51,6 @@ weight = 3
 
 [[menu.main]]
 url = "/index.xml"
-name = "RSS Feed"
+name = "Rss"
 weight = 4
 

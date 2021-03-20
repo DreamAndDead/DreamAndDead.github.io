@@ -58,7 +58,7 @@ GRUB_DISABLE_OS_PROBER=false
 重新执行 =update-grub= ，引导项就恢复正常了
 
 #+begin_example
-$ sudo update-grub
+$ sudo update-grub 
 正在生成 grub 配置文件 ...
 找到主题：/usr/share/grub/themes/manjaro/theme.txt
 找到 Linux 镜像：/boot/vmlinuz-5.4-x86_64
@@ -74,13 +74,14 @@ Found memtest86+ image: /boot/memtest86+/memtest.bin
 完成
 #+end_example
 
+* License
 
 #+begin_export markdown
 {{< license >}}
 #+end_export
 
+* Footnotes
 
 [fn:1]: https://wiki.archlinux.org/index.php/GRUB#Detecting_other_operating_systems
 
 [fn:2]: https://zhuanlan.zhihu.com/p/341300483
-

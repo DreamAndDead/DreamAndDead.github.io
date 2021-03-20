@@ -4,3 +4,6 @@
 #+hugo_front_matter_format: yaml
 #+hugo_auto_set_lastmod: t
 
+# don't export TODO section
+#+options: tasks:nil
+

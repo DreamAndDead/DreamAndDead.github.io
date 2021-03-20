@@ -8,7 +8,7 @@
 #+hugo_categories: test
 #+hugo_tags: test
 #+hugo_draft: true
-#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg  :series '(test)
 
 * 博客
 ** 如何同步到公众号
@@ -29,6 +29,8 @@ https://zhuanlan.zhihu.com/p/49575075
 *** 与 beancount 的公式区别
 *** 借 贷
 *** 收入 费用 账户
+** graphviz example
+*** subgraph
 ** 摄影理论
 *** 参数
 *** 纽约
