@@ -11,9 +11,10 @@
 #+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg  :series '(test)
 
 * 博客
-** 如何同步到公众号
+** 如何同步到公众号/其它专栏
 *** 导出 markdown 的方式
 *** 格式化工具
+*** 直接导出 html 的方式
 ** 配色理论
 
 https://zhuanlan.zhihu.com/p/52120537
@@ -24,11 +25,6 @@ https://www.sohu.com/a/397541366_100031423
 
 https://zhuanlan.zhihu.com/p/49575075
 
-** 理解 beancount 中的账户
-*** 复式记账法
-*** 与 beancount 的公式区别
-*** 借 贷
-*** 收入 费用 账户
 ** graphviz example
 *** subgraph
 ** 摄影理论
@@ -53,16 +49,16 @@ https://zhuanlan.zhihu.com/p/49575075
 **** grep
 **** awk
      
-- cf 851b 分析
+** cf 851b 分析
   - https://blog.csdn.net/zsnowwolfy/article/details/82793414
 
-- 3 点共线 计算
+** 3 点共线 计算
   - 涉及三角形面积为 0 的各种计算
   - 关注 行列式的方式，行列式与面积 体积的关系 线性代数
 
-- git submodule 中项目指定 hash
+** git submodule 中项目指定 hash
 
-- 图的最短路径理论
+** 图的最短路径理论
   - 算法导论
   - 最优性条件
   - dijkstra算法 的正确性
@@ -70,21 +66,17 @@ https://zhuanlan.zhihu.com/p/49575075
   - dag 中的拓扑加速
   - bellman ford
 
-- 反证法的正确性 （充分性  必要性）
+** 反证法的正确性 （充分性  必要性）
 
-- emacs key bindings 研究与配置
+** emacs key bindings 研究与配置
 
-- how RE == NFA == DFA
+** how RE == NFA == DFA
 
-- how scanner generator works (table driven / if else driven)
+** how scanner generator works (table driven / if else driven)
 
-- manjaro config best practise
+** manjaro config best practise
   - 各种迁移，熟悉工具的配置
   - fzf
   - autojump
 
-- software license
-- book license
-- blog license
-
-- krusader 预览功能的使用
+** krusader 预览功能的使用

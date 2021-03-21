@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-03-20T10:32:19+08:00
+lastmod: 2021-03-21T20:24:00+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -14,13 +14,16 @@ series: ["test"]
 ## 博客 {#博客}
 
 
-### 如何同步到公众号 {#如何同步到公众号}
+### 如何同步到公众号/其它专栏 {#如何同步到公众号-其它专栏}
 
 
 #### 导出 markdown 的方式 {#导出-markdown-的方式}
 
 
 #### 格式化工具 {#格式化工具}
+
+
+#### 直接导出 html 的方式 {#直接导出-html-的方式}
 
 
 ### 配色理论 {#配色理论}
@@ -32,21 +35,6 @@ series: ["test"]
 <https://www.sohu.com/a/397541366%5F100031423>
 
 <https://zhuanlan.zhihu.com/p/49575075>
-
-
-### 理解 beancount 中的账户 {#理解-beancount-中的账户}
-
-
-#### 复式记账法 {#复式记账法}
-
-
-#### 与 beancount 的公式区别 {#与-beancount-的公式区别}
-
-
-#### 借 贷 {#借-贷}
-
-
-#### 收入 费用 账户 {#收入-费用-账户}
 
 
 ### graphviz example {#graphviz-example}
@@ -122,38 +110,48 @@ series: ["test"]
 
 -  awk
 
-    -   cf 851b 分析
-        -   <https://blog.csdn.net/zsnowwolfy/article/details/82793414>
 
-    -   3 点共线 计算
-        -   涉及三角形面积为 0 的各种计算
-        -   关注 行列式的方式，行列式与面积 体积的关系 线性代数
+### cf 851b 分析 {#cf-851b-分析}
 
-    -   git submodule 中项目指定 hash
+-   <https://blog.csdn.net/zsnowwolfy/article/details/82793414>
 
-    -   图的最短路径理论
-        -   算法导论
-        -   最优性条件
-        -   dijkstra算法 的正确性
-            -   为什么不能是负边
-        -   dag 中的拓扑加速
-        -   bellman ford
 
-    -   反证法的正确性 （充分性  必要性）
+### 3 点共线 计算 {#3-点共线-计算}
 
-    -   emacs key bindings 研究与配置
+-   涉及三角形面积为 0 的各种计算
+-   关注 行列式的方式，行列式与面积 体积的关系 线性代数
 
-    -   how RE `= NFA =` DFA
 
-    -   how scanner generator works (table driven / if else driven)
+### git submodule 中项目指定 hash {#git-submodule-中项目指定-hash}
 
-    -   manjaro config best practise
-        -   各种迁移，熟悉工具的配置
-        -   fzf
-        -   autojump
 
-    -   software license
-    -   book license
-    -   blog license
+### 图的最短路径理论 {#图的最短路径理论}
 
-    -   krusader 预览功能的使用
+-   算法导论
+-   最优性条件
+-   dijkstra算法 的正确性
+    -   为什么不能是负边
+-   dag 中的拓扑加速
+-   bellman ford
+
+
+### 反证法的正确性 （充分性  必要性） {#反证法的正确性-充分性-必要性}
+
+
+### emacs key bindings 研究与配置 {#emacs-key-bindings-研究与配置}
+
+
+### how RE `= NFA =` DFA {#how-re-nfa-dfa}
+
+
+### how scanner generator works (table driven / if else driven) {#how-scanner-generator-works--table-driven-if-else-driven}
+
+
+### manjaro config best practise {#manjaro-config-best-practise}
+
+-   各种迁移，熟悉工具的配置
+-   fzf
+-   autojump
+
+
+### krusader 预览功能的使用 {#krusader-预览功能的使用}
