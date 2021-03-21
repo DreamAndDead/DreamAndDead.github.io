@@ -2,7 +2,7 @@
 title: "了解 Arch Linux 的包管理系统"
 author: ["DreamAndDead"]
 date: 2021-03-19T17:26:00+08:00
-lastmod: 2021-03-20T17:46:58+08:00
+lastmod: 2021-03-21T11:31:52+08:00
 tags: ["arch", "manjaro", "linux", "package-manager"]
 categories: ["Linux"]
 draft: false
@@ -94,7 +94,7 @@ pacman 本身有两个含义。
 二是 `/usr/bin/pacman` ，是 `core/pacman` 的一部分。
 文章之后出现的 `core/pacman` 表示第一种含义， `pacman` 表示第二种含义。
 
-pacman 的用法是非常清晰的[^fn:1]
+[pacman 的用法](https://man.archlinux.org/man/pacman.8)是非常清晰的
 
 ```text
 $ pacman <operation> [options] [targets]
@@ -176,13 +176,13 @@ $ pacman -Qs
 从服务器查询元信息
 
 ```text
-pacman -Si
+$ pacman -Si
 ```
 
 从本地查询元信息
 
 ```text
-pacman -Qi
+$ pacman -Qi
 ```
 
 
@@ -236,7 +236,7 @@ $ pacman -Rs
 
 ### 更新 {#更新}
 
-如果要更新，就整体全部更新。根据之前的图同步理论，局部更新是非常危险的[^fn:2]。
+如果要更新，就整体全部更新。根据之前的图同步理论，[局部更新是非常危险的](https://wiki.archlinux.org/index.php/Pacman#Upgrading%5Fpackages)。
 
 **Arch 发行版的软件包更新非常频繁，建议每次开机都进行更新** 。
 
@@ -249,7 +249,7 @@ $ pacman -Syu
 
 遇到相应任务再来文档查询非常消耗时间，可以直接将功能集成到 Shell 中。
 
-先安装 fuzzy finder[^fn:3]，
+先安装 [fuzzy finder](https://wiki.archlinux.org/index.php/Fzf#Pacman)，
 
 ```text
 $ sudo pacman -S fzf
@@ -272,7 +272,3 @@ alias pkg_upgrade="sudo pacman -Syu"
 ## License {#license}
 
 {{< license >}}
-
-[^fn:1]: : <https://man.archlinux.org/man/pacman.8>
-[^fn:2]: : <https://wiki.archlinux.org/index.php/Pacman#Upgrading%5Fpackages>
-[^fn:3]: : <https://wiki.archlinux.org/index.php/Fzf#Pacman>

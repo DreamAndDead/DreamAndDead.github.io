@@ -136,7 +136,7 @@ pacman 本身有两个含义。
 二是 =/usr/bin/pacman= ，是 =core/pacman= 的一部分。
 文章之后出现的 =core/pacman= 表示第一种含义， =pacman= 表示第二种含义。
 
-pacman 的用法是非常清晰的[fn:1]
+[[https://man.archlinux.org/man/pacman.8][pacman 的用法]]是非常清晰的
 
 #+begin_example
 $ pacman <operation> [options] [targets]
@@ -210,13 +210,13 @@ $ pacman -Qs
 从服务器查询元信息 
 
 #+begin_example
-pacman -Si
+$ pacman -Si
 #+end_example
 
 从本地查询元信息 
 
 #+begin_example
-pacman -Qi
+$ pacman -Qi
 #+end_example
 
 *** 列出软件包中包含的文件
@@ -265,7 +265,7 @@ $ pacman -Rs
    
 ** 更新
 
-如果要更新，就整体全部更新。根据之前的图同步理论，局部更新是非常危险的[fn:3]。
+如果要更新，就整体全部更新。根据之前的图同步理论，[[https://wiki.archlinux.org/index.php/Pacman#Upgrading_packages][局部更新是非常危险的]]。
 
 *Arch 发行版的软件包更新非常频繁，建议每次开机都进行更新* 。
 
@@ -277,7 +277,7 @@ $ pacman -Syu
 
 遇到相应任务再来文档查询非常消耗时间，可以直接将功能集成到 Shell 中。
 
-先安装 fuzzy finder[fn:4]，
+先安装 [[https://wiki.archlinux.org/index.php/Fzf#Pacman][fuzzy finder]]，
 
 #+begin_example
 $ sudo pacman -S fzf
@@ -311,15 +311,4 @@ alias pkg_upgrade="sudo pacman -Syu"
 #+begin_export markdown
 {{< license >}}
 #+end_export
-
-* Footnotes
-
-[fn:1]: https://man.archlinux.org/man/pacman.8
-
-[fn:2]: https://wiki.archlinux.org/index.php/Pacman/Tips_and_tricks
-
-[fn:3]: https://wiki.archlinux.org/index.php/Pacman#Upgrading_packages
-
-[fn:4]: https://wiki.archlinux.org/index.php/Fzf#Pacman
-
 
