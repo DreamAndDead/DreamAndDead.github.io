@@ -2,7 +2,7 @@
 title: "了解 Arch Linux 的包管理系统"
 author: ["DreamAndDead"]
 date: 2021-03-19T17:26:00+08:00
-lastmod: 2021-03-21T20:28:21+08:00
+lastmod: 2021-03-22T13:22:53+08:00
 tags: ["arch", "manjaro", "linux", "package-manager"]
 categories: ["Linux"]
 draft: false

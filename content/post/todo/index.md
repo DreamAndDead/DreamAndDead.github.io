@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-03-21T20:24:00+08:00
+lastmod: 2021-03-22T16:43:54+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -17,13 +17,39 @@ series: ["test"]
 ### 如何同步到公众号/其它专栏 {#如何同步到公众号-其它专栏}
 
 
-#### 导出 markdown 的方式 {#导出-markdown-的方式}
-
-
 #### 格式化工具 {#格式化工具}
 
 
 #### 直接导出 html 的方式 {#直接导出-html-的方式}
+
+
+#### 富文本 copy vs html copy {#富文本-copy-vs-html-copy}
+
+
+### 算法 {#算法}
+
+
+#### 枚举 排列 {#枚举-排列}
+
+<!--list-separator-->
+
+-  递归
+
+<!--list-separator-->
+
+-  next
+
+<!--list-separator-->
+
+-  可重集
+
+<!--list-separator-->
+
+-  cpp multiset
+
+<!--list-separator-->
+
+-  和回溯，解答树的关系
 
 
 ### 配色理论 {#配色理论}
@@ -37,10 +63,19 @@ series: ["test"]
 <https://zhuanlan.zhihu.com/p/49575075>
 
 
-### graphviz example {#graphviz-example}
+### 吉他保养 {#吉他保养}
 
 
-#### subgraph {#subgraph}
+#### 品丝 {#品丝}
+
+
+#### 护弦 {#护弦}
+
+
+#### 指板 {#指板}
+
+
+#### 换弦 {#换弦}
 
 
 ### 摄影理论 {#摄影理论}
@@ -155,3 +190,8 @@ series: ["test"]
 
 
 ### krusader 预览功能的使用 {#krusader-预览功能的使用}
+
+
+## 协议 {#协议}
+
+{{< license >}}

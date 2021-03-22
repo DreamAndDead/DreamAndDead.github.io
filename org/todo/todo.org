@@ -12,9 +12,16 @@
 
 * 博客
 ** 如何同步到公众号/其它专栏
-*** 导出 markdown 的方式
 *** 格式化工具
 *** 直接导出 html 的方式
+*** 富文本 copy vs html copy
+** 算法
+*** 枚举 排列
+**** 递归
+**** next
+**** 可重集
+**** cpp multiset
+**** 和回溯，解答树的关系
 ** 配色理论
 
 https://zhuanlan.zhihu.com/p/52120537
@@ -24,9 +31,11 @@ https://www.sohu.com/a/352611094_286880
 https://www.sohu.com/a/397541366_100031423
 
 https://zhuanlan.zhihu.com/p/49575075
-
-** graphviz example
-*** subgraph
+** 吉他保养
+*** 品丝
+*** 护弦
+*** 指板
+*** 换弦
 ** 摄影理论
 *** 参数
 *** 纽约
@@ -80,3 +89,10 @@ https://zhuanlan.zhihu.com/p/49575075
   - autojump
 
 ** krusader 预览功能的使用
+
+* 协议
+
+#+begin_export markdown
+{{< license >}}
+#+end_export
+  

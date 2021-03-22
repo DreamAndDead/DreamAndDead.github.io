@@ -3,7 +3,7 @@ disablePathToLower = true
 languageCode = "zh-cn"
 title = "Brain=f(X)?"
 theme = "diary"
-#copyright = "Attribution-NonCommercial-ShareAlike 4.0 International"
+copyright = "CC BY-NC-SA 4.0"
 googleAnalytics = "UA-93899485-1"
 
 # aliyun oss
@@ -39,18 +39,23 @@ tag = "tags"
 category = "categories"
 series = "series"
 
-[[menu.main]]
-url = "/categories"
-name = "Categories"
-weight = 2
+#[[menu.main]]
+#url = "/series"
+#name = "系列"
+#weight = 2
 
 [[menu.main]]
-url = "/tags"
-name = "Tags"
+url = "/categories"
+name = "分类"
 weight = 3
 
 [[menu.main]]
-url = "/index.xml"
-name = "Rss"
+url = "/tags"
+name = "标签"
 weight = 4
+
+[[menu.main]]
+url = "/index.xml"
+name = "订阅"
+weight = 5
 
