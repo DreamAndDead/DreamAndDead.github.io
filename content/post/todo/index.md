@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-03-22T16:43:54+08:00
+lastmod: 2021-03-23T15:04:27+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -61,21 +61,6 @@ series: ["test"]
 <https://www.sohu.com/a/397541366%5F100031423>
 
 <https://zhuanlan.zhihu.com/p/49575075>
-
-
-### 吉他保养 {#吉他保养}
-
-
-#### 品丝 {#品丝}
-
-
-#### 护弦 {#护弦}
-
-
-#### 指板 {#指板}
-
-
-#### 换弦 {#换弦}
 
 
 ### 摄影理论 {#摄影理论}
