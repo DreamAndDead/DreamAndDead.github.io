@@ -2,7 +2,7 @@
 title: "如何超越时间的限制"
 author: ["DreamAndDead"]
 date: 2021-03-22T13:22:00+08:00
-lastmod: 2021-03-23T16:02:10+08:00
+lastmod: 2021-03-23T16:05:55+08:00
 tags: ["life", "mind", "time"]
 categories: ["Mind"]
 draft: false
