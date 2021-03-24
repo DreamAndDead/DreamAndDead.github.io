@@ -39,10 +39,10 @@ tag = "tags"
 category = "categories"
 series = "series"
 
-#[[menu.main]]
-#url = "/series"
-#name = "系列"
-#weight = 2
+[[menu.main]]
+url = "/series"
+name = "系列"
+weight = 2
 
 [[menu.main]]
 url = "/categories"

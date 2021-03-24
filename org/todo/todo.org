@@ -15,13 +15,15 @@
 *** 格式化工具
 *** 直接导出 html 的方式
 *** 富文本 copy vs html copy
+*** inspect clip board
 ** 算法
 *** 枚举 排列
 **** 递归
 **** next
 **** 可重集
-**** cpp multiset
 **** 和回溯，解答树的关系
+*** 枚举 子集
+**** cpp multiset
 ** 配色理论
 
 https://zhuanlan.zhihu.com/p/52120537
@@ -176,7 +178,6 @@ https://zhuanlan.zhihu.com/p/49575075
 *** 技术选型，所有技术的深入了解，对业务需求的评测
 ** 健身动作新探索
 *** 哑铃的刺激
-*** 牧师凳
 *** 罗马椅
 ** 联接理论
 *** 以人为核心

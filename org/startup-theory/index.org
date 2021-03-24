@@ -1,0 +1,31 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: startup-theory
+#+export_file_name: index
+
+#+title: startup
+#+date: <2021-03-24 三 15:44>
+#+hugo_categories: Startup
+#+hugo_tags: life theory bussiness
+#+hugo_draft: true
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg
+
+不知如何开始
+- 认识它
+
+太多事不知道如何处理
+- 在过程中实时学习
+
+为什么要这样
+- 社会的认知理论
+
+无法想象
+- 这才是值得兴奋的地方
+
+* startup
+
+
+
+
+
+

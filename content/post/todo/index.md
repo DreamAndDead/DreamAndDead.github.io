@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-03-23T16:29:43+08:00
+lastmod: 2021-03-24T13:18:30+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -26,6 +26,9 @@ series: ["test"]
 #### 富文本 copy vs html copy {#富文本-copy-vs-html-copy}
 
 
+#### inspect clip board {#inspect-clip-board}
+
+
 ### 算法 {#算法}
 
 
@@ -45,11 +48,14 @@ series: ["test"]
 
 <!--list-separator-->
 
--  cpp multiset
+-  和回溯，解答树的关系
+
+
+#### 枚举 子集 {#枚举-子集}
 
 <!--list-separator-->
 
--  和回溯，解答树的关系
+-  cpp multiset
 
 
 ### 配色理论 {#配色理论}
@@ -502,9 +508,6 @@ series: ["test"]
 
 
 #### 哑铃的刺激 {#哑铃的刺激}
-
-
-#### 牧师凳 {#牧师凳}
 
 
 #### 罗马椅 {#罗马椅}

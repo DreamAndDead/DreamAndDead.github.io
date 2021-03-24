@@ -8,8 +8,7 @@
 #+hugo_categories: Tool
 #+hugo_tags: tool graphviz drawing
 #+hugo_draft: true
-#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg
-
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.png
 
 * usage
 

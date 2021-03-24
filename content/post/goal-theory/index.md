@@ -1,14 +1,22 @@
 ---
-title: "人生理论"
+title: "life theory"
 author: ["DreamAndDead"]
 date: 2021-03-23T16:05:00+08:00
-lastmod: 2021-03-23T16:29:40+08:00
+lastmod: 2021-03-24T15:45:37+08:00
 tags: ["life", "mind", "goal", "theory"]
 categories: ["Mind"]
 draft: true
 comment: false
 featured_image: "images/featured.jpg"
 ---
+
+理论融合
+
+强化学习
+OKR
+奇特的一生
+高效能人士的习惯
+
 
 ## key concept {#key-concept}
 
@@ -21,7 +29,7 @@ featured_image: "images/featured.jpg"
 身体 物质基础
 精神 价值认同，“我”之所在
 智力 做事能力
-情感 共情
+情感 共情，其它 agent 的共鸣
 
 身外之物
 金钱
@@ -35,7 +43,7 @@ featured_image: "images/featured.jpg"
 
 ### value {#value}
 
-对各项资源的重要程度的评价，由 agent 的物质决定
+对各项资源的重要程度的评价，由 agent 的特质决定
 
 
 ### object {#object}
@@ -103,12 +111,16 @@ featured_image: "images/featured.jpg"
 -   羡慕和讨厌的事
 -   擅长与不擅长的事
 
+post
+如何分析自我
+
 
 ### set object {#set-object}
 
 目标表示一个时间点的状态
 
 目标由价值而来
+目标由现实的困境而来
 
 内外兼修，平衡的原则
 
@@ -120,6 +132,10 @@ featured_image: "images/featured.jpg"
 
 所以在自己的目标中，应该添加关于接收新事物，新消息的目标，
 打开接收消息，主动更新的窗口。
+
+更新的速度
+时刻影响 agent 自身
+对于价值的判断，目标的设定与修改
 
 
 ### plan {#plan}
@@ -151,7 +167,7 @@ featured_image: "images/featured.jpg"
 
 再天才的计划也需要执行才能实现。
 
-目标计划变为 todo 之后，根据安排，使用相应的精力和资源去处理，
+目标计划的事情变为 todo 之后，根据安排，使用相应的精力和资源去处理，
 就像是一个投资的过程。
 
 执行是调度资源的能力。
@@ -163,6 +179,12 @@ featured_image: "images/featured.jpg"
 管理好精力，高质量的时间才是你需要的
 
 少做目标之外的事，是对资源的浪费
+
+时间都在分毫无关的时候，消失了
+ 即刻的冲动
+ 自律
+
+行动才有了一切
 
 
 ### refresh {#refresh}
@@ -193,9 +215,3 @@ featured_image: "images/featured.jpg"
 年度，反思 5 年目标        5
 
 5 年，反思人生目标         5
-
-时间都在分毫无关的时候，消失了
- 即刻的冲动
- 自律
-
-行动才有了一切

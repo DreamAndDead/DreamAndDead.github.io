@@ -2,12 +2,12 @@
 title: "Graphviz Examples"
 author: ["DreamAndDead"]
 date: 2021-03-22T14:48:00+08:00
-lastmod: 2021-03-22T16:40:36+08:00
+lastmod: 2021-03-24T15:01:54+08:00
 tags: ["tool", "graphviz", "drawing"]
 categories: ["Tool"]
 draft: true
 comment: false
-featured_image: "images/featured.jpg"
+featured_image: "images/featured.png"
 ---
 
 ## usage {#usage}
