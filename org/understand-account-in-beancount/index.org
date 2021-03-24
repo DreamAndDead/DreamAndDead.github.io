@@ -493,8 +493,6 @@ digraph {
 
 #+RESULTS:
 [[file:images/T.sub.png]]
-
-
    
 收入 和 费用是所有者权益的子账户
 
