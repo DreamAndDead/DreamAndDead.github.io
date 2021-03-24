@@ -2,7 +2,7 @@
 title: "startup"
 author: ["DreamAndDead"]
 date: 2021-03-24T15:44:00+08:00
-lastmod: 2021-03-24T15:52:32+08:00
+lastmod: 2021-03-24T19:59:48+08:00
 tags: ["life", "theory", "bussiness"]
 categories: ["Startup"]
 draft: true
@@ -25,6 +25,12 @@ featured_image: "images/featured.jpg"
 无法想象
 
 -   这才是值得兴奋的地方
+
+离博士，学术研究已经越来越远了
+
+-   以现实为界
+-   现世中的成就
+-   用商业证明自己
 
 
 ## startup {#startup}

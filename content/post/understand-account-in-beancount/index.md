@@ -2,7 +2,7 @@
 title: "浅谈复式记账与 Beancount"
 author: ["DreamAndDead"]
 date: 2021-02-28T15:59:00+08:00
-lastmod: 2021-03-24T14:34:20+08:00
+lastmod: 2021-03-24T22:07:49+08:00
 tags: ["accounting", "beancount", "python"]
 categories: ["Accounting"]
 draft: true
@@ -31,7 +31,8 @@ beancount 是采用复式记账法的工具，python 编写，定位为个人记
 交易必定涉及两/多方，每个主体都要准确记录交易标的，明确自身的财务情况。
 
 主流记账方式有两种，单式记账和复式记账。
-TODO
+TODO 区别
+由历史演变而来
 
 复式记账是一种方法，与交易主体无关。
 无论是个人还是公司，都可以采用复式记账法。
@@ -63,52 +64,65 @@ TODO
 
 ### 交易示例 {#交易示例}
 
-来自书籍
+**公司成立，创始人注入资本**
 
-财务原理
+{{< figure src="images/e.g.1.png" >}}
 
-三类账户的变化过程
+**向银行借款**
 
+{{< figure src="images/e.g.2.png" >}}
 
-#### 投资 {#投资}
+**购买设备，准备生产**
 
-
-#### 借款 {#借款}
-
-
-#### 出售 {#出售}
+{{< figure src="images/e.g.3.png" >}}
 
 
 ### 借 vs 贷 {#借-vs-贷}
 
-debit
-
-credit
-
-混乱的关系
+借贷，向来不清楚相应的关系
 
 会计部分是庞大的，复杂的。 尤其在大型公司，庞大的财务部门。
 
 会计的工作，将所有单项交易，最终整合为报表，呈现公司的财务整体面貌。
 
-最基础的记录，日记账
+最基础的记录，分类账
 
-T 形记录
+T 形账户
 
-前面的示例
+{{< figure src="images/T.1.png" >}}
+
+每个账户的左右均记分录
+
+借 debit 表示左边
+贷 credit 表示右边
 
 单纯的左右关系，借 贷仅表示左右。
 
 至于是增加/减少，是由账户的特性决定的
 
-debit card
+debit card，credit card 的由来
 
-credit card 的由来
+你的存款，进入银行的负债账户
+提取存款，相当于银行
+借 负债，贷 现金
 
-清晰了
+对于信用卡
+直接消费，相当于银行的资产，应收账款
+收回时
+借 现金，贷 应收账款
+
+{{< figure src="images/T.e.g.1.png" >}}
+
+{{< figure src="images/T.e.g.2.png" >}}
+
+{{< figure src="images/T.e.g.3.png" >}}
 
 
 ### 收入 vs 费用 {#收入-vs-费用}
+
+{{< figure src="images/T.all.png" >}}
+
+{{< figure src="images/T.sub.png" >}}
 
 收入 和 费用是所有者权益的子账户
 
@@ -161,6 +175,10 @@ credit card 的由来
 ```text
 $ pip install beancount fava
 ```
+
+《财务会计教程》
+
+<https://book.douban.com/subject/11636434/>
 
 
 ## License {#license}

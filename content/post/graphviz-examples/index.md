@@ -2,7 +2,7 @@
 title: "Graphviz Examples"
 author: ["DreamAndDead"]
 date: 2021-03-22T14:48:00+08:00
-lastmod: 2021-03-24T15:01:54+08:00
+lastmod: 2021-03-24T21:16:38+08:00
 tags: ["tool", "graphviz", "drawing"]
 categories: ["Tool"]
 draft: true
@@ -110,6 +110,13 @@ digraph {
 ### straight line {#straight-line}
 
 {{< figure src="images/edge-straight.png" >}}
+
+
+## table {#table}
+
+{{< figure src="images/table.png" >}}
+
+{{< figure src="images/table-hr-vr.png" >}}
 
 
 ## ref {#ref}

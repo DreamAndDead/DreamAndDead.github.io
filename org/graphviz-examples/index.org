@@ -151,6 +151,58 @@ graph {
 #+RESULTS:
 [[file:images/edge-straight.png]]
 
+
+* table
+
+#+begin_src dot :file images/table.png
+digraph {
+	format[label=<
+	      <table border="1" cellspacing="4">
+	        <tr>
+		  <td border="0" bgcolor="white">资产</td>
+		  <td border="0" bgcolor="white">  =  </td>
+		  <td border="0" bgcolor="white">  负债  </td>
+		  <td border="0" bgcolor="white">  +  </td>
+		  <td border="0" bgcolor="white">所有者权益</td>
+		</tr>
+	        <tr>
+		  <td border="0" bgcolor="white">现金</td>
+		  <td border="0" colspan="3" bgcolor="white"></td>
+		  <td border="0" bgcolor="white">资本</td>
+		</tr>
+	        <tr>
+		  <td border="0" bgcolor="white">+400,000</td>
+		  <td border="0" colspan="3" bgcolor="white"></td>
+		  <td border="0" bgcolor="white">+400,000</td>
+		</tr>
+	      </table>
+	       >, shape=none]
+}
+#+end_src
+
+#+begin_src dot :file images/table-hr-vr.png
+digraph {
+	format[label=<
+	      <table border="0" cellspacing="4">
+	        <tr>
+		  <td border="0" colspan="2" bgcolor="white">现金</td>
+		</tr>
+		<hr/>
+	        <tr>
+		  <td border="0" bgcolor="white">左边</td>
+		  <vr/>
+		  <td border="0" bgcolor="white">右边</td>
+		</tr>
+	        <tr>
+		  <td border="0" bgcolor="white">现金增加</td>
+		  <vr/>
+		  <td border="0" bgcolor="white">现金减少</td>
+		</tr>
+	      </table>
+	       >, shape=none]
+}
+#+end_src
+
 * ref
 
 https://blog.csdn.net/youwen21/article/details/98397993
