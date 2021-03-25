@@ -7,64 +7,57 @@
 #+date: <2021-02-28 日 15:59>
 #+hugo_categories: Accounting
 #+hugo_tags: accounting beancount python
-#+hugo_draft: true
-#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg
+#+hugo_custom_front_matter: :featured_image images/featured.jpg
 
-复式记账法是世界通行的会计方式。
-beancount 是采用复式记账法的工具，python 编写，定位为个人记账。
+复式记账法是世界通行的会计方法，
+Beancount 是采用复式记账法的工具，由 Python 编写，定位个人记账。
+起因是创作者不满于现存的记账工具，于是独自开发了 Beancount，并开源贡献给所有人使用，
+非常有 Geek 风范。
 
-本文的目的
-
-记账清晰，了解复式记账法，与 beancount 中的小小差异。
-对记账有帮助。
+本文的目的，是简要了解复式记账法的原理，以及 Beancount 是如何应用这些原理的。
 
 * 复式记账
 
-** 交易
+** 记账
 
 交易，是商业的本质。
-无论以物易物，还是使用货币，这一点从没有发生变化。
+无论是以物易物，还是使用通用货币，或者 App 中数字的增减，这一点从没有发生变化。
 
-而记账，就是记录交易。
-交易必定涉及两/多方，每个主体都要准确记录交易标的，明确自身的财务情况。
+记账，就是记录交易。
+交易必定涉及两方，每方都要准确记录交易标的，交易金额，明确自身的财务情况。
 
-主流记账方式有两种，单式记账和复式记账。
-TODO 区别
-由历史演变而来
-
-复式记账是一种方法，与交易主体无关。
+复式记账法是当前主流的记账方式，而且不限交易主体。
 无论是个人还是公司，都可以采用复式记账法。
-而这两种主体的交易项目不同，金额数目不同，本质没有变化。
+区别只在于两种主体的交易项目不同，金额数目不同，交易的本质并没有变化。
 
 ** 账户
 
-交易的记录方式，就是记录价值在不同账户间的流转过程。
+凡记账，必须要设立账户。
 
-#+begin_example
+复式记账法的特色在于
+*每笔交易都以相等的金额，同时登记在两个账户中，清晰反映了资金的流转过程。*
+
+如何设立账户可以同时登记？会计恒等式已经给出了方案。
+
+#+begin_quote
 资产 = 负债 + 所有者权益
-#+end_example
+#+end_quote
 
-会计恒等式人尽皆知，复式记账就是在这上面做文章。
-交易，左右必定相同。
+恒等式的三项，将所有账户分为三大类，简单理解即
+- 资产，表面上你所拥有的
+- 负债，不属于你的，迟早要归还的
+- 所有者权益，真正属于个人的
 
-恒等式的三项，理解为三类账户，记录账务的不同方面。
+在三类账户下，细分设立更多的子账户，用以记录交易。
+同时恒等意味着，公式在任意时刻， ~=~ 必须成立，不然就是记账出现问题。
 
-资产，明面上拥有的
+下面以一个公司成立之初的几笔交易，来了解复式记账的过程。
 
+*公司成立，创始人注入资本。*
 
+创始人的注入的资本，是真正属于公司的，属于所有者权益，细分账户实缴资本。
 
-负债，不属于你的，迟早要归还的
-
-
-所有者权益，真正属于个人的。
-
-
-三类账户，细分设立更多的子账户。
-精细记录交易。
-
-** 交易示例
-
-*公司成立，创始人注入资本*
+注入的资金为公司所有，表面在资产分类上，细分账户现金。
 
 #+begin_src dot :file images/e.g.1.png
 digraph {
@@ -80,7 +73,7 @@ digraph {
 	        <tr>
 		  <td border="0" bgcolor="white">现金</td>
 		  <td border="0" colspan="3" bgcolor="white"></td>
-		  <td border="0" bgcolor="white">资本</td>
+		  <td border="0" bgcolor="white">实缴资本</td>
 		</tr>
 	        <tr>
 		  <td border="0" bgcolor="white">+400,000</td>
@@ -95,7 +88,11 @@ digraph {
 #+RESULTS:
 [[file:images/e.g.1.png]]
 
-*向银行借款*
+*向银行借款。*
+
+公司向银行借款，属于负债，细分应付票据。
+
+同时借来的现金扩大了公司的资产。
 
 #+begin_src dot :file images/e.g.2.png
 digraph {
@@ -130,7 +127,14 @@ digraph {
 #+RESULTS:
 [[file:images/e.g.2.png]]
 
-*购买设备，准备生产*
+*购买存货。*
+
+假如公司本身不进行生产，只进行倒卖。
+
+公司花钱购买一批存货，准备日后出售。
+此时现金减少，存货增加。
+
+存货属于资产分类，资金只在资产账户下面流动。
 
 #+begin_src dot :file images/e.g.3.png
 digraph {
@@ -145,7 +149,7 @@ digraph {
 		</tr>
 	        <tr>
 		  <td border="0" bgcolor="white">现金</td>
-		  <td border="0" bgcolor="white">设备</td>
+		  <td border="0" bgcolor="white">存货</td>
 		  <td border="0" bgcolor="white"></td>
 		  <td border="0" bgcolor="white"></td>
 		  <td border="0" bgcolor="white"></td>
@@ -166,196 +170,199 @@ digraph {
 #+RESULTS:
 [[file:images/e.g.3.png]]
 
-** 借 vs 贷
+可以观察到，等式永远是成立的。
+同时资金的来源，去向，账户的余额都一目了然。
 
-借贷，向来不清楚相应的关系
-  
-会计部分是庞大的，复杂的。 尤其在大型公司，庞大的财务部门。
+*** 借？贷？
 
-会计的工作，将所有单项交易，最终整合为报表，呈现公司的财务整体面貌。
-  
-最基础的记录，分类账
+会计中有两个动词，借和贷，两者的区别困扰了很多人。
 
-T 形账户
+解除这个困惑，要从会计的流程开始。
 
-#+begin_src dot :file images/T.1.png
+究其根本，会计的工作，就是将所有单项交易，最终整合为报表，呈现公司的财务整体面貌。
+
+#+begin_src dot :file images/process.png
 digraph {
-	format[label=<
-	      <table border="0" cellspacing="4">
-	        <tr>
-		  <td border="0" colspan="2" bgcolor="white">现金</td>
-		</tr>
-		<hr/>
-	        <tr>
-		  <td border="0" bgcolor="white">左边</td>
-		  <vr/>
-		  <td border="0" bgcolor="white">右边</td>
-		</tr>
-	        <tr>
-		  <td border="0" bgcolor="white">现金增加</td>
-		  <vr/>
-		  <td border="0" bgcolor="white">现金减少</td>
-		</tr>
-	      </table>
-	       >, shape=none]
+rankdir=LR;
+node[shape=rectangle];
+a -> b -> c -> d -> e;
+a[label="交易凭证"];
+b[label="日记账"];
+c[label="分类账"];
+d[label="试算平衡表"];
+e[label="财务报表"];
 }
 #+end_src
 
 #+RESULTS:
-[[file:images/T.1.png]]
+[[file:images/process.png]]
+
+其中的分类账，使用一种简化的 T 形账户来登记，因为形状像 T 而得名。
+
+每个 T 形账户分为左右两边，分别表示资金的增加和减少。
+
+ #+begin_src dot :file images/T.1.png
+ digraph {
+	 format[label=<
+	       <table border="0" cellspacing="4">
+	         <tr>
+		   <td border="0" colspan="2" bgcolor="white">现金</td>
+		 </tr>
+		 <hr/>
+	         <tr>
+		   <td border="0" bgcolor="white">左边</td>
+		   <vr/>
+		   <td border="0" bgcolor="white">右边</td>
+		 </tr>
+	         <tr>
+		   <td border="0" bgcolor="white">现金增加</td>
+		   <vr/>
+		   <td border="0" bgcolor="white">现金减少</td>
+		 </tr>
+	       </table>
+		>, shape=none]
+ }
+ #+end_src
+
+ #+caption: 现金 T 形账户
+ #+RESULTS:
+ [[file:images/T.1.png]]
+
+优点在于，每次登记时，只记录相关的账户，不用把整个恒等式搬出来。
+
+同时每次记录的恒等关系变成 *T 形左边 = T 形右边* 。
+
+还是以上面公司的交易为例，用 T 形账户表示，则如下所示，
+
+ #+begin_src dot :file images/T.e.g.1.png
+ digraph {
+	 left[label=<
+	       <table border="0" cellspacing="4">
+	         <tr>
+		   <td border="0" colspan="2" bgcolor="white">现金</td>
+		 </tr>
+		 <hr/>
+	         <tr>
+		   <td border="0" bgcolor="white">(1) 400,000</td>
+		   <vr/>
+		   <td border="0" bgcolor="white">                  </td>
+		 </tr>
+	       </table>
+		>, shape=none]
+
+	 right[label=<
+	       <table border="0" cellspacing="4">
+	         <tr>
+		   <td border="0" colspan="2" bgcolor="white">实缴资本</td>
+		 </tr>
+		 <hr/>
+	         <tr>
+		   <td border="0" bgcolor="white">                  </td>
+		   <vr/>
+		   <td border="0" bgcolor="white">(1) 400,000</td>
+		 </tr>
+	       </table>
+		>, shape=none]
+ }
+ #+end_src
+
+ #+RESULTS:
+ [[file:images/T.e.g.1.png]]
 
 
+ #+begin_src dot :file images/T.e.g.2.png
+ digraph {
+	 left[label=<
+	       <table border="0" cellspacing="4">
+	         <tr>
+		   <td border="0" colspan="2" bgcolor="white">现金</td>
+		 </tr>
+		 <hr/>
+	         <tr>
+		   <td border="0" bgcolor="white">(1) 400,000</td>
+		   <vr/>
+		   <td border="0" bgcolor="white">                  </td>
+		 </tr>
+	         <tr>
+		   <td border="0" bgcolor="white">(2) 100,000</td>
+		   <vr/>
+		   <td border="0" bgcolor="white">                  </td>
+		 </tr>
+	       </table>
+		>, shape=none]
 
+	 right[label=<
+	       <table border="0" cellspacing="4">
+	         <tr>
+		   <td border="0" colspan="2" bgcolor="white">应付票据</td>
+		 </tr>
+		 <hr/>
+	         <tr>
+		   <td border="0" bgcolor="white">                  </td>
+		   <vr/>
+		   <td border="0" bgcolor="white">(2) 100,000</td>
+		 </tr>
+	         <tr>
+		   <td border="0" bgcolor="white">                  </td>
+		   <vr/>
+		   <td border="0" bgcolor="white">                  </td>
+		 </tr>
+	       </table>
+		>, shape=none]
+ }
+ #+end_src
 
+ #+RESULTS:
+ [[file:images/T.e.g.2.png]]
 
-每个账户的左右均记分录
+ #+begin_src dot :file images/T.e.g.3.png
+ digraph {
+	 left[label=<
+	       <table border="0" cellspacing="4">
+	         <tr>
+		   <td border="0" colspan="2" bgcolor="white">现金</td>
+		 </tr>
+		 <hr/>
+	         <tr>
+		   <td border="0" bgcolor="white">(1) 400,000</td>
+		   <vr/>
+		   <td border="0" bgcolor="white">(3) 50,000</td>
+		 </tr>
+	         <tr>
+		   <td border="0" bgcolor="white">(2) 100,000</td>
+		   <vr/>
+		   <td border="0" bgcolor="white">                  </td>
+		 </tr>
+	       </table>
+		>, shape=none]
 
-借 debit 表示左边
-贷 credit 表示右边
+	 right[label=<
+	       <table border="0" cellspacing="4">
+	         <tr>
+		   <td border="0" colspan="2" bgcolor="white">存货</td>
+		 </tr>
+		 <hr/>
+	         <tr>
+		   <td border="0" bgcolor="white">(3) 50,000</td>
+		   <vr/>
+		   <td border="0" bgcolor="white">                  </td>
+		 </tr>
+	         <tr>
+		   <td border="0" bgcolor="white">                  </td>
+		   <vr/>
+		   <td border="0" bgcolor="white">                  </td>
+		 </tr>
+	       </table>
+		>, shape=none]
+ }
+ #+end_src
 
+ #+RESULTS:
+ [[file:images/T.e.g.3.png]]
 
-单纯的左右关系，借 贷仅表示左右。
+如果账户的左边代表增加，右边表示减少，上面的记录方式是错误的。
 
-至于是增加/减少，是由账户的特性决定的
-
-debit card，credit card 的由来
-
-你的存款，进入银行的负债账户
-提取存款，相当于银行
-借 负债，贷 现金
-
-对于信用卡
-直接消费，相当于银行的资产，应收账款
-收回时
-借 现金，贷 应收账款
-
-#+begin_src dot :file images/T.e.g.1.png
-digraph {
-	left[label=<
-	      <table border="0" cellspacing="4">
-	        <tr>
-		  <td border="0" colspan="2" bgcolor="white">现金</td>
-		</tr>
-		<hr/>
-	        <tr>
-		  <td border="0" bgcolor="white">(1) 400,000</td>
-		  <vr/>
-		  <td border="0" bgcolor="white">                  </td>
-		</tr>
-	      </table>
-	       >, shape=none]
-
-	right[label=<
-	      <table border="0" cellspacing="4">
-	        <tr>
-		  <td border="0" colspan="2" bgcolor="white">资本</td>
-		</tr>
-		<hr/>
-	        <tr>
-		  <td border="0" bgcolor="white">                  </td>
-		  <vr/>
-		  <td border="0" bgcolor="white">(1) 400,000</td>
-		</tr>
-	      </table>
-	       >, shape=none]
-}
-#+end_src
-
-#+RESULTS:
-[[file:images/T.e.g.1.png]]
-
-
-#+begin_src dot :file images/T.e.g.2.png
-digraph {
-	left[label=<
-	      <table border="0" cellspacing="4">
-	        <tr>
-		  <td border="0" colspan="2" bgcolor="white">现金</td>
-		</tr>
-		<hr/>
-	        <tr>
-		  <td border="0" bgcolor="white">(1) 400,000</td>
-		  <vr/>
-		  <td border="0" bgcolor="white">                  </td>
-		</tr>
-	        <tr>
-		  <td border="0" bgcolor="white">(2) 100,000</td>
-		  <vr/>
-		  <td border="0" bgcolor="white">                  </td>
-		</tr>
-	      </table>
-	       >, shape=none]
-
-	right[label=<
-	      <table border="0" cellspacing="4">
-	        <tr>
-		  <td border="0" colspan="2" bgcolor="white">应付票据</td>
-		</tr>
-		<hr/>
-	        <tr>
-		  <td border="0" bgcolor="white">                  </td>
-		  <vr/>
-		  <td border="0" bgcolor="white">(2) 100,000</td>
-		</tr>
-	        <tr>
-		  <td border="0" bgcolor="white">                  </td>
-		  <vr/>
-		  <td border="0" bgcolor="white">                  </td>
-		</tr>
-	      </table>
-	       >, shape=none]
-}
-#+end_src
-
-#+RESULTS:
-[[file:images/T.e.g.2.png]]
-
-#+begin_src dot :file images/T.e.g.3.png
-digraph {
-	left[label=<
-	      <table border="0" cellspacing="4">
-	        <tr>
-		  <td border="0" colspan="2" bgcolor="white">现金</td>
-		</tr>
-		<hr/>
-	        <tr>
-		  <td border="0" bgcolor="white">(1) 400,000</td>
-		  <vr/>
-		  <td border="0" bgcolor="white">(3) 50,000</td>
-		</tr>
-	        <tr>
-		  <td border="0" bgcolor="white">(2) 100,000</td>
-		  <vr/>
-		  <td border="0" bgcolor="white">                  </td>
-		</tr>
-	      </table>
-	       >, shape=none]
-
-	right[label=<
-	      <table border="0" cellspacing="4">
-	        <tr>
-		  <td border="0" colspan="2" bgcolor="white">设备</td>
-		</tr>
-		<hr/>
-	        <tr>
-		  <td border="0" bgcolor="white">(3) 50,000</td>
-		  <vr/>
-		  <td border="0" bgcolor="white">                  </td>
-		</tr>
-	        <tr>
-		  <td border="0" bgcolor="white">                  </td>
-		  <vr/>
-		  <td border="0" bgcolor="white">                  </td>
-		</tr>
-	      </table>
-	       >, shape=none]
-}
-#+end_src
-
-#+RESULTS:
-[[file:images/T.e.g.3.png]]
-
-** 收入 vs 费用
+所以不同类型的账户，左右的含义是不同的。恒等式 ~=~ 两边的账户是相反的。
 
 #+begin_src dot :file images/T.all.png
 digraph {
@@ -438,7 +445,30 @@ digraph {
 #+RESULTS:
 [[file:images/T.all.png]]
 
+借(debit) 和贷(credit) 的含义非常纯粹，表示账户的左边和右边。
+正因为有时“借”，金额增加了，有时金额减少了，才造成了不少人的疑惑，
+其实是账户类型的不同影响的。
 
+*** TODO credit vs debit card
+
+    插播一段，为什么借记卡英文是 debit card ，信用卡英文是 credit card ？
+
+假设用户存款进借记卡，如何影响银行的资产负债表？
+银行的资产增加了，同时负债增加了，相当于银行 借(debit) 资产，贷 负债，来记录这笔交易。
+
+假如用户使用信用卡直接消费，相当于银行的资产，应收账款
+ 收回时
+ 借 现金，贷 应收账款
+
+** 收入账户与费用账户
+
+除此之外，还有两个账户比较常用，收入账户 和 费用账户。
+
+这两个是留存权益的子账户，单独设立出来，方便计算利润。
+
+“收入” 和 “费用” 都是正数，但是含义不同。
+收入增加，提高了留存收益；费用增加，减少了留存收益。
+   
 #+begin_src dot :file images/T.sub.png
 digraph {
 	right[label=<
@@ -493,72 +523,135 @@ digraph {
 
 #+RESULTS:
 [[file:images/T.sub.png]]
-   
-收入 和 费用是所有者权益的子账户
 
-   收入不会为负，由语言特性决定
+假如公司转手销售存货，
 
-   费用不用为正，一体两面
+#+begin_src dot :file images/T.sell.png
+digraph {
+	left[label=<
+	      <table border="0" cellspacing="4">
+	        <tr>
+		  <td border="0" colspan="2" bgcolor="white">存货</td>
+		</tr>
+		<hr/>
+	        <tr>
+		  <td border="0" bgcolor="white">                  </td>
+		  <vr/>
+		  <td border="0" bgcolor="white">(4) 50,000</td>
+		</tr>
+	      </table>
+	       >, shape=none]
 
-这两个账户存在，用来计算利润
+	right[label=<
+	      <table border="0" cellspacing="4">
+	        <tr>
+		  <td border="0" colspan="2" bgcolor="white">费用</td>
+		</tr>
+		<hr/>
+	        <tr>
+		  <td border="0" bgcolor="white">(4) 50,000</td>
+		  <vr/>
+		  <td border="0" bgcolor="white">                  </td>
+		</tr>
+	      </table>
+	       >, shape=none]
+}
+#+end_src
 
+#+RESULTS:
+[[file:images/T.sell.png]]
 
+同时得到收入
+
+#+begin_src dot :file images/T.income.png
+digraph {
+	left[label=<
+	      <table border="0" cellspacing="4">
+	        <tr>
+		  <td border="0" colspan="2" bgcolor="white">现金</td>
+		</tr>
+		<hr/>
+	        <tr>
+		  <td border="0" bgcolor="white">(5) 80,000</td>
+		  <vr/>
+		  <td border="0" bgcolor="white">                  </td>
+		</tr>
+	      </table>
+	       >, shape=none]
+
+	right[label=<
+	      <table border="0" cellspacing="4">
+	        <tr>
+		  <td border="0" colspan="2" bgcolor="white">收入</td>
+		</tr>
+		<hr/>
+	        <tr>
+		  <td border="0" bgcolor="white">                  </td>
+		  <vr/>
+		  <td border="0" bgcolor="white">(5) 80,000</td>
+		</tr>
+	      </table>
+	       >, shape=none]
+}
+#+end_src
+
+#+RESULTS:
+[[file:images/T.income.png]]
+
+#+begin_quote
+利润 = 收入 - 费用
+#+end_quote
+
+留存收益提升了 30,000 。
 
 * Beancount
 
-使用复式记账法，针对个人记账。
-
-特点，使用文本存储。
-
-教程很多，参考 [[https://byvoid.com/zhs/series/beancount%E5%A4%8D%E5%BC%8F%E8%AE%B0%E8%B4%A6/][byvoid]] 和 [[https://wzyboy.im/post/1063.html][wzyboy]] 的 blog 文章，非常清晰。
-
-** 账户
-
-预置的账户
-
-默认 5 个账户的安排。
-
-向上对应。
-
-公式区别
-
-  恒等式的变换
-   
-#+begin_example
-资产 + 负债 + 所有者权益 = 0
-#+end_example
-
-正值 变 负值
-
-** 借 vs 贷
-
-=+ -= 表示 借 贷 关系
-
-左 右
-
-示例
-
-
-* 结语
-
+Beancount 是 Python 开发的工具，使用复式记账法，用于个人记账。
 
 #+begin_example
 $ pip install beancount fava
 #+end_example
 
+推荐 [[https://byvoid.com/zhs/series/beancount%E5%A4%8D%E5%BC%8F%E8%AE%B0%E8%B4%A6/][byvoid]] 和 [[https://wzyboy.im/post/1063.html][wzyboy]] 的文章，将 Beancount 的用法讲解的非常透彻，
+这里不再赘述。
 
+下面简要谈谈 Beancount 和复式记账的对应关系。
 
-《财务会计教程》
+** 账户
 
-https://book.douban.com/subject/11636434/
+Beancount 内建有 5 个账户，和上面的讲解是对应的，
+- Assets，资产
+- Liabilities，负债
+- Equity，所有者权益
+- Income，收入
+- Expenses，费用
 
+** 恒等式
 
+Beancount 内部同样遵循会计恒等式，不过进行了移项处理。
+   
+#+begin_example
+资产 + 负债 + 所有者权益 = 0
+#+end_example
 
+这样带来的结果是，负债和所有者权益的相关账户都发生了颠倒，
+这一点需要用户来适应。
+   
+** 借贷关系
+
+Beancount 中使用 =+= 表示借， =-= 表示贷，不关心账户的正负值，
+这一点需要结合上一点来适应。
+
+* End
+
+相信有了复式记账的理解以及 Beancount 中的些许差异，
+可以帮助读者在记账过程中减少一些困惑。
+
+ps. 推荐阅读 [[https://book.douban.com/subject/11636434/][《财务会计教程》]]，将会计过程讲解的非常清晰。
+  
 * License
 
 #+begin_export markdown
 {{< license >}}
 #+end_export
-
-
 
