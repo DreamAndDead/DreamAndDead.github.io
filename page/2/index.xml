@@ -1,4 +1,104 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Mon, 22 Mar 2021 13:22:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>深度学习攒机总结</title><link>https://dreamanddead.github.io/post/compose-deep-learning-machine/</link><pubDate>Wed, 25 Mar 2020 09:02:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/compose-deep-learning-machine/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/compose-deep-learning-machine/ -&lt;p>深度学习需要强大的算力做支撑，无奈手边没有这样的机器，租赁和云服务器的方式又略显昂贵，
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Mon, 22 Mar 2021 14:48:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>论斗地主残局中的宿命论</title><link>https://dreamanddead.github.io/post/crack-final-phase/</link><pubDate>Fri, 27 Mar 2020 15:07:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/crack-final-phase/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/crack-final-phase/ -&lt;p>之前斗地主中的记牌做了些研究，近期又发现了（欢乐）斗地主的残局模式，对于研究如何出牌是一个很不错的题材。&lt;/p>
+&lt;h1 id="残局模式">残局模式&lt;/h1>
+&lt;figure>
+&lt;img src="images/10.png"/>
+&lt;/figure>
+&lt;p>残局模式的设定很简单。&lt;/p>
+&lt;p>玩家是地主，先手出牌，对面只有一个 AI 农民（设定另一个农民牌太差，几近于无）。
+过程中彼此可以看到对手的牌，按照斗地主的规则进行出牌。&lt;/p>
+&lt;p>从博弈的角度看，当前情况属于一种零和博弈，只能存在一人胜一人负的结果（但是没有平局结果）。
+这很容易理解，只要一个人先出完手上的牌，已经成为胜者，另一个人手上的牌再好，也是负局。&lt;/p>
+&lt;p>在这种情况下，如何才能赢？&lt;/p>
+&lt;h1 id="如何获胜">如何获胜&lt;/h1>
+&lt;p>了解了设定之后，我们来思考如何才能获胜。&lt;/p>
+&lt;p>一种简单的想法，枚举双方所有出牌的可能，搜索出一条已方获胜的路径。&lt;/p>
+&lt;p>表面上可行，深层次思考则站不住脚。假如对方一直选择 pass，对于已方一定是获胜路径，但是对手根本不会那样出牌。
+所以问题出在，对方也在根据你出牌的情况，选择要打的牌。上面的方法只是假定对手没有思考能力。&lt;/p>
+&lt;p>在网上参考了他人的想法，都提到使用 &lt;a href="http://web.cs.ucla.edu/~rosen/161/notes/minimax.html">minmax 对抗搜索&lt;/a> 的方法。&lt;/p>
+&lt;h1 id="对抗搜索">对抗搜索&lt;/h1>
+&lt;p>通常将 minmax 对抗搜索归为 AI 算法（游戏里的 AI），用于给游戏中的电脑角色增加“智能”，为游戏添加些许趣味。&lt;/p>
+&lt;figure>
+&lt;img src="images/minmax.png"/>
+&lt;/figure>
+&lt;p>对抗搜索的思想很简单，以上图为例。&lt;/p>
+&lt;ul>
+&lt;li>每个结点表示一种局面情况&lt;/li>
+&lt;li>方块结点表示轮流到自己出牌，圆形结点表示轮流到对手出牌&lt;/li>
+&lt;li>结点到子结点的边表示一种出牌选择&lt;/li>
+&lt;li>结点中的数值用于量化自己的优势&lt;/li>
+&lt;/ul>
+&lt;p>在零和博弈下，自己的优势越大，对手的优势自然越小。&lt;/p>
+&lt;p>从根结点开始，自己先手出牌，有 3 种出牌选择，A B C。&lt;/p>
+&lt;ul>
+&lt;li>假如选择出牌方式 A，对手有两种出牌可能，D E。
+&lt;ul>
+&lt;li>假如对手选择出牌方式 D，在这种局面下，自己的优势有 7 分&lt;/li>
+&lt;li>假如对手选择方式 E，则自己的优势只有 3 分&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>站在对手的角度思考，自然是让我们的优势越小越好，所以他自然会选择出牌方式 E，反向回推，自己如果先手按 A 方式出牌，只能得到 3 分的优势。&lt;/p>
+&lt;ul>
+&lt;li>假如选择方式 B，对手只有一种出牌可能 F
+&lt;ul>
+&lt;li>之后局面优势有 15 分&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>所以自己如果先手方式 B，可以得到 15 分的优势。&lt;/p>
+&lt;ul>
+&lt;li>假如选择方式 C，对手有 4 种出牌方式可选，G H I J
+&lt;ul>
+&lt;li>按照惯例，对手肯定要最小化我们的优势，他必定会选择出牌方式 G&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>所以先手以 C 方式出牌的情况下，只能得 1 分优势。&lt;/p>
+&lt;p>最后综合一下自己先手出牌的情况 A B C，我们必定从中选择一种优势最大的方式，即方式 B，
+这样会得到 15 分的优势，所以根节点优势是 15。&lt;/p>
+&lt;p>对手总想让我们的优势最小化，而我们想将优势最大化，这也是 minmax 的名称由来。&lt;/p>
+&lt;p>我们是否能得到优势 22 分呢？也有可能，就是对手不太专心思考，给了我们一次机会。
+如果对手完全理性，分析透彻，我们从根结点的局面开始只能得到 15 分的优势。&lt;/p>
+&lt;h1 id="优化">优化&lt;/h1>
+&lt;p>按照对抗算法的思想，就有了编写程序来破解残局模式的方向。&lt;/p>
+&lt;p>自己在实现这样一个&lt;a href="https://github.com/DreamAndDead/joker">小项目&lt;/a>的过程中，发现一些可优化的点，这样会使程序运行的速度更快。&lt;/p>
+&lt;p>因为实践发现，在每人手上的单牌比较多的情况下（最大 20 张牌），单纯来搜索，破解一个局面要花很长时间。&lt;/p>
+&lt;p>在优化之后，即使只是单线程的 python 程序，也可以在分钟内破解所有残局问题。&lt;/p>
+&lt;h2 id="简化表示">简化表示&lt;/h2>
+&lt;p>在搜索过程中，始终使用数值在量化自己的优势，这里可以进行一些简化的表示，优势只有 1 和 -1 两种表示。&lt;/p>
+&lt;p>1 表示自己获胜，-1 表示对手获胜。之所以可以这样表示的原因在于，即使每人手上有 20 张牌，整个树的深度最大为 40 层，
+到最终的叶子结点，必定可以得到终局的结果，再回溯上去。&lt;/p>
+&lt;p>其它量化优势的方法可以用在象棋这一类游戏中，因为走法过多，而且很难算到终局（层数太深了）。
+在这种情况下，程序只会搜索一定的深度，并对最终深度的叶子结点（局面）进行打分（比如车马炮的数量等），将其作为优势的判定。&lt;/p>
+&lt;p>所以要在象棋方面的 AI 有所突破，就需要&lt;/p>
+&lt;ul>
+&lt;li>搜索更深的层次&lt;/li>
+&lt;li>更高效的书面判定方法&lt;/li>
+&lt;/ul>
+&lt;p>相比之下，残局模式因为深度的限制，显得更简单一些。&lt;/p>
+&lt;h2 id="剪枝">剪枝&lt;/h2>
+&lt;p>针对 minmax 算法，有成熟的 &lt;a href="http://web.cs.ucla.edu/~rosen/161/notes/alphabeta.html">alpha beta 剪枝算法&lt;/a>来优化效率。&lt;/p>
+&lt;p>在这里我们使用 1 -1 的简化表示之后，剪枝的逻辑也变得简单。&lt;/p>
+&lt;p>在 max 过程，轮到自己出牌，&lt;/p>
+&lt;ul>
+&lt;li>如果存在一种优势为 1 的情况，就不需要对其它情况进行搜索，直接返回 1，因为已经有一种情况必胜&lt;/li>
+&lt;li>只有在所有出牌情况都为 -1 的情况，才表示自己在这种局面必输&lt;/li>
+&lt;/ul>
+&lt;p>在 min 过程，轮到对手出牌，&lt;/p>
+&lt;ul>
+&lt;li>如果存在一种优势为 -1 的情况，就不需要对其它情况进行搜索，直接返回 -1，因为对手已经有一种情况必胜&lt;/li>
+&lt;li>只有在所有出牌情况都为 1 的情况，才表示对手在此局面下必输&lt;/li>
+&lt;/ul>
+&lt;h2 id="缓存">缓存&lt;/h2>
+&lt;p>在搜索的过程中，难免出现一些重复的局面，如果提前将局面的优势记录下来，这样后续再遇到这种情况下，就可以避免重复的消耗。&lt;/p>
+&lt;h1 id="对出牌的启示">对出牌的启示&lt;/h1>
+&lt;p>出牌不仅要从自己的角度来思考问题，也要时刻站在对方的角度来想问题，这也是对抗搜索所强调的。
+而且考虑的越远，胜算越大。&lt;/p>
+&lt;p>而我们在打牌的时候，不免有些侥幸心理，猜想对手不会怎么样出牌，这种思维方式不时会将我们置于不利的局面。&lt;/p>
+&lt;p>当然这只是在明牌的情况下，实际在打牌时，看不到对方的牌，还需要一些猜测，这样会更加困难。&lt;/p>
+&lt;p>其次值得注意的是，我们之所以在残局模式下可以战胜对手，不是因为我们技巧高超，而是因为存在绝对胜利的路径。
+也就是说，我们的手牌是有优势的，对手不论怎么出牌，我们都能赢，因为 minmax 已经搜索了所有可能的局面。&lt;/p>
+&lt;p>这何尝不是一种宿命论。&lt;/p>- https://dreamanddead.github.io/post/crack-final-phase/ - CC BY-NC-SA 4.0</description></item><item><title>深度学习攒机总结</title><link>https://dreamanddead.github.io/post/compose-deep-learning-machine/</link><pubDate>Wed, 25 Mar 2020 09:02:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/compose-deep-learning-machine/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/compose-deep-learning-machine/ -&lt;p>深度学习需要强大的算力做支撑，无奈手边没有这样的机器，租赁和云服务器的方式又略显昂贵，
 免费的云计算服务不是网络不通畅，就是在软件环境上有限制，这大大限制了探索深度学习魅力的自由度。&lt;/p>
 &lt;p>与其花费在租赁和云服务器上，不如自己组装一台算力合适的机器。&lt;/p>
 &lt;h1 id="规划">规划&lt;/h1>
@@ -1762,125 +1862,4 @@ $$&lt;/p>
 &lt;p>$$
 {6, 6, 6, 6, 6}, 6, {6, 6, 6, 6}
 $$&lt;/p>
-&lt;p>这样可以使子问题的规模快速减少，保证排序算法的效率。&lt;/p>- https://dreamanddead.github.io/post/quicksort-complexity/ - CC BY-NC-SA 4.0</description></item><item><title>Trigonometric Function Illustrations</title><link>https://dreamanddead.github.io/post/triangle-math/</link><pubDate>Wed, 15 May 2019 08:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/triangle-math/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/triangle-math/ -&lt;p>三角函数是非常重要的一类周期函数，所有周期函数都可以分解为对应的三角函数的组合。&lt;/p>
-&lt;p>在中学数学中，学习最多是 正弦$sin$，余弦$cos$，正切$tan$ 函数，
-之后了解还有 正割$sec$，余割$csc$，余切$cot$ 函数。&lt;/p>
-&lt;p>其中最让我困惑不解在于它们的命名，什么是正？什么是余？&lt;/p>
-&lt;h1 id="基础图示">基础图示&lt;/h1>
-&lt;figure>
-&lt;img src="images/figure-in-textbook.png"
-alt="单位圆中的三角函数值"/> &lt;figcaption>
-&lt;p>单位圆中的三角函数值&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>在图示中，三角函数对应的值可以照如下的表格来计算。&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align:center">翻译&lt;/th>
-&lt;th style="text-align:center">缩写&lt;/th>
-&lt;th style="text-align:center">英文&lt;/th>
-&lt;th style="text-align:center">公式&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align:center">正弦&lt;/td>
-&lt;td style="text-align:center">sin&lt;/td>
-&lt;td style="text-align:center">sine&lt;/td>
-&lt;td style="text-align:center">$\dfrac{CD}{OD}$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">余弦&lt;/td>
-&lt;td style="text-align:center">cos&lt;/td>
-&lt;td style="text-align:center">cosine&lt;/td>
-&lt;td style="text-align:center">$\dfrac{OC}{OD}$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">正切&lt;/td>
-&lt;td style="text-align:center">tan&lt;/td>
-&lt;td style="text-align:center">tangent&lt;/td>
-&lt;td style="text-align:center">$\dfrac{AB}{OA}$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">余切&lt;/td>
-&lt;td style="text-align:center">cot&lt;/td>
-&lt;td style="text-align:center">cotangent&lt;/td>
-&lt;td style="text-align:center">$\dfrac{OA}{AB}$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">正割&lt;/td>
-&lt;td style="text-align:center">sec&lt;/td>
-&lt;td style="text-align:center">secant&lt;/td>
-&lt;td style="text-align:center">$\dfrac{OD}{OC}$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">余割&lt;/td>
-&lt;td style="text-align:center">csc&lt;/td>
-&lt;td style="text-align:center">cosecant&lt;/td>
-&lt;td style="text-align:center">$\dfrac{OD}{CD}$&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>又因为图中是一个单位圆，$OD\ =\ OA\ =\ 1$，所以有三条边的长度对应三个三角函数值。&lt;/p>
-&lt;p>观察对应的公式，我们会发现，正弦和余割互为倒数，余弦和正割互为倒数。
-为什么不是正弦和正割对应，余弦和余割对应呢？&lt;/p>
-&lt;p>而且图中只能表示出三个函数值，不能表现出六个函数值吗？&lt;/p>
-&lt;h1 id="改进图示">改进图示&lt;/h1>
-&lt;p>经过一个偶然的机会，看到了关于三角函数更加合理的解释。&lt;/p>
-&lt;figure>
-&lt;img src="images/triangle-functions.png"
-alt="单位圆中的三角函数值"/> &lt;figcaption>
-&lt;p>单位圆中的三角函数值&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align:center">翻译&lt;/th>
-&lt;th style="text-align:center">缩写&lt;/th>
-&lt;th style="text-align:center">英文&lt;/th>
-&lt;th style="text-align:center">公式&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align:center">正弦&lt;/td>
-&lt;td style="text-align:center">sin&lt;/td>
-&lt;td style="text-align:center">sine&lt;/td>
-&lt;td style="text-align:center">$\dfrac{CD}{OD}=CD$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">余弦&lt;/td>
-&lt;td style="text-align:center">cos&lt;/td>
-&lt;td style="text-align:center">cosine&lt;/td>
-&lt;td style="text-align:center">$\dfrac{OC}{OD}=\dfrac{FG}{OF}=FG$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">正切&lt;/td>
-&lt;td style="text-align:center">tan&lt;/td>
-&lt;td style="text-align:center">tangent&lt;/td>
-&lt;td style="text-align:center">$\dfrac{AB}{OA}=AB$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">余切&lt;/td>
-&lt;td style="text-align:center">cot&lt;/td>
-&lt;td style="text-align:center">cotangent&lt;/td>
-&lt;td style="text-align:center">$\dfrac{OA}{AB}=\dfrac{AE}{OA}=AE$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">正割&lt;/td>
-&lt;td style="text-align:center">sec&lt;/td>
-&lt;td style="text-align:center">secant&lt;/td>
-&lt;td style="text-align:center">$\dfrac{OD}{OC}=\dfrac{OB}{OA}=OB$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">余割&lt;/td>
-&lt;td style="text-align:center">csc&lt;/td>
-&lt;td style="text-align:center">cosecant&lt;/td>
-&lt;td style="text-align:center">$\dfrac{OD}{CD}=\dfrac{OE}{OA}=OE$&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>所以，三角函数重要的是比例关系，这张图就清晰的表达了一点。&lt;/p>
-&lt;p>co means complementary 表示余角。所以也就有了弦，切，割的正，余值，以及图中优雅的对应关系。&lt;/p>- https://dreamanddead.github.io/post/triangle-math/ - CC BY-NC-SA 4.0</description></item></channel></rss>
+&lt;p>这样可以使子问题的规模快速减少，保证排序算法的效率。&lt;/p>- https://dreamanddead.github.io/post/quicksort-complexity/ - CC BY-NC-SA 4.0</description></item></channel></rss>
