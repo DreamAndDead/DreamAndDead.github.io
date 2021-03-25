@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>accounting on Brain=f(X)?</title><link>https://dreamanddead.github.io/tags/accounting/</link><description>Recent content in accounting on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Sun, 28 Feb 2021 15:59:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/tags/accounting/index.xml" rel="self" type="application/rss+xml"/><item><title>浅谈复式记账与 Beancount</title><link>https://dreamanddead.github.io/post/understand-account-in-beancount/</link><pubDate>Sun, 28 Feb 2021 15:59:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/understand-account-in-beancount/</guid><description>复式记账法是世界通行的会计方法， Beancount 是采用复式记账法的工具，由 Python 编写，定位个人记账。 起因是创作者不满于现存的记账工具，于是独自开发了 Beancount，并开源贡献给所有人使用， 非常有 Geek 风范。
+本文的目的，是简要了解复式记账法的原理，以及 Beancount 是如何应用这些原理的。
+复式记账 记账 交易，是商业的本质。 无论是以物易物，还是使用通用货币，或者 App 中数字的增减，这一点从没有发生变化。
+记账，就是记录交易。 交易必定涉及两方，每方都要准确记录交易标的，交易金额，明确自身的财务情况。
+复式记账法是当前主流的记账方式，而且不限交易主体。 无论是个人还是公司，都可以采用复式记账法。 区别只在于两种主体的交易项目不同，金额数目不同，交易的本质并没有变化。
+账户 凡记账，必须要设立账户。
+复式记账法的特色在于 每笔交易都以相等的金额，同时登记在两个账户中，清晰反映了资金的流转过程。
+如何设立账户可以同时登记？会计恒等式已经给出了方案。
+资产 = 负债 + 所有者权益
+恒等式的三项，将所有账户分为三大类，简单理解即
+资产，表面上你所拥有的 负债，不属于你的，迟早要归还的 所有者权益，真正属于个人的 在三类账户下，细分设立更多的子账户，用以记录交易。 同时恒等意味着，公式在任意时刻， = 必须成立，不然就是记账出现问题。
+下面以一个公司成立之初的几笔交易，来了解复式记账的过程。
+公司成立，创始人注入资本。
+创始人的注入的资本，是真正属于公司的，属于所有者权益，细分账户实缴资本。
+注入的资金为公司所有，表面在资产分类上，细分账户现金。
+向银行借款。
+公司向银行借款，属于负债，细分应付票据。
+同时借来的现金扩大了公司的资产。
+购买存货。
+假如公司本身不进行生产，只进行倒卖。
+公司花钱购买一批存货，准备日后出售。 此时现金减少，存货增加。
+存货属于资产分类，资金只在资产账户下面流动。
+可以观察到，等式永远是成立的。 同时资金的来源，去向，账户的余额都一目了然。
+借？贷？ 会计中有两个动词，借和贷，两者的区别困扰了很多人。
+解除这个困惑，要从会计的流程开始。
+究其根本，会计的工作，就是将所有单项交易，最终整合为报表，呈现公司的财务整体面貌。</description></item></channel></rss>

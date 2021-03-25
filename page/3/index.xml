@@ -1,4 +1,504 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Mon, 22 Mar 2021 13:22:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>understanding euler angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/understanding-euler-angles/ -&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Mon, 22 Mar 2021 13:22:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Deferred Shading Method in DirectX9</title><link>https://dreamanddead.github.io/post/deferred-shading/</link><pubDate>Fri, 26 Apr 2019 14:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/deferred-shading/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/deferred-shading/ -&lt;p>In the latest work, we need the engine to support large number of lights.
+As we all know, the classic way built in DirectX9 is not a reasonable method to do that because of
+efficiency, so deferred shading way becomes the choice.&lt;/p>
+&lt;p>Adding new features in an existent system is never an easy thing. You&amp;rsquo;ll encounter tons of ceilings
+and pits.
+After the feature finished I decided to build a simple project just for deferred shading method itself. That why this blog is here.&lt;/p>
+&lt;p>ps. The project example is &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">on the github&lt;/a>, enjoy it with the blog. :)&lt;/p>
+&lt;h1 id="choice">Choice&lt;/h1>
+&lt;p>Deferred shading has become the choice for our need. What is deferred shading and why we use it?
+That&amp;rsquo;s what this section is for.&lt;/p>
+&lt;h2 id="rendering-pipeline">Rendering pipeline&lt;/h2>
+&lt;p>The rendering pipeline provided by DirectX9 is not unfamiliar for most developers.&lt;/p>
+&lt;figure>
+&lt;img src="images/rendering-pipeline.png"
+alt="rendering pipeline"/> &lt;figcaption>
+&lt;p>rendering pipeline&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Lighting phase is ahead of Clipping phase.
+Assuming the scene contains lots of objects, then the light work is heavy even the camera sees nothing.&lt;/p>
+&lt;p>In pseudo code, lighting work is done between each object and each light.&lt;/p>
+&lt;pre>&lt;code>for object in all_objects:
+for light in all_lights:
+Lighting(object, light)
+&lt;/code>&lt;/pre>&lt;p>That&amp;rsquo;s not an efficient way and it&amp;rsquo;s impossible to place innumerable lights in a scene.&lt;/p>
+&lt;h2 id="deferred-pipeline">Deferred pipeline&lt;/h2>
+&lt;figure>
+&lt;img src="images/deferred-pipeline.png"
+alt="deferred pipeline"/> &lt;figcaption>
+&lt;p>deferred pipeline&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>In deferred shading, there&amp;rsquo;s a geometry stage to store all objects information in G-buffer in advance.
+Then lighting stage reads data from G-buffer and lights pixels(not objects).&lt;/p>
+&lt;p>In pseudo code, those two stages are separated.&lt;/p>
+&lt;pre>&lt;code>for object in all_objects:
+StoreInGBuffer(object)
+for light in all_lights:
+Lighting(GBuffer, light)
+&lt;/code>&lt;/pre>&lt;p>The pixel number is determined by window size and resolution, and it&amp;rsquo;s a constant.
+So the complexity is lower than the old way.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>Efficiency is a main reason to choose deferred shading method,
+but there is also weakness in deferred way.&lt;/p>
+&lt;p>The fatal one is that it doesn&amp;rsquo;t support scene with transparency because a transparent pixel is composed by more than one point in different view depth.
+But in G-buffer, we only store one point with the least depth.&lt;/p>
+&lt;h1 id="architect">Architect&lt;/h1>
+&lt;p>Let&amp;rsquo;s talk about more details about deferred shading.&lt;/p>
+&lt;figure>
+&lt;img src="images/deferred-pipeline.png"
+alt="deferred pipeline"/> &lt;figcaption>
+&lt;p>deferred pipeline&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Clearly, there are 4 distinct stages in deferred shading: geometry stage, lighting stage, post-processing stage and final stage.
+The first 2 stages are the main topic in this blog.&lt;/p>
+&lt;p>Each stage uses shaders and communicates with the other ones through a shared
+memory area - the G-buffer.&lt;/p>
+&lt;h2 id="geometry-stage">Geometry Stage&lt;/h2>
+&lt;p>The geometry stage mainly draws all the objects in scene and makes perspective projection,
+and feeds the G-buffer with related information to be used in the later stages.&lt;/p>
+&lt;p>Usually, G-buffer contains 4 texture areas to store the data for later use.
+The textures have got the same size with the frame buffer.&lt;/p>
+&lt;ul>
+&lt;li>normal vector&lt;/li>
+&lt;li>depth&lt;/li>
+&lt;li>diffuse material information&lt;/li>
+&lt;li>specular material information&lt;/li>
+&lt;/ul>
+&lt;p>Normal vector and depth are values in view space.
+Diffuse material and specular material are the object properties.&lt;/p>
+&lt;h2 id="lighting-stage">Lighting Stage&lt;/h2>
+&lt;p>Lighting stage reads data from the G-buffer and does the lighting calculation.
+In this stage, the G-buffer is as input for the lighting shaders.
+It looks like in the lighting stage, we input 4 &amp;ldquo;images&amp;rdquo; and get 1 lighting &amp;ldquo;image&amp;rdquo; out.&lt;/p>
+&lt;p>A frequent question here is, all the data is stored in 2d screen space, how do we do
+the lighting work?
+I mean, lighting is a 3d world thing, related with distance, angles and something.&lt;/p>
+&lt;p>In the later section, we will see a method that recover the 3d space coordinate from the data
+we have got.&lt;/p>
+&lt;h2 id="post-processing-and-final-stage">Post-Processing and Final Stage&lt;/h2>
+&lt;p>This 2 stages are performed in order to enhance the image generated by lighting stage.
+Those are long stories and not involved in this blog.&lt;/p>
+&lt;h1 id="light-theory">Light Theory&lt;/h1>
+&lt;p>Before we get into the implementation details, light theory is necessary for us.&lt;/p>
+&lt;p>In deferred shading, the lighting thing is on our own shoulder.
+It&amp;rsquo;s free to define any light effect as we like, but here we still stick on the traditional light model.&lt;/p>
+&lt;h2 id="light-type">Light Type&lt;/h2>
+&lt;p>Commonly, there&amp;rsquo;re &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/light-types">3 different kind of lights&lt;/a>:&lt;/p>
+&lt;ul>
+&lt;li>directional light&lt;/li>
+&lt;li>point light&lt;/li>
+&lt;li>spot light&lt;/li>
+&lt;/ul>
+&lt;h3 id="directional-light">Directional Light&lt;/h3>
+&lt;p>Imaging the directional light as sun light is helpful.&lt;/p>
+&lt;p>Directional light has only color and direction, no position. It emits parallel light.&lt;/p>
+&lt;h3 id="point-light">Point Light&lt;/h3>
+&lt;figure>
+&lt;img src="images/point-light.png"
+alt="point light"/> &lt;figcaption>
+&lt;p>point light&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>In the reality, the light bulb is a good example of point light.&lt;/p>
+&lt;p>Point light has color and position within a scene, but no single direction.
+It gives off light equally in all directions.&lt;/p>
+&lt;h3 id="spot-light">Spot Light&lt;/h3>
+&lt;figure>
+&lt;img src="images/spot-light.png"
+alt="spot light"/> &lt;figcaption>
+&lt;p>spot light&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Thinking of spot light as a streetlight is a good idea.&lt;/p>
+&lt;p>Spot light has color, position and direction and it emits light.
+Light emitted from a spot light is made up of a brighter inner
+cone and a larger outer cone, with the light intensity diminishing between the two.&lt;/p>
+&lt;figure>
+&lt;img src="images/spot-light-area.png"/>
+&lt;/figure>
+&lt;h2 id="lighting-equation">Lighting Equation&lt;/h2>
+&lt;p>It&amp;rsquo;s about math&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> and it&amp;rsquo;s a tedious part but important.&lt;/p>
+&lt;h3 id="symbols">Symbols&lt;/h3>
+&lt;p>First, let&amp;rsquo;s denote the symbols we will use later.&lt;/p>
+&lt;p>$S$ means light $Source$, $I$ means $Illumination$, $M$ means $Material$, $C$ means $Camera$.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">symbol&lt;/th>
+&lt;th style="text-align:center">definition&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">$S_{amb}$&lt;/td>
+&lt;td style="text-align:center">ambient intensity color of light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{diff}$&lt;/td>
+&lt;td style="text-align:center">diffuse intensity color of light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{spec}$&lt;/td>
+&lt;td style="text-align:center">specular intensity color of light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{pos}$&lt;/td>
+&lt;td style="text-align:center">light position, only for point &amp;amp; spot light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{dir}$&lt;/td>
+&lt;td style="text-align:center">vector. light direction, only for directional &amp;amp; spot light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{range}$&lt;/td>
+&lt;td style="text-align:center">float number. denote the max lighting range, only for point &amp;amp; spot light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{falloff}$&lt;/td>
+&lt;td style="text-align:center">float number. denote the falloff parameter, only for spot light&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{att_0}$&lt;/td>
+&lt;td style="text-align:center">float number. light attenuation parameter of distance$^0$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{att_1}$&lt;/td>
+&lt;td style="text-align:center">float number. light attenuation parameter of distance$^1$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$S_{att_2}$&lt;/td>
+&lt;td style="text-align:center">float number. light attenuation parameter of distance$^2$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$M_{amb}$&lt;/td>
+&lt;td style="text-align:center">ambient material color&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$M_{diff}$&lt;/td>
+&lt;td style="text-align:center">diffuse material color&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$M_{spec}$&lt;/td>
+&lt;td style="text-align:center">specular material color&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$M_{shi}$&lt;/td>
+&lt;td style="text-align:center">material specular shininess parameter&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$C_{pos}$&lt;/td>
+&lt;td style="text-align:center">camera position&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>These symbols are defined for the simplicity of equations.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">symbol&lt;/th>
+&lt;th style="text-align:center">definition&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">$p$&lt;/td>
+&lt;td style="text-align:center">position of point to be shading&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$\vec{n}$&lt;/td>
+&lt;td style="text-align:center">unit vector. normal vector of point to be shading&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$\vec{l}$&lt;/td>
+&lt;td style="text-align:center">unit vector. denote the direction from point to light.&lt;!-- raw HTML omitted -->for directional light, $\vec{l} = -normalize(S_{dir})$. otherwise, $\vec{l} = normalize(S_{pos} - p)$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$\vec{v}$&lt;/td>
+&lt;td style="text-align:center">unit vector. denote the direction from point to camera.&lt;!-- raw HTML omitted -->$\vec{v} = normalize(C_{pos} - p)$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$\vec{h}$&lt;/td>
+&lt;td style="text-align:center">unit half vector between $\vec{l}$ and $\vec{v}$. used in &lt;a href="https://www.wikiwand.com/en/Phong_reflection_model">Phong shading model&lt;/a>.&lt;!-- raw HTML omitted -->$\vec{h} = \dfrac{\vec{l} + \vec{v}}{length(\vec{l} + \vec{v})}$&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;figure>
+&lt;img src="images/phong-model.png"
+alt="phong model"/> &lt;figcaption>
+&lt;p>phong model&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="i_tot">I_tot&lt;/h3>
+&lt;p>The total illumination equation we will use is:&lt;/p>
+&lt;p>$$
+I_{tot} = I_{amb} + (att \times spot)(I_{diff} + I_{spec})
+$$&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">symbol&lt;/th>
+&lt;th style="text-align:center">definition&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">$I_{tot}$&lt;/td>
+&lt;td style="text-align:center">total illumination&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$I_{amb}$&lt;/td>
+&lt;td style="text-align:center">ambient illumination&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$I_{diff}$&lt;/td>
+&lt;td style="text-align:center">diffuse illumination&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$I_{spec}$&lt;/td>
+&lt;td style="text-align:center">specular illumination&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$att$&lt;/td>
+&lt;td style="text-align:center">light attenuation factor(related to the distance from point to light)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$spot$&lt;/td>
+&lt;td style="text-align:center">spot light intensity factor(equals 1 for directional &amp;amp; point light)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>We will discuss each part in the subsections.&lt;/p>
+&lt;h3 id="i_amb">I_amb&lt;/h3>
+&lt;p>$$ I_{amb} = M_{diff} \otimes S_{amb} $$&lt;/p>
+&lt;p>Where $S_{amb}$ has the purpose of modulating the $M_{diff}$ value so that
+all objects in scene reflect a small part of their diffuse contribution.&lt;/p>
+&lt;p>$\otimes$ means multiplication between two vectors in each element. for example,&lt;/p>
+&lt;p>$$
+\begin{align}
+M_{diff} &amp;amp;= {1.0, 0.0, 0.0} \\\&lt;br>
+S_{amb} &amp;amp;= {0.2, 0.2, 0.2} \\\&lt;br>
+I_{amb} = M_{diff} \otimes S_{amb} &amp;amp;= {0.2, 0.0, 0.0}
+\end{align}
+$$&lt;/p>
+&lt;p>Ambient light is contributed to the whole scene whether the point is in or out the light range.
+Theoretically, every time we add a light, the whole scene will be brighter no matter which kind of light is added.&lt;/p>
+&lt;h3 id="att">att&lt;/h3>
+&lt;p>att is a parameter that control the light intensity influenced by distance.
+In intuition, the closer, the brighter.&lt;/p>
+&lt;p>Directional light has got no position, so the att always equal 1.&lt;/p>
+&lt;p>For point and spot light, if a point is off the light range, it can&amp;rsquo;t be lighted.
+Within the range, light intensity is inversely proportional to the binomial of the distance.&lt;/p>
+&lt;p>$$
+\begin{align}
+d &amp;amp;= length(S_{pos} - p) \\\&lt;br>
+att &amp;amp;=
+\begin{cases}
+0 &amp;amp; \text{if point or spot light, and } d &amp;gt; S_{range} \\\&lt;br>
+\dfrac{1}{ S_{att_0} + S_{att_1} \times d + S_{att_2} \times d^2 } &amp;amp; \text{if point or spot light, and } d \leqslant S_{range} \\\&lt;br>
+1 &amp;amp; \text{if directional light} \\\&lt;br>
+\end{cases}
+\end{align}
+$$&lt;/p>
+&lt;h3 id="spot">spot&lt;/h3>
+&lt;p>&lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/attenuation-and-spotlight-factor">spot parameter&lt;/a> is only for spot light.
+It&amp;rsquo;s always 1 for directional and point light.&lt;/p>
+&lt;figure>
+&lt;img src="images/spot-light.png"
+alt="spot light"/> &lt;figcaption>
+&lt;p>spot light&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The affected area of spot light is a cone in 3d space.
+This factor marks the light intensity in 3 different areas split by $\theta$ and $\phi$.&lt;/p>
+&lt;p>$$
+\begin{align}
+rho &amp;amp;= normalize(S_{dir}) \cdot \vec{l} \\\&lt;br>
+spot &amp;amp;=
+\begin{cases}
+1 &amp;amp; \text{if non spot lights or } rho &amp;gt; cos(\frac{theta}2). \text{[ in area 1 ]} \\\&lt;br>
+0 &amp;amp; \text{if } rho \leqslant cos(\frac{phi}2). \text{[ in area 3 ]} \\\&lt;br>
+\Bigg [ \dfrac{ rho - cos(\frac{phi}2) }{ cos(\frac{theta}2) - cos(\frac{phi}2) } \Bigg ]^{M_{falloff}} &amp;amp; \text{otherwise. [ in area 2 ]} \\\&lt;br>
+\end{cases}
+\end{align}
+$$&lt;/p>
+&lt;h3 id="i_diff">I_diff&lt;/h3>
+&lt;p>$$
+I_{diff} = MAX(0, \vec{l} \cdot \vec{n}) M_{diff} \otimes S_{diff}
+$$&lt;/p>
+&lt;p>This equation is based on &lt;a href="https://www.wikiwand.com/en/Lambert%27s_cosine_law">Lambert&amp;rsquo;s Law&lt;/a>, the reflected light is determined by the cosine
+between surface normal and light vector.&lt;/p>
+&lt;h3 id="i_spec">I_spec&lt;/h3>
+&lt;p>$$
+I_{spec} = MAX(0, \vec{h} \cdot \vec{n})^{M_{shi}} M_{spec} \otimes S_{spec}
+$$&lt;/p>
+&lt;p>It&amp;rsquo;s the famous &lt;a href="https://www.wikiwand.com/en/Phong_reflection_model">Phong reflection model&lt;/a>.&lt;/p>
+&lt;h1 id="implementation-in-directx9">Implementation in DirectX9&lt;/h1>
+&lt;p>This section focuses on the core parts in the &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">example project&lt;/a>.&lt;/p>
+&lt;p>The implementation project is &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">here&lt;/a>. You&amp;rsquo;d better download it and
+run it so you can see the whole picture and more details.&lt;/p>
+&lt;h2 id="geometry-stage-1">Geometry Stage&lt;/h2>
+&lt;h3 id="g-buffer">G-buffer&lt;/h3>
+&lt;p>G-buffer contains 4 textures storing the data for all pipeline stages.
+Using api &lt;code>D3DXCreateTexture()&lt;/code> to create textures of &lt;code>RENDERTARGET&lt;/code> type and holding their pointers.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=58:69">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=104:126">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=145:161">&lt;/script>
+&lt;h3 id="feed-g-buffer">Feed G-buffer&lt;/h3>
+&lt;p>You&amp;rsquo;d better have got good understanding about shaders to read the content below.
+If you don&amp;rsquo;t, this book&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup> is good mentor for you.&lt;/p>
+&lt;p>DirectX9 supports &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/multiple-render-targets">MRT(multiple render target)&lt;/a>.
+It refers to the ability to render to multiple surface with a single draw call.&lt;/p>
+&lt;p>Normally, we only set &lt;code>COLOR0&lt;/code> value in pixel shader and that will be the final frame buffer color
+showing on screen.&lt;/p>
+&lt;p>&lt;code>0&lt;/code> in &lt;code>COLOR0&lt;/code> means shader write the value to render target 0. It&amp;rsquo;s frame buffer by default.
+If we change the render target 0 or add more render targets, writing to &lt;code>COLOR0&lt;/code> &lt;code>COLOR1&lt;/code> means different things.&lt;/p>
+&lt;p>We have created 4 textures in G-buffer. In geometry stage we set this 4 textures as the render target.
+So all the information will store in G-buffer.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=223:233">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/GBuffer.hlsl?footer=minimal&amp;slice=22:29">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/GBuffer.hlsl?footer=minimal&amp;slice=52:69">&lt;/script>
+&lt;h2 id="lighting-stage-1">Lighting Stage&lt;/h2>
+&lt;p>In this stage, we use 4 &amp;ldquo;images&amp;rdquo; to develop 1 final lighting &amp;ldquo;image&amp;rdquo;.&lt;/p>
+&lt;h3 id="read-g-buffer">Read G-buffer&lt;/h3>
+&lt;p>Object data is feed in G-buffer in geometry stage and we need to fetch data from G-buffer in lighting stage.&lt;/p>
+&lt;p>Inputting textures into shader is easy. It&amp;rsquo;s textbook.&lt;/p>
+&lt;ol>
+&lt;li>cancel the MRT binding&lt;/li>
+&lt;li>set textures as shader parameters&lt;/li>
+&lt;li>use &lt;code>tex2D()&lt;/code> to fetch data from textures in shader&lt;/li>
+&lt;/ol>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=234:242">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=403:414">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=38:81">&lt;/script>
+&lt;h3 id="recover-3d-coordinate">Recover 3d coordinate&lt;/h3>
+&lt;p>In rendering pipeline, we input 3d object vertex list and project them into 2d screen.
+Recover 3d coordinate from 2d screen coordinate is a reverse process.&lt;/p>
+&lt;p>In this section, we only discuss recovering 3d coordinate in view space. It&amp;rsquo;s simple and understandable.&lt;/p>
+&lt;p>Before we start, we must know how 3d coordinate in view space is projected.&lt;/p>
+&lt;figure>
+&lt;img src="images/d3d-view-frustum.png"
+alt="view frustum"/> &lt;figcaption>
+&lt;p>view frustum&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>In view space, camera coordinate is $(0, 0)$ and facing the $z$ axis.
+Projection window coincides with plane $z = 1$. Its size is determined by $fov$
+and $ratio$.
+$fov$ is the camera view angle in y direction. $ratio$ is the ratio of screen width to screen height.&lt;/p>
+&lt;figure>
+&lt;img src="images/d3d-view-frustum-yz-plane.png"/>
+&lt;/figure>
+&lt;p>In &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/viewports-and-clipping">viewing frustum&lt;/a>, there&amp;rsquo;re 2 clipping plane, front clipping plane and back clipping plane.
+Usually, we set the front clipping plane to coincide with plane $z = 1$ too.&lt;/p>
+&lt;p>For a point $d$ in view frustum, we pick its $z$ value as the point depth after the projection.
+And this $z$ value is stored in the G-buffer depth texture.&lt;/p>
+&lt;p>The point $d$ is projected to the point $d'$ in projection window.
+Assuming the coordinate of $d$ is $(x, y, z)$, so the coordinate of $d'$ is $(x/z, y/z, 1)$.&lt;/p>
+&lt;p>If we have the 2d coordinate in projection window and depth, we know the 3d coordinate in 3d view space.&lt;/p>
+&lt;p>All those camera parameters are defined in api &lt;code>D3DXMatrixPerspectiveFovLH()&lt;/code>.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=490:497">&lt;/script>
+&lt;h3 id="draw-viewport-quad">Draw viewport quad&lt;/h3>
+&lt;p>So all things' ready, how do we start?
+We have got G-buffer, light theory, recovering 3d coordinate method, how do we get the final lighting image?&lt;/p>
+&lt;p>We used to just throw all object vertex list into pipeline let it go.
+So what is the vertex list for our final image?&lt;/p>
+&lt;p>Here is the answer, drawing a quad directly on the viewport skipping the local/world/camera/perspective transformation and get the image exactly equal to the viewport size.&lt;/p>
+&lt;p>Viewport coordinate system is arranged from $(-1, -1)$ to $(1, 1)$.&lt;/p>
+&lt;figure>
+&lt;img src="images/viewport-coordinate.png"
+alt="viewport coordinate"/> &lt;figcaption>
+&lt;p>viewport coordinate&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>So we draw 2 triangles with vertexes $(-1, -1), (-1, 1), (1, -1), (1, 1)$ to form a quad.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=163:211">&lt;/script>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=243:249">&lt;/script>
+&lt;p>&lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/texture-coordinates">Texture coordinate system&lt;/a> is a little different from the viewport coordinate.
+We need transform it before using &lt;code>tex2D&lt;/code> fetch data from the texture.&lt;/p>
+&lt;figure>
+&lt;img src="images/texture-coordinate.jpg"
+alt="texture coordinate"/> &lt;figcaption>
+&lt;p>texture coordinate&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>As to the projection window coordinate, we have seen it in the view frustum.
+The coordinates are stretched 1-to-1 to viewport coordinates.&lt;/p>
+&lt;figure>
+&lt;img src="images/projection-coordinate.png"/>
+&lt;/figure>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=157:167">&lt;/script>
+&lt;p>What the &lt;code>+ 0.5 / screenSize&lt;/code> is for? Check this &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/directly-mapping-texels-to-pixels">article&lt;/a> and you will see.&lt;/p>
+&lt;h3 id="lighting">Lighting&lt;/h3>
+&lt;p>Loop all the lights and accumulate each light intensity together.
+Using the light equations above, it&amp;rsquo;s math.&lt;/p>
+&lt;h2 id="post-processing-and-final-stage-1">Post-Processing and Final Stage&lt;/h2>
+&lt;p>Not discussed in this example.&lt;/p>
+&lt;h1 id="optimization">Optimization&lt;/h1>
+&lt;p>Deferred shading is an efficiency boost, yet there&amp;rsquo;s room for optimization.&lt;/p>
+&lt;p>For each light, we have to loop on all the pixels to calculate the light intensity.
+But usually point/spot light has limited range and can&amp;rsquo;t light the whole scene.
+If we skip the pixels not in light range, that&amp;rsquo;s a big dent in calculation.&lt;/p>
+&lt;p>That&amp;rsquo;s how the &lt;a href="https://kayru.org/articles/deferred-stencil/">stencil culling algorithm&lt;/a> works.&lt;/p>
+&lt;h2 id="theory">Theory&lt;/h2>
+&lt;p>Taking point light as example.&lt;/p>
+&lt;p>This time we draw the light range mesh as a object in scene instead of drawing the viewport quad.
+We use 2 passes to distinguish the lighting area and no lighting area,
+then do the lighting work in lighting area as usual.&lt;/p>
+&lt;p>Pass 1 creates a Stencil mask for the areas of the light volume that are not occluded by scene geometry.&lt;/p>
+&lt;p>Pass 1:&lt;/p>
+&lt;ul>
+&lt;li>Front (near) faces only&lt;/li>
+&lt;li>Color write is disabled&lt;/li>
+&lt;li>Z-write is disabled&lt;/li>
+&lt;li>Z function is &amp;lsquo;Less/Equal&amp;rsquo;&lt;/li>
+&lt;li>Z-Fail writes value 1 to Stencil buffer (Stencil ref = 1)&lt;/li>
+&lt;li>Stencil test result does not modify Stencil buffer&lt;/li>
+&lt;/ul>
+&lt;p>Pass 2 determines where lighting actually happens. Every pixel that passes Z and Stencil tests is then added to light pixel shader.&lt;/p>
+&lt;p>Pass 2:&lt;/p>
+&lt;ul>
+&lt;li>Back (far) faces only&lt;/li>
+&lt;li>Color write enabled&lt;/li>
+&lt;li>Z-write is disabled&lt;/li>
+&lt;li>Z function is &amp;lsquo;Greater/Equal&amp;rsquo;&lt;/li>
+&lt;li>Stencil function is &amp;lsquo;Equal&amp;rsquo; (Stencil ref = zero)&lt;/li>
+&lt;li>Always clears Stencil to zero&lt;/li>
+&lt;/ul>
+&lt;figure>
+&lt;img src="images/stencil-culling-algorithm.png"/>
+&lt;/figure>
+&lt;p>Light 1 has both near and far faces in front of all world geometry. It will pass Z test for near face, but will fail Z test for far face. Therefore pixel shader will not run.&lt;/p>
+&lt;p>Light 2 will fail Z test for near face, write non-zero value to Stencil and then fail Stencil test for far face. Again, no pixels will get through.&lt;/p>
+&lt;p>Light 3 will behave like Light 2 in the bottom part, but top part will pass both Z and Stencil tests and therefore will get rendered.&lt;/p>
+&lt;p>This method works well even the camera is in the light range. Brilliant!&lt;/p>
+&lt;h2 id="implementation">Implementation&lt;/h2>
+&lt;p>Let&amp;rsquo;s focus on the difference between optimization method and plain method in implementation.&lt;/p>
+&lt;p>drawing light range sphere mesh instead of drawing viewport quad.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=427:441">&lt;/script>
+&lt;p>And accordingly, the vertex shader get changes.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=230:249">&lt;/script>
+&lt;p>Optimization has 2 passes just as the theory said. Plain method has 1 pass.
+But they share the same lighting functions in pixel shader &lt;code>PS_Main&lt;/code>.&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=250:297">&lt;/script>
+&lt;h1 id="the-end">The End&lt;/h1>
+&lt;p>Again, I suggest you&amp;rsquo;d better download the &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">project&lt;/a> and run it.&lt;/p>
+&lt;p>For now, we only get a simple &amp;ldquo;image&amp;rdquo; that deferred shading produces.
+There are post-processing stages such as Anti-Alias and Bloom and etc to make
+the result better. They are not discussed here but they&amp;rsquo;re worth a shot.&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>Policarpo, F., Fonseca, F. and Games, C. (2005) ‘Deferred shading tutorial’, Pontifical Catholic University of Rio de Janeiro, 31, p. 32. &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2" role="doc-endnote">
+&lt;p>Luna, F. D. (2003) Introduction to 3D Game Programing with Direct Programming 9.0, Wordware Publishing, Inc. &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>- https://dreamanddead.github.io/post/deferred-shading/ - CC BY-NC-SA 4.0</description></item><item><title>understanding euler angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/understanding-euler-angles/ -&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
 have to understand the underlying math things.&lt;/p>
 &lt;p>I have known about Euler angles for a while, and today we talk about some more details about it.&lt;/p>
 &lt;h1 id="direction-vs-orientation">Direction vs Orientation&lt;/h1>
@@ -893,98 +1393,4 @@ grafana 看到了一台机器的并发量，其它的好像没有执行。&lt;/p
 &lt;p>所以部署相关的数据文件需要我们自己想办法解决。并且！有时数据文件一模一样也不行，毕竟 Slave 执行的过程是相同的，
 一样的文件必然导致其创建相同的用户，引发冲突，还要为每个 Slave 准备一份数据文件！:no_mouth:。&lt;/p>
 &lt;h1 id="end">End&lt;/h1>
-&lt;p>Jmeter 是一款很赞的软件，thanks apache。&lt;/p>- https://dreamanddead.github.io/post/jmeter-distributed-testing/ - CC BY-NC-SA 4.0</description></item><item><title>Deal with time in programming</title><link>https://dreamanddead.github.io/post/time-in-programming/</link><pubDate>Tue, 22 May 2018 08:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/time-in-programming/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/time-in-programming/ -&lt;p>时间无处不在，在编程中也是如此。
-比如程序日志，每一行必定包含时间。
-通常不会对时间特别关注，除非日志时间不对，或者编程使用时间，取不到正确结果。&lt;/p>
-&lt;p>其实在编程中只需明确几个简单的概念，就可以正确的使用时间。&lt;/p>
-&lt;h1 id="unix-epoch-time">UNIX Epoch time&lt;/h1>
-&lt;blockquote>
-&lt;p>UNIX Epoch time是从1970年1月1日（UTC）到目前经过的秒数&lt;/p>
-&lt;/blockquote>
-&lt;p>从某种意义上讲，这个时间是“绝对的”，无论在地球上哪个国家，大家的 UNIX Epoch time 是一样的。&lt;/p>
-&lt;p>它的值确定唯一，这个时间也在程序中广泛使用，比如用作机器间时间同步的 ntp 协议，同步的就是这个时间。
-如果每一台机器上的 UNIX Epoch time 都相同，就是保持了时钟的一致。&lt;/p>
-&lt;p>在 linux 上，可以通过 &lt;code>date&lt;/code> ，来查看时间&lt;/p>
-&lt;pre>&lt;code>####### %s means seconds since 1970-01-01 00:00:00 UTC
-####### %N means nanoseconds (000000000..999999999)
-$ date +&amp;quot;%s.%N&amp;quot;
-1526949060.804222827
-&lt;/code>&lt;/pre>&lt;h1 id="timezone">Timezone&lt;/h1>
-&lt;figure>
-&lt;img src="images/timezone-map.png"
-alt="时区图"/> &lt;figcaption>
-&lt;p>时区图&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>在同一时刻，经度距离较远不同地区，时钟的值是不一样的。比如北京时间的晚上8点，同时是纽约时间的早上7点。
-那么 UNIX Epoch time 是如何确保不同地区的时间是一致的呢？&lt;/p>
-&lt;p>原因在于时区，UNIX Epoch time 强制使用 UTC+0 时区的时间，而本地时间则使用各地区时区的时间。&lt;/p>
-&lt;p>究竟什么是&lt;a href="http://www.timeofdate.com/articles/posts/timezone-introduction.html">时区&lt;/a>？&lt;/p>
-&lt;blockquote>
-&lt;p>时区是一个地区，在这个区域内，大家使用同样的标准时间&lt;/p>
-&lt;/blockquote>
-&lt;p>一个时区内的当地时间，用与世界标准时间 (UTC) 之间的偏移量来定义。这个偏移量可以表示为 UTC- 或 UTC+，后面接上偏移的小时数和分钟数。
-因此时区这个名词常常被用来表示当地时间。比如国内大部分区域使用的就是 UTC+8 时间，在UTC时间的基础上，加8个小时，代表当地时间。&lt;/p>
-&lt;p>为什么全球不使用一个时间，方便统一？&lt;/p>
-&lt;p>其实时区的出现就是为了方便不同地区的人对时间概念认知。日出而作，日落而息是所有地区人们的生活习惯，很多地区根据当地的日出日落来设定时钟的时间。
-而且你肯定不希望，原来你在家里早上8点起床，出差到另外一个地区之后，要变成晚上2点起床。毕竟晚上2点见到太阳
-听起来并不怎么有趣。&lt;/p>
-&lt;p>&lt;a href="http://www.timeofdate.com/articles/posts/timezone-history.html">时区发展的历史&lt;/a>有点复杂，很多细节，但是正因它的出现，
-解决了各地地理差异而带来的时差问题，同时也让各地区的当地时间尽量贴合本地的太阳时间。&lt;/p>
-&lt;h2 id="abbr">Abbr&lt;/h2>
-&lt;p>用 UTC+8 这样的符号称谓当地时间毕竟不便，大部分地区都为各自地区的时区时间
-起一个名称，代表自己的本地时间。
-比如国内将本地时间称为China Standard Time，时区简称CST。&lt;/p>
-&lt;p>按照这样的规律（人们的心理），同一时区会有很多个不同的时区简称，有时还会有重复冲突。
-举例来说，在迈阿密，标准时间是 UTC-5，称作东部标准时间 (EST, Eastern Standard Time)。而在古巴的哈瓦那，同样的 UTC-5 标准时间，就被称为古巴标准时间 (CST, Cuba Standard Time)，而CST和国内的时区简称还是重复的！&lt;/p>
-&lt;p>通常一个地区只关注自己的时间，不加时区简称，但是在世界范围内，如果有相应的重复冲突还是要额外注明。&lt;/p>
-&lt;p>通常遇到最多的简称如，UTC，GMT，CST。&lt;/p>
-&lt;ul>
-&lt;li>UTC 代表&lt;a href="http://www.timeofdate.com/articles/posts/about-utc.html">世界标准时间&lt;/a>，Coordinated Universal Time&lt;/li>
-&lt;li>GMT，时区简称，Greenwich Mean Time，UTC+0&lt;/li>
-&lt;li>CST，时区简称（有重复冲突），China Standard Time，UTC+8&lt;/li>
-&lt;/ul>
-&lt;p>这里有 &lt;a href="https://www.timeanddate.com/time/zones/">时区简称的列表&lt;/a> 和 &lt;a href="https://www.timeanddate.com/time/map/">时区地图&lt;/a>，详细直观，值得一看。&lt;/p>
-&lt;h2 id="in-linux">In linux&lt;/h2>
-&lt;ul>
-&lt;li>系统当前时区可以用 &lt;code>date&lt;/code> 查看&lt;/li>
-&lt;li>时区地区由 &lt;code>/etc/timezone&lt;/code> 保存&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ date +&amp;quot;%Z %z&amp;quot;
-CST +0800
-$ cat /etc/timezone
-Asia/Shanghai
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>默认 &lt;code>date&lt;/code> 使用本地时区呈现时间&lt;/li>
-&lt;li>加上 &lt;code>-u&lt;/code>，使用 UTC 呈现时间&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>$ date
-2018年 04月 12日 星期四 16:03:16 CST
-$ date -u
-2018年 04月 12日 星期四 08:03:19 UTC
-&lt;/code>&lt;/pre>&lt;p>保证系统的时区正确是很重要的！这个时区作为所有系统运行程序的默认时区，
-如果这个时区不准确，在程序中就取不到准确的本地时间，程序的日志时间自然也有所偏差。&lt;/p>
-&lt;p>在多数 linux 发行版中，可以通过修改 &lt;code>/etc/localtime&lt;/code> 软链接来设置时区。&lt;/p>
-&lt;pre>&lt;code>$ sudo ln -sf /usr/share/zoneinfo/Africa/Nairobi /etc/localtime
-&lt;/code>&lt;/pre>&lt;p>相比之下，使用 &lt;code>timedatectl&lt;/code> 比较稳妥。&lt;/p>
-&lt;pre>&lt;code>$ timedatectl status
-Local time: 一 2018-05-21 09:01:08 CST
-Universal time: 一 2018-05-21 01:01:08 UTC
-RTC time: 一 2018-05-21 01:01:08
-Time zone: Asia/Shanghai (CST, +0800)
-Network time on: yes
-NTP synchronized: yes
-RTC in local TZ: no
-$ timedatectl set-timezone Asia/Hong_Kong
-$ timedatectl status
-Local time: 一 2018-05-21 09:01:47 HKT
-Universal time: 一 2018-05-21 01:01:47 UTC
-RTC time: 一 2018-05-21 01:01:47
-Time zone: Asia/Hong_Kong (HKT, +0800)
-Network time on: yes
-NTP synchronized: yes
-RTC in local TZ: no
-&lt;/code>&lt;/pre>&lt;p>参考： &lt;a href="https://www.tecmint.com/check-linux-timezone/">如何设置linux timezone&lt;/a>&lt;/p>
-&lt;h1 id="end">End&lt;/h1>
-&lt;p>这里没有具体针对特定编程语言来说明时间，时区的用法，不过本质是不变的。
-相信找到相应接口所针对的时间，可以很快掌握使用。&lt;/p>- https://dreamanddead.github.io/post/time-in-programming/ - CC BY-NC-SA 4.0</description></item></channel></rss>
+&lt;p>Jmeter 是一款很赞的软件，thanks apache。&lt;/p>- https://dreamanddead.github.io/post/jmeter-distributed-testing/ - CC BY-NC-SA 4.0</description></item></channel></rss>

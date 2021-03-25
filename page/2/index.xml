@@ -1,4 +1,106 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Mon, 22 Mar 2021 13:22:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>keras 如何从中断处继续训练</title><link>https://dreamanddead.github.io/post/resume-training-from-crash/</link><pubDate>Wed, 04 Mar 2020 19:32:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/resume-training-from-crash/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/resume-training-from-crash/ -&lt;p>深度学习的网络模型层次很深，训练模型的时间也很长，没有强大的算力，调试模型的周期就会
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Mon, 22 Mar 2021 13:22:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>深度学习攒机总结</title><link>https://dreamanddead.github.io/post/compose-deep-learning-machine/</link><pubDate>Wed, 25 Mar 2020 09:02:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/compose-deep-learning-machine/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/compose-deep-learning-machine/ -&lt;p>深度学习需要强大的算力做支撑，无奈手边没有这样的机器，租赁和云服务器的方式又略显昂贵，
+免费的云计算服务不是网络不通畅，就是在软件环境上有限制，这大大限制了探索深度学习魅力的自由度。&lt;/p>
+&lt;p>与其花费在租赁和云服务器上，不如自己组装一台算力合适的机器。&lt;/p>
+&lt;h1 id="规划">规划&lt;/h1>
+&lt;h2 id="gpu">GPU&lt;/h2>
+&lt;p>粗略来看，在深度学习方面 GPU 的训练效率是 CPU 的 10 倍，所以选择 GPU 是最重要的第一步。&lt;/p>
+&lt;p>根据这两篇出色的文章，&lt;a href="https://www.cnblogs.com/xiaozhi_5638/p/10923351.html">深度学习如何选择GPU?&lt;/a>，&lt;a href="https://zhuanlan.zhihu.com/p/42749496">更新2080Ti后，深度学习该选什么显卡?&lt;/a>&lt;/p>
+&lt;p>在没有过高的预算情况下，配置了 影弛 RTX 2070 SUPER。&lt;/p>
+&lt;h2 id="主板">主板&lt;/h2>
+&lt;p>选择一个资源丰厚的主板是重要的第二步，因为主板限定了 CPU 的型号，PCIe 通道的数量，以及 m.2 usb3.0 等外接口。&lt;/p>
+&lt;p>最终选择了 x99 主板，华南寨板 x99-f8（没有预算），因为提供了足够的接口，支持 E5 系列 CPU，提供 40 个 PCIe 通道。&lt;/p>
+&lt;p>附：&lt;a href="https://www.chiphell.com/thread-2153551-1-1.html">PCIe 通道解析&lt;/a>&lt;/p>
+&lt;p>当前的单张显卡占据 16 个通道，后期拓展双显卡使用 32 通道，留出一定拓展空间。&lt;/p>
+&lt;h2 id="cpu">CPU&lt;/h2>
+&lt;p>CPU 选择了 E5 V3 2080，服务器系列的 CPU 虽然主频不高，但是核心多，足够稳定（还是预算）&lt;/p>
+&lt;p>附：&lt;a href="https://ark.intel.com/content/www/us/en/ark/products/series/78583/intel-xeon-processor-e5-v3-family.html">E5 性能规格表&lt;/a>&lt;/p>
+&lt;h2 id="内存">内存&lt;/h2>
+&lt;p>本着内存越大越好，频率越高越好的原则，配置了单条 32G 2400MHz 三星内存。&lt;/p>
+&lt;p>重要的是它支持 recc，服务器主板的专享。&lt;/p>
+&lt;p>当前是单条单通道，之后可能拓展到 4 通道。&lt;/p>
+&lt;h2 id="硬盘">硬盘&lt;/h2>
+&lt;p>硬盘选择的范围就比较小，SSD 是必须的，这里配置了 m.2 接口的 Tigo 硬盘。&lt;/p>
+&lt;h2 id="电源">电源&lt;/h2>
+&lt;p>电源要为所有元件供能，且最高瓦数要有拓展之后的盈余。&lt;/p>
+&lt;p>在预算吃紧的情况下，配置了口碑不错的 海韵 850W，留出了大量电力供日后拓展。&lt;/p>
+&lt;h2 id="机箱">机箱&lt;/h2>
+&lt;p>选购了一个精简的塔式机箱，最大可安装 E-ATX 主板，内部空间足够大，且可以藏线，硬盘位多，前后带 3 个风扇散热通畅，后期也可以加装水冷。&lt;/p>
+&lt;h2 id="cpu-散热">CPU 散热&lt;/h2>
+&lt;p>这方面选择配套 x99 主板的散热器就可以，铜管数越多越好。&lt;/p>
+&lt;h2 id="支架">支架&lt;/h2>
+&lt;p>显卡的确很重，而且由于主板是侧装的，显卡的重量很容易将 PCIe 接口压弯，所以最好配置一个显卡支架做支撑，不至于引起更多问题。&lt;/p>
+&lt;h1 id="装机">装机&lt;/h1>
+&lt;p>硬件组装的过程就不赘述了，在装入机箱前，一定要先安装 windows，用 AIDA64 跑满足够小时的压力测试，提前发现硬件组合的问题。&lt;/p>
+&lt;h1 id="系统">系统&lt;/h1>
+&lt;h2 id="os">OS&lt;/h2>
+&lt;p>虽然 Linux 种类繁多，但是还是推荐 ubuntu 18.04，配置快捷不折腾。&lt;/p>
+&lt;p>虽然有 server 版，但是这里建议使用 desktop 版，性能差异并非太大，且提供了图形界面（只占用很少的显存），方便查看和调整其中的数据（尤其是图片）。&lt;/p>
+&lt;p>而且使用了图形界面，所以 NVidia 驱动已经为 &lt;a href="https://docs.nvidia.com/deploy/driver-persistence/">persistence 状态&lt;/a>。&lt;/p>
+&lt;h2 id="remote">Remote&lt;/h2>
+&lt;ul>
+&lt;li>openssh-server，服务器必备，使用 ssh 可远程终端连接&lt;/li>
+&lt;li>nfs-server，用于导出用户根目录，可以挂载到开发机，用心爱的编辑器开发&lt;/li>
+&lt;li>tmux，在 ssh 会话中开启多终端，同时防止 ssh 中断导致训练中断&lt;/li>
+&lt;li>tigervnc，必要时需要远程使用图形界面&lt;/li>
+&lt;/ul>
+&lt;h2 id="env">Env&lt;/h2>
+&lt;p>配置最新的 tensorflow 环境&lt;/p>
+&lt;h3 id="python">Python&lt;/h3>
+&lt;p>建议使用 conda 来提供 python 环境，使用 miniconda，精简，按需添加。&lt;/p>
+&lt;p>官方下载 miniconda 安装脚本，安装后配置&lt;a href="https://mirror.tuna.tsinghua.edu.cn/help/anaconda/">镜像源&lt;/a>。&lt;/p>
+&lt;p>使用 python 3.7 创建基础环境，和其它的库的版本匹配更好。&lt;/p>
+&lt;pre>&lt;code>$ conda create -n deep-learning python==3.7
+&lt;/code>&lt;/pre>&lt;h3 id="nvidia-driver--cuda--cudnn--tensorflow">NVidia driver &amp;amp; Cuda &amp;amp; CuDNN &amp;amp; tensorflow&lt;/h3>
+&lt;p>根据 &lt;a href="https://www.tensorflow.org/install/gpu#install_cuda_with_apt">tensorflow 的官方文档&lt;/a>，提供了安装 nvidia 驱动，cuda，cudnn 的方法&lt;/p>
+&lt;p>对于 18.04 版本，它提供了如下的方法，从官方源安装 driver, cuda, cudnn 这一系列让新手头疼的库。&lt;/p>
+&lt;pre>&lt;code># Add NVIDIA package repositories
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
+sudo dpkg -i cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+sudo apt-get update
+wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
+sudo apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
+sudo apt-get update
+# Install NVIDIA driver
+sudo apt-get install --no-install-recommends nvidia-driver-440 # 应该是 440，而不是 418!!!!!!
+&lt;/code>&lt;/pre>&lt;p>在驱动安装之后，使用提供的命令，检测显卡的状态，验证驱动是否已经安装好&lt;/p>
+&lt;pre>&lt;code>$ nvidia-smi
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 440.64.00 Driver Version: 440.64.00 CUDA Version: 10.2 |
+|-------------------------------+----------------------+----------------------+
+| GPU Name Persistence-M| Bus-Id Disp.A | Volatile Uncorr. ECC |
+| Fan Temp Perf Pwr:Usage/Cap| Memory-Usage | GPU-Util Compute M. |
+|===============================+======================+======================|
+| 0 GeForce RTX 207... On | 00000000:03:00.0 Off | N/A |
+| 34% 30C P2 36W / 215W | 73MiB / 7979MiB | 4% Default |
++-------------------------------+----------------------+----------------------+
++-----------------------------------------------------------------------------+
+| Processes: GPU Memory |
+| GPU PID Type Process name Usage |
+|=============================================================================|
+| 0 1220 G /usr/lib/xorg/Xorg 24MiB |
+| 0 1290 G /usr/bin/gnome-shell 49MiB |
++-----------------------------------------------------------------------------+
+&lt;/code>&lt;/pre>&lt;p>之后再安装 cuda, cudnn 和 TersorRT（可选）&lt;/p>
+&lt;pre>&lt;code># Install development and runtime libraries (~4GB)
+sudo apt-get install --no-install-recommends \
+cuda-10-1 \
+libcudnn7=7.6.4.38-1+cuda10.1 \
+libcudnn7-dev=7.6.4.38-1+cuda10.1
+# Install TensorRT. Requires that libcudnn7 is installed above.
+sudo apt-get install -y --no-install-recommends libnvinfer6=6.0.1-1+cuda10.1 \
+libnvinfer-dev=6.0.1-1+cuda10.1 \
+libnvinfer-plugin6=6.0.1-1+cuda10.1
+&lt;/code>&lt;/pre>&lt;p>官方发布的 tensorflow 2.1.0 在 cuda 10.1，cudnn 7.6 的&lt;a href="https://www.tensorflow.org/install/source#linux">环境&lt;/a>下编译，&lt;/p>
+&lt;p>根据驱动的版本，安装&lt;/p>
+&lt;pre>&lt;code>$ pip install tensorflow-gpu==2.1.0 keras==2.3.1
+&lt;/code>&lt;/pre>&lt;p>至此，python，tensorflow，显卡驱动，cuda，keras 的版本就有了合理的匹配。&lt;/p>
+&lt;p>安装之后，检测 tensorflow &lt;a href="https://stackoverflow.com/questions/38009682/how-to-tell-if-tensorflow-is-using-gpu-acceleration-from-inside-python-shell">是否使用了 gpu&lt;/a>。&lt;/p>
+&lt;p>一切配置检验之后，建议更新所有包到最新版本&lt;/p>
+&lt;pre>&lt;code>$ apt update
+$ apt upgrade
+&lt;/code>&lt;/pre>&lt;h1 id="end">End&lt;/h1>
+&lt;p>试运行一些项目，内存空间充足，显存足够，显卡算力足够，CPU 24 线程并发，开发效率大大的提高了。&lt;/p>- https://dreamanddead.github.io/post/compose-deep-learning-machine/ - CC BY-NC-SA 4.0</description></item><item><title>keras 如何从中断处继续训练</title><link>https://dreamanddead.github.io/post/resume-training-from-crash/</link><pubDate>Wed, 04 Mar 2020 19:32:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/resume-training-from-crash/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/resume-training-from-crash/ -&lt;p>深度学习的网络模型层次很深，训练模型的时间也很长，没有强大的算力，调试模型的周期就会
 变得非常之长，工作的效率自然就降了下来。&lt;/p>
 &lt;p>获取算力资源的途径，无论是通过云主机，主机租赁，还是个人组建工作站，都代价不菲。&lt;/p>
 &lt;p>但是有一点是确定的，无论使用哪一种方式，都会遇到意外，比如断电，宕机，训练过程被迫中断。
@@ -1781,504 +1883,4 @@ alt="单位圆中的三角函数值"/> &lt;figcaption>
 &lt;/tbody>
 &lt;/table>
 &lt;p>所以，三角函数重要的是比例关系，这张图就清晰的表达了一点。&lt;/p>
-&lt;p>co means complementary 表示余角。所以也就有了弦，切，割的正，余值，以及图中优雅的对应关系。&lt;/p>- https://dreamanddead.github.io/post/triangle-math/ - CC BY-NC-SA 4.0</description></item><item><title>Deferred Shading Method in DirectX9</title><link>https://dreamanddead.github.io/post/deferred-shading/</link><pubDate>Fri, 26 Apr 2019 14:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/deferred-shading/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/deferred-shading/ -&lt;p>In the latest work, we need the engine to support large number of lights.
-As we all know, the classic way built in DirectX9 is not a reasonable method to do that because of
-efficiency, so deferred shading way becomes the choice.&lt;/p>
-&lt;p>Adding new features in an existent system is never an easy thing. You&amp;rsquo;ll encounter tons of ceilings
-and pits.
-After the feature finished I decided to build a simple project just for deferred shading method itself. That why this blog is here.&lt;/p>
-&lt;p>ps. The project example is &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">on the github&lt;/a>, enjoy it with the blog. :)&lt;/p>
-&lt;h1 id="choice">Choice&lt;/h1>
-&lt;p>Deferred shading has become the choice for our need. What is deferred shading and why we use it?
-That&amp;rsquo;s what this section is for.&lt;/p>
-&lt;h2 id="rendering-pipeline">Rendering pipeline&lt;/h2>
-&lt;p>The rendering pipeline provided by DirectX9 is not unfamiliar for most developers.&lt;/p>
-&lt;figure>
-&lt;img src="images/rendering-pipeline.png"
-alt="rendering pipeline"/> &lt;figcaption>
-&lt;p>rendering pipeline&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>Lighting phase is ahead of Clipping phase.
-Assuming the scene contains lots of objects, then the light work is heavy even the camera sees nothing.&lt;/p>
-&lt;p>In pseudo code, lighting work is done between each object and each light.&lt;/p>
-&lt;pre>&lt;code>for object in all_objects:
-for light in all_lights:
-Lighting(object, light)
-&lt;/code>&lt;/pre>&lt;p>That&amp;rsquo;s not an efficient way and it&amp;rsquo;s impossible to place innumerable lights in a scene.&lt;/p>
-&lt;h2 id="deferred-pipeline">Deferred pipeline&lt;/h2>
-&lt;figure>
-&lt;img src="images/deferred-pipeline.png"
-alt="deferred pipeline"/> &lt;figcaption>
-&lt;p>deferred pipeline&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>In deferred shading, there&amp;rsquo;s a geometry stage to store all objects information in G-buffer in advance.
-Then lighting stage reads data from G-buffer and lights pixels(not objects).&lt;/p>
-&lt;p>In pseudo code, those two stages are separated.&lt;/p>
-&lt;pre>&lt;code>for object in all_objects:
-StoreInGBuffer(object)
-for light in all_lights:
-Lighting(GBuffer, light)
-&lt;/code>&lt;/pre>&lt;p>The pixel number is determined by window size and resolution, and it&amp;rsquo;s a constant.
-So the complexity is lower than the old way.&lt;/p>
-&lt;h2 id="conclusion">Conclusion&lt;/h2>
-&lt;p>Efficiency is a main reason to choose deferred shading method,
-but there is also weakness in deferred way.&lt;/p>
-&lt;p>The fatal one is that it doesn&amp;rsquo;t support scene with transparency because a transparent pixel is composed by more than one point in different view depth.
-But in G-buffer, we only store one point with the least depth.&lt;/p>
-&lt;h1 id="architect">Architect&lt;/h1>
-&lt;p>Let&amp;rsquo;s talk about more details about deferred shading.&lt;/p>
-&lt;figure>
-&lt;img src="images/deferred-pipeline.png"
-alt="deferred pipeline"/> &lt;figcaption>
-&lt;p>deferred pipeline&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>Clearly, there are 4 distinct stages in deferred shading: geometry stage, lighting stage, post-processing stage and final stage.
-The first 2 stages are the main topic in this blog.&lt;/p>
-&lt;p>Each stage uses shaders and communicates with the other ones through a shared
-memory area - the G-buffer.&lt;/p>
-&lt;h2 id="geometry-stage">Geometry Stage&lt;/h2>
-&lt;p>The geometry stage mainly draws all the objects in scene and makes perspective projection,
-and feeds the G-buffer with related information to be used in the later stages.&lt;/p>
-&lt;p>Usually, G-buffer contains 4 texture areas to store the data for later use.
-The textures have got the same size with the frame buffer.&lt;/p>
-&lt;ul>
-&lt;li>normal vector&lt;/li>
-&lt;li>depth&lt;/li>
-&lt;li>diffuse material information&lt;/li>
-&lt;li>specular material information&lt;/li>
-&lt;/ul>
-&lt;p>Normal vector and depth are values in view space.
-Diffuse material and specular material are the object properties.&lt;/p>
-&lt;h2 id="lighting-stage">Lighting Stage&lt;/h2>
-&lt;p>Lighting stage reads data from the G-buffer and does the lighting calculation.
-In this stage, the G-buffer is as input for the lighting shaders.
-It looks like in the lighting stage, we input 4 &amp;ldquo;images&amp;rdquo; and get 1 lighting &amp;ldquo;image&amp;rdquo; out.&lt;/p>
-&lt;p>A frequent question here is, all the data is stored in 2d screen space, how do we do
-the lighting work?
-I mean, lighting is a 3d world thing, related with distance, angles and something.&lt;/p>
-&lt;p>In the later section, we will see a method that recover the 3d space coordinate from the data
-we have got.&lt;/p>
-&lt;h2 id="post-processing-and-final-stage">Post-Processing and Final Stage&lt;/h2>
-&lt;p>This 2 stages are performed in order to enhance the image generated by lighting stage.
-Those are long stories and not involved in this blog.&lt;/p>
-&lt;h1 id="light-theory">Light Theory&lt;/h1>
-&lt;p>Before we get into the implementation details, light theory is necessary for us.&lt;/p>
-&lt;p>In deferred shading, the lighting thing is on our own shoulder.
-It&amp;rsquo;s free to define any light effect as we like, but here we still stick on the traditional light model.&lt;/p>
-&lt;h2 id="light-type">Light Type&lt;/h2>
-&lt;p>Commonly, there&amp;rsquo;re &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/light-types">3 different kind of lights&lt;/a>:&lt;/p>
-&lt;ul>
-&lt;li>directional light&lt;/li>
-&lt;li>point light&lt;/li>
-&lt;li>spot light&lt;/li>
-&lt;/ul>
-&lt;h3 id="directional-light">Directional Light&lt;/h3>
-&lt;p>Imaging the directional light as sun light is helpful.&lt;/p>
-&lt;p>Directional light has only color and direction, no position. It emits parallel light.&lt;/p>
-&lt;h3 id="point-light">Point Light&lt;/h3>
-&lt;figure>
-&lt;img src="images/point-light.png"
-alt="point light"/> &lt;figcaption>
-&lt;p>point light&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>In the reality, the light bulb is a good example of point light.&lt;/p>
-&lt;p>Point light has color and position within a scene, but no single direction.
-It gives off light equally in all directions.&lt;/p>
-&lt;h3 id="spot-light">Spot Light&lt;/h3>
-&lt;figure>
-&lt;img src="images/spot-light.png"
-alt="spot light"/> &lt;figcaption>
-&lt;p>spot light&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>Thinking of spot light as a streetlight is a good idea.&lt;/p>
-&lt;p>Spot light has color, position and direction and it emits light.
-Light emitted from a spot light is made up of a brighter inner
-cone and a larger outer cone, with the light intensity diminishing between the two.&lt;/p>
-&lt;figure>
-&lt;img src="images/spot-light-area.png"/>
-&lt;/figure>
-&lt;h2 id="lighting-equation">Lighting Equation&lt;/h2>
-&lt;p>It&amp;rsquo;s about math&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> and it&amp;rsquo;s a tedious part but important.&lt;/p>
-&lt;h3 id="symbols">Symbols&lt;/h3>
-&lt;p>First, let&amp;rsquo;s denote the symbols we will use later.&lt;/p>
-&lt;p>$S$ means light $Source$, $I$ means $Illumination$, $M$ means $Material$, $C$ means $Camera$.&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align:center">symbol&lt;/th>
-&lt;th style="text-align:center">definition&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align:center">$S_{amb}$&lt;/td>
-&lt;td style="text-align:center">ambient intensity color of light&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$S_{diff}$&lt;/td>
-&lt;td style="text-align:center">diffuse intensity color of light&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$S_{spec}$&lt;/td>
-&lt;td style="text-align:center">specular intensity color of light&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$S_{pos}$&lt;/td>
-&lt;td style="text-align:center">light position, only for point &amp;amp; spot light&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$S_{dir}$&lt;/td>
-&lt;td style="text-align:center">vector. light direction, only for directional &amp;amp; spot light&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$S_{range}$&lt;/td>
-&lt;td style="text-align:center">float number. denote the max lighting range, only for point &amp;amp; spot light&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$S_{falloff}$&lt;/td>
-&lt;td style="text-align:center">float number. denote the falloff parameter, only for spot light&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$S_{att_0}$&lt;/td>
-&lt;td style="text-align:center">float number. light attenuation parameter of distance$^0$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$S_{att_1}$&lt;/td>
-&lt;td style="text-align:center">float number. light attenuation parameter of distance$^1$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$S_{att_2}$&lt;/td>
-&lt;td style="text-align:center">float number. light attenuation parameter of distance$^2$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$M_{amb}$&lt;/td>
-&lt;td style="text-align:center">ambient material color&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$M_{diff}$&lt;/td>
-&lt;td style="text-align:center">diffuse material color&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$M_{spec}$&lt;/td>
-&lt;td style="text-align:center">specular material color&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$M_{shi}$&lt;/td>
-&lt;td style="text-align:center">material specular shininess parameter&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$C_{pos}$&lt;/td>
-&lt;td style="text-align:center">camera position&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>These symbols are defined for the simplicity of equations.&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align:center">symbol&lt;/th>
-&lt;th style="text-align:center">definition&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align:center">$p$&lt;/td>
-&lt;td style="text-align:center">position of point to be shading&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$\vec{n}$&lt;/td>
-&lt;td style="text-align:center">unit vector. normal vector of point to be shading&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$\vec{l}$&lt;/td>
-&lt;td style="text-align:center">unit vector. denote the direction from point to light.&lt;!-- raw HTML omitted -->for directional light, $\vec{l} = -normalize(S_{dir})$. otherwise, $\vec{l} = normalize(S_{pos} - p)$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$\vec{v}$&lt;/td>
-&lt;td style="text-align:center">unit vector. denote the direction from point to camera.&lt;!-- raw HTML omitted -->$\vec{v} = normalize(C_{pos} - p)$&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$\vec{h}$&lt;/td>
-&lt;td style="text-align:center">unit half vector between $\vec{l}$ and $\vec{v}$. used in &lt;a href="https://www.wikiwand.com/en/Phong_reflection_model">Phong shading model&lt;/a>.&lt;!-- raw HTML omitted -->$\vec{h} = \dfrac{\vec{l} + \vec{v}}{length(\vec{l} + \vec{v})}$&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;figure>
-&lt;img src="images/phong-model.png"
-alt="phong model"/> &lt;figcaption>
-&lt;p>phong model&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h3 id="i_tot">I_tot&lt;/h3>
-&lt;p>The total illumination equation we will use is:&lt;/p>
-&lt;p>$$
-I_{tot} = I_{amb} + (att \times spot)(I_{diff} + I_{spec})
-$$&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align:center">symbol&lt;/th>
-&lt;th style="text-align:center">definition&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align:center">$I_{tot}$&lt;/td>
-&lt;td style="text-align:center">total illumination&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$I_{amb}$&lt;/td>
-&lt;td style="text-align:center">ambient illumination&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$I_{diff}$&lt;/td>
-&lt;td style="text-align:center">diffuse illumination&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$I_{spec}$&lt;/td>
-&lt;td style="text-align:center">specular illumination&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$att$&lt;/td>
-&lt;td style="text-align:center">light attenuation factor(related to the distance from point to light)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">$spot$&lt;/td>
-&lt;td style="text-align:center">spot light intensity factor(equals 1 for directional &amp;amp; point light)&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>We will discuss each part in the subsections.&lt;/p>
-&lt;h3 id="i_amb">I_amb&lt;/h3>
-&lt;p>$$ I_{amb} = M_{diff} \otimes S_{amb} $$&lt;/p>
-&lt;p>Where $S_{amb}$ has the purpose of modulating the $M_{diff}$ value so that
-all objects in scene reflect a small part of their diffuse contribution.&lt;/p>
-&lt;p>$\otimes$ means multiplication between two vectors in each element. for example,&lt;/p>
-&lt;p>$$
-\begin{align}
-M_{diff} &amp;amp;= {1.0, 0.0, 0.0} \\\&lt;br>
-S_{amb} &amp;amp;= {0.2, 0.2, 0.2} \\\&lt;br>
-I_{amb} = M_{diff} \otimes S_{amb} &amp;amp;= {0.2, 0.0, 0.0}
-\end{align}
-$$&lt;/p>
-&lt;p>Ambient light is contributed to the whole scene whether the point is in or out the light range.
-Theoretically, every time we add a light, the whole scene will be brighter no matter which kind of light is added.&lt;/p>
-&lt;h3 id="att">att&lt;/h3>
-&lt;p>att is a parameter that control the light intensity influenced by distance.
-In intuition, the closer, the brighter.&lt;/p>
-&lt;p>Directional light has got no position, so the att always equal 1.&lt;/p>
-&lt;p>For point and spot light, if a point is off the light range, it can&amp;rsquo;t be lighted.
-Within the range, light intensity is inversely proportional to the binomial of the distance.&lt;/p>
-&lt;p>$$
-\begin{align}
-d &amp;amp;= length(S_{pos} - p) \\\&lt;br>
-att &amp;amp;=
-\begin{cases}
-0 &amp;amp; \text{if point or spot light, and } d &amp;gt; S_{range} \\\&lt;br>
-\dfrac{1}{ S_{att_0} + S_{att_1} \times d + S_{att_2} \times d^2 } &amp;amp; \text{if point or spot light, and } d \leqslant S_{range} \\\&lt;br>
-1 &amp;amp; \text{if directional light} \\\&lt;br>
-\end{cases}
-\end{align}
-$$&lt;/p>
-&lt;h3 id="spot">spot&lt;/h3>
-&lt;p>&lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/attenuation-and-spotlight-factor">spot parameter&lt;/a> is only for spot light.
-It&amp;rsquo;s always 1 for directional and point light.&lt;/p>
-&lt;figure>
-&lt;img src="images/spot-light.png"
-alt="spot light"/> &lt;figcaption>
-&lt;p>spot light&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The affected area of spot light is a cone in 3d space.
-This factor marks the light intensity in 3 different areas split by $\theta$ and $\phi$.&lt;/p>
-&lt;p>$$
-\begin{align}
-rho &amp;amp;= normalize(S_{dir}) \cdot \vec{l} \\\&lt;br>
-spot &amp;amp;=
-\begin{cases}
-1 &amp;amp; \text{if non spot lights or } rho &amp;gt; cos(\frac{theta}2). \text{[ in area 1 ]} \\\&lt;br>
-0 &amp;amp; \text{if } rho \leqslant cos(\frac{phi}2). \text{[ in area 3 ]} \\\&lt;br>
-\Bigg [ \dfrac{ rho - cos(\frac{phi}2) }{ cos(\frac{theta}2) - cos(\frac{phi}2) } \Bigg ]^{M_{falloff}} &amp;amp; \text{otherwise. [ in area 2 ]} \\\&lt;br>
-\end{cases}
-\end{align}
-$$&lt;/p>
-&lt;h3 id="i_diff">I_diff&lt;/h3>
-&lt;p>$$
-I_{diff} = MAX(0, \vec{l} \cdot \vec{n}) M_{diff} \otimes S_{diff}
-$$&lt;/p>
-&lt;p>This equation is based on &lt;a href="https://www.wikiwand.com/en/Lambert%27s_cosine_law">Lambert&amp;rsquo;s Law&lt;/a>, the reflected light is determined by the cosine
-between surface normal and light vector.&lt;/p>
-&lt;h3 id="i_spec">I_spec&lt;/h3>
-&lt;p>$$
-I_{spec} = MAX(0, \vec{h} \cdot \vec{n})^{M_{shi}} M_{spec} \otimes S_{spec}
-$$&lt;/p>
-&lt;p>It&amp;rsquo;s the famous &lt;a href="https://www.wikiwand.com/en/Phong_reflection_model">Phong reflection model&lt;/a>.&lt;/p>
-&lt;h1 id="implementation-in-directx9">Implementation in DirectX9&lt;/h1>
-&lt;p>This section focuses on the core parts in the &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">example project&lt;/a>.&lt;/p>
-&lt;p>The implementation project is &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">here&lt;/a>. You&amp;rsquo;d better download it and
-run it so you can see the whole picture and more details.&lt;/p>
-&lt;h2 id="geometry-stage-1">Geometry Stage&lt;/h2>
-&lt;h3 id="g-buffer">G-buffer&lt;/h3>
-&lt;p>G-buffer contains 4 textures storing the data for all pipeline stages.
-Using api &lt;code>D3DXCreateTexture()&lt;/code> to create textures of &lt;code>RENDERTARGET&lt;/code> type and holding their pointers.&lt;/p>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=58:69">&lt;/script>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=104:126">&lt;/script>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=145:161">&lt;/script>
-&lt;h3 id="feed-g-buffer">Feed G-buffer&lt;/h3>
-&lt;p>You&amp;rsquo;d better have got good understanding about shaders to read the content below.
-If you don&amp;rsquo;t, this book&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup> is good mentor for you.&lt;/p>
-&lt;p>DirectX9 supports &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/multiple-render-targets">MRT(multiple render target)&lt;/a>.
-It refers to the ability to render to multiple surface with a single draw call.&lt;/p>
-&lt;p>Normally, we only set &lt;code>COLOR0&lt;/code> value in pixel shader and that will be the final frame buffer color
-showing on screen.&lt;/p>
-&lt;p>&lt;code>0&lt;/code> in &lt;code>COLOR0&lt;/code> means shader write the value to render target 0. It&amp;rsquo;s frame buffer by default.
-If we change the render target 0 or add more render targets, writing to &lt;code>COLOR0&lt;/code> &lt;code>COLOR1&lt;/code> means different things.&lt;/p>
-&lt;p>We have created 4 textures in G-buffer. In geometry stage we set this 4 textures as the render target.
-So all the information will store in G-buffer.&lt;/p>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=223:233">&lt;/script>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/GBuffer.hlsl?footer=minimal&amp;slice=22:29">&lt;/script>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/GBuffer.hlsl?footer=minimal&amp;slice=52:69">&lt;/script>
-&lt;h2 id="lighting-stage-1">Lighting Stage&lt;/h2>
-&lt;p>In this stage, we use 4 &amp;ldquo;images&amp;rdquo; to develop 1 final lighting &amp;ldquo;image&amp;rdquo;.&lt;/p>
-&lt;h3 id="read-g-buffer">Read G-buffer&lt;/h3>
-&lt;p>Object data is feed in G-buffer in geometry stage and we need to fetch data from G-buffer in lighting stage.&lt;/p>
-&lt;p>Inputting textures into shader is easy. It&amp;rsquo;s textbook.&lt;/p>
-&lt;ol>
-&lt;li>cancel the MRT binding&lt;/li>
-&lt;li>set textures as shader parameters&lt;/li>
-&lt;li>use &lt;code>tex2D()&lt;/code> to fetch data from textures in shader&lt;/li>
-&lt;/ol>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=234:242">&lt;/script>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=403:414">&lt;/script>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=38:81">&lt;/script>
-&lt;h3 id="recover-3d-coordinate">Recover 3d coordinate&lt;/h3>
-&lt;p>In rendering pipeline, we input 3d object vertex list and project them into 2d screen.
-Recover 3d coordinate from 2d screen coordinate is a reverse process.&lt;/p>
-&lt;p>In this section, we only discuss recovering 3d coordinate in view space. It&amp;rsquo;s simple and understandable.&lt;/p>
-&lt;p>Before we start, we must know how 3d coordinate in view space is projected.&lt;/p>
-&lt;figure>
-&lt;img src="images/d3d-view-frustum.png"
-alt="view frustum"/> &lt;figcaption>
-&lt;p>view frustum&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>In view space, camera coordinate is $(0, 0)$ and facing the $z$ axis.
-Projection window coincides with plane $z = 1$. Its size is determined by $fov$
-and $ratio$.
-$fov$ is the camera view angle in y direction. $ratio$ is the ratio of screen width to screen height.&lt;/p>
-&lt;figure>
-&lt;img src="images/d3d-view-frustum-yz-plane.png"/>
-&lt;/figure>
-&lt;p>In &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/viewports-and-clipping">viewing frustum&lt;/a>, there&amp;rsquo;re 2 clipping plane, front clipping plane and back clipping plane.
-Usually, we set the front clipping plane to coincide with plane $z = 1$ too.&lt;/p>
-&lt;p>For a point $d$ in view frustum, we pick its $z$ value as the point depth after the projection.
-And this $z$ value is stored in the G-buffer depth texture.&lt;/p>
-&lt;p>The point $d$ is projected to the point $d'$ in projection window.
-Assuming the coordinate of $d$ is $(x, y, z)$, so the coordinate of $d'$ is $(x/z, y/z, 1)$.&lt;/p>
-&lt;p>If we have the 2d coordinate in projection window and depth, we know the 3d coordinate in 3d view space.&lt;/p>
-&lt;p>All those camera parameters are defined in api &lt;code>D3DXMatrixPerspectiveFovLH()&lt;/code>.&lt;/p>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=490:497">&lt;/script>
-&lt;h3 id="draw-viewport-quad">Draw viewport quad&lt;/h3>
-&lt;p>So all things' ready, how do we start?
-We have got G-buffer, light theory, recovering 3d coordinate method, how do we get the final lighting image?&lt;/p>
-&lt;p>We used to just throw all object vertex list into pipeline let it go.
-So what is the vertex list for our final image?&lt;/p>
-&lt;p>Here is the answer, drawing a quad directly on the viewport skipping the local/world/camera/perspective transformation and get the image exactly equal to the viewport size.&lt;/p>
-&lt;p>Viewport coordinate system is arranged from $(-1, -1)$ to $(1, 1)$.&lt;/p>
-&lt;figure>
-&lt;img src="images/viewport-coordinate.png"
-alt="viewport coordinate"/> &lt;figcaption>
-&lt;p>viewport coordinate&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>So we draw 2 triangles with vertexes $(-1, -1), (-1, 1), (1, -1), (1, 1)$ to form a quad.&lt;/p>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=163:211">&lt;/script>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=243:249">&lt;/script>
-&lt;p>&lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/texture-coordinates">Texture coordinate system&lt;/a> is a little different from the viewport coordinate.
-We need transform it before using &lt;code>tex2D&lt;/code> fetch data from the texture.&lt;/p>
-&lt;figure>
-&lt;img src="images/texture-coordinate.jpg"
-alt="texture coordinate"/> &lt;figcaption>
-&lt;p>texture coordinate&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>As to the projection window coordinate, we have seen it in the view frustum.
-The coordinates are stretched 1-to-1 to viewport coordinates.&lt;/p>
-&lt;figure>
-&lt;img src="images/projection-coordinate.png"/>
-&lt;/figure>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=157:167">&lt;/script>
-&lt;p>What the &lt;code>+ 0.5 / screenSize&lt;/code> is for? Check this &lt;a href="https://docs.microsoft.com/en-us/windows/desktop/direct3d9/directly-mapping-texels-to-pixels">article&lt;/a> and you will see.&lt;/p>
-&lt;h3 id="lighting">Lighting&lt;/h3>
-&lt;p>Loop all the lights and accumulate each light intensity together.
-Using the light equations above, it&amp;rsquo;s math.&lt;/p>
-&lt;h2 id="post-processing-and-final-stage-1">Post-Processing and Final Stage&lt;/h2>
-&lt;p>Not discussed in this example.&lt;/p>
-&lt;h1 id="optimization">Optimization&lt;/h1>
-&lt;p>Deferred shading is an efficiency boost, yet there&amp;rsquo;s room for optimization.&lt;/p>
-&lt;p>For each light, we have to loop on all the pixels to calculate the light intensity.
-But usually point/spot light has limited range and can&amp;rsquo;t light the whole scene.
-If we skip the pixels not in light range, that&amp;rsquo;s a big dent in calculation.&lt;/p>
-&lt;p>That&amp;rsquo;s how the &lt;a href="https://kayru.org/articles/deferred-stencil/">stencil culling algorithm&lt;/a> works.&lt;/p>
-&lt;h2 id="theory">Theory&lt;/h2>
-&lt;p>Taking point light as example.&lt;/p>
-&lt;p>This time we draw the light range mesh as a object in scene instead of drawing the viewport quad.
-We use 2 passes to distinguish the lighting area and no lighting area,
-then do the lighting work in lighting area as usual.&lt;/p>
-&lt;p>Pass 1 creates a Stencil mask for the areas of the light volume that are not occluded by scene geometry.&lt;/p>
-&lt;p>Pass 1:&lt;/p>
-&lt;ul>
-&lt;li>Front (near) faces only&lt;/li>
-&lt;li>Color write is disabled&lt;/li>
-&lt;li>Z-write is disabled&lt;/li>
-&lt;li>Z function is &amp;lsquo;Less/Equal&amp;rsquo;&lt;/li>
-&lt;li>Z-Fail writes value 1 to Stencil buffer (Stencil ref = 1)&lt;/li>
-&lt;li>Stencil test result does not modify Stencil buffer&lt;/li>
-&lt;/ul>
-&lt;p>Pass 2 determines where lighting actually happens. Every pixel that passes Z and Stencil tests is then added to light pixel shader.&lt;/p>
-&lt;p>Pass 2:&lt;/p>
-&lt;ul>
-&lt;li>Back (far) faces only&lt;/li>
-&lt;li>Color write enabled&lt;/li>
-&lt;li>Z-write is disabled&lt;/li>
-&lt;li>Z function is &amp;lsquo;Greater/Equal&amp;rsquo;&lt;/li>
-&lt;li>Stencil function is &amp;lsquo;Equal&amp;rsquo; (Stencil ref = zero)&lt;/li>
-&lt;li>Always clears Stencil to zero&lt;/li>
-&lt;/ul>
-&lt;figure>
-&lt;img src="images/stencil-culling-algorithm.png"/>
-&lt;/figure>
-&lt;p>Light 1 has both near and far faces in front of all world geometry. It will pass Z test for near face, but will fail Z test for far face. Therefore pixel shader will not run.&lt;/p>
-&lt;p>Light 2 will fail Z test for near face, write non-zero value to Stencil and then fail Stencil test for far face. Again, no pixels will get through.&lt;/p>
-&lt;p>Light 3 will behave like Light 2 in the bottom part, but top part will pass both Z and Stencil tests and therefore will get rendered.&lt;/p>
-&lt;p>This method works well even the camera is in the light range. Brilliant!&lt;/p>
-&lt;h2 id="implementation">Implementation&lt;/h2>
-&lt;p>Let&amp;rsquo;s focus on the difference between optimization method and plain method in implementation.&lt;/p>
-&lt;p>drawing light range sphere mesh instead of drawing viewport quad.&lt;/p>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/main.cpp?footer=minimal&amp;slice=427:441">&lt;/script>
-&lt;p>And accordingly, the vertex shader get changes.&lt;/p>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=230:249">&lt;/script>
-&lt;p>Optimization has 2 passes just as the theory said. Plain method has 1 pass.
-But they share the same lighting functions in pixel shader &lt;code>PS_Main&lt;/code>.&lt;/p>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/deferred-shading-example/blob/ee601c2c5ad833757b714ef7ae002a3893ac4da5/PointLight.hlsl?footer=minimal&amp;slice=250:297">&lt;/script>
-&lt;h1 id="the-end">The End&lt;/h1>
-&lt;p>Again, I suggest you&amp;rsquo;d better download the &lt;a href="https://github.com/DreamAndDead/deferred-shading-example">project&lt;/a> and run it.&lt;/p>
-&lt;p>For now, we only get a simple &amp;ldquo;image&amp;rdquo; that deferred shading produces.
-There are post-processing stages such as Anti-Alias and Bloom and etc to make
-the result better. They are not discussed here but they&amp;rsquo;re worth a shot.&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
-&lt;hr>
-&lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
-&lt;p>Policarpo, F., Fonseca, F. and Games, C. (2005) ‘Deferred shading tutorial’, Pontifical Catholic University of Rio de Janeiro, 31, p. 32. &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:2" role="doc-endnote">
-&lt;p>Luna, F. D. (2003) Introduction to 3D Game Programing with Direct Programming 9.0, Wordware Publishing, Inc. &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;/section>- https://dreamanddead.github.io/post/deferred-shading/ - CC BY-NC-SA 4.0</description></item></channel></rss>
+&lt;p>co means complementary 表示余角。所以也就有了弦，切，割的正，余值，以及图中优雅的对应关系。&lt;/p>- https://dreamanddead.github.io/post/triangle-math/ - CC BY-NC-SA 4.0</description></item></channel></rss>
