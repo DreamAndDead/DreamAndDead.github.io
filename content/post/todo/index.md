@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-03-24T13:18:30+08:00
+lastmod: 2021-03-25T16:30:15+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -29,35 +29,6 @@ series: ["test"]
 #### inspect clip board {#inspect-clip-board}
 
 
-### 算法 {#算法}
-
-
-#### 枚举 排列 {#枚举-排列}
-
-<!--list-separator-->
-
--  递归
-
-<!--list-separator-->
-
--  next
-
-<!--list-separator-->
-
--  可重集
-
-<!--list-separator-->
-
--  和回溯，解答树的关系
-
-
-#### 枚举 子集 {#枚举-子集}
-
-<!--list-separator-->
-
--  cpp multiset
-
-
 ### 配色理论 {#配色理论}
 
 <https://zhuanlan.zhihu.com/p/52120537>
@@ -67,6 +38,12 @@ series: ["test"]
 <https://www.sohu.com/a/397541366%5F100031423>
 
 <https://zhuanlan.zhihu.com/p/49575075>
+
+
+### gnuplot examples {#gnuplot-examples}
+
+
+#### in org mode {#in-org-mode}
 
 
 ### 摄影理论 {#摄影理论}
@@ -107,13 +84,13 @@ series: ["test"]
 #### nicechord {#nicechord}
 
 
-#### 配合 吉他 尤克里里 理解 {#配合-吉他-尤克里里-理解}
+#### 配合 吉他 理解 {#配合-吉他-理解}
 
 
 #### guitar pro {#guitar-pro}
 
 
-### 单音与和弦的搭配原理 {#单音与和弦的搭配原理}
+### 旋律与和弦的搭配原理 {#旋律与和弦的搭配原理}
 
 
 #### nicechord {#nicechord}
@@ -319,6 +296,9 @@ series: ["test"]
 
 
 #### 成为生产者 {#成为生产者}
+
+
+#### 唯一的财富来源，而非工薪 {#唯一的财富来源-而非工薪}
 
 
 #### 做同一件事，总在不断精进 {#做同一件事-总在不断精进}
@@ -539,3 +519,8 @@ series: ["test"]
 <!--list-separator-->
 
 -  篮球活动
+
+
+## License {#license}
+
+{{< license >}}

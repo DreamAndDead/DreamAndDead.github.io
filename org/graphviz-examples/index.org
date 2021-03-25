@@ -7,8 +7,7 @@
 #+date: <2021-03-22 一 14:48>
 #+hugo_categories: Tool
 #+hugo_tags: tool graphviz drawing
-#+hugo_draft: true
-#+hugo_custom_front_matter: :comment false :featured_image images/featured.png
+#+hugo_custom_front_matter: :featured_image images/featured.png
 
 * usage
 
@@ -69,7 +68,7 @@ $ dot -Tpng -o test.png test.dot
 
 *** asynomous
     
-#+begin_src dot :file images/subgraph.png
+#+begin_src dot :file images/subgraph.png :exports both
 digraph G {
   main -> init -> make_string;
   main -> {parse, cleanup};
@@ -109,7 +108,7 @@ digraph {
 
 ** label
   
-#+begin_src dot :file images/edge-label.png
+#+begin_src dot :file images/edge-label.png :exports both
 digraph {
     a -> b[label="0.2"];
     a -> c[label="0.4"];
@@ -125,7 +124,7 @@ digraph {
 
 ** straight line
 
-#+begin_src dot :file images/edge-straight.png
+#+begin_src dot :file images/edge-straight.png :exports both
 graph {
     splines=line;
     
@@ -154,7 +153,7 @@ graph {
 
 * table
 
-#+begin_src dot :file images/table.png
+#+begin_src dot :file images/table.png :exports both
 digraph {
 	format[label=<
 	      <table border="1" cellspacing="4">
@@ -180,7 +179,7 @@ digraph {
 }
 #+end_src
 
-#+begin_src dot :file images/table-hr-vr.png
+#+begin_src dot :file images/table-hr-vr.png :exports both
 digraph {
 	format[label=<
 	      <table border="0" cellspacing="4">
@@ -203,12 +202,11 @@ digraph {
 }
 #+end_src
 
-* ref
+* Refs
 
 https://blog.csdn.net/youwen21/article/details/98397993
 
 https://www.cnblogs.com/shuqin/p/11897207.html
-
 
 https://stackoverflow.com/questions/10147619/how-can-i-reverse-the-direction-of-every-edge-in-a-graphviz-dot-language-graph
 
@@ -222,4 +220,9 @@ https://graphviz.gitlab.io/documentation/
 
 http://graphviz.org/doc/info/attrs.html
 
+* License
+
+#+begin_export markdown
+{{< license >}}
+#+end_export
 

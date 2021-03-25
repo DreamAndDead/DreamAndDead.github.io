@@ -2,11 +2,10 @@
 title: "Graphviz Examples"
 author: ["DreamAndDead"]
 date: 2021-03-22T14:48:00+08:00
-lastmod: 2021-03-24T21:16:38+08:00
+lastmod: 2021-03-25T15:11:40+08:00
 tags: ["tool", "graphviz", "drawing"]
 categories: ["Tool"]
-draft: true
-comment: false
+draft: false
 featured_image: "images/featured.png"
 ---
 
@@ -72,6 +71,15 @@ digraph {
 
 #### asynomous {#asynomous}
 
+```dot
+digraph G {
+  main -> init -> make_string;
+  main -> {parse, cleanup};
+  main -> printf;
+  parse -> execute -> {make_string, compare, printf};
+}
+```
+
 {{< figure src="images/subgraph.png" >}}
 
 
@@ -104,22 +112,105 @@ digraph {
 
 ### label {#label}
 
+```dot
+digraph {
+    a -> b[label="0.2"];
+    a -> c[label="0.4"];
+    c -> b[label="0.6"];
+    c -> e[label="0.6"];
+    e -> e[label="0.1"];
+    e -> b[label="0.7"];
+}
+```
+
 {{< figure src="images/edge-label.png" >}}
 
 
 ### straight line {#straight-line}
+
+```dot
+graph {
+    splines=line;
+
+    subgraph cluster_0 {
+	label="Subgraph A";
+	a; b; c
+    }
+
+    subgraph cluster_1 {
+	label="Subgraph B";
+	d; e;
+    }
+
+    a -- e;
+    a -- d;
+    b -- d;
+    b -- e;
+    c -- d;
+    c -- e;
+}
+```
 
 {{< figure src="images/edge-straight.png" >}}
 
 
 ## table {#table}
 
+```dot
+digraph {
+	format[label=<
+	      <table border="1" cellspacing="4">
+		<tr>
+		  <td border="0" bgcolor="white">资产</td>
+		  <td border="0" bgcolor="white">  =  </td>
+		  <td border="0" bgcolor="white">  负债  </td>
+		  <td border="0" bgcolor="white">  +  </td>
+		  <td border="0" bgcolor="white">所有者权益</td>
+		</tr>
+		<tr>
+		  <td border="0" bgcolor="white">现金</td>
+		  <td border="0" colspan="3" bgcolor="white"></td>
+		  <td border="0" bgcolor="white">资本</td>
+		</tr>
+		<tr>
+		  <td border="0" bgcolor="white">+400,000</td>
+		  <td border="0" colspan="3" bgcolor="white"></td>
+		  <td border="0" bgcolor="white">+400,000</td>
+		</tr>
+	      </table>
+	       >, shape=none]
+}
+```
+
 {{< figure src="images/table.png" >}}
+
+```dot
+digraph {
+	format[label=<
+	      <table border="0" cellspacing="4">
+		<tr>
+		  <td border="0" colspan="2" bgcolor="white">现金</td>
+		</tr>
+		<hr/>
+		<tr>
+		  <td border="0" bgcolor="white">左边</td>
+		  <vr/>
+		  <td border="0" bgcolor="white">右边</td>
+		</tr>
+		<tr>
+		  <td border="0" bgcolor="white">现金增加</td>
+		  <vr/>
+		  <td border="0" bgcolor="white">现金减少</td>
+		</tr>
+	      </table>
+	       >, shape=none]
+}
+```
 
 {{< figure src="images/table-hr-vr.png" >}}
 
 
-## ref {#ref}
+## Refs {#refs}
 
 <https://blog.csdn.net/youwen21/article/details/98397993>
 
@@ -136,3 +227,8 @@ digraph {
 <https://graphviz.gitlab.io/documentation/>
 
 <http://graphviz.org/doc/info/attrs.html>
+
+
+## License {#license}
+
+{{< license >}}

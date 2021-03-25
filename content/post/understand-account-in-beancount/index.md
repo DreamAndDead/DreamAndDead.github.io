@@ -2,7 +2,7 @@
 title: "浅谈复式记账与 Beancount"
 author: ["DreamAndDead"]
 date: 2021-02-28T15:59:00+08:00
-lastmod: 2021-03-25T11:34:04+08:00
+lastmod: 2021-03-25T14:41:16+08:00
 tags: ["accounting", "beancount", "python"]
 categories: ["Accounting"]
 draft: false

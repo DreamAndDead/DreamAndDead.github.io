@@ -16,14 +16,6 @@
 *** 直接导出 html 的方式
 *** 富文本 copy vs html copy
 *** inspect clip board
-** 算法
-*** 枚举 排列
-**** 递归
-**** next
-**** 可重集
-**** 和回溯，解答树的关系
-*** 枚举 子集
-**** cpp multiset
 ** 配色理论
 
 https://zhuanlan.zhihu.com/p/52120537
@@ -33,7 +25,8 @@ https://www.sohu.com/a/352611094_286880
 https://www.sohu.com/a/397541366_100031423
 
 https://zhuanlan.zhihu.com/p/49575075
-
+** gnuplot examples
+*** in org mode
 ** 摄影理论
 *** 参数
 *** 纽约
@@ -46,9 +39,9 @@ https://zhuanlan.zhihu.com/p/49575075
 ** 和弦的命名方式
 *** m7 9
 *** nicechord
-*** 配合 吉他 尤克里里 理解
+*** 配合 吉他 理解
 *** guitar pro
-** 单音与和弦的搭配原理
+** 旋律与和弦的搭配原理
 *** nicechord
 ** 文本编辑
 *** 正则表达式工具
@@ -119,6 +112,7 @@ https://zhuanlan.zhihu.com/p/49575075
 *** 改变社会的力量
 *** 不是体制内，就是体制外
 *** 成为生产者
+*** 唯一的财富来源，而非工薪
 *** 做同一件事，总在不断精进
 *** 事情都是有限的
 *** hello world 是什么
@@ -188,3 +182,9 @@ https://zhuanlan.zhihu.com/p/49575075
 **** 校友？
 **** 篮球活动
   
+* License
+
+#+begin_export markdown
+{{< license >}}
+#+end_export
+
