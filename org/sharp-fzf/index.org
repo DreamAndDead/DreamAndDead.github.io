@@ -1,0 +1,14 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: sharp-fzf
+#+export_file_name: index
+
+#+title: 锋利的 fzf
+#+date: <2021-03-26 五 10:53>
+#+hugo_categories: CLI
+#+hugo_tags: cli tool linux shell
+#+hugo_draft: true
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg :series '("经典的 Command Line Interface")
+
+
+https://wiki.archlinux.org/index.php/Fzf
