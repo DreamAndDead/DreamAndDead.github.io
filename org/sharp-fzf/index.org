@@ -11,4 +11,30 @@
 #+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg :series '("经典的 Command Line Interface")
 
 
+
+
+It's an interactive Unix filter for command-line that can be used with any list; files, command history, processes, hostnames, bookmarks, git commits, etc.
+
+
+FZF_DEFAULT_COMMAND
+
+
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+
+
+fd respect .gitignore
+
+
+
+https://github.com/junegunn/fzf/wiki/examples
+
+
+https://github.com/junegunn/fzf
+
+
 https://wiki.archlinux.org/index.php/Fzf
+
+
+https://zhuanlan.zhihu.com/p/41859976
+
+

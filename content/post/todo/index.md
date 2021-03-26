@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-03-26T10:54:55+08:00
+lastmod: 2021-03-26T16:28:42+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -44,6 +44,20 @@ series: ["test"]
 
 
 #### 理论 {#理论}
+
+
+### git tricks (update anytime) {#git-tricks--update-anytime}
+
+
+#### gh-pages and master {#gh-pages-and-master}
+
+<!--list-separator-->
+
+-  only merge master
+
+<!--list-separator-->
+
+-  graph theory
 
 
 ### 摄影理论 {#摄影理论}
@@ -96,6 +110,27 @@ series: ["test"]
 #### nicechord {#nicechord}
 
 
+### CLI {#cli}
+
+
+#### fzf {#fzf}
+
+
+#### rg {#rg}
+
+
+#### fd {#fd}
+
+
+#### silver search {#silver-search}
+
+
+#### bat {#bat}
+
+
+#### autojump {#autojump}
+
+
 ### 文本编辑 {#文本编辑}
 
 
@@ -144,17 +179,10 @@ series: ["test"]
 ### emacs key bindings 研究与配置 {#emacs-key-bindings-研究与配置}
 
 
-### how RE `= NFA =` DFA {#how-re-nfa-dfa}
+### how `RE = NFA = DFA` {#how-re-nfa-dfa}
 
 
 ### how scanner generator works (table driven / if else driven) {#how-scanner-generator-works--table-driven-if-else-driven}
-
-
-### manjaro config best practise {#manjaro-config-best-practise}
-
--   各种迁移，熟悉工具的配置
--   fzf
--   autojump
 
 
 ### krusader 预览功能的使用 {#krusader-预览功能的使用}
@@ -173,14 +201,6 @@ series: ["test"]
 
 
 #### 编程 {#编程}
-
-<!--list-separator-->
-
--  在程序的世界里 你就是神
-
-<!--list-separator-->
-
--  cli
 
 <!--list-separator-->
 
@@ -206,14 +226,20 @@ series: ["test"]
 
 -  代码方面的成长
 
+    <!--list-separator-->
+
+    -  在程序的世界里 你就是神
+
+<!--list-separator-->
+
+-  为何要保持写代码
+
+    <!--list-separator-->
+
+    -  一线程序员，写代码为何不应停止
+
 
 #### PS/AI {#ps-ai}
-
-
-### 为何要保持写代码 {#为何要保持写代码}
-
-
-#### 一线程序员，写代码为何不应停止 {#一线程序员-写代码为何不应停止}
 
 
 ### 职业生涯 {#职业生涯}
@@ -328,6 +354,75 @@ series: ["test"]
 <!--list-separator-->
 
 -  篮球活动
+
+
+## 项目整理计划 {#项目整理计划}
+
+
+### csapp {#csapp}
+
+
+#### gitbook redirect {#gitbook-redirect}
+
+
+#### check make {#check-make}
+
+
+#### merge pr {#merge-pr}
+
+
+#### issues {#issues}
+
+
+### algorithms {#algorithms}
+
+
+#### interview related {#interview-related}
+
+
+### lua source guide {#lua-source-guide}
+
+
+#### site toc {#site-toc}
+
+
+#### how to write {#how-to-write}
+
+
+#### 文法的推敲 {#文法的推敲}
+
+
+### blog {#blog}
+
+
+#### link to project gallary {#link-to-project-gallary}
+
+
+#### link to portffolio {#link-to-portffolio}
+
+
+### fast style transfer {#fast-style-transfer}
+
+
+### medusa {#medusa}
+
+
+### captcha {#captcha}
+
+
+### joker {#joker}
+
+
+### oreilly generator {#oreilly-generator}
+
+
+### viaduct {#viaduct}
+
+
+#### merge .emacs.d {#merge-dot-emacs-dot-d}
+
+
+#### merge linux rc {#merge-linux-rc}
 
 
 ## License {#license}
