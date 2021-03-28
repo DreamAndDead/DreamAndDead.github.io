@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-03-26T16:28:42+08:00
+lastmod: 2021-03-28T16:00:28+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -14,13 +14,7 @@ series: ["test"]
 ## 博客 {#博客}
 
 
-### 如何同步到公众号/其它专栏 {#如何同步到公众号-其它专栏}
-
-
-#### 格式化工具 {#格式化工具}
-
-
-#### 直接导出 html 的方式 {#直接导出-html-的方式}
+### 同步到公众号/其它专栏 {#同步到公众号-其它专栏}
 
 
 #### 富文本 copy vs html copy {#富文本-copy-vs-html-copy}
@@ -29,21 +23,13 @@ series: ["test"]
 #### inspect clip board {#inspect-clip-board}
 
 
-### 配色理论 {#配色理论}
-
-<https://zhuanlan.zhihu.com/p/52120537>
-
-<https://www.sohu.com/a/352611094%5F286880>
-
-<https://www.sohu.com/a/397541366%5F100031423>
-
-<https://zhuanlan.zhihu.com/p/49575075>
-
-
 ### 如何发声 {#如何发声}
 
 
 #### 理论 {#理论}
+
+
+#### 不仅来自于身体物理支持，也来自于内心心灵的强壮 {#不仅来自于身体物理支持-也来自于内心心灵的强壮}
 
 
 ### git tricks (update anytime) {#git-tricks--update-anytime}
@@ -60,54 +46,7 @@ series: ["test"]
 -  graph theory
 
 
-### 摄影理论 {#摄影理论}
-
-
-#### 参数 {#参数}
-
-
-#### 纽约 {#纽约}
-
-
-### 音乐与乐器 {#音乐与乐器}
-
-
-#### 弦乐器的音高安排 {#弦乐器的音高安排}
-
-<!--list-separator-->
-
--  品丝
-
-<!--list-separator-->
-
--  距离
-
-
-### 记忆音名，唱名 {#记忆音名-唱名}
-
-
-#### 草稿 {#草稿}
-
-
-### 和弦的命名方式 {#和弦的命名方式}
-
-
-#### m7 9 {#m7-9}
-
-
-#### nicechord {#nicechord}
-
-
-#### 配合 吉他 理解 {#配合-吉他-理解}
-
-
-#### guitar pro {#guitar-pro}
-
-
-### 旋律与和弦的搭配原理 {#旋律与和弦的搭配原理}
-
-
-#### nicechord {#nicechord}
+#### git submodule 中项目指定 hash {#git-submodule-中项目指定-hash}
 
 
 ### CLI {#cli}
@@ -131,10 +70,11 @@ series: ["test"]
 #### autojump {#autojump}
 
 
-### 文本编辑 {#文本编辑}
+#### text edit {#text-edit}
 
+<!--list-separator-->
 
-#### 正则表达式工具 {#正则表达式工具}
+-  正则表达式工具
 
 <!--list-separator-->
 
@@ -149,21 +89,119 @@ series: ["test"]
 -  awk
 
 
-### cf 851b 分析 {#cf-851b-分析}
+### Tool {#tool}
+
+
+#### emacs {#emacs}
+
+<!--list-separator-->
+
+-  key bindings
+
+    <!--list-separator-->
+
+    -  研究与配置
+
+
+#### cmake {#cmake}
+
+<!--list-separator-->
+
+-  指定编译器
+
+    <https://tlanyan.me/cmake-specify-compiler/>
+
+
+#### kindle kf8 mobi 制作 {#kindle-kf8-mobi-制作}
+
+
+### 设计 {#设计}
+
+
+#### 配色理论 {#配色理论}
+
+<https://zhuanlan.zhihu.com/p/52120537>
+
+<https://www.sohu.com/a/352611094%5F286880>
+
+<https://www.sohu.com/a/397541366%5F100031423>
+
+<https://zhuanlan.zhihu.com/p/49575075>
+
+
+### 摄影 {#摄影}
+
+
+#### 相机参数，相机理论，纽约 {#相机参数-相机理论-纽约}
+
+
+### 音乐 {#音乐}
+
+
+#### 音乐与乐器 {#音乐与乐器}
+
+<!--list-separator-->
+
+-  弦乐器的音高安排
+
+    <!--list-separator-->
+
+    -  品丝
+
+    <!--list-separator-->
+
+    -  距离
+
+
+#### 如何记忆音名，唱名 {#如何记忆音名-唱名}
+
+
+#### 和弦的命名方式 {#和弦的命名方式}
+
+<!--list-separator-->
+
+-  m7 9
+
+<!--list-separator-->
+
+-  nicechord
+
+<!--list-separator-->
+
+-  配合 吉他 理解
+
+<!--list-separator-->
+
+-  guitar pro
+
+
+#### 吉他练习方法 {#吉他练习方法}
+
+
+### 算法 {#算法}
+
+
+#### 算法的过程 {#算法的过程}
+
+
+#### 一般复杂度的估计过程 {#一般复杂度的估计过程}
+
+
+#### 涉及语言问题 {#涉及语言问题}
+
+
+#### cf 851b 分析 {#cf-851b-分析}
 
 -   <https://blog.csdn.net/zsnowwolfy/article/details/82793414>
 
 
-### 3 点共线 计算 {#3-点共线-计算}
+#### 3 点共线 计算 {#3-点共线-计算}
 
 -   涉及三角形面积为 0 的各种计算
 -   关注 行列式的方式，行列式与面积 体积的关系 线性代数
 
 
-### git submodule 中项目指定 hash {#git-submodule-中项目指定-hash}
-
-
-### 图的最短路径理论 {#图的最短路径理论}
+#### 图的最短路径理论 {#图的最短路径理论}
 
 -   算法导论
 -   最优性条件
@@ -173,19 +211,16 @@ series: ["test"]
 -   bellman ford
 
 
-### 反证法的正确性 （充分性  必要性） {#反证法的正确性-充分性-必要性}
+#### how `RE = NFA = DFA` {#how-re-nfa-dfa}
 
 
-### emacs key bindings 研究与配置 {#emacs-key-bindings-研究与配置}
+#### how scanner generator works (table driven / if else driven) {#how-scanner-generator-works--table-driven-if-else-driven}
 
 
-### how `RE = NFA = DFA` {#how-re-nfa-dfa}
+### 数学 {#数学}
 
 
-### how scanner generator works (table driven / if else driven) {#how-scanner-generator-works--table-driven-if-else-driven}
-
-
-### krusader 预览功能的使用 {#krusader-预览功能的使用}
+#### 反证法的正确性 （充分性  必要性） {#反证法的正确性-充分性-必要性}
 
 
 ## 自我 {#自我}
@@ -194,10 +229,7 @@ series: ["test"]
 ### 一个人的每日积累 {#一个人的每日积累}
 
 
-#### 视频 {#视频}
-
-
-#### 文章 {#文章}
+#### 写作 {#写作}
 
 
 #### 编程 {#编程}
@@ -208,35 +240,19 @@ series: ["test"]
 
 <!--list-separator-->
 
--  算法研究与实现，论文
+-  算法研究与实现
+
+    <!--list-separator-->
+
+    -  论文
 
 <!--list-separator-->
 
 -  数学
 
-    <!--list-separator-->
-
-    -  线性代数
-
-    <!--list-separator-->
-
-    -  微积分
-
 <!--list-separator-->
 
--  代码方面的成长
-
-    <!--list-separator-->
-
-    -  在程序的世界里 你就是神
-
-<!--list-separator-->
-
--  为何要保持写代码
-
-    <!--list-separator-->
-
-    -  一线程序员，写代码为何不应停止
+-  编码技巧
 
 
 #### PS/AI {#ps-ai}
@@ -245,7 +261,10 @@ series: ["test"]
 ### 职业生涯 {#职业生涯}
 
 
-#### system design? {#system-design}
+#### 问题/需求驱动 {#问题-需求驱动}
+
+
+#### system design {#system-design}
 
 <!--list-separator-->
 
@@ -256,14 +275,27 @@ series: ["test"]
 -  python 实现
 
 
-#### 从大学研究项目方向来选择？ {#从大学研究项目方向来选择}
+#### 架构 是一种形状？ {#架构-是一种形状}
+
+
+#### 从大学研究项目方向来选择 {#从大学研究项目方向来选择}
 
 <!--list-separator-->
 
 -  计算摄影
 
 
-### 问题集合与解决方案 {#问题集合与解决方案}
+#### 为何要保持写代码 {#为何要保持写代码}
+
+<!--list-separator-->
+
+-  一线程序员，写代码为何不应停止
+
+
+#### 如douwei 般优秀的创造者 {#如douwei-般优秀的创造者}
+
+
+### 问题集合 {#问题集合}
 
 
 #### 短期的 {#短期的}
@@ -287,8 +319,24 @@ series: ["test"]
 
 -  住房
 
+<!--list-separator-->
+
+-  养老
+
+
+#### 解决方案？ {#解决方案}
+
 
 ## 理论 {#理论}
+
+
+### 创业理论 {#创业理论}
+
+
+#### 技术创业，如 PingCAP {#技术创业-如-pingcap}
+
+
+#### 技术选型，所有技术的深入了解，对业务需求的评测 {#技术选型-所有技术的深入了解-对业务需求的评测}
 
 
 ### 如何写作 {#如何写作}
@@ -308,24 +356,6 @@ series: ["test"]
 
 
 ### 如何购买基金 {#如何购买基金}
-
-
-### 创业理论 {#创业理论}
-
-
-#### 技术创业，如 PingCAP？ {#技术创业-如-pingcap}
-
-
-#### 技术选型，所有技术的深入了解，对业务需求的评测 {#技术选型-所有技术的深入了解-对业务需求的评测}
-
-
-### 健身动作新探索 {#健身动作新探索}
-
-
-#### 哑铃的刺激 {#哑铃的刺激}
-
-
-#### 罗马椅 {#罗马椅}
 
 
 ### 联接理论 {#联接理论}
@@ -359,10 +389,10 @@ series: ["test"]
 ## 项目整理计划 {#项目整理计划}
 
 
+### blog add gallary entry {#blog-add-gallary-entry}
+
+
 ### csapp {#csapp}
-
-
-#### gitbook redirect {#gitbook-redirect}
 
 
 #### check make {#check-make}
@@ -423,6 +453,33 @@ series: ["test"]
 
 
 #### merge linux rc {#merge-linux-rc}
+
+
+## 支言片语 mind {#支言片语-mind}
+
+
+### 当心灵困惑时，就会到艺术中寻找安慰 {#当心灵困惑时-就会到艺术中寻找安慰}
+
+
+### 假如一个目标，你已经达到，届时你会怎样？ {#假如一个目标-你已经达到-届时你会怎样}
+
+
+### 写作，可以磨砺不成型的想法 {#写作-可以磨砺不成型的想法}
+
+
+### 积累，发展，成长，是一回事 {#积累-发展-成长-是一回事}
+
+
+### 没有梦想的人，不会早起 {#没有梦想的人-不会早起}
+
+
+### 心流？ {#心流}
+
+
+### 冥想？ {#冥想}
+
+
+### 不加节制的自由，不是谁都可以消受的 {#不加节制的自由-不是谁都可以消受的}
 
 
 ## License {#license}

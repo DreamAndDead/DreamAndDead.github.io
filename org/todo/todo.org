@@ -11,42 +11,17 @@
 #+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg  :series '(test)
 
 * 博客
-** 如何同步到公众号/其它专栏
-*** 格式化工具
-*** 直接导出 html 的方式
+** 同步到公众号/其它专栏
 *** 富文本 copy vs html copy
 *** inspect clip board
-** 配色理论
-
-https://zhuanlan.zhihu.com/p/52120537
-
-https://www.sohu.com/a/352611094_286880
-
-https://www.sohu.com/a/397541366_100031423
-
-https://zhuanlan.zhihu.com/p/49575075
 ** 如何发声
 *** 理论
+*** 不仅来自于身体物理支持，也来自于内心心灵的强壮
 ** git tricks (update anytime)
 *** gh-pages and master
 **** only merge master
 **** graph theory
-** 摄影理论
-*** 参数
-*** 纽约
-** 音乐与乐器
-*** 弦乐器的音高安排
-**** 品丝
-**** 距离
-** 记忆音名，唱名
-*** 草稿
-** 和弦的命名方式
-*** m7 9
-*** nicechord
-*** 配合 吉他 理解
-*** guitar pro
-** 旋律与和弦的搭配原理
-*** nicechord
+*** git submodule 中项目指定 hash
 ** CLI
 *** fzf
 *** rg
@@ -54,71 +29,102 @@ https://zhuanlan.zhihu.com/p/49575075
 *** silver search
 *** bat
 *** autojump
-** 文本编辑
-*** 正则表达式工具
+*** text edit
+**** 正则表达式工具
 **** sed
 **** grep
 **** awk
-** cf 851b 分析
-  - https://blog.csdn.net/zsnowwolfy/article/details/82793414
-** 3 点共线 计算
-  - 涉及三角形面积为 0 的各种计算
-  - 关注 行列式的方式，行列式与面积 体积的关系 线性代数
-** git submodule 中项目指定 hash
-** 图的最短路径理论
-  - 算法导论
-  - 最优性条件
-  - dijkstra算法 的正确性
-	- 为什么不能是负边
-  - dag 中的拓扑加速
-  - bellman ford
-** 反证法的正确性 （充分性  必要性）
-** emacs key bindings 研究与配置
-** how ~RE = NFA = DFA~
-** how scanner generator works (table driven / if else driven)
-** krusader 预览功能的使用
+** Tool
+*** emacs
+**** key bindings
+***** 研究与配置
+*** cmake
+**** 指定编译器
+https://tlanyan.me/cmake-specify-compiler/
+*** kindle kf8 mobi 制作
+** 设计
+*** 配色理论
+ https://zhuanlan.zhihu.com/p/52120537
 
+ https://www.sohu.com/a/352611094_286880
+
+ https://www.sohu.com/a/397541366_100031423
+
+ https://zhuanlan.zhihu.com/p/49575075
+** 摄影
+*** 相机参数，相机理论，纽约
+** 音乐
+*** 音乐与乐器
+**** 弦乐器的音高安排
+***** 品丝
+***** 距离
+*** 如何记忆音名，唱名
+*** 和弦的命名方式
+**** m7 9
+**** nicechord
+**** 配合 吉他 理解
+**** guitar pro
+*** 吉他练习方法
+** 算法
+*** 算法的过程
+*** 一般复杂度的估计过程
+*** 涉及语言问题
+*** cf 851b 分析
+   - https://blog.csdn.net/zsnowwolfy/article/details/82793414
+*** 3 点共线 计算
+   - 涉及三角形面积为 0 的各种计算
+   - 关注 行列式的方式，行列式与面积 体积的关系 线性代数
+*** 图的最短路径理论
+   - 算法导论
+   - 最优性条件
+   - dijkstra算法 的正确性
+     - 为什么不能是负边
+   - dag 中的拓扑加速
+   - bellman ford
+*** how ~RE = NFA = DFA~
+*** how scanner generator works (table driven / if else driven)
+** 数学
+*** 反证法的正确性 （充分性  必要性）
 * 自我
 ** 一个人的每日积累
-*** 视频
-*** 文章
+*** 写作
 *** 编程
 **** 项目分析与源码
-**** 算法研究与实现，论文
+**** 算法研究与实现
+***** 论文
 **** 数学
-***** 线性代数
-***** 微积分
-**** 代码方面的成长
-***** 在程序的世界里 你就是神
-**** 为何要保持写代码
-***** 一线程序员，写代码为何不应停止
+**** 编码技巧
 *** PS/AI
 ** 职业生涯
-*** system design?
+*** 问题/需求驱动
+*** system design
 **** 面向对象设计
 **** python 实现
-*** 从大学研究项目方向来选择？
+*** 架构 是一种形状？
+*** 从大学研究项目方向来选择
 **** 计算摄影
-** 问题集合与解决方案
+*** 为何要保持写代码
+**** 一线程序员，写代码为何不应停止
+*** 如douwei 般优秀的创造者
+** 问题集合
 *** 短期的
 **** 职业
 **** 孩子
 *** 长期的
 **** 教育
 **** 住房
+**** 养老
+*** 解决方案？
 * 理论
+** 创业理论
+*** 技术创业，如 PingCAP
+*** 技术选型，所有技术的深入了解，对业务需求的评测
 ** 如何写作
 *** 讲理，说服摇摆的心
 *** 做决定，以及做决定的理由
 *** 辩证论
 **** 挑战的热情 vs 面对困境无路的挫折
 ** 如何购买基金
-** 创业理论
-*** 技术创业，如 PingCAP？
-*** 技术选型，所有技术的深入了解，对业务需求的评测
-** 健身动作新探索
-*** 哑铃的刺激
-*** 罗马椅
 ** 联接理论
 *** 以人为核心
 *** 六度空间
@@ -127,11 +133,9 @@ https://zhuanlan.zhihu.com/p/49575075
 **** 开源会议
 **** 校友？
 **** 篮球活动
-
-
 * 项目整理计划
+** blog add gallary entry
 ** csapp
-*** gitbook redirect
 *** check make
 *** merge pr
 *** issues
@@ -152,8 +156,16 @@ https://zhuanlan.zhihu.com/p/49575075
 ** viaduct
 *** merge .emacs.d
 *** merge linux rc
-
-  
+* 支言片语 mind
+** 当心灵困惑时，就会到艺术中寻找安慰
+** 假如一个目标，你已经达到，届时你会怎样？
+** 写作，可以磨砺不成型的想法
+** 积累，发展，成长，是一回事
+** 没有梦想的人，不会早起
+** 心流？
+** 冥想？
+** 不加节制的自由，不是谁都可以消受的
+    
 * License
 
 #+begin_export markdown

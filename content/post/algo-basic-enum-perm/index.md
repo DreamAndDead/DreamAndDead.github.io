@@ -2,7 +2,7 @@
 title: "基础算法之枚举排列"
 author: ["DreamAndDead"]
 date: 2021-03-25T15:10:00+08:00
-lastmod: 2021-03-26T10:12:41+08:00
+lastmod: 2021-03-28T16:00:11+08:00
 tags: ["algorithm", "programing"]
 categories: ["Algorithm"]
 draft: true
@@ -10,12 +10,23 @@ comment: false
 featured_image: "images/featured.jpg"
 ---
 
+枚举是第一尝试法
+
+枚举排列
+
+
 ## 排列 {#排列}
 
 
 ### next\_perm {#next-perm}
 
 无重复元素
+
+所有数字的一种排列方式
+
+如果按照字典序从小到大，排序
+
+上一个到下一个有明显的关系
 
 将所有排列列出来
 
@@ -42,6 +53,10 @@ featured_image: "images/featured.jpg"
 
 类似于进位
 
+| 题目   | 标题     | 难度 | 启发                              |
+|------|--------|----|---------------------------------|
+| uva146 | ID Codes | 1  | next\_perm 的实现原理，reverse not sort |
+
 j i k 比较使用了 < > 号，而没有使用 =
 
 这就决定了，本身处理了可重集的情况
@@ -53,17 +68,9 @@ j i k 比较使用了 < > 号，而没有使用 =
 
 <https://blog.csdn.net/u011465808/article/details/37886527>
 
-任意一个字符串，都可以生成下一个，不需要遍历所有字符
-与下一个有明显的关系
-
 不需要每次都实现
-std 方法
 
 std::next\_permutation
-
-| 题目   | 标题     | 难度 | 启发                              |
-|------|--------|----|---------------------------------|
-| uva146 | ID Codes | 1  | next\_perm 的实现原理，reverse not sort |
 
 
 ### 递归生成 {#递归生成}
@@ -76,14 +83,7 @@ std::next\_permutation
 | uva524   | Prime Ring Problem | 1  | 掌握递归生成 perm 的方法，就可以提前利用 prime 条件进行剪枝 |
 
 
-### 解答树 {#解答树}
-
-dfs 搜索
-
-计算规模的统计
-
-
-## 子集 {#子集}
+## 组合 {#组合}
 
 <https://www.luogu.com.cn/training/108#information>
 
@@ -95,20 +95,17 @@ dfs 搜索
 子集和组合数之间有明确的关系
 
 
-### multiset {#multiset}
+### 二进制枚举方式 {#二进制枚举方式}
 
-与 cpp multiset 的关系
 
-uva11136
+### 递归方式 {#递归方式}
 
-multiset是<set>库中一个非常有用的类型，它可以看成一个序列，插入一个数，删除一个数都能够在O(logn)的时间内完成，而且他能时刻保证序列中的数是有序的，而且序列中可以存在重复的数。
-
-multiset 的实现
-
--   红黑树?
+有序的方式
 
 
 ## 解答树 {#解答树}
+
+深度搜索的模式
 
 将递归枚举的模式统一起来
 
