@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-03-28T16:00:28+08:00
+lastmod: 2021-03-29T15:56:20+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -14,15 +14,6 @@ series: ["test"]
 ## 博客 {#博客}
 
 
-### 同步到公众号/其它专栏 {#同步到公众号-其它专栏}
-
-
-#### 富文本 copy vs html copy {#富文本-copy-vs-html-copy}
-
-
-#### inspect clip board {#inspect-clip-board}
-
-
 ### 如何发声 {#如何发声}
 
 
@@ -30,6 +21,48 @@ series: ["test"]
 
 
 #### 不仅来自于身体物理支持，也来自于内心心灵的强壮 {#不仅来自于身体物理支持-也来自于内心心灵的强壮}
+
+
+### 算法 {#算法}
+
+
+#### 枚举排列与子集 {#枚举排列与子集}
+
+
+#### 算法的过程 {#算法的过程}
+
+
+#### 一般复杂度的估计过程 {#一般复杂度的估计过程}
+
+
+#### 涉及语言问题 {#涉及语言问题}
+
+
+#### cf 851b 分析 {#cf-851b-分析}
+
+-   <https://blog.csdn.net/zsnowwolfy/article/details/82793414>
+
+
+#### 3 点共线 计算 {#3-点共线-计算}
+
+-   涉及三角形面积为 0 的各种计算
+-   关注 行列式的方式，行列式与面积 体积的关系 线性代数
+
+
+#### 图的最短路径理论 {#图的最短路径理论}
+
+-   算法导论
+-   最优性条件
+-   dijkstra算法 的正确性
+    -   为什么不能是负边
+-   dag 中的拓扑加速
+-   bellman ford
+
+
+#### how `RE = NFA = DFA` {#how-re-nfa-dfa}
+
+
+#### how scanner generator works (table driven / if else driven) {#how-scanner-generator-works--table-driven-if-else-driven}
 
 
 ### git tricks (update anytime) {#git-tricks--update-anytime}
@@ -93,6 +126,10 @@ series: ["test"]
 
 
 #### emacs {#emacs}
+
+<!--list-separator-->
+
+-  tab space 的处理
 
 <!--list-separator-->
 
@@ -176,45 +213,6 @@ series: ["test"]
 
 
 #### 吉他练习方法 {#吉他练习方法}
-
-
-### 算法 {#算法}
-
-
-#### 算法的过程 {#算法的过程}
-
-
-#### 一般复杂度的估计过程 {#一般复杂度的估计过程}
-
-
-#### 涉及语言问题 {#涉及语言问题}
-
-
-#### cf 851b 分析 {#cf-851b-分析}
-
--   <https://blog.csdn.net/zsnowwolfy/article/details/82793414>
-
-
-#### 3 点共线 计算 {#3-点共线-计算}
-
--   涉及三角形面积为 0 的各种计算
--   关注 行列式的方式，行列式与面积 体积的关系 线性代数
-
-
-#### 图的最短路径理论 {#图的最短路径理论}
-
--   算法导论
--   最优性条件
--   dijkstra算法 的正确性
-    -   为什么不能是负边
--   dag 中的拓扑加速
--   bellman ford
-
-
-#### how `RE = NFA = DFA` {#how-re-nfa-dfa}
-
-
-#### how scanner generator works (table driven / if else driven) {#how-scanner-generator-works--table-driven-if-else-driven}
 
 
 ### 数学 {#数学}

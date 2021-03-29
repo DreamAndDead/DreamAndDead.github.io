@@ -1,0 +1,40 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: gnuplot-example
+#+export_file_name: index
+
+#+title: gnuplot example
+#+date: <2021-03-29 一 15:36>
+#+hugo_categories: Tool
+#+hugo_tags: tool gnuplot drawing
+#+hugo_draft: true
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg
+
+#+tblname: dict_order_n_table
+| 0 | 0 |
+| 1 | 1 |
+| 2 | 2 |
+| 3 | 3 |
+| 4 | 4 |
+| 5 | 5 |
+| 6 | 6 |
+| 7 | 8 |
+| 8 | 7 |
+
+#+begin_src gnuplot :var data=dict_order_n_table :file images/dict_order_n_table.png
+set xrange [0:10]
+set xtics 1,1,8
+
+set yrange [0:10]
+set ytics 1,1,8
+
+set boxwidth 2.9 relative
+
+set style fill solid
+plot data u 1 w histograms title "before"
+#+end_src
+
+#+RESULTS:
+[[file:images/dict_order_n_table.png]]
+
+
