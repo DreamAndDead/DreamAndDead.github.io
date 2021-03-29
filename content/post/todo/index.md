@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-03-29T15:56:20+08:00
+lastmod: 2021-03-29T16:07:44+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -130,6 +130,12 @@ series: ["test"]
 <!--list-separator-->
 
 -  tab space 的处理
+
+    select region
+
+    <https://www.masteringemacs.org/article/converting-tabs-whitespace>
+
+    <http://ergoemacs.org/emacs/emacs%5Ftabs%5Fspace%5Findentation%5Fsetup.html>
 
 <!--list-separator-->
 

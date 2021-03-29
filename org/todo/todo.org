@@ -53,6 +53,13 @@
 ** Tool
 *** emacs
 **** tab space 的处理
+
+select region
+
+https://www.masteringemacs.org/article/converting-tabs-whitespace
+
+http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
+
 **** key bindings
 ***** 研究与配置
 *** cmake

@@ -133,8 +133,8 @@ bool next_perm(int perm[], int n) {
     if (perm[i] > perm[j]) {
       int k;
       for (k = n-1; k >= i; k--) {
-	if (perm[k] > perm[j])
-	  break;
+        if (perm[k] > perm[j])
+          break;
       }
 
       swap(perm[j], perm[k]);
@@ -149,7 +149,6 @@ bool next_perm(int perm[], int n) {
 }
 #+end_src
 
-
 对于多重集
 
 j i k 比较使用了 < > 号，而没有使用 =
@@ -163,17 +162,17 @@ j i k 比较使用了 < > 号，而没有使用 =
 
 https://blog.csdn.net/u011465808/article/details/37886527
 
-
 不需要每次都实现
 
 std::next_permutation
-
 
 | 题目   | 标题     | 难度 | 启发                                   |
 |--------+----------+------+----------------------------------------|
 | uva146 | ID Codes |    1 | next_perm 的实现原理 |
 
 ** 递归生成
+
+
 
 递归生成的方式
 
