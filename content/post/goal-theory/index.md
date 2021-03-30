@@ -2,13 +2,16 @@
 title: "Life Model"
 author: ["DreamAndDead"]
 date: 2021-03-23T16:05:00+08:00
-lastmod: 2021-03-26T16:11:53+08:00
+lastmod: 2021-03-30T17:00:53+08:00
 tags: ["life", "mind", "goal", "theory"]
 categories: ["Mind"]
 draft: true
 comment: false
 featured_image: "images/featured.jpg"
 ---
+
+做每一件事情，都要反向追溯，为什么要做
+todo 关联到目标，小目标关联到大目标
 
 这个理论融合了以下方面的要点
 
@@ -306,6 +309,13 @@ RL 中概念，探索与探究的矛盾
 
 
 ### plan {#plan}
+
+计划不时是凭空而来，而是经过大量的时间
+收集资料，分析优劣
+
+始计
+
+三思而后行
 
 计划用来
 
