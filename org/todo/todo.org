@@ -8,7 +8,7 @@
 #+hugo_categories: test
 #+hugo_tags: test
 #+hugo_draft: true
-#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg  :series '(test)
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg :series '(test)
 
 * 博客
 ** 如何发声

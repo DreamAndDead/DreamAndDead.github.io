@@ -1,0 +1,24 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: kindle-kf8-mobi
+#+export_file_name: index
+
+#+title: kindle kf8 mobi flow
+#+date: <2021-03-31 三 18:15>
+#+hugo_categories: Tool
+#+hugo_tags: kindle mobi reading
+#+hugo_draft: true
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg
+
+
+* kindle
+
+  
+unpack
+
+https://bookfere.com/post/187.html
+
+
+kindlegen
+
+https://bookfere.com/post/92.html
