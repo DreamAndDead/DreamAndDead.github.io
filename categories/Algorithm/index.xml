@@ -1,4 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Algorithm on Brain=f(X)?</title><link>https://dreamanddead.github.io/categories/Algorithm/</link><description>Recent content in Algorithm on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Thu, 27 Aug 2020 11:09:00 +0000</lastBuildDate><atom:link href="https://dreamanddead.github.io/categories/Algorithm/index.xml" rel="self" type="application/rss+xml"/><item><title>Bellman Equation Deduction</title><link>https://dreamanddead.github.io/post/bellman-equation/</link><pubDate>Thu, 27 Aug 2020 11:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/bellman-equation/</guid><description>&lt;p>详细理解 Bellman 方程的证明过程。&lt;/p></description></item><item><title>简明 Decision Trees</title><link>https://dreamanddead.github.io/post/decision-trees/</link><pubDate>Wed, 23 Oct 2019 07:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/decision-trees/</guid><description>&lt;p>根据直觉来看，决策树是一种非常自然的方法，和人类处理问题的机制很像。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Algorithm on Brain=f(X)?</title><link>https://dreamanddead.github.io/categories/Algorithm/</link><description>Recent content in Algorithm on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/categories/Algorithm/index.xml" rel="self" type="application/rss+xml"/><item><title>基础算法之枚举 排列 组合</title><link>https://dreamanddead.github.io/post/algo-basic-enum-perm/</link><pubDate>Thu, 25 Mar 2021 15:10:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/algo-basic-enum-perm/</guid><description>过早优化是万恶之源。
+遇到问题，第一想到的方法往往是使用暴力手段破解。 枚举出所有可能的解，一一进行检测， 这一点正是计算机所擅长的。
+这种做法有很多优点。比如可以快速检验思路；初步理解问题复杂度，为进一步优化提供可能； 避免陷入过度优化的陷阱。
+在多数问题中，排列组合是常见的枚举对象。 本文主要探讨枚举排列组合的常见做法。
+集合 凡排列和组合都针对一组元素，这组元素构成一个集合（set）。
+排列是所有集合元素构成的一个有序序列； 组合是集合的子集。
+与些同时，存在一种集合的推广，称为多重集合（multiset）1。 在一个集合（set）中，相同的元素只能出现一次； 在多重集合（multiset）中，同一个元素可以出现多次。
+两种集合性质不同，所涉及的枚举方法也存在差异。
+排列 排列是所有集合元素构成的一个有序序列。
+枚举方法有两种，迭代法和递归法。
+迭代法 集合 枚举排列的迭代法和字典序关系密切。
+字典序，义如其名，指应用于字典中的单词排序规则，
+两个单词（序列）从左到右，依次比较字符（元素），直到比出大小 空字符（元素）最小 字典序决定了单词的顺序，比如
+am &amp;lt; be am &amp;lt; among 考虑集合 {1, 2, 3, 4} 的 16 个排列，按字典序排序，
+1 2 3 4 1 2 4 3 1 3 2 4 1 3 4 2 1 4 2 3 1 4 3 2 2 1 3 4 2 1 4 3 2 3 1 4 2 3 4 1 2 4 1 3 2 4 3 1 3 1 2 4 3 1 4 2 3 2 1 4 3 2 4 1 3 4 1 2 3 4 2 1 4 1 2 3 4 1 3 2 4 2 1 3 4 2 3 1 4 3 1 2 4 3 2 1 可以观察到相邻序列存在潜在的关系，迭代法利用的正是这一点。</description></item><item><title>Bellman Equation Deduction</title><link>https://dreamanddead.github.io/post/bellman-equation/</link><pubDate>Thu, 27 Aug 2020 11:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/bellman-equation/</guid><description>&lt;p>详细理解 Bellman 方程的证明过程。&lt;/p></description></item><item><title>简明 Decision Trees</title><link>https://dreamanddead.github.io/post/decision-trees/</link><pubDate>Wed, 23 Oct 2019 07:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/decision-trees/</guid><description>&lt;p>根据直觉来看，决策树是一种非常自然的方法，和人类处理问题的机制很像。
 面对问题，在做出一个决策之后，跟随着要考虑子决策，直到决定最终的行动。
 而且这种决策过程在遇到同样问题时可以重复利用，就像先人留下的经验。&lt;/p>
 &lt;p>决策树算法在我看来，更像是一种艺术，其过程没有明确的确定性，而是在一种启发下找寻一种思考的路径。&lt;/p></description></item><item><title>简明 SVM</title><link>https://dreamanddead.github.io/post/support-vector-machine/</link><pubDate>Mon, 14 Oct 2019 14:03:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/support-vector-machine/</guid><description>&lt;p>最近研究了 SVM 算法&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> &lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>，发现它本身的推导过程真是充满了美感！

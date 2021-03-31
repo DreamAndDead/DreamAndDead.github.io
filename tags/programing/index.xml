@@ -1,4 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>programing on Brain=f(X)?</title><link>https://dreamanddead.github.io/tags/programing/</link><description>Recent content in programing on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Tue, 22 May 2018 08:08:00 +0000</lastBuildDate><atom:link href="https://dreamanddead.github.io/tags/programing/index.xml" rel="self" type="application/rss+xml"/><item><title>Deal with time in programming</title><link>https://dreamanddead.github.io/post/time-in-programming/</link><pubDate>Tue, 22 May 2018 08:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/time-in-programming/</guid><description>&lt;p>时间无处不在，在编程中也是如此。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>programing on Brain=f(X)?</title><link>https://dreamanddead.github.io/tags/programing/</link><description>Recent content in programing on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/tags/programing/index.xml" rel="self" type="application/rss+xml"/><item><title>基础算法之枚举 排列 组合</title><link>https://dreamanddead.github.io/post/algo-basic-enum-perm/</link><pubDate>Thu, 25 Mar 2021 15:10:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/algo-basic-enum-perm/</guid><description>过早优化是万恶之源。
+遇到问题，第一想到的方法往往是使用暴力手段破解。 枚举出所有可能的解，一一进行检测， 这一点正是计算机所擅长的。
+这种做法有很多优点。比如可以快速检验思路；初步理解问题复杂度，为进一步优化提供可能； 避免陷入过度优化的陷阱。
+在多数问题中，排列组合是常见的枚举对象。 本文主要探讨枚举排列组合的常见做法。
+集合 凡排列和组合都针对一组元素，这组元素构成一个集合（set）。
+排列是所有集合元素构成的一个有序序列； 组合是集合的子集。
+与些同时，存在一种集合的推广，称为多重集合（multiset）1。 在一个集合（set）中，相同的元素只能出现一次； 在多重集合（multiset）中，同一个元素可以出现多次。
+两种集合性质不同，所涉及的枚举方法也存在差异。
+排列 排列是所有集合元素构成的一个有序序列。
+枚举方法有两种，迭代法和递归法。
+迭代法 集合 枚举排列的迭代法和字典序关系密切。
+字典序，义如其名，指应用于字典中的单词排序规则，
+两个单词（序列）从左到右，依次比较字符（元素），直到比出大小 空字符（元素）最小 字典序决定了单词的顺序，比如
+am &amp;lt; be am &amp;lt; among 考虑集合 {1, 2, 3, 4} 的 16 个排列，按字典序排序，
+1 2 3 4 1 2 4 3 1 3 2 4 1 3 4 2 1 4 2 3 1 4 3 2 2 1 3 4 2 1 4 3 2 3 1 4 2 3 4 1 2 4 1 3 2 4 3 1 3 1 2 4 3 1 4 2 3 2 1 4 3 2 4 1 3 4 1 2 3 4 2 1 4 1 2 3 4 1 3 2 4 2 1 3 4 2 3 1 4 3 1 2 4 3 2 1 可以观察到相邻序列存在潜在的关系，迭代法利用的正是这一点。</description></item><item><title>Deal with time in programming</title><link>https://dreamanddead.github.io/post/time-in-programming/</link><pubDate>Tue, 22 May 2018 08:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/time-in-programming/</guid><description>&lt;p>时间无处不在，在编程中也是如此。
 比如程序日志，每一行必定包含时间。
 通常不会对时间特别关注，除非日志时间不对，或者编程使用时间，取不到正确结果。&lt;/p>
 &lt;p>其实在编程中只需明确几个简单的概念，就可以正确的使用时间。&lt;/p></description></item></channel></rss>

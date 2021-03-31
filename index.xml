@@ -1,4 +1,620 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Mon, 22 Mar 2021 14:48:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Graphviz Examples</title><link>https://dreamanddead.github.io/post/graphviz-examples/</link><pubDate>Mon, 22 Mar 2021 14:48:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/graphviz-examples/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/graphviz-examples/ -&lt;h2 id="usage">usage&lt;/h2>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>基础算法之枚举 排列 组合</title><link>https://dreamanddead.github.io/post/algo-basic-enum-perm/</link><pubDate>Thu, 25 Mar 2021 15:10:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/algo-basic-enum-perm/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/algo-basic-enum-perm/ -&lt;blockquote>
+&lt;p>过早优化是万恶之源。&lt;/p>
+&lt;/blockquote>
+&lt;p>遇到问题，第一想到的方法往往是使用暴力手段破解。
+枚举出所有可能的解，一一进行检测，
+这一点正是计算机所擅长的。&lt;/p>
+&lt;p>这种做法有很多优点。比如可以快速检验思路；初步理解问题复杂度，为进一步优化提供可能；
+避免陷入过度优化的陷阱。&lt;/p>
+&lt;p>在多数问题中，排列组合是常见的枚举对象。
+本文主要探讨枚举排列组合的常见做法。&lt;/p>
+&lt;h2 id="集合">集合&lt;/h2>
+&lt;p>凡排列和组合都针对一组元素，这组元素构成一个集合（set）。&lt;/p>
+&lt;p>排列是所有集合元素构成的一个有序序列；
+组合是集合的子集。&lt;/p>
+&lt;p>与些同时，存在一种集合的推广，称为多重集合（multiset）&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>。
+在一个集合（set）中，相同的元素只能出现一次；
+在多重集合（multiset）中，同一个元素可以出现多次。&lt;/p>
+&lt;p>两种集合性质不同，所涉及的枚举方法也存在差异。&lt;/p>
+&lt;h2 id="排列">排列&lt;/h2>
+&lt;blockquote>
+&lt;p>排列是所有集合元素构成的一个有序序列。&lt;/p>
+&lt;/blockquote>
+&lt;p>枚举方法有两种，迭代法和递归法。&lt;/p>
+&lt;h3 id="迭代法">迭代法&lt;/h3>
+&lt;h4 id="集合">集合&lt;/h4>
+&lt;p>枚举排列的迭代法和字典序关系密切。&lt;/p>
+&lt;p>字典序，义如其名，指应用于字典中的单词排序规则，&lt;/p>
+&lt;ul>
+&lt;li>两个单词（序列）从左到右，依次比较字符（元素），直到比出大小&lt;/li>
+&lt;li>空字符（元素）最小&lt;/li>
+&lt;/ul>
+&lt;p>字典序决定了单词的顺序，比如&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>am &amp;lt; be&lt;/code>&lt;/li>
+&lt;li>&lt;code>am &amp;lt; among&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>考虑集合 &lt;code>{1, 2, 3, 4}&lt;/code> 的 16 个排列，按字典序排序，&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">1 2 3 4
+1 2 4 3
+1 3 2 4
+1 3 4 2
+1 4 2 3
+1 4 3 2
+2 1 3 4
+2 1 4 3
+2 3 1 4
+2 3 4 1
+2 4 1 3
+2 4 3 1
+3 1 2 4
+3 1 4 2
+3 2 1 4
+3 2 4 1
+3 4 1 2
+3 4 2 1
+4 1 2 3
+4 1 3 2
+4 2 1 3
+4 2 3 1
+4 3 1 2
+4 3 2 1
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以观察到相邻序列存在潜在的关系，迭代法利用的正是这一点。&lt;/p>
+&lt;p>第一个字典序是已知的，即排序序列 &lt;code>1 2 3 4&lt;/code> ，
+根据相邻序列的关系，不断枚举下一个序列，从而遍历所有排列。&lt;/p>
+&lt;p>那么，如何从当前序列得到下一个序列？&lt;/p>
+&lt;p>根据字典序的定义，头部元素的影响大于尾部元素，因为在头部已经比较出大小的情况下，
+后续的元素没有比较的必要。
+所以在计算下一个相邻序列时，尽量从尾部开始变动，不变动头部的元素。&lt;/p>
+&lt;p>以序列 &lt;code>1 2 4 3&lt;/code> 为例，&lt;/p>
+&lt;ul>
+&lt;li>最后一位，只有一个数 &lt;code>3&lt;/code> ，没有变动的空间&lt;/li>
+&lt;li>最后两位， &lt;code>4 3&lt;/code> ，此时 &lt;code>4 &amp;gt; 3&lt;/code> ，没有可变动的空间。如果交换位置成 &lt;code>3 4&lt;/code> ，字典序会变得更小&lt;/li>
+&lt;li>最后三位， &lt;code>2 4 3&lt;/code> ，此时 &lt;code>2 &amp;lt; 4&lt;/code> ，说明有调整的空间。
+用 &lt;code>3&lt;/code> 取代 &lt;code>2&lt;/code> 的位置是最合理的，因为 &lt;code>4 3&lt;/code> 中， &lt;code>3&lt;/code> 是比 &lt;code>2&lt;/code> 大的最小的数。
+&lt;code>3&lt;/code> 的位置确定之后，字典序 &lt;code>3 * *&lt;/code> 已经比之前更大，
+剩下的 &lt;code>4 2&lt;/code> 需要排序为 &lt;code>2 4&lt;/code> ，确保得到最小的序列，这样才会和原先的序列相邻。&lt;/li>
+&lt;/ul>
+&lt;p>最终得到下个序列 &lt;code>1 3 2 4&lt;/code> 。&lt;/p>
+&lt;p>上述过程中， &lt;code>2&lt;/code> 称为定位元素， &lt;code>3&lt;/code> 称为替换元素。&lt;/p>
+&lt;p>思考不难发现，仍存在两点改进之处。&lt;/p>
+&lt;p>一，如何快速寻找用于替换的元素？&lt;/p>
+&lt;p>当定位结束时，剩余的尾部元素是呈逆序排列的。
+因为只有尾部元素从后至前递增，定位过程才会继续下去。&lt;/p>
+&lt;p>比如 &lt;code>1 4 3 2&lt;/code> 定位到元素 &lt;code>1&lt;/code> ， &lt;code>1 3 4 2&lt;/code> 只能定位到元素 &lt;code>3&lt;/code> 。&lt;/p>
+&lt;p>所以在寻找替换元素时，只需倒序遍历，直到比定位元素更大的即可，比全部遍历更快速。&lt;/p>
+&lt;p>二，替换之后，剩余尾部元素必须全部进行排序？&lt;/p>
+&lt;p>这一步其实是不需要的。&lt;/p>
+&lt;p>在交换之前，尾部元素已经是逆序，将替换元素和定位元素交换后，逆序的性质并没有改变。
+此时只需要将剩余尾部元素反转&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>，就可以得到正序。&lt;/p>
+&lt;p>这一点不容小觑，reverse 的复杂度为 O(N)，而 sort 的复杂度为 O(Nlog(N))。&lt;/p>
+&lt;p>以下 &lt;code>next_perm&lt;/code> 函数是这个过程的代码实现。&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;algorithm&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">&lt;/span>
+&lt;span style="color:#00688b;font-weight:bold">bool&lt;/span> &lt;span style="color:#008b45">next_perm&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> perm[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n) {
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = n-&lt;span style="color:#b452cd">1&lt;/span>; i &amp;gt; &lt;span style="color:#b452cd">0&lt;/span>; i--) {
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> j = i - &lt;span style="color:#b452cd">1&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (perm[i] &amp;gt; perm[j]) {
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> k;
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (k = n-&lt;span style="color:#b452cd">1&lt;/span>; k &amp;gt;= i; k--) {
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (perm[k] &amp;gt; perm[j])
+&lt;span style="color:#8b008b;font-weight:bold">break&lt;/span>;
+}
+std::swap(perm[j], perm[k]);
+std::reverse(perm + i, perm + n);
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#658b00">true&lt;/span>;
+}
+}
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#658b00">false&lt;/span>;
+}
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> perm[&lt;span style="color:#b452cd">4&lt;/span>] = {&lt;span style="color:#b452cd">1&lt;/span>, &lt;span style="color:#b452cd">2&lt;/span>, &lt;span style="color:#b452cd">3&lt;/span>, &lt;span style="color:#b452cd">4&lt;/span>};
+&lt;span style="color:#8b008b;font-weight:bold">do&lt;/span> {
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = &lt;span style="color:#b452cd">0&lt;/span>; i &amp;lt; &lt;span style="color:#b452cd">4&lt;/span>; i++)
+printf(&lt;span style="color:#cd5555">&amp;#34;%d &amp;#34;&lt;/span>, perm[i]);
+printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>);
+} &lt;span style="color:#8b008b;font-weight:bold">while&lt;/span> (next_perm(perm, &lt;span style="color:#b452cd">4&lt;/span>));
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#b452cd">0&lt;/span>;
+}
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">1 2 3 4
+1 2 4 3
+1 3 2 4
+1 3 4 2
+1 4 2 3
+1 4 3 2
+2 1 3 4
+2 1 4 3
+2 3 1 4
+2 3 4 1
+2 4 1 3
+2 4 3 1
+3 1 2 4
+3 1 4 2
+3 2 1 4
+3 2 4 1
+3 4 1 2
+3 4 2 1
+4 1 2 3
+4 1 3 2
+4 2 1 3
+4 2 3 1
+4 3 1 2
+4 3 2 1
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="可重集合">可重集合&lt;/h4>
+&lt;p>有一个好消息， &lt;code>next_perm&lt;/code> 同时可以处理多重集合的情况。&lt;/p>
+&lt;p>比如多重集合 &lt;code>{1, 2, 2, 3, 3, 3, 4}&lt;/code> 的排列 &lt;code>2 4 3 3 3 2 1&lt;/code> ，
+应用 &lt;code>next_perm&lt;/code> 得到 &lt;code>3 1 2 2 3 3 4&lt;/code> 。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">locate
+2 4 3 3 3 2 1
+j i k
+swap
+3 4 3 3 2 2 1
+j i k
+reverse
+3 1 2 2 3 3 4
+j i k
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以拓展到多重集合的关键在于两处，读者可自行体会。&lt;/p>
+&lt;ul>
+&lt;li>line 9，使用 &lt;code>&amp;gt;&lt;/code> 比较，而不是 &lt;code>&amp;gt;=&lt;/code>&lt;/li>
+&lt;li>line 12，使用 &lt;code>&amp;gt;&lt;/code> 比较，而不是 &lt;code>&amp;gt;=&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>另一个好消息是，标准库已经实现了这个方法，
+就是包含在头文件 &lt;code>&amp;lt;algorithm&amp;gt;&lt;/code> 中的 &lt;code>std::next_permutation&lt;/code> ，
+同时对可重集合生效。&lt;/p>
+&lt;p>推荐练习：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.luogu.com.cn/problem/UVA146">UVA146 ID Codes&lt;/a>，动手实现 &lt;code>next_perm&lt;/code> 过程&lt;/li>
+&lt;/ul>
+&lt;h3 id="递归法">递归法&lt;/h3>
+&lt;p>相比于迭代法，递归方式更加直观。&lt;/p>
+&lt;h4 id="集合">集合&lt;/h4>
+&lt;p>递归过程中，按照从左到右的位置，每次从未使用的元素中挑选一个，直到排列完成。&lt;/p>
+&lt;p>且每次递归时，按照从小到大的顺序来挑选未使用的元素，如此得到所有排列的字典序。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;algorithm&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">&lt;/span>
+&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">enum_perm&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> perm[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> ith) {
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (ith == n) {
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = &lt;span style="color:#b452cd">0&lt;/span>; i &amp;lt; n; i++)
+printf(&lt;span style="color:#cd5555">&amp;#34;%d &amp;#34;&lt;/span>, perm[i]);
+printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>);
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span>;
+}
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = &lt;span style="color:#b452cd">0&lt;/span>; i &amp;lt; n; i++) {
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> e = eles[i];
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> c = std::count(perm, perm+ith, e);
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (c == &lt;span style="color:#b452cd">0&lt;/span>) {
+perm[ith] = e;
+enum_perm(eles, perm, n, ith+&lt;span style="color:#b452cd">1&lt;/span>);
+}
+}
+}
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[&lt;span style="color:#b452cd">4&lt;/span>] = {&lt;span style="color:#b452cd">1&lt;/span>, &lt;span style="color:#b452cd">2&lt;/span>, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">7&lt;/span>};
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> perm[&lt;span style="color:#b452cd">4&lt;/span>];
+enum_perm(eles, perm, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">0&lt;/span>);
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#b452cd">0&lt;/span>;
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">1 2 4 7
+1 2 7 4
+1 4 2 7
+1 4 7 2
+1 7 2 4
+1 7 4 2
+2 1 4 7
+2 1 7 4
+2 4 1 7
+2 4 7 1
+2 7 1 4
+2 7 4 1
+4 1 2 7
+4 1 7 2
+4 2 1 7
+4 2 7 1
+4 7 1 2
+4 7 2 1
+7 1 2 4
+7 1 4 2
+7 2 1 4
+7 2 4 1
+7 4 1 2
+7 4 2 1
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>推荐练习：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.luogu.com.cn/problem/UVA524">UVA524 Prime Ring Problem&lt;/a>，递归配合回溯来处理&lt;/li>
+&lt;/ul>
+&lt;h4 id="可重集合">可重集合&lt;/h4>
+&lt;p>以上代码虽然非常直观，遗憾的是，对于可重集合是不生效的。&lt;/p>
+&lt;p>考虑可重集合 &lt;code>{1, 1, 1}&lt;/code> ，使用上述算法会生成 8 个重复的 &lt;code>1 1 1&lt;/code> 的排列，
+其实只需要输出一个即可。&lt;/p>
+&lt;p>其实只需要对之前的递归过程做一点修改，就可以适应可重集合。&lt;/p>
+&lt;p>在每次挑选元素时，按照元素的种类遍历，而不是每个元素都全部遍历。&lt;/p>
+&lt;p>比如 &lt;code>{1, 1, 2, 2, 3, 4}&lt;/code> ，只遍历 &lt;code>1 2 3 4&lt;/code> 即可。&lt;/p>
+&lt;p>在确定元素是否可以使用时，要计算元素是否已经使用完。&lt;/p>
+&lt;p>综合来看，可认为是上述算法的拓展。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;algorithm&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">&lt;/span>
+&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">enum_perm&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> perm[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> ith) {
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (ith == n) {
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = &lt;span style="color:#b452cd">0&lt;/span>; i &amp;lt; n; i++)
+printf(&lt;span style="color:#cd5555">&amp;#34;%d &amp;#34;&lt;/span>, perm[i]);
+printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>);
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span>;
+}
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = &lt;span style="color:#b452cd">0&lt;/span>; i &amp;lt; n; i++) {
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (i != &lt;span style="color:#b452cd">0&lt;/span> &amp;amp;&amp;amp; eles[i] == eles[i-&lt;span style="color:#b452cd">1&lt;/span>])
+&lt;span style="color:#8b008b;font-weight:bold">continue&lt;/span>;
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> e = eles[i];
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> c = std::count(eles, eles+n, e) - std::count(perm, perm+ith, e);
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (c &amp;gt; &lt;span style="color:#b452cd">0&lt;/span>) {
+perm[ith] = e;
+enum_perm(eles, perm, n, ith+&lt;span style="color:#b452cd">1&lt;/span>);
+}
+}
+}
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[&lt;span style="color:#b452cd">4&lt;/span>] = {&lt;span style="color:#b452cd">1&lt;/span>, &lt;span style="color:#b452cd">2&lt;/span>, &lt;span style="color:#b452cd">2&lt;/span>, &lt;span style="color:#b452cd">7&lt;/span>};
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> perm[&lt;span style="color:#b452cd">4&lt;/span>];
+enum_perm(eles, perm, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">0&lt;/span>);
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#b452cd">0&lt;/span>;
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">1 2 2 7
+1 2 7 2
+1 7 2 2
+2 1 2 7
+2 1 7 2
+2 2 1 7
+2 2 7 1
+2 7 1 2
+2 7 2 1
+7 1 2 2
+7 2 1 2
+7 2 2 1
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>推荐练习：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.luogu.com.cn/problem/UVA10098">UVA10098 Generating Fast&lt;/a>，尝试使用递归法生成&lt;/li>
+&lt;/ul>
+&lt;h2 id="组合">组合&lt;/h2>
+&lt;blockquote>
+&lt;p>组合就是从全部元素挑选出部分组成的子集。&lt;/p>
+&lt;/blockquote>
+&lt;p>枚举组合就是枚举子集。同样地，有迭代和递归两种方式。&lt;/p>
+&lt;p>&lt;strong>以下算法只对普通集合生效，不适用于 可重集合。&lt;/strong>&lt;/p>
+&lt;h3 id="迭代法">迭代法&lt;/h3>
+&lt;p>集合和二进制有一种天生的关系。&lt;/p>
+&lt;p>规定一个元素对应一个 bit， 1 表示元素存在， 0 表示元素不存在，
+则一个二进制数可以唯一确定一个子集。
+&lt;code>0b11...11&lt;/code> 对应全集， &lt;code>0b00...00&lt;/code> 对应空集。&lt;/p>
+&lt;p>比如集合 &lt;code>{1, 2, 3, 4, 7, 9}&lt;/code> 的子集和其二进制表示，&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text"> { 1, 2, 3, 4, 7, 9 }
+0b 1 1 1 1 1 1
+{ 1, 3, 4, 7, 9 }
+0b 1 0 1 1 1 1
+{ 1, 2, 7, 9 }
+0b 1 1 0 0 1 1
+{ }
+0b 0 0 0 0 0 0
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这种表示法将子集和整数一一对应，
+这就是迭代法的原理。
+n 个元素的集合，共有 &lt;code>2^n&lt;/code> 个子集，
+从 0 到 &lt;code>2^n&lt;/code> 迭代整数，每个整数对应一个子集。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;algorithm&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cmath&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">&lt;/span>
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n = &lt;span style="color:#b452cd">4&lt;/span>;
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[n] = {&lt;span style="color:#b452cd">1&lt;/span>, &lt;span style="color:#b452cd">2&lt;/span>, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">9&lt;/span>};
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = &lt;span style="color:#b452cd">0&lt;/span>; i &amp;lt; std::pow(n, &lt;span style="color:#b452cd">2&lt;/span>); i++) {
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> k = &lt;span style="color:#b452cd">0&lt;/span>; k &amp;lt; n; k++) {
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> ((&lt;span style="color:#b452cd">1&lt;/span> &amp;lt;&amp;lt; k) &amp;amp; i)
+printf(&lt;span style="color:#cd5555">&amp;#34;%d&amp;#34;&lt;/span>, eles[k]);
+&lt;span style="color:#8b008b;font-weight:bold">else&lt;/span>
+printf(&lt;span style="color:#cd5555">&amp;#34; &amp;#34;&lt;/span>);
+printf(&lt;span style="color:#cd5555">&amp;#34; &amp;#34;&lt;/span>);
+}
+printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>);
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">
+1
+2
+1 2
+4
+1 4
+2 4
+1 2 4
+9
+1 9
+2 9
+1 2 9
+4 9
+1 4 9
+2 4 9
+1 2 4 9
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>推荐练习：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.luogu.com.cn/problem/P1036">luogu P1036 选数&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h4 id="枚举子集的子集">枚举子集的子集&lt;/h4>
+&lt;p>用二进制表示集合，同时也将位运算和集合运算关联起来，&lt;/p>
+&lt;ul>
+&lt;li>二进制与 对应 集合的交&lt;/li>
+&lt;li>二进制或 对应 集合的并&lt;/li>
+&lt;li>二进制异或 对应 集合的对称差，如果集合是包含关系，对应集合的差&lt;/li>
+&lt;/ul>
+&lt;p>结合运算关系，可以将子集枚举表示的更精细。&lt;/p>
+&lt;p>从全集枚举子集，只需遍历 0 到 &lt;code>2^n&lt;/code> 即可。
+对于已经枚举得到的子集，如何枚举这个子集的子集？&lt;/p>
+&lt;p>比如集合 &lt;code>{1, 2, 4, 9, 11, 13}&lt;/code> ， &lt;code>0b010011&lt;/code> 对应子集 &lt;code>{2, 11, 13}&lt;/code> ，
+如何枚举子集 &lt;code>{2, 11, 13}&lt;/code> 的子集呢？（依然使用 6 bits 表示）&lt;/p>
+&lt;p>一种方法是，依旧从 0 到 &lt;code>2^n&lt;/code> 遍历，判断是否为 &lt;code>0b010011&lt;/code> 的子集，虽然可行但不是最优的方法。&lt;/p>
+&lt;p>另一种方法是，每次从 &lt;code>0b010011&lt;/code> 向下减 1，使用 与 运算屏蔽无关位，这样只需遍历 8 次。&lt;/p>
+&lt;p>以下代码呈现了这个技巧，&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;bitset&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">&lt;/span>
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
+&lt;span style="color:#8b008b;font-weight:bold">const&lt;/span> &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n = &lt;span style="color:#b452cd">6&lt;/span>;
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[n] = {&lt;span style="color:#b452cd">1&lt;/span>, &lt;span style="color:#b452cd">2&lt;/span>, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">9&lt;/span>, &lt;span style="color:#b452cd">11&lt;/span>, &lt;span style="color:#b452cd">13&lt;/span>};
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> sub_set = &lt;span style="color:#b452cd">0b010011&lt;/span>;
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> left = sub_set;
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> right = &lt;span style="color:#b452cd">0&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">while&lt;/span> (left) {
+std::cout &amp;lt;&amp;lt; std::bitset&amp;lt;n&amp;gt;(left) &amp;lt;&amp;lt; std::endl;
+std::cout &amp;lt;&amp;lt; std::bitset&amp;lt;n&amp;gt;(right) &amp;lt;&amp;lt; std::endl;
+std::cout &amp;lt;&amp;lt; std::endl;
+left = (left - &lt;span style="color:#b452cd">1&lt;/span>) &amp;amp; sub_set;
+right = left ^ sub_set;
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">010011
+000000
+010010
+000001
+010001
+000010
+010000
+000011
+000011
+010000
+000010
+010001
+000001
+010010
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>推荐练习：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.luogu.com.cn/problem/UVA1354">UVA1354 Mobile Computing&lt;/a>，可以应用上面的技巧&lt;/li>
+&lt;/ul>
+&lt;h4 id="枚举-k-个元素的子集">枚举 k 个元素的子集&lt;/h4>
+&lt;p>考虑问题，如何枚举只有 k 个元素的集合？&lt;/p>
+&lt;p>比如集合 &lt;code>{1, 2, 4, 9, 11, 13}&lt;/code> ，只枚举包含 4 个元素的子集。&lt;/p>
+&lt;p>将位对应元素的思路可以拓展开来，这次用数组来表示。&lt;/p>
+&lt;p>用数组 &lt;code>[0 0 1 1 1 1]&lt;/code> 表示起始子集，使用 &lt;code>next_permutation&lt;/code> 方法，
+枚举所有排列的情况，对应所有 4 个元素的子集。&lt;/p>
+&lt;blockquote>
+&lt;p>可重集合 {0, 0, 0, &amp;hellip;, 1, 1, 1} 的排列和只含 n 个元素的子集一一对应。&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;algorithm&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">&lt;/span>
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
+&lt;span style="color:#8b008b;font-weight:bold">const&lt;/span> &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n = &lt;span style="color:#b452cd">6&lt;/span>;
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[n] = {&lt;span style="color:#b452cd">1&lt;/span>, &lt;span style="color:#b452cd">2&lt;/span>, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">9&lt;/span>, &lt;span style="color:#b452cd">11&lt;/span>, &lt;span style="color:#b452cd">13&lt;/span>};
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> mask[n] = {&lt;span style="color:#b452cd">0&lt;/span>, &lt;span style="color:#b452cd">0&lt;/span>, &lt;span style="color:#b452cd">1&lt;/span>, &lt;span style="color:#b452cd">1&lt;/span>, &lt;span style="color:#b452cd">1&lt;/span>, &lt;span style="color:#b452cd">1&lt;/span>};
+&lt;span style="color:#8b008b;font-weight:bold">do&lt;/span> {
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = &lt;span style="color:#b452cd">0&lt;/span>; i &amp;lt; n; i++)
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (mask[i])
+printf(&lt;span style="color:#cd5555">&amp;#34;%d &amp;#34;&lt;/span>, eles[i]);
+printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>);
+} &lt;span style="color:#8b008b;font-weight:bold">while&lt;/span> (std::next_permutation(mask, mask+n));
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">4 9 11 13
+2 9 11 13
+2 4 11 13
+2 4 9 13
+2 4 9 11
+1 9 11 13
+1 4 11 13
+1 4 9 13
+1 4 9 11
+1 2 11 13
+1 2 9 13
+1 2 9 11
+1 2 4 13
+1 2 4 11
+1 2 4 9
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>推荐练习：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.luogu.com.cn/problem/P1157">luogu P1157 组合的输出&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="递归法">递归法&lt;/h3>
+&lt;p>最直观的方式，每次递归，考虑第 i 个元素在不在子集，
+直到最终确定集合。&lt;/p>
+&lt;p>其实和按位表示是一种思想，不过使用递归来实现。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">&lt;/span>
+&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">enum_subset&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> subset[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> ith) {
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (ith == n) {
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = &lt;span style="color:#b452cd">0&lt;/span>; i &amp;lt; n; i++)
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (subset[i])
+printf(&lt;span style="color:#cd5555">&amp;#34;%d &amp;#34;&lt;/span>, eles[i]);
+printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>);
+&lt;span style="color:#8b008b;font-weight:bold">return&lt;/span>;
+}
+subset[ith] = &lt;span style="color:#b452cd">0&lt;/span>;
+enum_subset(eles, subset, n, ith+&lt;span style="color:#b452cd">1&lt;/span>);
+subset[ith] = &lt;span style="color:#b452cd">1&lt;/span>;
+enum_subset(eles, subset, n, ith+&lt;span style="color:#b452cd">1&lt;/span>);
+}
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[&lt;span style="color:#b452cd">4&lt;/span>] = {&lt;span style="color:#b452cd">1&lt;/span>, &lt;span style="color:#b452cd">2&lt;/span>, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">9&lt;/span>};
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> subset[&lt;span style="color:#b452cd">4&lt;/span>];
+enum_subset(eles, subset, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">0&lt;/span>);
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">
+9
+4
+4 9
+2
+2 9
+2 4
+2 4 9
+1
+1 9
+1 4
+1 4 9
+1 2
+1 2 9
+1 2 4
+1 2 4 9
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>另一种方法是使用定序的技巧，子集后面的元素必须比前面大，
+这样在递归枚举集合时，可避免出现重复。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;/span>&lt;span style="color:#1e889b">&lt;/span>
+&lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">enum_subset&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> subset[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> ith) {
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = &lt;span style="color:#b452cd">0&lt;/span>; i &amp;lt; ith; i++)
+printf(&lt;span style="color:#cd5555">&amp;#34;%d &amp;#34;&lt;/span>, subset[i]);
+printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>);
+&lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = &lt;span style="color:#b452cd">0&lt;/span>; i &amp;lt; n; i++) {
+&lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (ith == &lt;span style="color:#b452cd">0&lt;/span> || eles[i] &amp;gt; subset[ith-&lt;span style="color:#b452cd">1&lt;/span>]) {
+subset[ith] = eles[i];
+enum_subset(eles, subset, n, ith+&lt;span style="color:#b452cd">1&lt;/span>);
+}
+}
+}
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[&lt;span style="color:#b452cd">4&lt;/span>] = {&lt;span style="color:#b452cd">1&lt;/span>, &lt;span style="color:#b452cd">2&lt;/span>, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">9&lt;/span>};
+&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> subset[&lt;span style="color:#b452cd">4&lt;/span>];
+enum_subset(eles, subset, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">0&lt;/span>);
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">
+1
+1 2
+1 2 4
+1 2 4 9
+1 2 9
+1 4
+1 4 9
+1 9
+2
+2 4
+2 4 9
+2 9
+4
+4 9
+9
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="结论">结论&lt;/h2>
+&lt;p>枚举排列和组合各有两种方式，不同的方法适用于不同的问题，按需挑选。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;/th>
+&lt;th>迭代&lt;/th>
+&lt;th>递归&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>排列&lt;/td>
+&lt;td>存在标准库实现&lt;/td>
+&lt;td>符合直觉，易实现&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;/td>
+&lt;td>无法减小复杂度&lt;/td>
+&lt;td>可回溯，减小复杂度&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;/td>
+&lt;td>同时适用可重集合&lt;/td>
+&lt;td>可重集合需要拓展处理&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>组合&lt;/td>
+&lt;td>只需枚举整数&lt;/td>
+&lt;td>不如迭代法简洁&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;/td>
+&lt;td>需要注意位运算&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;/td>
+&lt;td>整数表示的位数量有限&lt;/td>
+&lt;td>不限集合元素数量&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="license">License&lt;/h2>
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+&lt;img
+src="https://dreamanddead.github.io/img/license.png"
+alt="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
+title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
+/>
+&lt;/a>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>: 多重集合的定义 &lt;a href="https://baike.baidu.com/item/%E5%A4%9A%E9%87%8D%E9%9B%86">https://baike.baidu.com/item/%E5%A4%9A%E9%87%8D%E9%9B%86&lt;/a> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2" role="doc-endnote">
+&lt;p>: &lt;a href="https://blog.csdn.net/u011465808/article/details/37886527">https://blog.csdn.net/u011465808/article/details/37886527&lt;/a> &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>
+- https://dreamanddead.github.io/post/algo-basic-enum-perm/ - CC BY-NC-SA 4.0</description></item><item><title>Graphviz Examples</title><link>https://dreamanddead.github.io/post/graphviz-examples/</link><pubDate>Mon, 22 Mar 2021 14:48:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/graphviz-examples/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/graphviz-examples/ -&lt;h2 id="usage">usage&lt;/h2>
 &lt;p>安装相应软件包&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -S graphviz xdot
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>新建 &lt;code>test.dot&lt;/code> 文件，保存绘图代码。&lt;/p>
@@ -142,15 +758,21 @@ format[label=&amp;lt;
 &lt;/code>&lt;/pre>&lt;figure>
 &lt;img src="images/table-hr-vr.png"/>
 &lt;/figure>
-&lt;h2 id="refs">Refs&lt;/h2>
-&lt;p>&lt;a href="https://blog.csdn.net/youwen21/article/details/98397993">https://blog.csdn.net/youwen21/article/details/98397993&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://www.cnblogs.com/shuqin/p/11897207.html">https://www.cnblogs.com/shuqin/p/11897207.html&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://stackoverflow.com/questions/10147619/how-can-i-reverse-the-direction-of-every-edge-in-a-graphviz-dot-language-graph">https://stackoverflow.com/questions/10147619/how-can-i-reverse-the-direction-of-every-edge-in-a-graphviz-dot-language-graph&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://stackoverflow.com/questions/43599738/graphviz-alignment-of-subgraph">https://stackoverflow.com/questions/43599738/graphviz-alignment-of-subgraph&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://renenyffenegger.ch/notes/tools/Graphviz/examples/index">https://renenyffenegger.ch/notes/tools/Graphviz/examples/index&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://graphs.grevian.org/reference">https://graphs.grevian.org/reference&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://graphviz.gitlab.io/documentation/">https://graphviz.gitlab.io/documentation/&lt;/a>&lt;/p>
-&lt;p>&lt;a href="http://graphviz.org/doc/info/attrs.html">http://graphviz.org/doc/info/attrs.html&lt;/a>&lt;/p>
+&lt;h2 id="resources">Resources&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://www.graphviz.org/pdf/dotguide.pdf">dot guide&lt;/a>, official manual, precise and clear&lt;/li>
+&lt;li>other links
+&lt;ul>
+&lt;li>&lt;a href="https://blog.csdn.net/youwen21/article/details/98397993">https://blog.csdn.net/youwen21/article/details/98397993&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.cnblogs.com/shuqin/p/11897207.html">https://www.cnblogs.com/shuqin/p/11897207.html&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://stackoverflow.com/questions/10147619/how-can-i-reverse-the-direction-of-every-edge-in-a-graphviz-dot-language-graph">https://stackoverflow.com/questions/10147619/how-can-i-reverse-the-direction-of-every-edge-in-a-graphviz-dot-language-graph&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://stackoverflow.com/questions/43599738/graphviz-alignment-of-subgraph">https://stackoverflow.com/questions/43599738/graphviz-alignment-of-subgraph&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://renenyffenegger.ch/notes/tools/Graphviz/examples/index">https://renenyffenegger.ch/notes/tools/Graphviz/examples/index&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://graphs.grevian.org/reference">https://graphs.grevian.org/reference&lt;/a>&lt;/li>
+&lt;li>&lt;a href="http://graphviz.org/doc/info/attrs.html">http://graphviz.org/doc/info/attrs.html&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
 &lt;h2 id="license">License&lt;/h2>
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
 &lt;img
@@ -912,92 +1534,4 @@ V_\pi(s) = \sum_a \pi(a|s) Q_\pi(s, a) = \sum_a \pi(a|s) \sum_{s'} \sum_r p(s', 
 $$&lt;/p>
 &lt;p>$$
 Q_\pi(s, a) = \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma V_\pi(s')] = \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma \sum_{a'} \pi(a'|s') Q_\pi(s', a')]
-$$&lt;/p>- https://dreamanddead.github.io/post/bellman-equation/ - CC BY-NC-SA 4.0</description></item><item><title>connect two pc with a wire</title><link>https://dreamanddead.github.io/post/connect-pc-with-wire/</link><pubDate>Fri, 10 Apr 2020 18:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/connect-pc-with-wire/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/connect-pc-with-wire/ -&lt;p>先前&lt;a href="https://dreamanddead.github.io/2020/03/25/compose-deep-learning-machine.html">组装了一台用于深度学习的服务器&lt;/a>，连接在一个局域网内使用。
-通过 ssh 远程连接，tmux 终端复用，nfs 挂载编辑代码，vnc 远程桌面，一切运行的都很流畅。&lt;/p>
-&lt;p>不过最不适的在于，速度太慢了，一时想将开发机中 10G 的数据集传递到服务器，scp rsync nfs 都没有速度。
-尤其经常在 nfs 挂载目录查看图片文件，文件数量繁多，预览等待的时间很长，完全没有操作本地文件相似的体验。&lt;/p>
-&lt;p>为了提高连接速度，计划直接用网线将两者互连。&lt;/p>
-&lt;h1 id="现状">现状&lt;/h1>
-&lt;p>最简单地抽象内部的网络状况，如下图。&lt;/p>
-&lt;figure>
-&lt;img src="images/origin.png"/>
-&lt;/figure>
-&lt;p>主要涉及两台机器，一台开发机和一台服务器，都运行 Linux 系统。&lt;/p>
-&lt;p>开发机有一个无线网卡和一个有线接口，服务器只有一个有线接口。
-开发机通过无线网卡接入内网，服务器通过有线连接接入内网。&lt;/p>
-&lt;p>开发机 ip 为 &lt;code>10.27.3.9/23&lt;/code>，服务器 ip 为 &lt;code>10.27.2.145/23&lt;/code>，内部网关 ip 为 &lt;code>10.27.2.1&lt;/code>。&lt;/p>
-&lt;p>在当前情况下，开发机和服务器网络互通，也可以连通内部网络的其它机器，且都可以连接外网。
-连接环境其实很理想，唯一缺点在于连接速度。&lt;/p>
-&lt;h1 id="互连">互连&lt;/h1>
-&lt;h2 id="网线">网线&lt;/h2>
-&lt;p>根据先前对网络的了解，同等设备间连接需要使用交叉线，比如 pc 连 pc，交换机连交换机。
-但是也有一种说法，当前新的网卡都可以自适应的进行调整，直接使用相同的线序也是可以的（未验证）。
-保险起见，还是使用了交叉线的方法，一端使用 568A，一端使用 568B，制作了一根 6 类线。&lt;/p>
-&lt;figure>
-&lt;img src="images/wire.png"/> &lt;figcaption>
-&lt;p>交叉线线序&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="拓扑">拓扑&lt;/h2>
-&lt;p>由于服务器只有一个有线接口，在将服务器与开发机互连之后，服务器无法像之前一样接入内网。&lt;/p>
-&lt;p>网络拓扑变化为&lt;/p>
-&lt;figure>
-&lt;img src="images/new.png"/>
-&lt;/figure>
-&lt;p>更改连接后，开发机的网络连接状况没有大的变化，但对于服务器来说，如果想要如期的访问内部网络和外网，就必须通过开发机的转发。&lt;/p>
-&lt;h2 id="网络层地址">网络层地址&lt;/h2>
-&lt;p>原先的内网使用了网段 &lt;code>10.27.2.0/23&lt;/code>，那目前两个 pc 互连就使用经典网段 &lt;code>192.168.0.0&lt;/code> 吧。&lt;/p>
-&lt;figure>
-&lt;img src="images/after.png"/>
-&lt;/figure>
-&lt;p>开发机设置&lt;/p>
-&lt;pre>&lt;code>ip 192.168.0.1
-mask 255.255.254.0
-gateway 192.168.0.1
-&lt;/code>&lt;/pre>&lt;p>服务器设置&lt;/p>
-&lt;pre>&lt;code>ip 192.168.0.2
-mask 255.255.254.0
-gateway 192.168.0.1
-&lt;/code>&lt;/pre>&lt;p>两者就使用了同样的网段，且开发机作为这个网络的网关。&lt;/p>
-&lt;p>设置地址之后，用 ping 来检测网络连通性。&lt;/p>
-&lt;p>在开发机上&lt;/p>
-&lt;pre>&lt;code>$ ping 192.168.0.1 # 连通自身
-$ ping 192.168.0.2 # 连通服务器
-&lt;/code>&lt;/pre>&lt;p>在服务器上&lt;/p>
-&lt;pre>&lt;code>$ ping 192.168.0.2 # 连通自身
-$ ping 192.168.0.1 # 连通开发机
-&lt;/code>&lt;/pre>&lt;p>网络连通，没有出现问题。&lt;/p>
-&lt;h2 id="包转发">包转发&lt;/h2>
-&lt;p>在连通两者的同时，服务器想要连接外部网络（用于安装软件，更新系统），就需要开发机负责转发来自服务器的包。&lt;/p>
-&lt;p>开发机有两块网卡，要保证网络包在两者之间的转发，需要启用 &lt;a href="https://linuxhint.com/enable_ip_forwarding_ipv4_debian_linux/">ip forward&lt;/a>。&lt;/p>
-&lt;pre>&lt;code>$ sudo sysctl net.ipv4.ip_forward=1
-&lt;/code>&lt;/pre>&lt;p>这时服务器就可以连通开发机的另一个网卡的地址。&lt;/p>
-&lt;pre>&lt;code>$ ping 10.27.3.9
-&lt;/code>&lt;/pre>&lt;h2 id="nat">NAT&lt;/h2>
-&lt;p>成功设置了包转发之后，服务器虽然可以连通开发机的另一块网卡，但是却连不通相应网络的网关。&lt;/p>
-&lt;pre>&lt;code>$ ping 10.27.2.1 # 无法连通
-&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://blog.csdn.net/tiger_he/article/details/80805075">为什么会这样？&lt;/a>&lt;/p>
-&lt;p>考虑服务器发出去的包，源地址是 &lt;code>192.168.0.2&lt;/code>，通过有线网络进入开发机，通过无线网卡转发到另一个内网。
-当网关 &lt;code>10.27.2.1&lt;/code> 收到这个包并做出响应，返回包的目的地址是收到包的源地址 &lt;code>192.168.0.2&lt;/code>。
-对于网关来说，它并不属于 &lt;code>10.27.2.0&lt;/code> 这个网络，需要进一步查找自己的路由表进行发送选择（大概率会被丢弃），
-这样返回的包就不能回到内网 &lt;code>10.27.2.0&lt;/code>，从而也不能返回到开发机，服务器就更不用说了。&lt;/p>
-&lt;p>我们需要的是，当包在通过无线网卡转发出去的时候，将包的源地址 &lt;code>192.168.0.2&lt;/code> 修改为开发机的地址 &lt;code>10.27.3.9&lt;/code>，
-这样网关就会将这个包正确返回回来，在开发机内部，将返回包的目的地址重新替换为 &lt;code>192.168.0.2&lt;/code>，这样服务器就与外部连通了。&lt;/p>
-&lt;p>设置 &lt;a href="https://wiki.archlinux.org/index.php/Iptables_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">iptables&lt;/a> 的 nat 表（wlp3s0 是无线网卡）就可以达到这样的效果。&lt;/p>
-&lt;pre>&lt;code>$ sudo iptables -P FORWARD ACCEPT
-$ sudo iptables -t nat -A POSTROUTING -o wlp3s0 -j MASQUERADE
-&lt;/code>&lt;/pre>&lt;h2 id="route">route&lt;/h2>
-&lt;p>检查开发机的路由表&lt;/p>
-&lt;pre>&lt;code>$ route -n
-Kernel IP routing table
-Destination Gateway Genmask Flags Metric Ref Use Iface
-0.0.0.0 10.27.2.1 0.0.0.0 UG 600 0 0 wlp3s0
-0.0.0.0 192.168.0.1 0.0.0.0 UG 3600 0 0 enp2s0
-10.27.2.0 0.0.0.0 255.255.254.0 U 600 0 0 wlp3s0
-192.168.0.0 0.0.0.0 255.255.254.0 U 100 0 0 enp2s0
-&lt;/code>&lt;/pre>&lt;p>出现了新的默认网关 &lt;code>192.168.0.1&lt;/code>，这明显是没有必要的，因为那边只有一台机器，不会有什么包需要到那里去。&lt;/p>
-&lt;p>可以选择将这条记录删除，避免出现无意义的转发&lt;/p>
-&lt;pre>&lt;code>$ sudo route del default gw 192.168.0.1 dev enp2s0
-&lt;/code>&lt;/pre>&lt;h1 id="end">end&lt;/h1>
-&lt;p>通过上面的设置，既连通了两台 pc，又没有阻碍彼此对外网的访问。
-且 6 类线直接连通两块千兆网卡，文件操作瞬间变顺畅了。&lt;/p>- https://dreamanddead.github.io/post/connect-pc-with-wire/ - CC BY-NC-SA 4.0</description></item></channel></rss>
+$$&lt;/p>- https://dreamanddead.github.io/post/bellman-equation/ - CC BY-NC-SA 4.0</description></item></channel></rss>

@@ -1,4 +1,101 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Mon, 22 Mar 2021 14:48:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>使用Jmeter进行分布式测试</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing/</link><pubDate>Thu, 24 May 2018 19:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing/ -&lt;p>业务发展初期，关注的更多是功能，直至使用量增加到一定量级，就要考虑高并发，程序性能等问题，
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>记一次 Jmeter 分布式测试故障调试过程</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</link><pubDate>Fri, 25 May 2018 02:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ -&lt;p>之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。&lt;/p>
+&lt;p>至于为什么要这么做，源于这一次 debug 的过程。&lt;/p>
+&lt;h1 id="运行环境">运行环境&lt;/h1>
+&lt;p>mint, ubuntu 两台主机作为 master 节点，一台 win server 作为 slave 节点，采用分布式的方式，
+对 target 进行测试。&lt;/p>
+&lt;h1 id="问题">问题&lt;/h1>
+&lt;p>问题很奇怪，以 mint 系统作为 master，调度分布式测试没有问题，&lt;/p>
+&lt;pre>&lt;code>$ jmeter -n -t ./test.jmx -R 10.27.2.210 -l test.jtl -e -o report_test
+Creating summariser &amp;lt;summary&amp;gt;
+Created the tree successfully using ./888.jmx
+Configuring remote engine: 10.27.2.210
+Starting remote engines
+Starting the test @ Wed May 16 10:09:24 CST 2018 (1526436564379)
+Remote engines have been started
+Waiting for possible Shutdown/StopTestNow/Heapdump message on port 4445
+summary = 1 in 00:00:00 = 3.5/s Avg: 20 Min: 20 Max: 20 Err: 0 (0.00%)
+Tidying up remote @ Wed May 16 10:09:26 CST 2018 (1526436566910)
+... end of run
+&lt;/code>&lt;/pre>&lt;p>而使用另一台 ubuntu 主机作为 master，调度测试，则卡在 waiting 这一行，&lt;/p>
+&lt;pre>&lt;code>$ jmeter -n -t ./test.jmx -R 10.27.2.210 -l test.jtl -e -o report_test
+Creating summariser &amp;lt;summary&amp;gt;
+Created the tree successfully using ./888.jmx
+Configuring remote engine: 10.27.2.210
+Starting remote engines
+Starting the test @ Wed May 16 10:09:24 CST 2018 (1526436564379)
+Remote engines have been started
+Waiting for possible Shutdown/StopTestNow/Heapdump message on port 4445
+&lt;/code>&lt;/pre>&lt;h2 id="尝试1防火墙干扰">尝试1：防火墙干扰&lt;/h2>
+&lt;p>第一种猜测，应该是 ubuntu 系统的防火墙干扰，阻止了 4445 端口的数据。&lt;/p>
+&lt;p>先关闭防火墙&lt;/p>
+&lt;pre>&lt;code>$ sudo service ufw stop
+&lt;/code>&lt;/pre>&lt;p>再次运行测试，依旧卡在 waiting 那一行，看来问题没有那么简单。&lt;/p>
+&lt;h2 id="尝试2关闭监听功能">尝试2：关闭监听功能&lt;/h2>
+&lt;p>以 &lt;code>Waiting for possible Shutdown/StopTestNow/Heapdump message on port 4445&lt;/code>
+信息在网上查找，有人建议修改 jmeter 设置，不监听 shutdown 信息，相应的也就不会开启 4445 端口，
+理论上就不会卡在 waiting 那里，而是直接跳过。&lt;/p>
+&lt;p>在 ubuntu 主机，修改 jmeter.properties 文件，&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/apache/jmeter/blob/v4_0/bin/jmeter.properties?footer=minimal&amp;slice=1074:1076">&lt;/script>
+&lt;p>修改为&lt;/p>
+&lt;pre>&lt;code>jmeterengine.nongui.maxport=0
+&lt;/code>&lt;/pre>&lt;p>但是依旧不能工作。&lt;/p>
+&lt;h2 id="尝试3端口没有开启">尝试3：端口没有开启&lt;/h2>
+&lt;p>在 mint 作为 master，成功调度分布式测试的过程中，mint 主机自身打开了 4445 udp 端口，
+用 netstat 可以查看的到。&lt;/p>
+&lt;p>但是，在 ubuntu 调度的时候，用 netstat 也可以查看到 4445 udp 端口已经打开。
+而且用 &lt;a href="https://unix.stackexchange.com/a/266368/278131">netcat 测试 udp 端口&lt;/a>也是可用的。&lt;/p>
+&lt;pre>&lt;code>$ nc -vz -u 10.27.2.13 4445
+Connection to 10.27.2.13 4445 port [udp/*] succeeded!
+&lt;/code>&lt;/pre>&lt;p>看来也不是端口未开放的问题。&lt;/p>
+&lt;h2 id="尝试4信息被阻塞">尝试4：信息被阻塞&lt;/h2>
+&lt;p>猜测是不是在哪个环节，shutdown message 被阻拦，导致收不过消息，而一直卡在那里。&lt;/p>
+&lt;p>于是在 mint 主机运行测试的时候，用 wireshark 监听所有发送与 4445 udp 的信息，然而！什么都没有！&lt;/p>
+&lt;p>这样看来，之前对问题的判断是不准确的。一直以为和 shutdown message 有关，其实正常运行一次测试，根本不必要有 shutdown message。&lt;/p>
+&lt;h2 id="尝试5在日志中寻找">尝试5：在日志中寻找&lt;/h2>
+&lt;p>之前一直被表面现象迷惑，认为是 master 的问题，直到进入 slave 节点查看日志 &lt;code>jmeter-server.log&lt;/code>。
+发现这样的错误输出，&lt;/p>
+&lt;pre>&lt;code>2018-05-14 18:29:56,240 ERROR o.a.j.s.BatchSampleSender: testEnded(host)
+java.rmi.ConnectException: Connection refused to host: 127.0.1.1; nested exception is:
+java.net.ConnectException: Connection refused: connect
+at sun.rmi.transport.tcp.TCPEndpoint.newSocket(Unknown Source) ~[?:1.8.0_162]
+at sun.rmi.transport.tcp.TCPChannel.createConnection(Unknown Source) ~[?:1.8.0_162]
+at sun.rmi.transport.tcp.TCPChannel.newConnection(Unknown Source) ~[?:1.8.0_162]
+at sun.rmi.server.UnicastRef.invoke(Unknown Source) ~[?:1.8.0_162]
+at java.rmi.server.RemoteObjectInvocationHandler.invokeRemoteMethod(Unknown Source) ~[?:1.8.0_162]
+at java.rmi.server.RemoteObjectInvocationHandler.invoke(Unknown Source) ~[?:1.8.0_162]
+at com.sun.proxy.$Proxy20.testEnded(Unknown Source) ~[?:?]
+at org.apache.jmeter.samplers.BatchSampleSender.testEnded(BatchSampleSender.java:127) [ApacheJMeter_core.jar:4.0 r1823414]
+at org.apache.jmeter.samplers.DataStrippingSampleSender.testEnded(DataStrippingSampleSender.java:86) [ApacheJMeter_core.jar:4.0 r1823414]
+at org.apache.jmeter.samplers.RemoteListenerWrapper.testEnded(RemoteListenerWrapper.java:90) [ApacheJMeter_core.jar:4.0 r1823414]
+at org.apache.jmeter.engine.StandardJMeterEngine.notifyTestListenersOfEnd(StandardJMeterEngine.java:229) [ApacheJMeter_core.jar:4.0 r1823414]
+at org.apache.jmeter.engine.StandardJMeterEngine.run(StandardJMeterEngine.java:495) [ApacheJMeter_core.jar:4.0 r1823414]
+at java.lang.Thread.run(Unknown Source) [?:1.8.0_162]
+Caused by: java.net.ConnectException: Connection refused: connect
+at java.net.DualStackPlainSocketImpl.connect0(Native Method) ~[?:1.8.0_162]
+at java.net.DualStackPlainSocketImpl.socketConnect(Unknown Source) ~[?:1.8.0_162]
+at java.net.AbstractPlainSocketImpl.doConnect(Unknown Source) ~[?:1.8.0_162]
+at java.net.AbstractPlainSocketImpl.connectToAddress(Unknown Source) ~[?:1.8.0_162]
+at java.net.AbstractPlainSocketImpl.connect(Unknown Source) ~[?:1.8.0_162]
+at java.net.PlainSocketImpl.connect(Unknown Source) ~[?:1.8.0_162]
+at java.net.SocksSocketImpl.connect(Unknown Source) ~[?:1.8.0_162]
+at java.net.Socket.connect(Unknown Source) ~[?:1.8.0_162]
+at java.net.Socket.connect(Unknown Source) ~[?:1.8.0_162]
+at java.net.Socket.&amp;lt;init&amp;gt;(Unknown Source) ~[?:1.8.0_162]
+at java.net.Socket.&amp;lt;init&amp;gt;(Unknown Source) ~[?:1.8.0_162]
+at sun.rmi.transport.proxy.RMIDirectSocketFactory.createSocket(Unknown Source) ~[?:1.8.0_162]
+at sun.rmi.transport.proxy.RMIMasterSocketFactory.createSocket(Unknown Source) ~[?:1.8.0_162]
+... 13 more
+&lt;/code>&lt;/pre>&lt;p>为什么地址是 127.0.1.1 ？为什么要向这个地址通信？&lt;/p>
+&lt;p>根据对 jmeter master/slave 通信机制的理解，不仅 master 主动向 slave 通信， slave 也向 master 主动通信，自然要知道彼此的地址。&lt;/p>
+&lt;p>由此联想到，在 slave 节点多网卡的时候，一般都&lt;a href="https://github.com/apache/jmeter/blob/v4_0/bin/jmeter-server#L30">设置 hostname&lt;/a>，猜测 master 也需要进行同样的设置，告知 slave 自己的通信地址。&lt;/p>
+&lt;p>于是在 ubuntu master 主机的 &lt;a href="https://github.com/apache/jmeter/blob/v4_0/bin/system.properties">system.properties&lt;/a> 最后一行添加，&lt;/p>
+&lt;pre>&lt;code>java.rmi.server.hostname=10.27.2.13
+&lt;/code>&lt;/pre>&lt;p>测试终于正常运行了。&lt;/p>
+&lt;h1 id="写在最后">写在最后&lt;/h1>
+&lt;p>推而广之，在 jmeter 的所有节点，无论 master/slave，都显示设置自己的 IP 地址。&lt;/p>
+&lt;p>&lt;a href="https://github.com/apache/jmeter/blob/v4_0/bin/system.properties">system.properties&lt;/a> 最后一行添加&lt;/p>
+&lt;pre>&lt;code>java.rmi.server.hostname=&amp;lt;IP addr&amp;gt;
+&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ - CC BY-NC-SA 4.0</description></item><item><title>使用Jmeter进行分布式测试</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing/</link><pubDate>Thu, 24 May 2018 19:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing/ -&lt;p>业务发展初期，关注的更多是功能，直至使用量增加到一定量级，就要考虑高并发，程序性能等问题，
 因此性能测试就成为重要的一环。&lt;/p>
 &lt;p>Loadrunner 是性能测试工具领域的王者，但是闭源无法自由（free）使用。相较之下，开源的 Jmeter 算是一个
 不错的选择。&lt;/p>

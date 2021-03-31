@@ -1,4 +1,92 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Mon, 22 Mar 2021 14:48:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>论斗地主残局中的宿命论</title><link>https://dreamanddead.github.io/post/crack-final-phase/</link><pubDate>Fri, 27 Mar 2020 15:07:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/crack-final-phase/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/crack-final-phase/ -&lt;p>之前斗地主中的记牌做了些研究，近期又发现了（欢乐）斗地主的残局模式，对于研究如何出牌是一个很不错的题材。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>connect two pc with a wire</title><link>https://dreamanddead.github.io/post/connect-pc-with-wire/</link><pubDate>Fri, 10 Apr 2020 18:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/connect-pc-with-wire/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/connect-pc-with-wire/ -&lt;p>先前&lt;a href="https://dreamanddead.github.io/2020/03/25/compose-deep-learning-machine.html">组装了一台用于深度学习的服务器&lt;/a>，连接在一个局域网内使用。
+通过 ssh 远程连接，tmux 终端复用，nfs 挂载编辑代码，vnc 远程桌面，一切运行的都很流畅。&lt;/p>
+&lt;p>不过最不适的在于，速度太慢了，一时想将开发机中 10G 的数据集传递到服务器，scp rsync nfs 都没有速度。
+尤其经常在 nfs 挂载目录查看图片文件，文件数量繁多，预览等待的时间很长，完全没有操作本地文件相似的体验。&lt;/p>
+&lt;p>为了提高连接速度，计划直接用网线将两者互连。&lt;/p>
+&lt;h1 id="现状">现状&lt;/h1>
+&lt;p>最简单地抽象内部的网络状况，如下图。&lt;/p>
+&lt;figure>
+&lt;img src="images/origin.png"/>
+&lt;/figure>
+&lt;p>主要涉及两台机器，一台开发机和一台服务器，都运行 Linux 系统。&lt;/p>
+&lt;p>开发机有一个无线网卡和一个有线接口，服务器只有一个有线接口。
+开发机通过无线网卡接入内网，服务器通过有线连接接入内网。&lt;/p>
+&lt;p>开发机 ip 为 &lt;code>10.27.3.9/23&lt;/code>，服务器 ip 为 &lt;code>10.27.2.145/23&lt;/code>，内部网关 ip 为 &lt;code>10.27.2.1&lt;/code>。&lt;/p>
+&lt;p>在当前情况下，开发机和服务器网络互通，也可以连通内部网络的其它机器，且都可以连接外网。
+连接环境其实很理想，唯一缺点在于连接速度。&lt;/p>
+&lt;h1 id="互连">互连&lt;/h1>
+&lt;h2 id="网线">网线&lt;/h2>
+&lt;p>根据先前对网络的了解，同等设备间连接需要使用交叉线，比如 pc 连 pc，交换机连交换机。
+但是也有一种说法，当前新的网卡都可以自适应的进行调整，直接使用相同的线序也是可以的（未验证）。
+保险起见，还是使用了交叉线的方法，一端使用 568A，一端使用 568B，制作了一根 6 类线。&lt;/p>
+&lt;figure>
+&lt;img src="images/wire.png"/> &lt;figcaption>
+&lt;p>交叉线线序&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="拓扑">拓扑&lt;/h2>
+&lt;p>由于服务器只有一个有线接口，在将服务器与开发机互连之后，服务器无法像之前一样接入内网。&lt;/p>
+&lt;p>网络拓扑变化为&lt;/p>
+&lt;figure>
+&lt;img src="images/new.png"/>
+&lt;/figure>
+&lt;p>更改连接后，开发机的网络连接状况没有大的变化，但对于服务器来说，如果想要如期的访问内部网络和外网，就必须通过开发机的转发。&lt;/p>
+&lt;h2 id="网络层地址">网络层地址&lt;/h2>
+&lt;p>原先的内网使用了网段 &lt;code>10.27.2.0/23&lt;/code>，那目前两个 pc 互连就使用经典网段 &lt;code>192.168.0.0&lt;/code> 吧。&lt;/p>
+&lt;figure>
+&lt;img src="images/after.png"/>
+&lt;/figure>
+&lt;p>开发机设置&lt;/p>
+&lt;pre>&lt;code>ip 192.168.0.1
+mask 255.255.254.0
+gateway 192.168.0.1
+&lt;/code>&lt;/pre>&lt;p>服务器设置&lt;/p>
+&lt;pre>&lt;code>ip 192.168.0.2
+mask 255.255.254.0
+gateway 192.168.0.1
+&lt;/code>&lt;/pre>&lt;p>两者就使用了同样的网段，且开发机作为这个网络的网关。&lt;/p>
+&lt;p>设置地址之后，用 ping 来检测网络连通性。&lt;/p>
+&lt;p>在开发机上&lt;/p>
+&lt;pre>&lt;code>$ ping 192.168.0.1 # 连通自身
+$ ping 192.168.0.2 # 连通服务器
+&lt;/code>&lt;/pre>&lt;p>在服务器上&lt;/p>
+&lt;pre>&lt;code>$ ping 192.168.0.2 # 连通自身
+$ ping 192.168.0.1 # 连通开发机
+&lt;/code>&lt;/pre>&lt;p>网络连通，没有出现问题。&lt;/p>
+&lt;h2 id="包转发">包转发&lt;/h2>
+&lt;p>在连通两者的同时，服务器想要连接外部网络（用于安装软件，更新系统），就需要开发机负责转发来自服务器的包。&lt;/p>
+&lt;p>开发机有两块网卡，要保证网络包在两者之间的转发，需要启用 &lt;a href="https://linuxhint.com/enable_ip_forwarding_ipv4_debian_linux/">ip forward&lt;/a>。&lt;/p>
+&lt;pre>&lt;code>$ sudo sysctl net.ipv4.ip_forward=1
+&lt;/code>&lt;/pre>&lt;p>这时服务器就可以连通开发机的另一个网卡的地址。&lt;/p>
+&lt;pre>&lt;code>$ ping 10.27.3.9
+&lt;/code>&lt;/pre>&lt;h2 id="nat">NAT&lt;/h2>
+&lt;p>成功设置了包转发之后，服务器虽然可以连通开发机的另一块网卡，但是却连不通相应网络的网关。&lt;/p>
+&lt;pre>&lt;code>$ ping 10.27.2.1 # 无法连通
+&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://blog.csdn.net/tiger_he/article/details/80805075">为什么会这样？&lt;/a>&lt;/p>
+&lt;p>考虑服务器发出去的包，源地址是 &lt;code>192.168.0.2&lt;/code>，通过有线网络进入开发机，通过无线网卡转发到另一个内网。
+当网关 &lt;code>10.27.2.1&lt;/code> 收到这个包并做出响应，返回包的目的地址是收到包的源地址 &lt;code>192.168.0.2&lt;/code>。
+对于网关来说，它并不属于 &lt;code>10.27.2.0&lt;/code> 这个网络，需要进一步查找自己的路由表进行发送选择（大概率会被丢弃），
+这样返回的包就不能回到内网 &lt;code>10.27.2.0&lt;/code>，从而也不能返回到开发机，服务器就更不用说了。&lt;/p>
+&lt;p>我们需要的是，当包在通过无线网卡转发出去的时候，将包的源地址 &lt;code>192.168.0.2&lt;/code> 修改为开发机的地址 &lt;code>10.27.3.9&lt;/code>，
+这样网关就会将这个包正确返回回来，在开发机内部，将返回包的目的地址重新替换为 &lt;code>192.168.0.2&lt;/code>，这样服务器就与外部连通了。&lt;/p>
+&lt;p>设置 &lt;a href="https://wiki.archlinux.org/index.php/Iptables_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">iptables&lt;/a> 的 nat 表（wlp3s0 是无线网卡）就可以达到这样的效果。&lt;/p>
+&lt;pre>&lt;code>$ sudo iptables -P FORWARD ACCEPT
+$ sudo iptables -t nat -A POSTROUTING -o wlp3s0 -j MASQUERADE
+&lt;/code>&lt;/pre>&lt;h2 id="route">route&lt;/h2>
+&lt;p>检查开发机的路由表&lt;/p>
+&lt;pre>&lt;code>$ route -n
+Kernel IP routing table
+Destination Gateway Genmask Flags Metric Ref Use Iface
+0.0.0.0 10.27.2.1 0.0.0.0 UG 600 0 0 wlp3s0
+0.0.0.0 192.168.0.1 0.0.0.0 UG 3600 0 0 enp2s0
+10.27.2.0 0.0.0.0 255.255.254.0 U 600 0 0 wlp3s0
+192.168.0.0 0.0.0.0 255.255.254.0 U 100 0 0 enp2s0
+&lt;/code>&lt;/pre>&lt;p>出现了新的默认网关 &lt;code>192.168.0.1&lt;/code>，这明显是没有必要的，因为那边只有一台机器，不会有什么包需要到那里去。&lt;/p>
+&lt;p>可以选择将这条记录删除，避免出现无意义的转发&lt;/p>
+&lt;pre>&lt;code>$ sudo route del default gw 192.168.0.1 dev enp2s0
+&lt;/code>&lt;/pre>&lt;h1 id="end">end&lt;/h1>
+&lt;p>通过上面的设置，既连通了两台 pc，又没有阻碍彼此对外网的访问。
+且 6 类线直接连通两块千兆网卡，文件操作瞬间变顺畅了。&lt;/p>- https://dreamanddead.github.io/post/connect-pc-with-wire/ - CC BY-NC-SA 4.0</description></item><item><title>论斗地主残局中的宿命论</title><link>https://dreamanddead.github.io/post/crack-final-phase/</link><pubDate>Fri, 27 Mar 2020 15:07:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/crack-final-phase/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/crack-final-phase/ -&lt;p>之前斗地主中的记牌做了些研究，近期又发现了（欢乐）斗地主的残局模式，对于研究如何出牌是一个很不错的题材。&lt;/p>
 &lt;h1 id="残局模式">残局模式&lt;/h1>
 &lt;figure>
 &lt;img src="images/10.png"/>
@@ -1669,197 +1757,4 @@ add control = Control_L Control_R
 &lt;li>&lt;a href="https://www.zouyesheng.com/xmodmap-usage.html">xmodmap tutorial&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">arch wiki cn&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://askubuntu.com/questions/29603/how-do-i-clear-xmodmap-settings">reset xmodmap&lt;/a>&lt;/li>
-&lt;/ul>- https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/ - CC BY-NC-SA 4.0</description></item><item><title>Quicksort Complexity Analysis in Probability</title><link>https://dreamanddead.github.io/post/quicksort-complexity/</link><pubDate>Wed, 07 Aug 2019 16:43:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/quicksort-complexity/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/quicksort-complexity/ -&lt;p>最近在阅读&lt;a href="https://book.douban.com/subject/25813568/">《概率论基础教程 A First Course in Probability》&lt;/a>时，看到&lt;strong>chapter 7 期望的性质&lt;/strong>，
-其中提到了如何使用概率的方法来衡量快速排序算法的效率，看完之后很受启发，特此记录在这里。&lt;/p>
-&lt;p>对于一个排序算法，对于最好运行情况和最坏运行情况，我们都容易找出相应的输入来测试。
-而对于一般的情况，也就是当我们面对随机的输入，这时可以利用到期望的方式来衡量，
-因为期望就代表着所有情况的平均。&lt;/p>
-&lt;h1 id="快速排序">快速排序&lt;/h1>
-&lt;p>先温习一下快速排序的算法过程。&lt;/p>
-&lt;p>假设有一组互不相同的数 $x_1, x_2, &amp;hellip;, x_n$，我们将它们排成一个递增的序列，这个过程称为排序。&lt;/p>
-&lt;p>快速排序算法是一个非常有效的方法，它是这样定义的：&lt;/p>
-&lt;ul>
-&lt;li>初始的 $n$ 个数看作一个集合&lt;/li>
-&lt;li>当 $n = 1$ 时，本身就是有序的&lt;/li>
-&lt;li>当 $n = 2$ 时，只需直接比较这两个数并将它们排序即可&lt;/li>
-&lt;li>当 $n &amp;gt; 2$ 时，随机选择一个数 $x_i$，然后将所有剩下的数和 $x_i$ 比较，小于 $x_i$ 的数归入左边的集合，大于 $x_i$ 的数归入右边的集合&lt;/li>
-&lt;li>然后对所有集合重复上面的处理过程，直到所有的集合只有一个数为止&lt;/li>
-&lt;/ul>
-&lt;p>举例来看，假设有 $10$ 个不同的数，&lt;/p>
-&lt;p>$$
-{5,9,3,10,11,14,8,4,17,6}
-$$&lt;/p>
-&lt;p>开始时随机选择一个数，比如选择到了 $10$，然后将所有的数和 $10$ 比较，得到&lt;/p>
-&lt;p>$$
-{5, 9, 3, 8, 4, 6}, 10, {11, 14, 17}
-$$&lt;/p>
-&lt;p>我们对集合继续同样的过程。比如左边的集合，选择到了 $6$，得到&lt;/p>
-&lt;p>$$
-{5, 3, 4}, 6, {9, 8}, 10, {11, 14, 17}
-$$&lt;/p>
-&lt;p>对左边的集合再次选择到 $4$，得到&lt;/p>
-&lt;p>$$
-{3}, 4, {5}, 6, {9, 8}, 10, {11, 14, 17}
-$$&lt;/p>
-&lt;p>重复这个过程直到所有集合只有一个数为止。&lt;/p>
-&lt;p>假定右边的集合选定了 $8$ 和 $14$，最终得到排序&lt;/p>
-&lt;p>$$
-{3}, 4, {5}, 6, 8, {9}, 10, {11}, 14, {17}
-$$&lt;/p>
-&lt;h1 id="效率度量">效率度量&lt;/h1>
-&lt;p>在排序的过程中，最基本的运算是比较两个数的大小，
-完成排序过程所需要的比较次数越多，效率就越差。&lt;/p>
-&lt;p>我们用比较次数作为metric，我们来衡量算法的效率表现。&lt;/p>
-&lt;h2 id="最坏表现">最坏表现&lt;/h2>
-&lt;p>还是以上面排序的例子作为示例。&lt;/p>
-&lt;p>$$
-{5,9,3,10,11,14,8,4,17,6}
-$$&lt;/p>
-&lt;p>假如我们每次选择 $x_i$ 时，$x_i$总是当前集合中最小的数（或者最大），我们来看一下排序的过程是怎样的。&lt;/p>
-&lt;p>第一次选择到 $3$，比较了 $9$ 次&lt;/p>
-&lt;p>$$
-3, {5,9,10,11,14,8,4,17,6}
-$$&lt;/p>
-&lt;p>第二次选择到 $4$，比较了 $8$ 次&lt;/p>
-&lt;p>$$
-3, 4, {5,9,10,11,14,8,17,6}
-$$&lt;/p>
-&lt;p>第三次选择到 $5$，比较了 $7$ 次&lt;/p>
-&lt;p>$$
-3, 4, 5, {9,10,11,14,8,17,6}
-$$&lt;/p>
-&lt;p>&amp;hellip;&lt;/p>
-&lt;p>第九次选择到 $14$，比较了 $1$ 次&lt;/p>
-&lt;p>$$
-3, 4, 5, 6, 8, 9, 10, 11, 14, {17}
-$$&lt;/p>
-&lt;p>我们会发现整个排序过程的比较次数近乎为 $O(n^2)$。&lt;/p>
-&lt;p>之所以这样的原因就在于，每次选择一个数，进行集合分割时，总是分出&lt;strong>空集&lt;/strong>和&lt;strong>元素仅仅减少一个的集合&lt;/strong>，这样问题规模的降低速度就变的很慢。&lt;/p>
-&lt;h2 id="最好表现">最好表现&lt;/h2>
-&lt;p>对比最差的表现，我们来看一下最好的表现。
-还是以上面排序的例子作为示例。&lt;/p>
-&lt;p>$$
-{5,9,3,10,11,14,8,4,17,6}
-$$&lt;/p>
-&lt;p>第一次选择到 $8$，比较了 $9$ 次&lt;/p>
-&lt;p>$$
-{5, 3, 4, 6}, 8, {9, 10, 11, 14, 17}
-$$&lt;/p>
-&lt;p>第二次选择到 $4$，比较了 $3$ 次&lt;/p>
-&lt;p>$$
-{3}, 4, {5, 6}, 8, {9, 10, 11, 14, 17}
-$$&lt;/p>
-&lt;p>第三次选择到 $5，比较了 $1$ 次&lt;/p>
-&lt;p>$$
-{3}, 4, 5, {6}, 8, {9, 10, 11, 14, 17}
-$$&lt;/p>
-&lt;p>第四次选择到 $11$，比较了 $4$ 次&lt;/p>
-&lt;p>$$
-{3}, 4, 5, {6}, 8, {9, 10}, 11, {14, 17}
-$$&lt;/p>
-&lt;p>第五次选择到 $10$，比较了 $1$ 次&lt;/p>
-&lt;p>$$
-{3}, 4, 5, {6}, 8, {9}, 10, 11, {14, 17}
-$$&lt;/p>
-&lt;p>第六次选择到 $17$，比较了 $1$ 次&lt;/p>
-&lt;p>$$
-{3}, 4, 5, {6}, 8, {9}, 10, 11, {14}, 17
-$$&lt;/p>
-&lt;p>和最差情况相对比，我们每次对集合都近乎是二分的划分，使每个子问题的规模快速减小，这样总体比较次数也快速的减少，整体效率近乎于 $O(nlog(n))$。&lt;/p>
-&lt;h2 id="平均表现">平均表现&lt;/h2>
-&lt;p>这里是这篇文章的重点，也就是书中使用的概率方法，计算平均效率。&lt;/p>
-&lt;p>记 $X$ 是实现 $n$ 个不同数的排序所需要比较的次数，$E[X]$ 就是对这个排序算法效率的一个平均度量。&lt;/p>
-&lt;p>为了计算 $E[X]$，我们先将 $X$ 写为一系列随机变量的和。
-我们将 $n$ 个数中最小的数命名为 $1$，第二小的数命名为 $2$，&amp;hellip;，最大的数命名为 $n$，对于 $1 &amp;lt;= i &amp;lt;= j &amp;lt;= n$，记&lt;/p>
-&lt;ul>
-&lt;li>$I(i, j) = 1$, 在排序的过程中，数 $i, j$ 直接比较过&lt;/li>
-&lt;li>$I(i, j) = 0$, 其它&lt;/li>
-&lt;/ul>
-&lt;p>根据快速排序的过程，任意两个数 $i, j$ 在排序过程中，&lt;/p>
-&lt;ul>
-&lt;li>可能从未比较过（因为被划分到了不同的集合）&lt;/li>
-&lt;li>如果它们直接比较过，只可能比较一次，不可能再次比较（因为其中一个数被选择作为比较点，离开了集合）&lt;/li>
-&lt;/ul>
-&lt;p>由 $X$ 的定义可得：&lt;/p>
-&lt;p>$$
-X = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} I(i, j) \tag{1}
-$$&lt;/p>
-&lt;p>根据期望的性质，当 $E[X], E[Y]$ 均为有限值时，$E[X+Y] = E[X] + E[Y]$。&lt;/p>
-&lt;p>由此可得，&lt;/p>
-&lt;p>$$
-\begin{align}
-E[X] &amp;amp;= E[\sum_{i=1}^{n-1} \sum_{j=i+1}^{n} I(i, j)] \\\&lt;br>
-&amp;amp;= \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} E[I(i, j)] \\\&lt;br>
-&amp;amp;= \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} P({i和j在排序过程中做过比较}) \tag{2}
-\end{align}
-$$&lt;/p>
-&lt;p>下面我们来计算概率 $P({i和j在排序过程中做过比较})$。&lt;/p>
-&lt;p>数 $i, i+1, &amp;hellip;, j$ 最开始全部在一个集合中。&lt;/p>
-&lt;p>排序开始，随机在 $n$ 个数中选择一个数作为比较点，如果比较点不在 $i, j$ 这个区间内，即比$i$小，或者比$j$大，则在比较并划分集合后，$i, i+1, &amp;hellip;, j$ 还是在一个集合内。&lt;/p>
-&lt;p>假如选择的比较点在 $i, i+1, &amp;hellip;, j$ 之中，则只有当选择 $i / j$ 时，$i$ 和 $j$ 才会直接进行比较；否则它们两个将会被划分在比较点两边的两个集合中，再也不可能直接比较。&lt;/p>
-&lt;p>因此，$i, j$ 直接进行比较的概率，就是从 $i, i+1, &amp;hellip;, j$ 中选择到 $i / j$ 的概率，等于 $\frac{2}{j - i + 1}$。&lt;/p>
-&lt;p>于是&lt;/p>
-&lt;p>$$
-P({i和j在排序过程中做过比较}) = \frac{2}{j-i+1} \tag{3}
-$$&lt;/p>
-&lt;p>我们来仔细的理解公式$(3)$，在一开始，有 $n$ 个数，其中在 $i, j$ 区间的有 $j-i+1$ 个数。&lt;/p>
-&lt;p>在选择比较点之后，根据条件概率，&lt;/p>
-&lt;p>$$
-\begin{align}
-&amp;amp;P({i和j在排序过程中做过比较}) \\\&lt;br>
-=&amp;amp; P({i和j在排序过程中做过比较 \mid 比较点在区间外})P({比较点在区间外}) + \\\&lt;br>
-&amp;amp; P({i和j在排序过程中做过比较 \mid 比较点在区间内})P({比较点在区间内}) \tag{4}
-\end{align}
-$$&lt;/p>
-&lt;p>假如选择点是完全随机的，则&lt;/p>
-&lt;p>$$
-\begin{align}
-P({i和j在排序过程中做过比较 \mid 比较点在区间外}) &amp;amp;= P({i和j在排序过程中做过比较}) \\\&lt;br>
-P({比较点在区间外}) &amp;amp;= \frac{n-(j-i+1)}{n} \\\&lt;br>
-P({i和j在排序过程中做过比较 \mid 比较点在区间内}) &amp;amp;= \frac{2}{j-i+1} \\\&lt;br>
-P({比较点在区间内}) &amp;amp;= \frac{j-i+1}{n}
-\end{align}
-$$&lt;/p>
-&lt;p>代入公式$(4)$，&lt;/p>
-&lt;p>$$
-P({i和j在排序过程中做过比较}) = P({i和j在排序过程中做过比较}) * \frac{n-(j-i+1)}{n} + \frac{2}{j-i+1} * \frac{j-i+1}{n}
-$$&lt;/p>
-&lt;p>$$
-P({i和j在排序过程中做过比较}) = \frac{2}{j-i+1} \tag{3}
-$$&lt;/p>
-&lt;p>所以，将结果$(3)$代入$(2)$，最终的期望为&lt;/p>
-&lt;p>$$
-E[X] = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} P({i和j在排序过程中做过比较}) = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \frac{2}{j-i+1}
-$$&lt;/p>
-&lt;p>为了得到 $E[X]$ 的大致估计，当 $n$ 充分大时，我们用积分来近似&lt;/p>
-&lt;p>$$
-\begin{align}
-\sum_{j=i+1}^{n} \frac{2}{j-i+1} &amp;amp;\approx \int_{i+1}^{n} \frac{2}{x-i+1} dx \\\&lt;br>
-&amp;amp;= 2ln(x-i+1) |_{i+1}^n \\\&lt;br>
-&amp;amp;= 2ln(n-i+1) - 2ln(2) \\\&lt;br>
-&amp;amp;\approx 2ln(n-i+1)
-\end{align}
-$$&lt;/p>
-&lt;p>因此，&lt;/p>
-&lt;p>$$
-\begin{align}
-E[X] &amp;amp;= \sum_{i=1}^{n-1} 2 ln(n-i+1) \\\&lt;br>
-&amp;amp;\approx 2 \int_{1}^{n-1} ln(n-x+1) dx \\\&lt;br>
-&amp;amp;= 2 \int_{2}^{n} ln(y) dy \\\&lt;br>
-&amp;amp;= 2(yln(y) - y) |_2^n \\\&lt;br>
-&amp;amp;\approx 2nln(n)
-\end{align}
-$$&lt;/p>
-&lt;p>由此可知，在使用快速排序算法时，当 $n$ 充分大时，平均大概需要 $O(nln(n))$ 次比较才可以将 $n$ 个数排序。&lt;/p>
-&lt;h1 id="假如有重复的数字">假如有重复的数字&lt;/h1>
-&lt;p>在前面的问题假设中，我们假设 $n$ 个数字是完全不同的，假如在要排序的序列中，出现了重复的数字，我们使用 $i, j$ 区间来计算概率的方法就会失效。&lt;/p>
-&lt;p>但是在这种情况下，根据上面对最好情况和最差情况的分析，我们使用一种启发式的方法，在分割集合时，假如要比较的数和比较点相同，我们将它们平均的左右分配。
-举一个例子，极端情况下，所有的数都相同，10 个 6 进行排序。&lt;/p>
-&lt;p>$$
-{6, 6, 6, 6, 6, 6, 6, 6, 6, 6}
-$$&lt;/p>
-&lt;p>选择比较点 6 之后，我们将和比较点相同的数平均分配到集合的两边，&lt;/p>
-&lt;p>$$
-{6, 6, 6, 6, 6}, 6, {6, 6, 6, 6}
-$$&lt;/p>
-&lt;p>这样可以使子问题的规模快速减少，保证排序算法的效率。&lt;/p>- https://dreamanddead.github.io/post/quicksort-complexity/ - CC BY-NC-SA 4.0</description></item></channel></rss>
+&lt;/ul>- https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/ - CC BY-NC-SA 4.0</description></item></channel></rss>

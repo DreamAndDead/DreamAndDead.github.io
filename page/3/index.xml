@@ -1,4 +1,197 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Mon, 22 Mar 2021 14:48:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Trigonometric Function Illustrations</title><link>https://dreamanddead.github.io/post/triangle-math/</link><pubDate>Wed, 15 May 2019 08:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/triangle-math/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/triangle-math/ -&lt;p>三角函数是非常重要的一类周期函数，所有周期函数都可以分解为对应的三角函数的组合。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Quicksort Complexity Analysis in Probability</title><link>https://dreamanddead.github.io/post/quicksort-complexity/</link><pubDate>Wed, 07 Aug 2019 16:43:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/quicksort-complexity/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/quicksort-complexity/ -&lt;p>最近在阅读&lt;a href="https://book.douban.com/subject/25813568/">《概率论基础教程 A First Course in Probability》&lt;/a>时，看到&lt;strong>chapter 7 期望的性质&lt;/strong>，
+其中提到了如何使用概率的方法来衡量快速排序算法的效率，看完之后很受启发，特此记录在这里。&lt;/p>
+&lt;p>对于一个排序算法，对于最好运行情况和最坏运行情况，我们都容易找出相应的输入来测试。
+而对于一般的情况，也就是当我们面对随机的输入，这时可以利用到期望的方式来衡量，
+因为期望就代表着所有情况的平均。&lt;/p>
+&lt;h1 id="快速排序">快速排序&lt;/h1>
+&lt;p>先温习一下快速排序的算法过程。&lt;/p>
+&lt;p>假设有一组互不相同的数 $x_1, x_2, &amp;hellip;, x_n$，我们将它们排成一个递增的序列，这个过程称为排序。&lt;/p>
+&lt;p>快速排序算法是一个非常有效的方法，它是这样定义的：&lt;/p>
+&lt;ul>
+&lt;li>初始的 $n$ 个数看作一个集合&lt;/li>
+&lt;li>当 $n = 1$ 时，本身就是有序的&lt;/li>
+&lt;li>当 $n = 2$ 时，只需直接比较这两个数并将它们排序即可&lt;/li>
+&lt;li>当 $n &amp;gt; 2$ 时，随机选择一个数 $x_i$，然后将所有剩下的数和 $x_i$ 比较，小于 $x_i$ 的数归入左边的集合，大于 $x_i$ 的数归入右边的集合&lt;/li>
+&lt;li>然后对所有集合重复上面的处理过程，直到所有的集合只有一个数为止&lt;/li>
+&lt;/ul>
+&lt;p>举例来看，假设有 $10$ 个不同的数，&lt;/p>
+&lt;p>$$
+{5,9,3,10,11,14,8,4,17,6}
+$$&lt;/p>
+&lt;p>开始时随机选择一个数，比如选择到了 $10$，然后将所有的数和 $10$ 比较，得到&lt;/p>
+&lt;p>$$
+{5, 9, 3, 8, 4, 6}, 10, {11, 14, 17}
+$$&lt;/p>
+&lt;p>我们对集合继续同样的过程。比如左边的集合，选择到了 $6$，得到&lt;/p>
+&lt;p>$$
+{5, 3, 4}, 6, {9, 8}, 10, {11, 14, 17}
+$$&lt;/p>
+&lt;p>对左边的集合再次选择到 $4$，得到&lt;/p>
+&lt;p>$$
+{3}, 4, {5}, 6, {9, 8}, 10, {11, 14, 17}
+$$&lt;/p>
+&lt;p>重复这个过程直到所有集合只有一个数为止。&lt;/p>
+&lt;p>假定右边的集合选定了 $8$ 和 $14$，最终得到排序&lt;/p>
+&lt;p>$$
+{3}, 4, {5}, 6, 8, {9}, 10, {11}, 14, {17}
+$$&lt;/p>
+&lt;h1 id="效率度量">效率度量&lt;/h1>
+&lt;p>在排序的过程中，最基本的运算是比较两个数的大小，
+完成排序过程所需要的比较次数越多，效率就越差。&lt;/p>
+&lt;p>我们用比较次数作为metric，我们来衡量算法的效率表现。&lt;/p>
+&lt;h2 id="最坏表现">最坏表现&lt;/h2>
+&lt;p>还是以上面排序的例子作为示例。&lt;/p>
+&lt;p>$$
+{5,9,3,10,11,14,8,4,17,6}
+$$&lt;/p>
+&lt;p>假如我们每次选择 $x_i$ 时，$x_i$总是当前集合中最小的数（或者最大），我们来看一下排序的过程是怎样的。&lt;/p>
+&lt;p>第一次选择到 $3$，比较了 $9$ 次&lt;/p>
+&lt;p>$$
+3, {5,9,10,11,14,8,4,17,6}
+$$&lt;/p>
+&lt;p>第二次选择到 $4$，比较了 $8$ 次&lt;/p>
+&lt;p>$$
+3, 4, {5,9,10,11,14,8,17,6}
+$$&lt;/p>
+&lt;p>第三次选择到 $5$，比较了 $7$ 次&lt;/p>
+&lt;p>$$
+3, 4, 5, {9,10,11,14,8,17,6}
+$$&lt;/p>
+&lt;p>&amp;hellip;&lt;/p>
+&lt;p>第九次选择到 $14$，比较了 $1$ 次&lt;/p>
+&lt;p>$$
+3, 4, 5, 6, 8, 9, 10, 11, 14, {17}
+$$&lt;/p>
+&lt;p>我们会发现整个排序过程的比较次数近乎为 $O(n^2)$。&lt;/p>
+&lt;p>之所以这样的原因就在于，每次选择一个数，进行集合分割时，总是分出&lt;strong>空集&lt;/strong>和&lt;strong>元素仅仅减少一个的集合&lt;/strong>，这样问题规模的降低速度就变的很慢。&lt;/p>
+&lt;h2 id="最好表现">最好表现&lt;/h2>
+&lt;p>对比最差的表现，我们来看一下最好的表现。
+还是以上面排序的例子作为示例。&lt;/p>
+&lt;p>$$
+{5,9,3,10,11,14,8,4,17,6}
+$$&lt;/p>
+&lt;p>第一次选择到 $8$，比较了 $9$ 次&lt;/p>
+&lt;p>$$
+{5, 3, 4, 6}, 8, {9, 10, 11, 14, 17}
+$$&lt;/p>
+&lt;p>第二次选择到 $4$，比较了 $3$ 次&lt;/p>
+&lt;p>$$
+{3}, 4, {5, 6}, 8, {9, 10, 11, 14, 17}
+$$&lt;/p>
+&lt;p>第三次选择到 $5，比较了 $1$ 次&lt;/p>
+&lt;p>$$
+{3}, 4, 5, {6}, 8, {9, 10, 11, 14, 17}
+$$&lt;/p>
+&lt;p>第四次选择到 $11$，比较了 $4$ 次&lt;/p>
+&lt;p>$$
+{3}, 4, 5, {6}, 8, {9, 10}, 11, {14, 17}
+$$&lt;/p>
+&lt;p>第五次选择到 $10$，比较了 $1$ 次&lt;/p>
+&lt;p>$$
+{3}, 4, 5, {6}, 8, {9}, 10, 11, {14, 17}
+$$&lt;/p>
+&lt;p>第六次选择到 $17$，比较了 $1$ 次&lt;/p>
+&lt;p>$$
+{3}, 4, 5, {6}, 8, {9}, 10, 11, {14}, 17
+$$&lt;/p>
+&lt;p>和最差情况相对比，我们每次对集合都近乎是二分的划分，使每个子问题的规模快速减小，这样总体比较次数也快速的减少，整体效率近乎于 $O(nlog(n))$。&lt;/p>
+&lt;h2 id="平均表现">平均表现&lt;/h2>
+&lt;p>这里是这篇文章的重点，也就是书中使用的概率方法，计算平均效率。&lt;/p>
+&lt;p>记 $X$ 是实现 $n$ 个不同数的排序所需要比较的次数，$E[X]$ 就是对这个排序算法效率的一个平均度量。&lt;/p>
+&lt;p>为了计算 $E[X]$，我们先将 $X$ 写为一系列随机变量的和。
+我们将 $n$ 个数中最小的数命名为 $1$，第二小的数命名为 $2$，&amp;hellip;，最大的数命名为 $n$，对于 $1 &amp;lt;= i &amp;lt;= j &amp;lt;= n$，记&lt;/p>
+&lt;ul>
+&lt;li>$I(i, j) = 1$, 在排序的过程中，数 $i, j$ 直接比较过&lt;/li>
+&lt;li>$I(i, j) = 0$, 其它&lt;/li>
+&lt;/ul>
+&lt;p>根据快速排序的过程，任意两个数 $i, j$ 在排序过程中，&lt;/p>
+&lt;ul>
+&lt;li>可能从未比较过（因为被划分到了不同的集合）&lt;/li>
+&lt;li>如果它们直接比较过，只可能比较一次，不可能再次比较（因为其中一个数被选择作为比较点，离开了集合）&lt;/li>
+&lt;/ul>
+&lt;p>由 $X$ 的定义可得：&lt;/p>
+&lt;p>$$
+X = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} I(i, j) \tag{1}
+$$&lt;/p>
+&lt;p>根据期望的性质，当 $E[X], E[Y]$ 均为有限值时，$E[X+Y] = E[X] + E[Y]$。&lt;/p>
+&lt;p>由此可得，&lt;/p>
+&lt;p>$$
+\begin{align}
+E[X] &amp;amp;= E[\sum_{i=1}^{n-1} \sum_{j=i+1}^{n} I(i, j)] \\\&lt;br>
+&amp;amp;= \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} E[I(i, j)] \\\&lt;br>
+&amp;amp;= \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} P({i和j在排序过程中做过比较}) \tag{2}
+\end{align}
+$$&lt;/p>
+&lt;p>下面我们来计算概率 $P({i和j在排序过程中做过比较})$。&lt;/p>
+&lt;p>数 $i, i+1, &amp;hellip;, j$ 最开始全部在一个集合中。&lt;/p>
+&lt;p>排序开始，随机在 $n$ 个数中选择一个数作为比较点，如果比较点不在 $i, j$ 这个区间内，即比$i$小，或者比$j$大，则在比较并划分集合后，$i, i+1, &amp;hellip;, j$ 还是在一个集合内。&lt;/p>
+&lt;p>假如选择的比较点在 $i, i+1, &amp;hellip;, j$ 之中，则只有当选择 $i / j$ 时，$i$ 和 $j$ 才会直接进行比较；否则它们两个将会被划分在比较点两边的两个集合中，再也不可能直接比较。&lt;/p>
+&lt;p>因此，$i, j$ 直接进行比较的概率，就是从 $i, i+1, &amp;hellip;, j$ 中选择到 $i / j$ 的概率，等于 $\frac{2}{j - i + 1}$。&lt;/p>
+&lt;p>于是&lt;/p>
+&lt;p>$$
+P({i和j在排序过程中做过比较}) = \frac{2}{j-i+1} \tag{3}
+$$&lt;/p>
+&lt;p>我们来仔细的理解公式$(3)$，在一开始，有 $n$ 个数，其中在 $i, j$ 区间的有 $j-i+1$ 个数。&lt;/p>
+&lt;p>在选择比较点之后，根据条件概率，&lt;/p>
+&lt;p>$$
+\begin{align}
+&amp;amp;P({i和j在排序过程中做过比较}) \\\&lt;br>
+=&amp;amp; P({i和j在排序过程中做过比较 \mid 比较点在区间外})P({比较点在区间外}) + \\\&lt;br>
+&amp;amp; P({i和j在排序过程中做过比较 \mid 比较点在区间内})P({比较点在区间内}) \tag{4}
+\end{align}
+$$&lt;/p>
+&lt;p>假如选择点是完全随机的，则&lt;/p>
+&lt;p>$$
+\begin{align}
+P({i和j在排序过程中做过比较 \mid 比较点在区间外}) &amp;amp;= P({i和j在排序过程中做过比较}) \\\&lt;br>
+P({比较点在区间外}) &amp;amp;= \frac{n-(j-i+1)}{n} \\\&lt;br>
+P({i和j在排序过程中做过比较 \mid 比较点在区间内}) &amp;amp;= \frac{2}{j-i+1} \\\&lt;br>
+P({比较点在区间内}) &amp;amp;= \frac{j-i+1}{n}
+\end{align}
+$$&lt;/p>
+&lt;p>代入公式$(4)$，&lt;/p>
+&lt;p>$$
+P({i和j在排序过程中做过比较}) = P({i和j在排序过程中做过比较}) * \frac{n-(j-i+1)}{n} + \frac{2}{j-i+1} * \frac{j-i+1}{n}
+$$&lt;/p>
+&lt;p>$$
+P({i和j在排序过程中做过比较}) = \frac{2}{j-i+1} \tag{3}
+$$&lt;/p>
+&lt;p>所以，将结果$(3)$代入$(2)$，最终的期望为&lt;/p>
+&lt;p>$$
+E[X] = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} P({i和j在排序过程中做过比较}) = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \frac{2}{j-i+1}
+$$&lt;/p>
+&lt;p>为了得到 $E[X]$ 的大致估计，当 $n$ 充分大时，我们用积分来近似&lt;/p>
+&lt;p>$$
+\begin{align}
+\sum_{j=i+1}^{n} \frac{2}{j-i+1} &amp;amp;\approx \int_{i+1}^{n} \frac{2}{x-i+1} dx \\\&lt;br>
+&amp;amp;= 2ln(x-i+1) |_{i+1}^n \\\&lt;br>
+&amp;amp;= 2ln(n-i+1) - 2ln(2) \\\&lt;br>
+&amp;amp;\approx 2ln(n-i+1)
+\end{align}
+$$&lt;/p>
+&lt;p>因此，&lt;/p>
+&lt;p>$$
+\begin{align}
+E[X] &amp;amp;= \sum_{i=1}^{n-1} 2 ln(n-i+1) \\\&lt;br>
+&amp;amp;\approx 2 \int_{1}^{n-1} ln(n-x+1) dx \\\&lt;br>
+&amp;amp;= 2 \int_{2}^{n} ln(y) dy \\\&lt;br>
+&amp;amp;= 2(yln(y) - y) |_2^n \\\&lt;br>
+&amp;amp;\approx 2nln(n)
+\end{align}
+$$&lt;/p>
+&lt;p>由此可知，在使用快速排序算法时，当 $n$ 充分大时，平均大概需要 $O(nln(n))$ 次比较才可以将 $n$ 个数排序。&lt;/p>
+&lt;h1 id="假如有重复的数字">假如有重复的数字&lt;/h1>
+&lt;p>在前面的问题假设中，我们假设 $n$ 个数字是完全不同的，假如在要排序的序列中，出现了重复的数字，我们使用 $i, j$ 区间来计算概率的方法就会失效。&lt;/p>
+&lt;p>但是在这种情况下，根据上面对最好情况和最差情况的分析，我们使用一种启发式的方法，在分割集合时，假如要比较的数和比较点相同，我们将它们平均的左右分配。
+举一个例子，极端情况下，所有的数都相同，10 个 6 进行排序。&lt;/p>
+&lt;p>$$
+{6, 6, 6, 6, 6, 6, 6, 6, 6, 6}
+$$&lt;/p>
+&lt;p>选择比较点 6 之后，我们将和比较点相同的数平均分配到集合的两边，&lt;/p>
+&lt;p>$$
+{6, 6, 6, 6, 6}, 6, {6, 6, 6, 6}
+$$&lt;/p>
+&lt;p>这样可以使子问题的规模快速减少，保证排序算法的效率。&lt;/p>- https://dreamanddead.github.io/post/quicksort-complexity/ - CC BY-NC-SA 4.0</description></item><item><title>Trigonometric Function Illustrations</title><link>https://dreamanddead.github.io/post/triangle-math/</link><pubDate>Wed, 15 May 2019 08:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/triangle-math/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/triangle-math/ -&lt;p>三角函数是非常重要的一类周期函数，所有周期函数都可以分解为对应的三角函数的组合。&lt;/p>
 &lt;p>在中学数学中，学习最多是 正弦$sin$，余弦$cos$，正切$tan$ 函数，
 之后了解还有 正割$sec$，余割$csc$，余切$cot$ 函数。&lt;/p>
 &lt;p>其中最让我困惑不解在于它们的命名，什么是正？什么是余？&lt;/p>
@@ -1258,101 +1451,4 @@ uri &amp;quot;/api/v1/file/logo.png&amp;quot;: case-insesitive regex match &amp;
 &lt;/code>&lt;/pre>&lt;p>存在 &lt;code>/&lt;/code> prefix 规则是有益的，收容所有未明确定位的 uri，再做错误处理。&lt;/p>
 &lt;pre>&lt;code>$ curl http://localhost:8080/no-where
 uri &amp;quot;/no-where&amp;quot;: prefix match &amp;quot;location /&amp;quot;
-&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/nginx-location/ - CC BY-NC-SA 4.0</description></item><item><title>记一次 Jmeter 分布式测试故障调试过程</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</link><pubDate>Fri, 25 May 2018 02:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ -&lt;p>之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。&lt;/p>
-&lt;p>至于为什么要这么做，源于这一次 debug 的过程。&lt;/p>
-&lt;h1 id="运行环境">运行环境&lt;/h1>
-&lt;p>mint, ubuntu 两台主机作为 master 节点，一台 win server 作为 slave 节点，采用分布式的方式，
-对 target 进行测试。&lt;/p>
-&lt;h1 id="问题">问题&lt;/h1>
-&lt;p>问题很奇怪，以 mint 系统作为 master，调度分布式测试没有问题，&lt;/p>
-&lt;pre>&lt;code>$ jmeter -n -t ./test.jmx -R 10.27.2.210 -l test.jtl -e -o report_test
-Creating summariser &amp;lt;summary&amp;gt;
-Created the tree successfully using ./888.jmx
-Configuring remote engine: 10.27.2.210
-Starting remote engines
-Starting the test @ Wed May 16 10:09:24 CST 2018 (1526436564379)
-Remote engines have been started
-Waiting for possible Shutdown/StopTestNow/Heapdump message on port 4445
-summary = 1 in 00:00:00 = 3.5/s Avg: 20 Min: 20 Max: 20 Err: 0 (0.00%)
-Tidying up remote @ Wed May 16 10:09:26 CST 2018 (1526436566910)
-... end of run
-&lt;/code>&lt;/pre>&lt;p>而使用另一台 ubuntu 主机作为 master，调度测试，则卡在 waiting 这一行，&lt;/p>
-&lt;pre>&lt;code>$ jmeter -n -t ./test.jmx -R 10.27.2.210 -l test.jtl -e -o report_test
-Creating summariser &amp;lt;summary&amp;gt;
-Created the tree successfully using ./888.jmx
-Configuring remote engine: 10.27.2.210
-Starting remote engines
-Starting the test @ Wed May 16 10:09:24 CST 2018 (1526436564379)
-Remote engines have been started
-Waiting for possible Shutdown/StopTestNow/Heapdump message on port 4445
-&lt;/code>&lt;/pre>&lt;h2 id="尝试1防火墙干扰">尝试1：防火墙干扰&lt;/h2>
-&lt;p>第一种猜测，应该是 ubuntu 系统的防火墙干扰，阻止了 4445 端口的数据。&lt;/p>
-&lt;p>先关闭防火墙&lt;/p>
-&lt;pre>&lt;code>$ sudo service ufw stop
-&lt;/code>&lt;/pre>&lt;p>再次运行测试，依旧卡在 waiting 那一行，看来问题没有那么简单。&lt;/p>
-&lt;h2 id="尝试2关闭监听功能">尝试2：关闭监听功能&lt;/h2>
-&lt;p>以 &lt;code>Waiting for possible Shutdown/StopTestNow/Heapdump message on port 4445&lt;/code>
-信息在网上查找，有人建议修改 jmeter 设置，不监听 shutdown 信息，相应的也就不会开启 4445 端口，
-理论上就不会卡在 waiting 那里，而是直接跳过。&lt;/p>
-&lt;p>在 ubuntu 主机，修改 jmeter.properties 文件，&lt;/p>
-&lt;script src="https://gist-it.appspot.com/github/apache/jmeter/blob/v4_0/bin/jmeter.properties?footer=minimal&amp;slice=1074:1076">&lt;/script>
-&lt;p>修改为&lt;/p>
-&lt;pre>&lt;code>jmeterengine.nongui.maxport=0
-&lt;/code>&lt;/pre>&lt;p>但是依旧不能工作。&lt;/p>
-&lt;h2 id="尝试3端口没有开启">尝试3：端口没有开启&lt;/h2>
-&lt;p>在 mint 作为 master，成功调度分布式测试的过程中，mint 主机自身打开了 4445 udp 端口，
-用 netstat 可以查看的到。&lt;/p>
-&lt;p>但是，在 ubuntu 调度的时候，用 netstat 也可以查看到 4445 udp 端口已经打开。
-而且用 &lt;a href="https://unix.stackexchange.com/a/266368/278131">netcat 测试 udp 端口&lt;/a>也是可用的。&lt;/p>
-&lt;pre>&lt;code>$ nc -vz -u 10.27.2.13 4445
-Connection to 10.27.2.13 4445 port [udp/*] succeeded!
-&lt;/code>&lt;/pre>&lt;p>看来也不是端口未开放的问题。&lt;/p>
-&lt;h2 id="尝试4信息被阻塞">尝试4：信息被阻塞&lt;/h2>
-&lt;p>猜测是不是在哪个环节，shutdown message 被阻拦，导致收不过消息，而一直卡在那里。&lt;/p>
-&lt;p>于是在 mint 主机运行测试的时候，用 wireshark 监听所有发送与 4445 udp 的信息，然而！什么都没有！&lt;/p>
-&lt;p>这样看来，之前对问题的判断是不准确的。一直以为和 shutdown message 有关，其实正常运行一次测试，根本不必要有 shutdown message。&lt;/p>
-&lt;h2 id="尝试5在日志中寻找">尝试5：在日志中寻找&lt;/h2>
-&lt;p>之前一直被表面现象迷惑，认为是 master 的问题，直到进入 slave 节点查看日志 &lt;code>jmeter-server.log&lt;/code>。
-发现这样的错误输出，&lt;/p>
-&lt;pre>&lt;code>2018-05-14 18:29:56,240 ERROR o.a.j.s.BatchSampleSender: testEnded(host)
-java.rmi.ConnectException: Connection refused to host: 127.0.1.1; nested exception is:
-java.net.ConnectException: Connection refused: connect
-at sun.rmi.transport.tcp.TCPEndpoint.newSocket(Unknown Source) ~[?:1.8.0_162]
-at sun.rmi.transport.tcp.TCPChannel.createConnection(Unknown Source) ~[?:1.8.0_162]
-at sun.rmi.transport.tcp.TCPChannel.newConnection(Unknown Source) ~[?:1.8.0_162]
-at sun.rmi.server.UnicastRef.invoke(Unknown Source) ~[?:1.8.0_162]
-at java.rmi.server.RemoteObjectInvocationHandler.invokeRemoteMethod(Unknown Source) ~[?:1.8.0_162]
-at java.rmi.server.RemoteObjectInvocationHandler.invoke(Unknown Source) ~[?:1.8.0_162]
-at com.sun.proxy.$Proxy20.testEnded(Unknown Source) ~[?:?]
-at org.apache.jmeter.samplers.BatchSampleSender.testEnded(BatchSampleSender.java:127) [ApacheJMeter_core.jar:4.0 r1823414]
-at org.apache.jmeter.samplers.DataStrippingSampleSender.testEnded(DataStrippingSampleSender.java:86) [ApacheJMeter_core.jar:4.0 r1823414]
-at org.apache.jmeter.samplers.RemoteListenerWrapper.testEnded(RemoteListenerWrapper.java:90) [ApacheJMeter_core.jar:4.0 r1823414]
-at org.apache.jmeter.engine.StandardJMeterEngine.notifyTestListenersOfEnd(StandardJMeterEngine.java:229) [ApacheJMeter_core.jar:4.0 r1823414]
-at org.apache.jmeter.engine.StandardJMeterEngine.run(StandardJMeterEngine.java:495) [ApacheJMeter_core.jar:4.0 r1823414]
-at java.lang.Thread.run(Unknown Source) [?:1.8.0_162]
-Caused by: java.net.ConnectException: Connection refused: connect
-at java.net.DualStackPlainSocketImpl.connect0(Native Method) ~[?:1.8.0_162]
-at java.net.DualStackPlainSocketImpl.socketConnect(Unknown Source) ~[?:1.8.0_162]
-at java.net.AbstractPlainSocketImpl.doConnect(Unknown Source) ~[?:1.8.0_162]
-at java.net.AbstractPlainSocketImpl.connectToAddress(Unknown Source) ~[?:1.8.0_162]
-at java.net.AbstractPlainSocketImpl.connect(Unknown Source) ~[?:1.8.0_162]
-at java.net.PlainSocketImpl.connect(Unknown Source) ~[?:1.8.0_162]
-at java.net.SocksSocketImpl.connect(Unknown Source) ~[?:1.8.0_162]
-at java.net.Socket.connect(Unknown Source) ~[?:1.8.0_162]
-at java.net.Socket.connect(Unknown Source) ~[?:1.8.0_162]
-at java.net.Socket.&amp;lt;init&amp;gt;(Unknown Source) ~[?:1.8.0_162]
-at java.net.Socket.&amp;lt;init&amp;gt;(Unknown Source) ~[?:1.8.0_162]
-at sun.rmi.transport.proxy.RMIDirectSocketFactory.createSocket(Unknown Source) ~[?:1.8.0_162]
-at sun.rmi.transport.proxy.RMIMasterSocketFactory.createSocket(Unknown Source) ~[?:1.8.0_162]
-... 13 more
-&lt;/code>&lt;/pre>&lt;p>为什么地址是 127.0.1.1 ？为什么要向这个地址通信？&lt;/p>
-&lt;p>根据对 jmeter master/slave 通信机制的理解，不仅 master 主动向 slave 通信， slave 也向 master 主动通信，自然要知道彼此的地址。&lt;/p>
-&lt;p>由此联想到，在 slave 节点多网卡的时候，一般都&lt;a href="https://github.com/apache/jmeter/blob/v4_0/bin/jmeter-server#L30">设置 hostname&lt;/a>，猜测 master 也需要进行同样的设置，告知 slave 自己的通信地址。&lt;/p>
-&lt;p>于是在 ubuntu master 主机的 &lt;a href="https://github.com/apache/jmeter/blob/v4_0/bin/system.properties">system.properties&lt;/a> 最后一行添加，&lt;/p>
-&lt;pre>&lt;code>java.rmi.server.hostname=10.27.2.13
-&lt;/code>&lt;/pre>&lt;p>测试终于正常运行了。&lt;/p>
-&lt;h1 id="写在最后">写在最后&lt;/h1>
-&lt;p>推而广之，在 jmeter 的所有节点，无论 master/slave，都显示设置自己的 IP 地址。&lt;/p>
-&lt;p>&lt;a href="https://github.com/apache/jmeter/blob/v4_0/bin/system.properties">system.properties&lt;/a> 最后一行添加&lt;/p>
-&lt;pre>&lt;code>java.rmi.server.hostname=&amp;lt;IP addr&amp;gt;
-&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ - CC BY-NC-SA 4.0</description></item></channel></rss>
+&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/nginx-location/ - CC BY-NC-SA 4.0</description></item></channel></rss>
