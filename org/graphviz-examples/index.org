@@ -202,23 +202,17 @@ digraph {
 }
 #+end_src
 
-* Refs
+* Resources
 
-https://blog.csdn.net/youwen21/article/details/98397993
-
-https://www.cnblogs.com/shuqin/p/11897207.html
-
-https://stackoverflow.com/questions/10147619/how-can-i-reverse-the-direction-of-every-edge-in-a-graphviz-dot-language-graph
-
-https://stackoverflow.com/questions/43599738/graphviz-alignment-of-subgraph
-
-https://renenyffenegger.ch/notes/tools/Graphviz/examples/index
-
-https://graphs.grevian.org/reference
-
-https://graphviz.gitlab.io/documentation/
-
-http://graphviz.org/doc/info/attrs.html
+- [[https://www.graphviz.org/pdf/dotguide.pdf][dot guide]], official manual, precise and clear
+- other links
+  - https://blog.csdn.net/youwen21/article/details/98397993
+  - https://www.cnblogs.com/shuqin/p/11897207.html
+  - https://stackoverflow.com/questions/10147619/how-can-i-reverse-the-direction-of-every-edge-in-a-graphviz-dot-language-graph
+  - https://stackoverflow.com/questions/43599738/graphviz-alignment-of-subgraph
+  - https://renenyffenegger.ch/notes/tools/Graphviz/examples/index
+  - https://graphs.grevian.org/reference
+  - http://graphviz.org/doc/info/attrs.html
 
 * License
 

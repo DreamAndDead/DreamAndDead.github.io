@@ -2,7 +2,7 @@
 title: "Graphviz Examples"
 author: ["DreamAndDead"]
 date: 2021-03-22T14:48:00+08:00
-lastmod: 2021-03-25T15:11:40+08:00
+lastmod: 2021-03-31T17:43:24+08:00
 tags: ["tool", "graphviz", "drawing"]
 categories: ["Tool"]
 draft: false
@@ -210,23 +210,17 @@ digraph {
 {{< figure src="images/table-hr-vr.png" >}}
 
 
-## Refs {#refs}
+## Resources {#resources}
 
-<https://blog.csdn.net/youwen21/article/details/98397993>
-
-<https://www.cnblogs.com/shuqin/p/11897207.html>
-
-<https://stackoverflow.com/questions/10147619/how-can-i-reverse-the-direction-of-every-edge-in-a-graphviz-dot-language-graph>
-
-<https://stackoverflow.com/questions/43599738/graphviz-alignment-of-subgraph>
-
-<https://renenyffenegger.ch/notes/tools/Graphviz/examples/index>
-
-<https://graphs.grevian.org/reference>
-
-<https://graphviz.gitlab.io/documentation/>
-
-<http://graphviz.org/doc/info/attrs.html>
+-   [dot guide](https://www.graphviz.org/pdf/dotguide.pdf), official manual, precise and clear
+-   other links
+    -   <https://blog.csdn.net/youwen21/article/details/98397993>
+    -   <https://www.cnblogs.com/shuqin/p/11897207.html>
+    -   <https://stackoverflow.com/questions/10147619/how-can-i-reverse-the-direction-of-every-edge-in-a-graphviz-dot-language-graph>
+    -   <https://stackoverflow.com/questions/43599738/graphviz-alignment-of-subgraph>
+    -   <https://renenyffenegger.ch/notes/tools/Graphviz/examples/index>
+    -   <https://graphs.grevian.org/reference>
+    -   <http://graphviz.org/doc/info/attrs.html>
 
 
 ## License {#license}
