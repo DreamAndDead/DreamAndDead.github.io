@@ -1,4 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Brain=f(X)?</title><link>https://dreamanddead.github.io/</link><description>Recent content on Brain=f(X)?</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>CC BY-NC-SA 4.0</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>记一次 Jmeter 分布式测试故障调试过程</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</link><pubDate>Fri, 25 May 2018 02:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ -&lt;p>之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>记一次 Jmeter 分布式测试故障调试过程</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</link><pubDate>Fri, 25 May 2018 02:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</guid><description>时长N年半 https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ -&lt;p>之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。&lt;/p>
 &lt;p>至于为什么要这么做，源于这一次 debug 的过程。&lt;/p>
 &lt;h1 id="运行环境">运行环境&lt;/h1>
 &lt;p>mint, ubuntu 两台主机作为 master 节点，一台 win server 作为 slave 节点，采用分布式的方式，
@@ -95,7 +95,7 @@ at sun.rmi.transport.proxy.RMIMasterSocketFactory.createSocket(Unknown Source) ~
 &lt;p>推而广之，在 jmeter 的所有节点，无论 master/slave，都显示设置自己的 IP 地址。&lt;/p>
 &lt;p>&lt;a href="https://github.com/apache/jmeter/blob/v4_0/bin/system.properties">system.properties&lt;/a> 最后一行添加&lt;/p>
 &lt;pre>&lt;code>java.rmi.server.hostname=&amp;lt;IP addr&amp;gt;
-&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ - CC BY-NC-SA 4.0</description></item><item><title>使用Jmeter进行分布式测试</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing/</link><pubDate>Thu, 24 May 2018 19:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/jmeter-distributed-testing/ -&lt;p>业务发展初期，关注的更多是功能，直至使用量增加到一定量级，就要考虑高并发，程序性能等问题，
+&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ - DreamAndDead 2014-2021</description></item><item><title>使用Jmeter进行分布式测试</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing/</link><pubDate>Thu, 24 May 2018 19:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing/</guid><description>时长N年半 https://dreamanddead.github.io/post/jmeter-distributed-testing/ -&lt;p>业务发展初期，关注的更多是功能，直至使用量增加到一定量级，就要考虑高并发，程序性能等问题，
 因此性能测试就成为重要的一环。&lt;/p>
 &lt;p>Loadrunner 是性能测试工具领域的王者，但是闭源无法自由（free）使用。相较之下，开源的 Jmeter 算是一个
 不错的选择。&lt;/p>
@@ -254,7 +254,7 @@ grafana 看到了一台机器的并发量，其它的好像没有执行。&lt;/p
 &lt;p>所以部署相关的数据文件需要我们自己想办法解决。并且！有时数据文件一模一样也不行，毕竟 Slave 执行的过程是相同的，
 一样的文件必然导致其创建相同的用户，引发冲突，还要为每个 Slave 准备一份数据文件！:no_mouth:。&lt;/p>
 &lt;h1 id="end">End&lt;/h1>
-&lt;p>Jmeter 是一款很赞的软件，thanks apache。&lt;/p>- https://dreamanddead.github.io/post/jmeter-distributed-testing/ - CC BY-NC-SA 4.0</description></item><item><title>Deal with time in programming</title><link>https://dreamanddead.github.io/post/time-in-programming/</link><pubDate>Tue, 22 May 2018 08:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/time-in-programming/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/time-in-programming/ -&lt;p>时间无处不在，在编程中也是如此。
+&lt;p>Jmeter 是一款很赞的软件，thanks apache。&lt;/p>- https://dreamanddead.github.io/post/jmeter-distributed-testing/ - DreamAndDead 2014-2021</description></item><item><title>Deal with time in programming</title><link>https://dreamanddead.github.io/post/time-in-programming/</link><pubDate>Tue, 22 May 2018 08:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/time-in-programming/</guid><description>时长N年半 https://dreamanddead.github.io/post/time-in-programming/ -&lt;p>时间无处不在，在编程中也是如此。
 比如程序日志，每一行必定包含时间。
 通常不会对时间特别关注，除非日志时间不对，或者编程使用时间，取不到正确结果。&lt;/p>
 &lt;p>其实在编程中只需明确几个简单的概念，就可以正确的使用时间。&lt;/p>
@@ -348,7 +348,7 @@ RTC in local TZ: no
 &lt;/code>&lt;/pre>&lt;p>参考： &lt;a href="https://www.tecmint.com/check-linux-timezone/">如何设置linux timezone&lt;/a>&lt;/p>
 &lt;h1 id="end">End&lt;/h1>
 &lt;p>这里没有具体针对特定编程语言来说明时间，时区的用法，不过本质是不变的。
-相信找到相应接口所针对的时间，可以很快掌握使用。&lt;/p>- https://dreamanddead.github.io/post/time-in-programming/ - CC BY-NC-SA 4.0</description></item><item><title>SSH X11 Forward</title><link>https://dreamanddead.github.io/post/ssh-x11-forward/</link><pubDate>Thu, 17 May 2018 20:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/ssh-x11-forward/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/ssh-x11-forward/ -&lt;p>一般情况下，操作远程电脑，ssh+console足矣。突然有一天，隔壁项目组
+相信找到相应接口所针对的时间，可以很快掌握使用。&lt;/p>- https://dreamanddead.github.io/post/time-in-programming/ - DreamAndDead 2014-2021</description></item><item><title>SSH X11 Forward</title><link>https://dreamanddead.github.io/post/ssh-x11-forward/</link><pubDate>Thu, 17 May 2018 20:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/ssh-x11-forward/</guid><description>时长N年半 https://dreamanddead.github.io/post/ssh-x11-forward/ -&lt;p>一般情况下，操作远程电脑，ssh+console足矣。突然有一天，隔壁项目组
 想要检测下，从香港服务器浏览他们的网页，效果是怎么样的。
 背景漆黑语法高亮的控制台好像帮不了忙&amp;hellip;&lt;/p>
 &lt;p>诚然，vnc是一个易用可行的方案，但是这里想探索一下，X Window System本身对远程应用的支持。&lt;/p>
@@ -656,7 +656,7 @@ alt="ssh如何处理auth认证 from oreilly"/> &lt;figcaption>
 &lt;li>全部X流量加密&lt;/li>
 &lt;li>如果ssh server不可信，过程中也没有暴露真实的cookie&lt;/li>
 &lt;/ul>
-&lt;p>What a clever way!&lt;/p>- https://dreamanddead.github.io/post/ssh-x11-forward/ - CC BY-NC-SA 4.0</description></item><item><title>Serve http and https at same time with nginx</title><link>https://dreamanddead.github.io/post/serve-http-https-same-time/</link><pubDate>Thu, 17 May 2018 14:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/serve-http-https-same-time/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/serve-http-https-same-time/ -&lt;p>之前讨论过，&lt;a href="https://dreamanddead.github.io/2018/04/11/comfortable-way-when-testing-https-site.html">网站从http迁移到https时，需要注意些什么&lt;/a>。
+&lt;p>What a clever way!&lt;/p>- https://dreamanddead.github.io/post/ssh-x11-forward/ - DreamAndDead 2014-2021</description></item><item><title>Serve http and https at same time with nginx</title><link>https://dreamanddead.github.io/post/serve-http-https-same-time/</link><pubDate>Thu, 17 May 2018 14:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/serve-http-https-same-time/</guid><description>时长N年半 https://dreamanddead.github.io/post/serve-http-https-same-time/ -&lt;p>之前讨论过，&lt;a href="https://dreamanddead.github.io/2018/04/11/comfortable-way-when-testing-https-site.html">网站从http迁移到https时，需要注意些什么&lt;/a>。
 由于旧有的服务依旧在运行，需要同时保留http与https。
 突然有一天，访问http服务，页面上只出现nginx的错误信息：&lt;/p>
 &lt;pre>&lt;code>400 bad request the plain http request was sent to https port
@@ -696,7 +696,7 @@ alt="ssh如何处理auth认证 from oreilly"/> &lt;figcaption>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>所以问题的核心就在于，指令 &lt;code>ssl on&lt;/code>，将所有 listen 的端口，都运行在 ssl 模式，但是对于端口 80，
 这样明显是不对的，也就导致了最开始的报错信息。&lt;/p>
 &lt;pre>&lt;code>400 bad request the plain http request was sent to https port
-&lt;/code>&lt;/pre>&lt;p>这时就推荐使用 listen 加 ssl 参数，更细粒度的控制哪些端口运行在 ssl 模式下。&lt;/p>- https://dreamanddead.github.io/post/serve-http-https-same-time/ - CC BY-NC-SA 4.0</description></item><item><title>thinkpad E530c 的升级之路</title><link>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</link><pubDate>Sat, 12 May 2018 20:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ -&lt;p>不知不觉，自己的&lt;a href="http://detail.zol.com.cn/361/360255/param.shtml">Thinkpad E530c&lt;/a>入手5年，期间换过数次系统，如今不觉有些老态龙钟，
+&lt;/code>&lt;/pre>&lt;p>这时就推荐使用 listen 加 ssl 参数，更细粒度的控制哪些端口运行在 ssl 模式下。&lt;/p>- https://dreamanddead.github.io/post/serve-http-https-same-time/ - DreamAndDead 2014-2021</description></item><item><title>thinkpad E530c 的升级之路</title><link>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</link><pubDate>Sat, 12 May 2018 20:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</guid><description>时长N年半 https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ -&lt;p>不知不觉，自己的&lt;a href="http://detail.zol.com.cn/361/360255/param.shtml">Thinkpad E530c&lt;/a>入手5年，期间换过数次系统，如今不觉有些老态龙钟，
 硬件资源已远远不足以支持日常使用的需求，速度慢多次卡顿，十分损伤工作效率。&lt;/p>
 &lt;p>决心升级一下跟随多年的“小黑”，焕发新颜。&lt;/p>
 &lt;h1 id="拆机">拆机&lt;/h1>
@@ -858,7 +858,7 @@ Flags: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 c
 &lt;p>不过目前一直使用外接显示器，这一点也可以接受。&lt;/p>
 &lt;h1 id="电池">电池&lt;/h1>
 &lt;p>使用电脑的时间这么多年，电池的续航能力也变差了。&lt;/p>
-&lt;p>直接在网上搜索对应型号，买原装的可以，简单有效。&lt;/p>- https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ - CC BY-NC-SA 4.0</description></item><item><title>Comfortable way when testing HTTPS site</title><link>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</link><pubDate>Wed, 11 Apr 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ -&lt;p>网站初期一直使用http，近期购买了ssl证书，预期将网站全面升级使用https。&lt;/p>
+&lt;p>直接在网上搜索对应型号，买原装的可以，简单有效。&lt;/p>- https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ - DreamAndDead 2014-2021</description></item><item><title>Comfortable way when testing HTTPS site</title><link>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</link><pubDate>Wed, 11 Apr 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</guid><description>时长N年半 https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ -&lt;p>网站初期一直使用http，近期购买了ssl证书，预期将网站全面升级使用https。&lt;/p>
 &lt;p>当部署https后，居然出现了这种问题&amp;hellip;&lt;/p>
 &lt;h1 id="测试https">测试HTTPS&lt;/h1>
 &lt;h2 id="部署环境">部署环境&lt;/h2>
@@ -1052,7 +1052,7 @@ Flags: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 c
 }
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>这里的配置，对于 ssl 的支持有一些瑕疵，在&lt;a href="https://dreamanddead.github.io/2018/05/17/serve-http-https-same-time.html">这篇文章&lt;/a>里，做了相关修正。
-Remember to check it :)&lt;/p>- https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ - CC BY-NC-SA 4.0</description></item><item><title>Play curl with http</title><link>https://dreamanddead.github.io/post/play-curl-with-http/</link><pubDate>Mon, 09 Apr 2018 10:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/play-curl-with-http/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/play-curl-with-http/ -&lt;p>curl是一款强大的网络传输工具，支持多种协议，在HTTP的支持方面尤其为人称道。
+Remember to check it :)&lt;/p>- https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ - DreamAndDead 2014-2021</description></item><item><title>Play curl with http</title><link>https://dreamanddead.github.io/post/play-curl-with-http/</link><pubDate>Mon, 09 Apr 2018 10:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/play-curl-with-http/</guid><description>时长N年半 https://dreamanddead.github.io/post/play-curl-with-http/ -&lt;p>curl是一款强大的网络传输工具，支持多种协议，在HTTP的支持方面尤其为人称道。
 对curl的使用越深入，对HTTP也会有更深的理解。&lt;/p>
 &lt;h1 id="a-little-http">a little http&lt;/h1>
 &lt;p>http是应用层协议，其设计非常简单，灵活。请求与响应是HTTP概念的核心，从本质上讲，
@@ -1841,7 +1841,7 @@ POST使用query的麻烦之处在于，要求我们注意URL的编码&lt;/p>
 &lt;pre>&lt;code>$ man curl
 $ curl --help
 $ curl --manual
-&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://curl.haxx.se/docs/httpscripting.html">curl docs online&lt;/a>&lt;/p>- https://dreamanddead.github.io/post/play-curl-with-http/ - CC BY-NC-SA 4.0</description></item><item><title>Git Internals</title><link>https://dreamanddead.github.io/post/git-internals/</link><pubDate>Wed, 03 Jan 2018 08:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/git-internals/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/git-internals/ -&lt;p>这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://curl.haxx.se/docs/httpscripting.html">curl docs online&lt;/a>&lt;/p>- https://dreamanddead.github.io/post/play-curl-with-http/ - DreamAndDead 2014-2021</description></item><item><title>Git Internals</title><link>https://dreamanddead.github.io/post/git-internals/</link><pubDate>Wed, 03 Jan 2018 08:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/git-internals/</guid><description>时长N年半 https://dreamanddead.github.io/post/git-internals/ -&lt;p>这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。&lt;/p>
 &lt;p>所有示例使用git版本 2.7.4，
 示例仓库可见于github: &lt;a href="https://github.com/DreamAndDead/git-internals-example">https://github.com/DreamAndDead/git-internals-example&lt;/a>&lt;/p>
 &lt;h1 id="git-folder">.git folder&lt;/h1>
@@ -2953,7 +2953,7 @@ pigz: &amp;lt;stdin&amp;gt; OK, has trailing junk which was ignored
 &lt;/code>&lt;/pre>&lt;p>可见两个版本的a.out并没有存储两份，delta部分数据量尤其的小，节省了50%的空间。&lt;/p>
 &lt;p>不幸的是，虽然按照 &lt;a href="https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-format.txt#L112">官方文档&lt;/a> 的方式解开了OBJ_OFS_DELTA的内容，
 但是我却不知道如何解读，这方面并没有详细的记载，只有找到唯一 &lt;a href="https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-heuristics.txt">官方又有些诙谐的文档&lt;/a> ，可以读一下，very funny。&lt;/p>
-&lt;p>希望后续有时间深入源码，再来详细的解释delta(dark corner of git)部分。&lt;/p>- https://dreamanddead.github.io/post/git-internals/ - CC BY-NC-SA 4.0</description></item><item><title>Understanding ssh port forwarding</title><link>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</link><pubDate>Wed, 13 Dec 2017 00:00:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</guid><description>Brain=f(X)? https://dreamanddead.github.io/post/understanding-ssh-tunnel/ -&lt;p>这篇文件旨在理好的理解ssh隧道的原理与用法。&lt;/p>
+&lt;p>希望后续有时间深入源码，再来详细的解释delta(dark corner of git)部分。&lt;/p>- https://dreamanddead.github.io/post/git-internals/ - DreamAndDead 2014-2021</description></item><item><title>Understanding ssh port forwarding</title><link>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</link><pubDate>Wed, 13 Dec 2017 00:00:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</guid><description>时长N年半 https://dreamanddead.github.io/post/understanding-ssh-tunnel/ -&lt;p>这篇文件旨在理好的理解ssh隧道的原理与用法。&lt;/p>
 &lt;h1 id="port-forwarding">Port forwarding&lt;/h1>
 &lt;p>端口转发是ssh内建的机制，在已经建立的ssh通道之上，转发应用层的流量。
 大家也形象地称之为ssh隧道（ssh tunnel）。&lt;/p>
@@ -3170,4 +3170,4 @@ alt="网络示意图"/> &lt;figcaption>
 &lt;pre>&lt;code>export http_proxy=socks5://47.52.20.34:1080
 curl -X GET http://172.168.0.2:80
 curl -X GET http://192.168.0.3:9200
-&lt;/code>&lt;/pre>&lt;p>访问nginx服务与ES服务&lt;/p>- https://dreamanddead.github.io/post/understanding-ssh-tunnel/ - CC BY-NC-SA 4.0</description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;p>访问nginx服务与ES服务&lt;/p>- https://dreamanddead.github.io/post/understanding-ssh-tunnel/ - DreamAndDead 2014-2021</description></item></channel></rss>
