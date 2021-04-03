@@ -1,9 +1,9 @@
 baseURL = "https://dreamanddead.github.io"
 disablePathToLower = true
 languageCode = "zh-cn"
-title = "Brain=f(X)?"
+title = "时长N年半"
 theme = "diary"
-copyright = "CC BY-NC-SA 4.0"
+copyright = "DreamAndDead 2014-2021"
 googleAnalytics = "UA-93899485-1"
 
 # aliyun oss
@@ -22,7 +22,7 @@ cloud_url = "https://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com"
     tabWidth = 4
 
 [params]
-subtitle = "Can machine think?"
+subtitle = "技术，智能，认知，思考"
 enableReadingTime=true
 disableAutoCollapse=true
 disqusShortname = "dreamanddead"

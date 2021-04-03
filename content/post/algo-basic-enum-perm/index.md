@@ -1,12 +1,13 @@
 ---
-title: "基础算法之枚举 排列 组合"
+title: "基础算法之枚举排列组合"
 author: ["DreamAndDead"]
 date: 2021-03-25T15:10:00+08:00
-lastmod: 2021-03-31T17:39:47+08:00
+lastmod: 2021-04-03T15:56:22+08:00
 tags: ["algorithm", "programing"]
 categories: ["Algorithm"]
 draft: false
 featured_image: "images/featured.jpg"
+series: ["基础算法"]
 ---
 
 > 过早优化是万恶之源。
@@ -452,7 +453,6 @@ int main(void) {
 ```
 
 ```text
-
 1
   2
 1 2
@@ -541,7 +541,6 @@ int main(void) {
 
 000001
 010010
-
 ```
 
 推荐练习：
@@ -640,7 +639,6 @@ int main(void) {
 ```
 
 ```text
-
 9
 4
 4 9
@@ -686,7 +684,6 @@ int main(void) {
 ```
 
 ```text
-
 1
 1 2
 1 2 4
