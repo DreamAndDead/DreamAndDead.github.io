@@ -2,7 +2,7 @@
 title: "自由与平等"
 author: ["DreamAndDead"]
 date: 2021-04-03T17:47:00+08:00
-lastmod: 2021-04-03T18:01:01+08:00
+lastmod: 2021-04-03T21:56:47+08:00
 tags: ["mind", "society", "life"]
 categories: ["Mind"]
 draft: true
@@ -56,6 +56,9 @@ featured_image: "images/featured.jpg"
 
 
 ### 自由是惰性的无所作为吗 {#自由是惰性的无所作为吗}
+
+
+### 不加节制的自由，不是谁都可以消受的 {#不加节制的自由-不是谁都可以消受的}
 
 
 ### 均可消受的自由 {#均可消受的自由}

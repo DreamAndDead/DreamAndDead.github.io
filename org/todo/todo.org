@@ -113,11 +113,11 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 **** 配合 吉他 理解
 **** nicechord
 **** guitar pro
+** 冥想
+*** 如何冥想
 ** 认知科学
 *** 认知疗法
 *** GEB
-** 冥想
-
 * 论题
 ** 学习理论（学习如何学习）
 *** 归纳，再演绎
@@ -170,7 +170,6 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 *** 是所有人的宏观现象？还是自然现象？
 *** 道中无人，完全受自然规律支配？
 *** 宿命论，人的性格，决定了自己的道
-
 ** 复杂系统
 *** 什么是复杂系统
 *** 如
@@ -244,13 +243,9 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 *** 系统认知
 *** 性格维度
 *** 沟通
-**** 如何发声
-***** 理论
-***** 不仅来自于身体物理支持，也来自于内心的强壮
 *** 交友
 *** 谈判
 *** 识人用人
-** 发声理论
 ** 基金购买方法
 
 * 项目整理
@@ -281,8 +276,6 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 *** 上面的假设只是一种自我安慰
 ** 没有梦想的人，不会早起
 ** 心流？
-** 冥想？
-** 不加节制的自由，不是谁都可以消受的
 ** 关于写作
 *** 厚积薄发
 *** 如果觉得混乱，就开始写作

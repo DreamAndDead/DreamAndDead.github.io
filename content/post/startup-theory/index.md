@@ -2,7 +2,7 @@
 title: "创业理论"
 author: ["DreamAndDead"]
 date: 2021-03-24T15:44:00+08:00
-lastmod: 2021-04-03T17:50:18+08:00
+lastmod: 2021-04-03T22:02:35+08:00
 tags: ["life", "theory", "bussiness"]
 categories: ["Startup"]
 draft: true
