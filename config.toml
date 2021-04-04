@@ -9,6 +9,9 @@ googleAnalytics = "UA-93899485-1"
 # aliyun oss
 cloud_url = "https://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com"
 
+# ignore emacs cache file when rendering
+ignoreFiles = ["d@d-pc.*"]
+
 [markup]
   [markup.highlight]
     codeFences = true
@@ -31,8 +34,10 @@ disqusShortname = "dreamanddead"
 # Twitter Card and Open Graph settings
 enableOpenGraph = true
 enableTwitterCards = true
-title = "Brain=f(X)?" # will set 'og:site_name'
-description = "Can machine think?"  # will set 'og:description'
+# will set 'og:site_name'
+title = "时长N年半"
+# will set 'og:description'
+description = "技术，智能，认知，思考"
 
 [taxonomies]
 tag = "tags"

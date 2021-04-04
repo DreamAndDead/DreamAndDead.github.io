@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-03T22:02:33+08:00
+lastmod: 2021-04-04T21:45:12+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -633,6 +633,56 @@ series: ["test"]
 <!--list-separator-->
 
 -  一直学习，没有可做事的时间
+
+
+#### 追随成功的项目 {#追随成功的项目}
+
+
+#### 未来方向 {#未来方向}
+
+<!--list-separator-->
+
+-  3d
+
+    <!--list-separator-->
+
+    -  结合 VR，AR
+
+    <!--list-separator-->
+
+    -  工程渲染
+
+<!--list-separator-->
+
+-  编程语言
+
+    <!--list-separator-->
+
+    -  DSL
+
+<!--list-separator-->
+
+-  基础算法
+
+    <!--list-separator-->
+
+    -  教育？
+
+    <!--list-separator-->
+
+    -  拓展之用？
+
+<!--list-separator-->
+
+-  数据分析
+
+    <!--list-separator-->
+
+    -  商业分析
+
+    <!--list-separator-->
+
+    -  可视化
 
 
 ### 如何做事 {#如何做事}

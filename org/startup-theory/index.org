@@ -282,6 +282,14 @@ sell me this pen
 
 模糊的是，未来是软件方向，从事的方面，必定有自己独特的思考
 
+
+* faq
+
+** 市场和行业的区别？
+
+https://book.douban.com/review/10003348/
+
+
 * roadmap
 
 #+begin_src plantuml :file images/business-roadmap.png :cmdline -charset utf-8

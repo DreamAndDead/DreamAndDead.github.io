@@ -2,7 +2,7 @@
 title: "创业理论"
 author: ["DreamAndDead"]
 date: 2021-03-24T15:44:00+08:00
-lastmod: 2021-04-03T22:02:35+08:00
+lastmod: 2021-04-04T21:57:56+08:00
 tags: ["life", "theory", "bussiness"]
 categories: ["Startup"]
 draft: true
@@ -358,6 +358,14 @@ sell me this pen
 而规划，是行动的第一步。
 
 模糊的是，未来是软件方向，从事的方面，必定有自己独特的思考
+
+
+## faq {#faq}
+
+
+### 市场和行业的区别？ {#市场和行业的区别}
+
+<https://book.douban.com/review/10003348/>
 
 
 ## roadmap {#roadmap}
