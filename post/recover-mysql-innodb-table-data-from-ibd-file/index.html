@@ -3,7 +3,7 @@
 mysql> select count(*) from users625;
 ERROR 1146 (42S02): Table 'km8.users625' doesn't exist
 show tables 它还显示在列表里，在 mysql 数据目录中也可以找到对应的表文件，也没有
-进行过删除操作，突然出现这样的错误非常奇怪。"><meta property="og:type" content="article"><meta property="og:url" content="https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/"><meta property="article:published_time" content="2018-09-27T04:10:00+00:00"><meta property="article:modified_time" content="2018-09-27T04:10:00+00:00"><meta property="og:site_name" content="Brain=f(X)?"><meta name=twitter:card content="summary"><meta name=twitter:title content="mysql table suddenly doesn't exists"><meta name=twitter:description content="最近内部的 mysql 数据库发生了一件奇怪的事，其中有一个表 users625 突然出现问题，
+进行过删除操作，突然出现这样的错误非常奇怪。"><meta property="og:type" content="article"><meta property="og:url" content="https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/"><meta property="article:published_time" content="2018-09-27T04:10:00+00:00"><meta property="article:modified_time" content="2018-09-27T04:10:00+00:00"><meta property="og:site_name" content="时长N年半"><meta name=twitter:card content="summary"><meta name=twitter:title content="mysql table suddenly doesn't exists"><meta name=twitter:description content="最近内部的 mysql 数据库发生了一件奇怪的事，其中有一个表 users625 突然出现问题，
 所有对它的操作都报错误 数据表不存在。
 mysql> select count(*) from users625;
 ERROR 1146 (42S02): Table 'km8.users625' doesn't exist

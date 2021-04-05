@@ -812,7 +812,7 @@ the result better. They are not discussed here but they&amp;rsquo;re worth a sho
 &lt;p>Luna, F. D. (2003) Introduction to 3D Game Programing with Direct Programming 9.0, Wordware Publishing, Inc. &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section>- https://dreamanddead.github.io/post/deferred-shading/ - DreamAndDead 2014-2021</description></item><item><title>understanding euler angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>时长N年半 https://dreamanddead.github.io/post/understanding-euler-angles/ -&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
+&lt;/section>- https://dreamanddead.github.io/post/deferred-shading/ - DreamAndDead 2014-2021</description></item><item><title>Understanding Euler Angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>时长N年半 https://dreamanddead.github.io/post/understanding-euler-angles/ -&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
 have to understand the underlying math things.&lt;/p>
 &lt;p>I have known about Euler angles for a while, and today we talk about some more details about it.&lt;/p>
 &lt;h1 id="direction-vs-orientation">Direction vs Orientation&lt;/h1>
@@ -897,16 +897,24 @@ $$&lt;/p>
 &lt;p>So&lt;/p>
 &lt;p>$$
 \begin{align}
-I_z I_{y'} I_{x''} &amp;amp;= I_z I_{y'} (I_z I_{y'})^{-1} E_x (I_z I_{y'}) \&lt;br>
-&amp;amp;= E_x (I_z I_{y'}) \&lt;br>
-&amp;amp;= E_x (I_z I_z^{-1} E_y I_z) \&lt;br>
-&amp;amp;= E_x E_y I_z \&lt;br>
+I_z I_{y'} I_{x''} &amp;amp;= I_z I_{y'} (I_z I_{y'})^{-1} E_x (I_z I_{y'}) \\\&lt;br>
+&amp;amp;= E_x (I_z I_{y'}) \\\&lt;br>
+&amp;amp;= E_x (I_z I_z^{-1} E_y I_z) \\\&lt;br>
+&amp;amp;= E_x E_y I_z \\\&lt;br>
 &amp;amp;= E_x E_y E_z
 \end{align}
 $$&lt;/p>
-&lt;h1 id="the-end">The end&lt;/h1>
+&lt;h1 id="acknowledgement">Acknowledgement&lt;/h1>
 &lt;p>In &lt;a href="https://www.wikiwand.com/en/Euler_angles">wikipedia&lt;/a>, I know more about &lt;a href="https://www.wikiwand.com/en/Euler_angles">euler angles&lt;/a> including extrinsic/intrinsic and Proper/Tait-Bryan.&lt;/p>
-&lt;p>I first see the conversion between extrinsic and intrinsic in &lt;a href="http://www.cnitblog.com/luckydmz/archive/2010/09/07/68674.html">this blog&lt;/a> and that shocked me. There&amp;rsquo;s &lt;a href="https://www.wikiwand.com/en/Davenport_chained_rotations#/Conversion_between_intrinsic_and_extrinsic_rotations">another proof in wikipedia&lt;/a> and a enlightening answer about &lt;a href="https://math.stackexchange.com/a/1155951">relativity&lt;/a>.&lt;/p>- https://dreamanddead.github.io/post/understanding-euler-angles/ - DreamAndDead 2014-2021</description></item><item><title>a matrix det puzzle</title><link>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</link><pubDate>Mon, 22 Apr 2019 08:39:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</guid><description>时长N年半 https://dreamanddead.github.io/post/a-matrix-det-puzzle/ -&lt;p>求解行列式&lt;/p>
+&lt;p>I first see the conversion between extrinsic and intrinsic in &lt;a href="http://www.cnitblog.com/luckydmz/archive/2010/09/07/68674.html">this blog&lt;/a> and that shocked me. There&amp;rsquo;s &lt;a href="https://www.wikiwand.com/en/Davenport_chained_rotations#/Conversion_between_intrinsic_and_extrinsic_rotations">another proof in wikipedia&lt;/a> and a enlightening answer about &lt;a href="https://math.stackexchange.com/a/1155951">relativity&lt;/a>.&lt;/p>
+&lt;h1 id="license">License&lt;/h1>
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+&lt;img
+src="https://dreamanddead.github.io/img/license.png"
+alt="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
+title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
+/>
+&lt;/a>- https://dreamanddead.github.io/post/understanding-euler-angles/ - DreamAndDead 2014-2021</description></item><item><title>a matrix det puzzle</title><link>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</link><pubDate>Mon, 22 Apr 2019 08:39:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</guid><description>时长N年半 https://dreamanddead.github.io/post/a-matrix-det-puzzle/ -&lt;p>求解行列式&lt;/p>
 &lt;p>$$
 \newcommand\iddots{\mathinner{
 \kern1mu\raise1pt{.}
