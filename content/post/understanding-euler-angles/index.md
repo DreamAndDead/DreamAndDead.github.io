@@ -1,6 +1,7 @@
 ---
-title: understanding euler angles
+title: Understanding Euler Angles
 date: "2019-04-24T09:10:00Z"
+lastmod: "2021-04-05T16:16:00Z"
 categories:
 - Math
 tags: 
@@ -125,29 +126,23 @@ So
 
 $$
 \begin{align}
-I_z I_{y'} I_{x''} &= I_z I_{y'} (I_z I_{y'})^{-1} E_x (I_z I_{y'}) \\
-&= E_x (I_z I_{y'}) \\
-&= E_x (I_z I_z^{-1} E_y I_z) \\
-&= E_x E_y I_z \\
+I_z I_{y'} I_{x''} &= I_z I_{y'} (I_z I_{y'})^{-1} E_x (I_z I_{y'}) \\\\\\
+&= E_x (I_z I_{y'}) \\\\\\
+&= E_x (I_z I_z^{-1} E_y I_z) \\\\\\
+&= E_x E_y I_z \\\\\\
 &= E_x E_y E_z 
 \end{align}
 $$
 
-# The end
+# Acknowledgement
 
 In [wikipedia][euler angles], I know more about [euler angles][euler angles] including extrinsic/intrinsic and Proper/Tait-Bryan.
 
 I first see the conversion between extrinsic and intrinsic in [this blog][intrinsic and extrinsic] and that shocked me. There's [another proof in wikipedia][chained rotation] and a enlightening answer about [relativity][relative idea].
 
+# License
 
-
-
-
-
-
-
-
-
+{{< license >}}
 
 [euler angles]: https://www.wikiwand.com/en/Euler_angles
 
