@@ -1,5 +1,5 @@
 ---
-title: A little talk about panorama
+title: 浅谈全景图
 date: "2020-09-27T14:02:58Z"
 categories:
 - Panorama
