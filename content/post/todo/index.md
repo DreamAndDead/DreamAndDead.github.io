@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-05T16:12:53+08:00
+lastmod: 2021-04-07T20:01:12+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -15,63 +15,6 @@ series: ["test"]
 
 
 ### 算法 {#算法}
-
-
-#### 模型 {#模型}
-
-<!--list-separator-->
-
--  某种意义上，算法就是分析模型，针对问题代入模型
-
-<!--list-separator-->
-
--  从问题中抽象得到，再应用于问题，采用相似性
-
-
-#### 一般复杂度的估计过程 {#一般复杂度的估计过程}
-
-<!--list-separator-->
-
--  pow 的规模
-
-<!--list-separator-->
-
--  fact comb 的规模
-
-<!--list-separator-->
-
--  空间的估计
-
-<!--list-separator-->
-
--  时间的估计
-
-
-#### 算法的过程 {#算法的过程}
-
-<!--list-separator-->
-
--  问题
-
-<!--list-separator-->
-
--  算法
-
-<!--list-separator-->
-
--  时间
-
-<!--list-separator-->
-
--  空间
-
-<!--list-separator-->
-
--  极值 溢出
-
-<!--list-separator-->
-
--  边界
 
 
 #### 回溯 总结 {#回溯-总结}
@@ -90,6 +33,10 @@ series: ["test"]
 <!--list-separator-->
 
 -  vs DFS
+
+<!--list-separator-->
+
+-  双向 BFS
 
 <!--list-separator-->
 
