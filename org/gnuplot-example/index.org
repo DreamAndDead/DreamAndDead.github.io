@@ -37,4 +37,32 @@ plot data u 1 w histograms title "before"
 #+RESULTS:
 [[file:images/dict_order_n_table.png]]
 
+#+tblname: power_2_data
+|  p | log10( power(p, 2) ) |
+|  0 |                  0.0 |
+|  8 |   2.4082399653118496 |
+| 16 |    4.816479930623699 |
+| 24 |    7.224719895935548 |
+| 32 |    9.632959861247398 |
+| 40 |   12.041199826559248 |
+| 48 |   14.449439791871097 |
+| 56 |   16.857679757182947 |
+| 64 |   19.265919722494797 |
 
+#+name: plot
+#+header: :var data=power_2_data
+#+begin_src gnuplot :file images/power_2.png
+set xlabel "n"
+set xrange [0:72]
+set xtics 0,8,72
+
+set yrange [0:21]
+set ytics 0,2,21
+
+plot data using 1:2 w lp title "log_{10}(2^n)"
+#+end_src
+
+#+RESULTS:
+[[file:images/power_2.png]]
+
+#+call: plot(data=power_2_data) :file images/p_2_t.png

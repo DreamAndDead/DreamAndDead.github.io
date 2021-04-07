@@ -10,22 +10,6 @@
 #+hugo_draft: true
 #+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg :series '("基础算法")
 
-* 算法的过程
-** 模型
-*** 某种意义上，算法就是分析模型，针对问题代入模型
-*** 从问题中抽象得到，再应用于问题，采用相似性
-** 问题
-** 算法
-** 复杂度的估计过程
-*** pow 的规模
-*** fact comb 的规模
-*** 空间的估计
-*** 时间的估计
-** 时间
-** 空间
-** 极值 溢出
-** 边界
-
 * 推荐什么语言
 
 cpp
@@ -33,28 +17,9 @@ cpp
 python 不利于表示细节
   
 * 如何调试
-** printf
+** PE
 
-** gdb
-
-cgdb .out -ex "b main" -ex "r"
-
-$home/.cgdb/cgdbrc
-
-#+begin_src 
-set winsplit=even
-set wso=vertical
-#+end_src
-
-** gdb 的检查指令
-
-如何查看数字的不同格式
-
-** 寻找数据集
-
-uva
-
-** 空行的问题
+空行的问题
 
 输出的间隔之间存在空行
 
@@ -66,6 +31,27 @@ there is a blank line after each test case
 there is a blank line between each test case
 
 是不同的
+** WA
+*** printf
+
+*** gdb
+
+ cgdb .out -ex "b main" -ex "r"
+
+ $home/.cgdb/cgdbrc
+
+ #+begin_src 
+ set winsplit=even
+ set wso=vertical
+ #+end_src
+
+**** gdb 的检查指令
+
+  如何查看数字的不同格式
+
+*** 寻找数据集
+
+uva udebug
 
 * 时间估计
 
@@ -113,6 +99,14 @@ https://blog.csdn.net/qq_30763385/article/details/104580790
 
 https://zhuanlan.zhihu.com/p/90829922
 
+** io 时间
+
+ memset 大数组
+
+ for loop 重置
+
+ scanf 和 cin 的速度
+
 * 空间估计
   
 ** 131072k 是什么概念
@@ -159,14 +153,14 @@ int main(void) {
 - ~int[1000 000]~ 占用空间 4000 k
 - ~int[1000 000 000]~ 占用空间 4000 000k
 
-* 极值
+* 常见数值
 
 ** 阶乘
 
 阶乘规模增加的是非常快的，可以看到其位数基本随着 n 的增加基本呈线性，由系数 1 慢慢增加
    
 #+tblname: factor_data
-#+begin_src python :results table :exports results
+#+begin_src python :results table :exports none
 import math
 
 table = [
@@ -217,7 +211,6 @@ return fname
 #+end_src
 
 #+RESULTS: plot
-[[file:images/factor.png]]
 
 ** 组合数
 
@@ -228,7 +221,7 @@ return fname
 趋势和 pow(2) 是相近的，因为 sum(C(n, k)) = pow(n, 2)
 
 #+tblname: comb_data
-#+begin_src python :results table :exports results
+#+begin_src python :results table :exports none
 import math
 
 table = [
@@ -271,10 +264,10 @@ return table
 - ~2^64 = 10^19~
 
 #+tblname: power_2_data
-#+begin_src python :results table :exports results
+#+begin_src python :results table :exports none
 import math
 
-table = [['p', 'log10( power(p, 2) )']]
+table = [['p', 'log_{10}( power(p, 2) )']]
 
 for i in range(0, 64+1, 8):
     table.append([i, math.log10(pow(2, i))])
@@ -294,10 +287,24 @@ return table
 | 56 |   16.857679757182947 |
 | 64 |   19.265919722494797 |
 
-#+call: plot(data=power_2_data, filename="images/power_2.png")
+#+name: gplot
+#+header: :var data=power_2_data
+#+begin_src gnuplot
+set xlabel "n"
+set xrange [0:72]
+set xtics 0,8,72
+
+set yrange [0:21]
+set ytics 0,2,21
+
+plot data using 1:2 w lp title "log_{10}(2^n)"
+#+end_src
+
+#+call: gplot(data=power_2_data) :file images/power_2.png
 
 #+RESULTS:
 [[file:images/power_2.png]]
+
 
 ** 浮点数的精确位
 
@@ -305,33 +312,36 @@ float
 
 double
    
-* 常见延迟数
 
-网络
+* 复杂度
 
-io
-
-* 复杂度与时空的关系
-
+TODO 不同复杂度的 plot 曲线
+  
+绝对
+相对
+  
 绝对时间 与 相对时间
 
 即使复杂度很高，但如果数据集很小，在时间约束下还是可以完成的
 
-* 时间换空间
+** 时间换空间
 
-* 空间换时间
+** 空间换时间
 
-* 分析过程
+* 解题过程
 
-  问题
-
-  算法
-
-  时间分析
-
-  空间分析
-
-  极值/溢出分析
-
-  边缘分析
+  某种意义上，算法就是分析模型，针对问题代入模型
+  从问题中抽象得到，再应用于问题，采用相似性
+  
+** 问题
+** 算法
+** 复杂度估计
+*** 时间
+*** 空间
+** 溢出
+*** 整数溢出
+*** 递归栈溢出
+** 边界
+*** 最简单情况
+*** 最大边界情况
 

@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-07T20:01:12+08:00
+lastmod: 2021-04-07T21:17:36+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -17,14 +17,14 @@ series: ["test"]
 ### 算法 {#算法}
 
 
-#### 回溯 总结 {#回溯-总结}
+#### 回溯 {#回溯}
 
 <!--list-separator-->
 
 -  优化条件
 
 
-#### 最优路径搜索 {#最优路径搜索}
+#### 搜索 {#搜索}
 
 <!--list-separator-->
 
