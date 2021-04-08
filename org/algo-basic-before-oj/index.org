@@ -305,14 +305,12 @@ plot data using 1:2 w lp title "log_{10}(2^n)"
 #+RESULTS:
 [[file:images/power_2.png]]
 
-
 ** 浮点数的精确位
 
 float
 
 double
    
-
 * 复杂度
 
 TODO 不同复杂度的 plot 曲线

@@ -2,7 +2,7 @@
 title: "写在算法学习前"
 author: ["DreamAndDead"]
 date: 2021-04-07T18:21:00+08:00
-lastmod: 2021-04-07T22:09:47+08:00
+lastmod: 2021-04-08T10:16:53+08:00
 tags: ["algorithm", "oj", "programing"]
 categories: ["Algorithm"]
 draft: true
@@ -109,7 +109,7 @@ int main()
 ```
 
 ```text
-running time: 1691.23ms
+running time: 1673.13ms
 ```
 
 <https://blog.csdn.net/qq%5F30763385/article/details/104580790>

@@ -66,3 +66,7 @@ plot data using 1:2 w lp title "log_{10}(2^n)"
 [[file:images/power_2.png]]
 
 #+call: plot(data=power_2_data) :file images/p_2_t.png
+
+#+RESULTS:
+[[file:images/p_2_t.png]]
+

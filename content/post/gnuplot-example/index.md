@@ -2,7 +2,7 @@
 title: "gnuplot example"
 author: ["DreamAndDead"]
 date: 2021-03-29T15:36:00+08:00
-lastmod: 2021-04-07T22:10:11+08:00
+lastmod: 2021-04-08T10:17:45+08:00
 tags: ["tool", "gnuplot", "drawing"]
 categories: ["Tool"]
 draft: true
