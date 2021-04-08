@@ -3,20 +3,316 @@
 #+hugo_bundle: algo-basic-before-oj
 #+export_file_name: index
 
-#+title: 写在算法学习前
+#+title: 在 OJ 做题之前，应该知道的
 #+date: <2021-04-07 三 18:21>
 #+hugo_categories: Algorithm
 #+hugo_tags: algorithm oj programing
 #+hugo_draft: true
 #+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg :series '("基础算法")
 
-* 推荐什么语言
+基础
+每个题目都需要的
+支撑算法应用的
+
+* 推荐语言
 
 cpp
 
-python 不利于表示细节
+python
+不利于表示细节
+太多高阶结构
+完全掌控
   
-* 如何调试
+* 复杂度
+
+** 大 O
+  
+TODO 不同复杂度的 plot 曲线
+
+N 很大时有意义
+
+绝对时间 与 相对时间
+
+即使复杂度很高，但如果数据集很小，在时间约束下还是可以完成的
+
+** 常见数值
+*** 阶乘
+
+ 阶乘规模增加的是非常快的，可以看到其位数基本随着 n 的增加基本呈线性，由系数 1 慢慢增加
+   
+ #+tblname: factor_data
+ #+begin_src python :results table :exports none
+ import math
+
+ table = [
+     ['n', 'log10(n!)']
+ ]
+ l = 0
+
+ for i in range(1, 110, 1):
+     l = l + math.log10(i)
+
+     if i % 10 == 0:
+         table.append([i, l])
+
+ return table
+ #+end_src
+
+ #+RESULTS: factor_data
+ |   n |          log10(n!) |
+ |  10 |  6.559763032876794 |
+ |  20 | 18.386124616877716 |
+ |  30 |  32.42366007492572 |
+ |  40 |  47.91164506815586 |
+ |  50 |  64.48307487247203 |
+ |  60 |  81.92017484939018 |
+ |  70 | 100.07840503567996 |
+ |  80 | 118.85472772249958 |
+ |  90 | 138.17193579001076 |
+ | 100 | 157.97000365471575 |
+
+ #+begin_src gnuplot :var data=factor_data :file images/factor.png
+ reset
+
+ set xlabel "n"
+ set xrange [0:110]
+ set xtics 0,10,110
+
+ set yrange [0:170]
+ set ytics 0,10,170
+
+ plot data using 1:2 w lp title "log_{10}(n!)"
+ #+end_src
+
+ #+RESULTS:
+ [[file:images/factor.png]]
+
+*** 组合数
+
+ 组合数 C(n, k) 中，k = n/2 时，组合数是最大的。
+
+ 基本趋势也是线性上升，系数约为 0.25 左右。
+
+ 趋势和 pow(2) 是相近的，因为 sum(C(n, k)) = pow(n, 2)
+
+ #+tblname: comb_data
+ #+begin_src python :results table :exports none
+ import math
+
+ table = [
+     ['n', 'log10( C(n, n/2) )']
+ ]
+ l = 0
+
+ for i in range(0, 110, 10):
+     table.append([i, math.log10(math.comb(i, i // 2))])
+
+ return table
+ #+end_src
+
+ #+RESULTS: comb_data
+ |   n | log10( C(n, n/2) ) |
+ |   0 |                0.0 |
+ |  10 |  2.401400540781544 |
+ |  20 |  5.266598551124127 |
+ |  30 |   8.19066085267892 |
+ |  40 |  11.13939583440044 |
+ |  50 | 14.101783514801882 |
+ |  60 |  17.07285469953875 |
+ |  70 | 20.049939738979344 |
+ |  80 | 23.031437586187852 |
+ |  90 | 26.016312067781552 |
+ | 100 | 29.003853909771717 |
+
+ #+begin_src gnuplot :var data=comb_data :file images/comb.png
+ reset
+
+ set xlabel "n"
+ set xrange [0:110]
+ set xtics 0,10,110
+
+ set yrange [0:30]
+ set ytics 0,2,30
+
+ plot data using 1:2 w lp title "log_{10}(C(n, n/2))"
+ #+end_src
+
+ #+RESULTS:
+ [[file:images/comb.png]]
+
+*** 2 的幂
+
+ 2 的幂对应的位数基本也呈线性增长，不过速度比阶乘要慢。
+
+ 关键记忆
+ - ~2^10 = 10^3~
+ - ~2^32 = 10^10~
+ - ~2^64 = 10^19~
+
+ #+tblname: power_2_data
+ #+begin_src python :results table :exports none
+ import math
+
+ table = [['p', 'log_{10}( power(p, 2) )']]
+
+ for i in range(0, 64+1, 8):
+     table.append([i, math.log10(pow(2, i))])
+
+ return table
+ #+end_src
+
+ #+RESULTS: power_2_data
+ |  p | log10( power(p, 2) ) |
+ |  0 |                  0.0 |
+ |  8 |   2.4082399653118496 |
+ | 16 |    4.816479930623699 |
+ | 24 |    7.224719895935548 |
+ | 32 |    9.632959861247398 |
+ | 40 |   12.041199826559248 |
+ | 48 |   14.449439791871097 |
+ | 56 |   16.857679757182947 |
+ | 64 |   19.265919722494797 |
+
+ #+begin_src gnuplot :var data=power_2_data :file images/power_2.png
+ reset
+
+ set xlabel "n"
+ set xrange [0:72]
+ set xtics 0,8,72
+
+ set yrange [0:21]
+ set ytics 0,2,21
+
+ plot data using 1:2 w lp title "log_{10}(2^n)"
+ #+end_src
+
+ #+RESULTS:
+ [[file:images/power_2.png]]
+
+*** 浮点数的精确位
+
+ float
+
+ double
+   
+
+** 时间估计
+*** 3000ms 对应什么概念
+
+ 对于单线程程序， ~运行时间 = 运行指令数 * 每个指令的周期数 * cpu 周期时间~ 。
+
+ cpu 内部的时钟一个 tick 为一个周期，周期时间为主频的倒数， 比如 =Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz= ，
+ 周期时间为 ~1/3.4G~
+
+ 不同指令，需要不同周期数才能完成，比如乘法指令就比加法指令消耗更多周期
+
+ 运行指令数是由程序生成的指令以及数据规模决定的
+
+ 根据上面的分析，粗略简化为
+ - ~1G~ 个指令运行 ~1s = 1000ms~
+
+ #+begin_src cpp :exports both
+ #include <ctime>
+ #include <iostream>
+
+ using namespace std; 
+
+ int main()
+ {
+ 
+     clock_t start,end;
+     start = clock();
+    
+     for(int i = 0; i < 1e9; i++)
+       {
+	 i++;
+       }
+
+     end = clock();
+
+     cout <<"running time: " << (float)(end-start)*1000.0/CLOCKS_PER_SEC << "ms" << endl;
+ }
+ #+end_src
+
+ #+RESULTS:
+ : running time: 1480.79ms
+  
+ https://blog.csdn.net/qq_30763385/article/details/104580790
+
+ https://zhuanlan.zhihu.com/p/90829922
+
+*** io 时间
+
+  memset 大数组
+
+  for loop 重置
+
+  scanf 和 cin 的速度
+
+** 空间估计
+  
+*** 131072k 是什么概念
+
+ 内存管理的最小单位为 字节(1 byte = 8 bits)，4G 内存对应 ~4*1024*1024*1024~ bytes。
+
+ cpp 中类型直接对应空间的大小，也用字节表示，用 ~sizeof~ 计算。
+
+ #+begin_src cpp :exports results
+ #include <cstdio>
+
+ int main(void) {
+   printf("bytes of char = %d\n", sizeof(char));
+   printf("bytes of bool = %d\n", sizeof(bool));
+   printf("bytes of short = %d\n", sizeof(short));
+   printf("bytes of int = %d\n", sizeof(int));
+   printf("bytes of long = %d\n", sizeof(long));
+   printf("bytes of longlong = %d\n", sizeof(long long));
+   printf("bytes of float = %d\n", sizeof(float));
+   printf("bytes of double = %d\n", sizeof(double));
+   printf("bytes of void = %d\n", sizeof(void));
+   printf("bytes of void* = %d\n", sizeof(void*));
+
+   printf("bytes of int[1000] = %d\n", sizeof(int[1000]));
+ }
+ #+end_src
+
+ #+RESULTS:
+ | bytes | of | char      | = |    1 |
+ | bytes | of | bool      | = |    1 |
+ | bytes | of | short     | = |    2 |
+ | bytes | of | int       | = |    4 |
+ | bytes | of | long      | = |    8 |
+ | bytes | of | longlong  | = |    8 |
+ | bytes | of | float     | = |    4 |
+ | bytes | of | double    | = |    8 |
+ | bytes | of | void      | = |    1 |
+ | bytes | of | void*     | = |    8 |
+ | bytes | of | int[1000] | = | 4000 |
+
+ ~空间 = 类型大小 * 数组长度~
+
+ - ~int[1000]~ 占用空间 4k
+ - ~int[1000 000]~ 占用空间 4000 k
+ - ~int[1000 000 000]~ 占用空间 4000 000k
+
+* 解题过程
+
+  某种意义上，算法就是分析模型，针对问题代入模型
+  从问题中抽象得到，再应用于问题，采用相似性
+  
+** 问题
+** 算法
+** 复杂度估计
+*** 时间
+*** 空间
+** 溢出
+*** 整数溢出
+*** 递归栈溢出
+** 边界
+*** 最简单情况
+*** 最大边界情况
+
+* 调试方法
 ** PE
 
 空行的问题
@@ -52,294 +348,4 @@ there is a blank line between each test case
 *** 寻找数据集
 
 uva udebug
-
-* 时间估计
-
-** 3000ms 对应什么概念
-
-对于单线程程序， ~运行时间 = 运行指令数 * 每个指令的周期数 * cpu 周期时间~ 。
-
-cpu 内部的时钟一个 tick 为一个周期，周期时间为主频的倒数， 比如 =Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz= ，
-周期时间为 ~1/3.4G~
-
-不同指令，需要不同周期数才能完成，比如乘法指令就比加法指令消耗更多周期
-
-运行指令数是由程序生成的指令以及数据规模决定的
-
-根据上面的分析，粗略简化为
-- ~1G~ 个指令运行 ~1s = 1000ms~
-
-#+begin_src cpp :exports both
-#include <ctime>
-#include <iostream>
-
-using namespace std; 
-
-int main()
-{
- 
-    clock_t start,end;
-    start = clock();
-    
-    for(int i = 0; i < 1e9; i++)
-      {
-	i++;
-      }
-
-    end = clock();
-
-    cout <<"running time: " << (float)(end-start)*1000.0/CLOCKS_PER_SEC << "ms" << endl;
-}
-#+end_src
-
-#+RESULTS:
-: running time: 1480.79ms
-  
-https://blog.csdn.net/qq_30763385/article/details/104580790
-
-https://zhuanlan.zhihu.com/p/90829922
-
-** io 时间
-
- memset 大数组
-
- for loop 重置
-
- scanf 和 cin 的速度
-
-* 空间估计
-  
-** 131072k 是什么概念
-
-内存管理的最小单位为 字节(1 byte = 8 bits)，4G 内存对应 ~4*1024*1024*1024~ bytes。
-
-cpp 中类型直接对应空间的大小，也用字节表示，用 ~sizeof~ 计算。
-
-#+begin_src cpp :exports results
-#include <cstdio>
-
-int main(void) {
-  printf("bytes of char = %d\n", sizeof(char));
-  printf("bytes of bool = %d\n", sizeof(bool));
-  printf("bytes of short = %d\n", sizeof(short));
-  printf("bytes of int = %d\n", sizeof(int));
-  printf("bytes of long = %d\n", sizeof(long));
-  printf("bytes of longlong = %d\n", sizeof(long long));
-  printf("bytes of float = %d\n", sizeof(float));
-  printf("bytes of double = %d\n", sizeof(double));
-  printf("bytes of void = %d\n", sizeof(void));
-  printf("bytes of void* = %d\n", sizeof(void*));
-
-  printf("bytes of int[1000] = %d\n", sizeof(int[1000]));
-}
-#+end_src
-
-#+RESULTS:
-| bytes | of | char      | = |    1 |
-| bytes | of | bool      | = |    1 |
-| bytes | of | short     | = |    2 |
-| bytes | of | int       | = |    4 |
-| bytes | of | long      | = |    8 |
-| bytes | of | longlong  | = |    8 |
-| bytes | of | float     | = |    4 |
-| bytes | of | double    | = |    8 |
-| bytes | of | void      | = |    1 |
-| bytes | of | void*     | = |    8 |
-| bytes | of | int[1000] | = | 4000 |
-
-~空间 = 类型大小 * 数组长度~
-
-- ~int[1000]~ 占用空间 4k
-- ~int[1000 000]~ 占用空间 4000 k
-- ~int[1000 000 000]~ 占用空间 4000 000k
-
-* 常见数值
-
-** 阶乘
-
-阶乘规模增加的是非常快的，可以看到其位数基本随着 n 的增加基本呈线性，由系数 1 慢慢增加
-   
-#+tblname: factor_data
-#+begin_src python :results table :exports none
-import math
-
-table = [
-    ['n', 'log10(n!)']
-]
-l = 0
-
-for i in range(1, 110, 1):
-    l = l + math.log10(i)
-
-    if i % 10 == 0:
-        table.append([i, l])
-
-return table
-#+end_src
-
-#+RESULTS: factor_data
-|   n |          log10(n!) |
-|  10 |  6.559763032876794 |
-|  20 | 18.386124616877716 |
-|  30 |  32.42366007492572 |
-|  40 |  47.91164506815586 |
-|  50 |  64.48307487247203 |
-|  60 |  81.92017484939018 |
-|  70 | 100.07840503567996 |
-|  80 | 118.85472772249958 |
-|  90 | 138.17193579001076 |
-| 100 | 157.97000365471575 |
-
-#+name: plot
-#+header: :var data=factor_data :var filename="images/factor.png"
-#+begin_src python :results file :exports results
-import matplotlib
-import matplotlib.pyplot as plt
-matplotlib.use('Agg')
-import numpy as np
-import pandas as pd
-
-fig = plt.figure(figsize=(4,2))
-fig.tight_layout()
-
-df = pd.DataFrame(data[1:], columns=data[0])
-df.plot(x=data[0][0])
-
-fname = filename
-plt.savefig(fname)
-return fname
-#+end_src
-
-#+RESULTS: plot
-
-** 组合数
-
-组合数 C(n, k) 中，k = n/2 时，组合数是最大的。
-
-基本趋势也是线性上升，系数约为 0.25 左右。
-
-趋势和 pow(2) 是相近的，因为 sum(C(n, k)) = pow(n, 2)
-
-#+tblname: comb_data
-#+begin_src python :results table :exports none
-import math
-
-table = [
-    ['n', 'log10( C(n, n/2) )']
-]
-l = 0
-
-for i in range(0, 110, 10):
-    table.append([i, math.log10(math.comb(i, i // 2))])
-
-return table
-#+end_src
-
-#+RESULTS: comb_data
-|   n | log10( C(n, n/2) ) |
-|   0 |                0.0 |
-|  10 |  2.401400540781544 |
-|  20 |  5.266598551124127 |
-|  30 |   8.19066085267892 |
-|  40 |  11.13939583440044 |
-|  50 | 14.101783514801882 |
-|  60 |  17.07285469953875 |
-|  70 | 20.049939738979344 |
-|  80 | 23.031437586187852 |
-|  90 | 26.016312067781552 |
-| 100 | 29.003853909771717 |
-
-#+call: plot(data=comb_data, filename="images/comb.png")
-
-#+RESULTS:
-[[file:images/comb.png]]
-   
-** 2 的幂
-
-2 的幂对应的位数基本也呈线性增长，不过速度比阶乘要慢。
-
-关键记忆
-- ~2^10 = 10^3~
-- ~2^32 = 10^10~
-- ~2^64 = 10^19~
-
-#+tblname: power_2_data
-#+begin_src python :results table :exports none
-import math
-
-table = [['p', 'log_{10}( power(p, 2) )']]
-
-for i in range(0, 64+1, 8):
-    table.append([i, math.log10(pow(2, i))])
-
-return table
-#+end_src
-
-#+RESULTS: power_2_data
-|  p | log10( power(p, 2) ) |
-|  0 |                  0.0 |
-|  8 |   2.4082399653118496 |
-| 16 |    4.816479930623699 |
-| 24 |    7.224719895935548 |
-| 32 |    9.632959861247398 |
-| 40 |   12.041199826559248 |
-| 48 |   14.449439791871097 |
-| 56 |   16.857679757182947 |
-| 64 |   19.265919722494797 |
-
-#+name: gplot
-#+header: :var data=power_2_data
-#+begin_src gnuplot
-set xlabel "n"
-set xrange [0:72]
-set xtics 0,8,72
-
-set yrange [0:21]
-set ytics 0,2,21
-
-plot data using 1:2 w lp title "log_{10}(2^n)"
-#+end_src
-
-#+call: gplot(data=power_2_data) :file images/power_2.png
-
-#+RESULTS:
-[[file:images/power_2.png]]
-
-** 浮点数的精确位
-
-float
-
-double
-   
-* 复杂度
-
-TODO 不同复杂度的 plot 曲线
-  
-绝对
-相对
-  
-绝对时间 与 相对时间
-
-即使复杂度很高，但如果数据集很小，在时间约束下还是可以完成的
-
-** 时间换空间
-
-** 空间换时间
-
-* 解题过程
-
-  某种意义上，算法就是分析模型，针对问题代入模型
-  从问题中抽象得到，再应用于问题，采用相似性
-  
-** 问题
-** 算法
-** 复杂度估计
-*** 时间
-*** 空间
-** 溢出
-*** 整数溢出
-*** 递归栈溢出
-** 边界
-*** 最简单情况
-*** 最大边界情况
 

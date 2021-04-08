@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-07T21:17:36+08:00
+lastmod: 2021-04-08T11:43:15+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -41,6 +41,25 @@ series: ["test"]
 <!--list-separator-->
 
 -  和 dijkstra 的关系
+
+
+#### 可视化模型 {#可视化模型}
+
+<!--list-separator-->
+
+-  树模型
+
+    <!--list-separator-->
+
+    -  枚举
+
+<!--list-separator-->
+
+-  图模型
+
+    <!--list-separator-->
+
+    -  八数码
 
 
 ### 编程语言 {#编程语言}
@@ -331,10 +350,31 @@ series: ["test"]
 #### 分析优秀的作品 {#分析优秀的作品}
 
 
+#### 模仿 {#模仿}
+
+
+#### 超越 {#超越}
+
+
 #### 记录，分享，交流，成长 {#记录-分享-交流-成长}
 
 
 #### 认知缺点与不足 {#认知缺点与不足}
+
+
+#### 绘画 编程 都是一种艺术活动 {#绘画-编程-都是一种艺术活动}
+
+<!--list-separator-->
+
+-  艺术活动，结合的是技术力和创造力
+
+<!--list-separator-->
+
+-  技术需要去磨练，比如绘图笔法，编程语言的熟悉使用
+
+<!--list-separator-->
+
+-  而在创作时，是随心所欲的，甚至觉知不到技术的存在
 
 
 #### 就编程而言 {#就编程而言}
@@ -511,6 +551,29 @@ series: ["test"]
 #### 追求幸福，而放弃追逐资产，是逃避者的行为 {#追求幸福-而放弃追逐资产-是逃避者的行为}
 
 
+#### 拖延心理 {#拖延心理}
+
+<!--list-separator-->
+
+-  恐惧机会成本
+
+<!--list-separator-->
+
+-  恐惧成功
+
+    <!--list-separator-->
+
+    -  担心那不再是自己
+
+    <!--list-separator-->
+
+    -  朋友好奇的眼光
+
+<!--list-separator-->
+
+-  只追求简单，快速，数量
+
+
 ### 职业生涯 {#职业生涯}
 
 
@@ -544,13 +607,45 @@ series: ["test"]
 
         -  复杂系统的认知
 
+            <!--list-separator-->
+
+            -  可视化是有力的工具
+
+            <!--list-separator-->
+
+            -  良好的设计
+
+            <!--list-separator-->
+
+            -  如何对抗
+
+            <!--list-separator-->
+
+            -  建模
+
+            <!--list-separator-->
+
+            -  一个人
+
+            <!--list-separator-->
+
+            -  一个组织
+
         <!--list-separator-->
 
         -  架构师
 
     <!--list-separator-->
 
-    -  更好的记忆
+    -  记忆
+
+        <!--list-separator-->
+
+        -  可深入的事？
+
+        <!--list-separator-->
+
+        -  图像记忆
 
     <!--list-separator-->
 
@@ -618,6 +713,10 @@ series: ["test"]
     <!--list-separator-->
 
     -  拓展之用？
+
+    <!--list-separator-->
+
+    -  可视化解析算法过程
 
 <!--list-separator-->
 
@@ -753,6 +852,10 @@ series: ["test"]
 
 
 #### 沟通 {#沟通}
+
+<!--list-separator-->
+
+-  与人交流的焦虑
 
 
 #### 交友 {#交友}

@@ -49,7 +49,7 @@ plot data u 1 w histograms title "before"
 | 56 |   16.857679757182947 |
 | 64 |   19.265919722494797 |
 
-#+name: plot
+#+name: gplot
 #+header: :var data=power_2_data
 #+begin_src gnuplot :file images/power_2.png
 set xlabel "n"
@@ -65,8 +65,37 @@ plot data using 1:2 w lp title "log_{10}(2^n)"
 #+RESULTS:
 [[file:images/power_2.png]]
 
-#+call: plot(data=power_2_data) :file images/p_2_t.png
+#+call: gplot(data=power_2_data) :file images/p_2_t.png
 
 #+RESULTS:
 [[file:images/p_2_t.png]]
 
+
+
+#+name: plot
+#+header: :var data=factor_data :var filename="images/factor.png"
+#+begin_src python :results file :exports results
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.use('Agg')
+import numpy as np
+import pandas as pd
+
+fig = plt.figure(figsize=(4,2))
+fig.tight_layout()
+
+df = pd.DataFrame(data[1:], columns=data[0])
+df.plot(x=data[0][0])
+
+fname = filename
+plt.savefig(fname)
+return fname
+#+end_src
+
+#+RESULTS: plot
+
+
+#+call: plot(data=power_2_data, filename="images/py_power_2.png")
+
+#+RESULTS:
+[[file:images/py_power_2.png]]
