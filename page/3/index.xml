@@ -1,4 +1,252 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Quicksort Complexity Analysis in Probability</title><link>https://dreamanddead.github.io/post/quicksort-complexity/</link><pubDate>Wed, 07 Aug 2019 16:43:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/quicksort-complexity/</guid><description>时长N年半 https://dreamanddead.github.io/post/quicksort-complexity/ -&lt;p>最近在阅读&lt;a href="https://book.douban.com/subject/25813568/">《概率论基础教程 A First Course in Probability》&lt;/a>时，看到&lt;strong>chapter 7 期望的性质&lt;/strong>，
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>How to Customize Keymap in Linux</title><link>https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/</link><pubDate>Mon, 12 Aug 2019 10:29:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/</guid><description>时长N年半 https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/ -&lt;p>最近刚开始使用 emacs ，太多 Ctrl Alt 相关的快捷键，边侧的手指不舒服，于是想法将部分键盘按键进行改键。&lt;/p>
+&lt;p>如果 Caps Lock 可以作为 BackSpace，删除字符的时候就不需要右侧的小指离的太远。
+如果将 Menu 键改为 Ctrl，这样就可以用小指的指根来按压，方便进行快捷键操作。&lt;/p>
+&lt;p>针对这样的需求，开始在网上寻找相关改键的方案，搜索结果几乎一致统一的，在 Xorg 环境下，使用 xmodmap 来修改是最合适的。&lt;/p>
+&lt;h1 id="key-concept">key concept&lt;/h1>
+&lt;p>在开始之前，我们先了解一下 Xorg 环境下，关于键盘的&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap">一些概念&lt;/a>。&lt;/p>
+&lt;p>在 Xorg 中，有两种键盘值，分别是 keycode 和 keysym。&lt;/p>
+&lt;p>keycode 本质是一组数字表示，和键盘上的按键是一一对应的。
+在按键被按下后，相关信号传递给内核，内核看到的就是这个 keycode 数字。&lt;/p>
+&lt;p>而 keysym 是和 keycode 相关联的值，可以理解为是键盘的功能，比如输入字符 a，删除字符等等。
+它是内核对应相应按键所调用的处理方法。&lt;/p>
+&lt;p>它们两者的关系就是一个 map 结构，keycode 是 key，keysym 是value。
+于是，按键就和按键的功能关联起来。&lt;/p>
+&lt;p>这种对应结构管理由 Xorg 来管理，被称为 keymap table，它可以用 xmodmap 来查看和修改。&lt;/p>
+&lt;p>所以说，修改了关联关系，就达到了改键的目的。&lt;/p>
+&lt;h1 id="browse-keymap-table">browse keymap table&lt;/h1>
+&lt;p>通过命令，我们可以查看当前的 keymap table。&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -pke
+keycode 8 =
+keycode 9 = Escape NoSymbol Escape
+keycode 10 = 1 exclam 1 exclam
+keycode 11 = 2 at 2 at
+...............................................
+...............................................
+...............................................
+keycode 23 = Tab ISO_Left_Tab Tab ISO_Left_Tab
+keycode 24 = q Q q Q
+keycode 25 = w W w W
+...............................................
+...............................................
+...............................................
+keycode 254 = XF86WWAN NoSymbol XF86WWAN
+keycode 255 = XF86RFKill NoSymbol XF86RFKill
+&lt;/code>&lt;/pre>
+&lt;p>可以观察到，一个 keycode 对应了多个 keysym。&lt;/p>
+&lt;p>其实第一个是按键本身按下所对应的 keysym，后面的 keysym 对应于&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">当修饰键所按下时的情况&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>Key&lt;/li>
+&lt;li>Shift+Key&lt;/li>
+&lt;li>Mode_switch+Key&lt;/li>
+&lt;li>Mode_switch+Shift+Key&lt;/li>
+&lt;li>etc&lt;/li>
+&lt;/ol>
+&lt;p>我们通常只需要了解前两个就足够了，即按键本身和 shift 加按键两种情况。&lt;/p>
+&lt;p>每个 keycode 用数字来标识，而 keysym 有相应的名称，比如 n N BackSpace，表达相应的功能含义。
+如果想设置为空值，可以设置为 NoSymbol。&lt;/p>
+&lt;h1 id="check-out-specific-key">check out specific key&lt;/h1>
+&lt;p>通过 xev 工具，&lt;/p>
+&lt;pre>&lt;code>$ xev -event keyboard
+&lt;/code>&lt;/pre>
+&lt;p>可以监听到所有的键盘消息，并打印出 log。&lt;/p>
+&lt;p>通过这种方式，我们就可以检测出当前键盘的按键对应的 keycode 是什么，调用了什么 keysym。&lt;/p>
+&lt;p>比如在按下字符 d 之后，可以从 log 中看到 keycode 是 40 ，使用的 keysym 为 d，数字标识为 0x64&lt;/p>
+&lt;pre>&lt;code>KeyPress event, serial 28, synthetic NO, window 0x6e00001,
+root 0x1d5, subw 0x0, time 34680022, (634,241), root:(3198,270),
+state 0x0, keycode 40 (keysym 0x64, d), same_screen YES,
+XLookupString gives 1 bytes: (64) &amp;quot;d&amp;quot;
+XmbLookupString gives 1 bytes: (64) &amp;quot;d&amp;quot;
+XFilterEvent returns: False
+KeyRelease event, serial 28, synthetic NO, window 0x6e00001,
+root 0x1d5, subw 0x0, time 34680062, (634,241), root:(3198,270),
+state 0x0, keycode 40 (keysym 0x64, d), same_screen YES,
+XLookupString gives 1 bytes: (64) &amp;quot;d&amp;quot;
+XFilterEvent returns: False
+&lt;/code>&lt;/pre>
+&lt;h1 id="configure-keymap-table">configure keymap table&lt;/h1>
+&lt;p>修改按键就是使用 xmodmap 配置 keymap table 的过程。&lt;/p>
+&lt;p>第一种方法，可以通过命令，直接进行修改，使一行配置生效。&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -e 'keycode 38 = b E'
+&lt;/code>&lt;/pre>
+&lt;p>另外一种方法，可以将配置写在文件中，载入文件进行批量修改。&lt;/p>
+&lt;pre>&lt;code>$ xmodmap ~/.Xmodmap
+&lt;/code>&lt;/pre>
+&lt;p>另外在配置的过程中，如果有修改不合适的地方，可以使用&lt;/p>
+&lt;pre>&lt;code>$ setxkbmap
+&lt;/code>&lt;/pre>
+&lt;p>来重置 keymap table 到默认状态。&lt;/p>
+&lt;h2 id="grammar">grammar&lt;/h2>
+&lt;p>通过&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -grammar
+&lt;/code>&lt;/pre>
+&lt;p>可以查看 xmodmap 配置所使用的语法规则，&lt;/p>
+&lt;pre>&lt;code>xmodmap accepts the following input expressions:
+pointer = default reset pointer buttons to default
+pointer = NUMBER ... set pointer button codes
+keycode NUMBER = [KEYSYM ...] map keycode to given keysyms
+keysym KEYSYM = [KEYSYM ...] look up keysym and do a keycode operation
+clear MODIFIER remove all keys for this modifier
+add MODIFIER = KEYSYM ... add the keysyms to the modifier
+remove MODIFIER = KEYSYM ... remove the keysyms from the modifier
+where NUMBER is a decimal, octal, or hex constant; KEYSYM is a valid
+Key Symbol name; and MODIFIER is one of the eight modifier names: Shift,
+Lock, Control, Mod1, Mod2, Mod3, Mod4, or Mod5. Lines beginning with
+an exclamation mark (!) are taken as comments. Case is significant except
+for MODIFIER names.
+Keysyms on the left hand side of the = sign are looked up before any changes
+are made; keysyms on the right are looked up after all of those on the left
+have been resolved. This makes it possible to swap modifier keys.
+&lt;/code>&lt;/pre>&lt;p>pointer 是和鼠标事件相关的，这里先不讨论。
+至于后面的 5 种规则，我们之后详细的从实践角度分析一下它们的作用。&lt;/p>
+&lt;h2 id="keycode-">keycode =&lt;/h2>
+&lt;p>首先我们来看，&lt;/p>
+&lt;pre>&lt;code>keycode NUMBER = [KEYSYM ...] map keycode to given keysyms
+&lt;/code>&lt;/pre>
+&lt;p>这个配置是万能配置，可以将任何键盘按键映射到任何按键处理方法上。&lt;/p>
+&lt;p>我们在 xev 中看到键盘 a 的 keycode 是 38，我们现在将它映射到 shift 方法上。&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -e 'keycode 38 = Shift_L A'
+&lt;/code>&lt;/pre>
+&lt;p>如同去前面说的，第一个是单独按键的 keysym，第二个是有 shift 修饰的时候的 keysym。&lt;/p>
+&lt;p>（大家可以体会一下这个示例，观察一下 a 按键的行为，修改之后变得非常微妙。记得使用 &lt;code>setxkbmap&lt;/code> 重置成正常的布局~）&lt;/p>
+&lt;h2 id="keysym-">keysym =&lt;/h2>
+&lt;p>另外一种配置方法是&lt;/p>
+&lt;pre>&lt;code>keysym KEYSYM = [KEYSYM ...] look up keysym and do a keycode operation
+&lt;/code>&lt;/pre>
+&lt;p>这个配置就有些微妙了。
+它可以将相应 keysym 代表的处理方法，赋值给另一个　keysym。&lt;/p>
+&lt;p>比如&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -e 'keysym a = b'
+$ xmodmap -pke | grep 38
+keycode 38 = b B b B
+&lt;/code>&lt;/pre>
+&lt;p>可以看到原来绑定的 a 方法都绑定成为了 b 方法，而且附带修饰键的 keysym 也一并修改了。
+也就是我们按 a 键的时候，其实输入的是 b。&lt;/p>
+&lt;p>但如果&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -e 'keysym a = b c'
+$ xmodmap -pke | grep 38
+keycode 38 = b c b c
+&lt;/code>&lt;/pre>
+&lt;p>它则会这样的绑定结果。
+因为没有具体的文档告诉我们这样配置后的规则到底是什么，所以不推荐用这种方法来配置。&lt;/p>
+&lt;p>有意思的是，文档中提到，这种方法可以用来交换两个按键。&lt;/p>
+&lt;pre>&lt;code>Keysyms on the left hand side of the = sign are looked up before any changes
+are made; keysyms on the right are looked up after all of those on the left
+have been resolved. This makes it possible to swap modifier keys.
+&lt;/code>&lt;/pre>
+&lt;p>keysym = keysym，左侧解析在前，右侧在左侧解析后再解析。&lt;/p>
+&lt;p>所以如果我们载入这样的配置&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">keysym a = b
+keysym b = a
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>发现 a b 两个按键互换了。&lt;/p>
+&lt;p>从某种意义上，这种交换很像 python 中变量的交换。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">a, b = b, a
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>左侧的 a b 先解析成对象的地址，右侧的 a b 解析为对象的值，然后统一赋值。&lt;/p>
+&lt;p>这样来看的话，keysym 的符号表示更像是一个变量指针。&lt;/p>
+&lt;h2 id="modifier">modifier&lt;/h2>
+&lt;p>下面来看 modifier 的部分。&lt;/p>
+&lt;p>一共有 8 个修饰键，通过&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -pm
+&lt;/code>&lt;/pre>
+&lt;p>可以查看当前状态。&lt;/p>
+&lt;pre>&lt;code>xmodmap: up to 4 keys per modifier, (keycodes in parentheses):
+shift Shift_L (0x32), Shift_R (0x3e)
+lock Caps_Lock (0x42)
+control Control_L (0x25), Control_R (0x69)
+mod1 Alt_L (0x40), Alt_R (0x6c), Meta_L (0xcd)
+mod2 Num_Lock (0x4d)
+mod3
+mod4 Super_L (0x85), Super_R (0x86), Super_L (0xce), Hyper_L (0xcf)
+mod5 ISO_Level3_Shift (0x5c), Mode_switch (0xcb)
+&lt;/code>&lt;/pre>
+&lt;p>我们可以发现，不同于之前 keycode 和 keysym 的对应关系，修饰键是一个分类，其中包括了一些 keysym。&lt;/p>
+&lt;p>前 4 个我们可以轻易的看出是 shift capslock control alt 分类。&lt;/p>
+&lt;p>每个 keysym 有自己的含义，比如 a，当使用这个 keysym 的时候，系统会输入 a 字符。
+modifier 是一个分类，当某个 keysym 归于这个分类的时候，它就同时附加了相应 modifier 的功能。&lt;/p>
+&lt;p>关于 modifier，语法规定可以这样修改&lt;/p>
+&lt;pre>&lt;code>clear MODIFIER remove all keys for this modifier
+add MODIFIER = KEYSYM ... add the keysyms to the modifier
+remove MODIFIER = KEYSYM ... remove the keysyms from the modifier
+&lt;/code>&lt;/pre>
+&lt;p>clear 可以清空某个 modifier 包含的全部 keysym；
+add 可以添加对应的 keysym 到 modifier；
+remove 可以删除相应 modifier 下的 keysym。&lt;/p>
+&lt;p>remove 不如 clear 常用，因为一般的修改都直接 clear 相关的 modifier，再添加相应的 keysym，这样逻辑清晰，不容易出错。&lt;/p>
+&lt;p>在改动 modifier 按键的时候要考虑两点：&lt;/p>
+&lt;p>一是，尽量不要将有一定功能含义的 keysym 加入到 modifier 中。&lt;/p>
+&lt;p>假如我们将 a 加入到 shift 组中，&lt;/p>
+&lt;pre>&lt;code>xmodmap -e 'add shift = a'
+&lt;/code>&lt;/pre>
+&lt;p>会发生非常不舒服的情况，单独按 a 还是会输入 a，当 a 按下，再按别的键，它又成了 shift （可以体会一下）。&lt;/p>
+&lt;p>所以，将像 a 这样的 keysym 加入 modifier，并不会消除它本身的含义，导致它本身的含义和 modifier 的含义发生混乱。
+但是像 Shift_L 这样的 keysym，如果它不在 modifier 组中，它什么功能都没有，天生就适合作为 modifier。&lt;/p>
+&lt;p>二是，两种修改方法的结果有一些差异。&lt;/p>
+&lt;pre>&lt;code>keycode NUMBER = [KEYSYM ...] map keycode to given keysyms
+keysym KEYSYM = [KEYSYM ...] look up keysym and do a keycode operation
+&lt;/code>&lt;/pre>
+&lt;p>这两种方法都可以进行改键。
+假如我们想将键盘上的 caps lock 改成 control 按键，
+用第一种方法，我们先找到 caps lock 的 keycode 是 66，然后载入配置&lt;/p>
+&lt;pre>&lt;code>clear shift
+clear lock
+keycode 66 = Shift_L
+add shift = Shift_L Shift_R
+&lt;/code>&lt;/pre>
+&lt;p>打印目前的 modifier 结果，&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -pm
+xmodmap: up to 4 keys per modifier, (keycodes in parentheses):
+shift Shift_L (0x32), Shift_R (0x3e), Shift_L (0x42)
+lock
+control Control_L (0x25), Control_R (0x69)
+mod1 Alt_L (0x40), Alt_R (0x6c), Meta_L (0xcd)
+mod2 Num_Lock (0x4d)
+mod3
+mod4 Super_L (0x85), Super_R (0x86), Super_L (0xce), Hyper_L (0xcf)
+mod5 ISO_Level3_Shift (0x5c), Mode_switch (0xcb)
+&lt;/code>&lt;/pre>
+&lt;p>发现 shift 中多了一个 Shift_L 键，那是新加的 caps lock 键。&lt;/p>
+&lt;p>假如我们用第二种方式，改变 keysym Caps_Lock 的含义。&lt;/p>
+&lt;pre>&lt;code>clear lock
+keysym Caps_Lock = Shift_L
+&lt;/code>&lt;/pre>
+&lt;p>然后查看当前 modifier 的状态，&lt;/p>
+&lt;pre>&lt;code>$ xmodmap -pm
+xmodmap: up to 4 keys per modifier, (keycodes in parentheses):
+shift Shift_L (0x32), Shift_R (0x3e)
+lock
+control Control_L (0x25), Control_R (0x69)
+mod1 Alt_L (0x40), Alt_R (0x6c), Meta_L (0xcd)
+mod2 Num_Lock (0x4d)
+mod3
+mod4 Super_L (0x85), Super_R (0x86), Super_L (0xce), Hyper_L (0xcf)
+mod5 ISO_Level3_Shift (0x5c), Mode_switch (0xcb)
+&lt;/code>&lt;/pre>
+&lt;p>我们发现，shift 中只有两个按键，相当于我们将 caps lock 修改成了 shift，利用这一点，可以突破最多 4 个按键绑定的限制。&lt;/p>
+&lt;p>但是综合来看，我还是&lt;strong>建议使用 keycode 的方法&lt;/strong>来修改，这样相对清晰，稳妥。&lt;/p>
+&lt;h1 id="modification">modification&lt;/h1>
+&lt;p>在具体了解 xmodmap 之后，再按照我们的想法来修改按键就很简单了。&lt;/p>
+&lt;p>比如我目前用的键盘，配合 emacs，很适合将 caps lock 换成 backSpace 键，右边的 menu 换成 ctrl 键。&lt;/p>
+&lt;figure>
+&lt;img src="images/penixx-keyboard.jpg"/>
+&lt;/figure>
+&lt;pre>&lt;code>clear lock
+clear control
+keycode 66 = BackSpace BackSpace
+keycode 135 = Control_R
+add control = Control_L Control_R
+&lt;/code>&lt;/pre>
+&lt;h1 id="load-at-boot">load at boot&lt;/h1>
+&lt;p>在修改之后，我们想在启动的时候，自动载入改键的配置。&lt;/p>
+&lt;p>可以在 &lt;code>~/.xinitrc&lt;/code> 文件中，加入&lt;/p>
+&lt;pre>&lt;code>[[ -f ~/.Xmodmap ]] &amp;amp;&amp;amp; xmodmap ~/.Xmodmap
+&lt;/code>&lt;/pre>
+&lt;p>而一般情况下，&lt;code>.xinitrc&lt;/code> 中已经有了相应的配置，不需要另外再添加。&lt;/p>
+&lt;h1 id="refs">refs&lt;/h1>
+&lt;ul>
+&lt;li>&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap">arch wiki&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.zouyesheng.com/xmodmap-usage.html">xmodmap tutorial&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">arch wiki cn&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://askubuntu.com/questions/29603/how-do-i-clear-xmodmap-settings">reset xmodmap&lt;/a>&lt;/li>
+&lt;/ul>- https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/ - DreamAndDead 2014-2021</description></item><item><title>Quicksort Complexity Analysis in Probability</title><link>https://dreamanddead.github.io/post/quicksort-complexity/</link><pubDate>Wed, 07 Aug 2019 16:43:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/quicksort-complexity/</guid><description>时长N年半 https://dreamanddead.github.io/post/quicksort-complexity/ -&lt;p>最近在阅读&lt;a href="https://book.douban.com/subject/25813568/">《概率论基础教程 A First Course in Probability》&lt;/a>时，看到&lt;strong>chapter 7 期望的性质&lt;/strong>，
 其中提到了如何使用概率的方法来衡量快速排序算法的效率，看完之后很受启发，特此记录在这里。&lt;/p>
 &lt;p>对于一个排序算法，对于最好运行情况和最坏运行情况，我们都容易找出相应的输入来测试。
 而对于一般的情况，也就是当我们面对随机的输入，这时可以利用到期望的方式来衡量，
@@ -1328,135 +1576,4 @@ deb http://archive.debian.org/debian squeeze-lts main
 &lt;/code>&lt;/pre>&lt;p>2.同时配置 apt，添加以下内容到 /etc/apt/apt.conf(没有则新建)&lt;/p>
 &lt;pre>&lt;code>Acquire::Check-Valid-Until false;
 &lt;/code>&lt;/pre>&lt;p>其中特别提到了 &lt;code>The second line will fail with an &amp;quot;expired&amp;quot; type message, so you also need to ...&lt;/code>，so sweet！&lt;/p>
-&lt;p>既然 Debian Squeeze 已经不再更新，apt source 也划入了 archive，这个方案应该是最“长治久安”的。&lt;/p>- https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ - DreamAndDead 2014-2021</description></item><item><title>How uri match nginx location</title><link>https://dreamanddead.github.io/post/nginx-location/</link><pubDate>Mon, 28 May 2018 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/nginx-location/</guid><description>时长N年半 https://dreamanddead.github.io/post/nginx-location/ -&lt;p>location 是 nginx 配置中出现最频繁的配置项，一个 uri 是如何与多个 location 进行匹配的？
-在有多个 location 都匹配的情况下，如何决定使用哪一个 location 作为匹配结果？&lt;/p>
-&lt;p>清晰内部机制之后，疑问自然迎刃而解。&lt;/p>
-&lt;h1 id="location-规则类型">location 规则类型&lt;/h1>
-&lt;p>根据&lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location">官方文档&lt;/a>，location 配置语法如下&lt;/p>
-&lt;pre>&lt;code>Syntax: location [ = | ~ | ~* | ^~ ] uri { ... }
-location @name { ... }
-Default: —
-Context: server, location
-&lt;/code>&lt;/pre>&lt;p>其语法对应了 location 规则的 5 种类型：&lt;/p>
-&lt;h2 id="prefix">prefix&lt;/h2>
-&lt;p>前缀匹配规则，如果 uri 包含相应的前缀，则匹配成功。&lt;/p>
-&lt;p>语法上， location 之后单纯跟上 uri，没有任何操作符。&lt;/p>
-&lt;pre>&lt;code>location /api/v1 {
-....
-}
-&lt;/code>&lt;/pre>&lt;h2 id="exact-uri">exact uri&lt;/h2>
-&lt;p>完全匹配规则，如果 uri 和规则完全相同，则匹配成功。&lt;/p>
-&lt;p>语法上，使用 = 操作符。&lt;/p>
-&lt;pre>&lt;code>location = /api/v1 {
-....
-}
-&lt;/code>&lt;/pre>&lt;h2 id="case-sensitive-regex">case-sensitive regex&lt;/h2>
-&lt;p>区分大小写的正则表达式匹配规则，如果 uri 与正则表达式相匹配，则匹配成功。
-正则表达式使用 &lt;a href="https://www.pcre.org/">pcre library&lt;/a>，语法和 perl 兼容。&lt;/p>
-&lt;p>语法上，使用 ~ 操作符。&lt;/p>
-&lt;p>这里有一个细节，uri 作为一个 string，只要 regex 匹配其中的一部分，即可算作匹配。
-比如有如下的规则，&lt;/p>
-&lt;pre>&lt;code>location ~ /api/v1 {
-....
-}
-&lt;/code>&lt;/pre>&lt;p>可以匹配 uri&lt;/p>
-&lt;ul>
-&lt;li>/api/v1/login&lt;/li>
-&lt;li>/pod/api/v1&lt;/li>
-&lt;/ul>
-&lt;p>如果想要匹配整个 string，则要使用 &lt;code>^ $&lt;/code>。
-比如，&lt;/p>
-&lt;pre>&lt;code>location ~ ^/api/v1.*$ {
-....
-}
-&lt;/code>&lt;/pre>&lt;p>可以匹配 uri&lt;/p>
-&lt;ul>
-&lt;li>/api/v1/login&lt;/li>
-&lt;/ul>
-&lt;p>不可以匹配&lt;/p>
-&lt;ul>
-&lt;li>/pod/api/v1&lt;/li>
-&lt;/ul>
-&lt;h2 id="case-insensitive-regex">case-insensitive regex&lt;/h2>
-&lt;p>规则同上，区别只在于，正则表达式不区分大小写。
-&lt;strong>不&lt;/strong>区分大小写的正则表达式匹配规则，如果 uri 与正则表达式相匹配，则匹配成功。&lt;/p>
-&lt;p>语法上，使用 &lt;code>~*&lt;/code> 操作符。&lt;/p>
-&lt;pre>&lt;code>location ~* /api/v1 {
-....
-}
-&lt;/code>&lt;/pre>&lt;h2 id="disable-regex-prefix">disable regex prefix&lt;/h2>
-&lt;p>匹配流程与 prefix 规则相同，有一点区别在于，如果最长匹配是当前规则，则之后不进行 正则表达式 规则的搜索。
-这一点可能有些难以理解，后面会详细讲解。&lt;/p>
-&lt;p>语法上，使用 &lt;code>^~&lt;/code> 操作符。&lt;/p>
-&lt;pre>&lt;code>location ^~ /api/v1 {
-....
-}
-&lt;/code>&lt;/pre>&lt;h1 id="uri-如何选择-location">uri 如何选择 location&lt;/h1>
-&lt;p>前面讲到，location 规则有 5 种类型，那么 uri 如何在多种不同类型的 location 规则之间，
-最终选择到唯一的 location 规则呢？&lt;/p>
-&lt;p>根据&lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location">官方文档&lt;/a>的描述，详细规则如下：&lt;/p>
-&lt;ol>
-&lt;li>如果存在 exact uri 规则与 uri 匹配，至步骤 6&lt;/li>
-&lt;li>在所有 prefix 规则和 disable regex prefix 规则中进行匹配（&lt;strong>与这些规则定义的顺序无关&lt;/strong>），
-如果没有匹配到规则，至步骤 3；如果存在匹配的规则，选择出最长匹配 uri 的规则：
-&lt;ul>
-&lt;li>如果规则是 disable regex prefix 类型，至步骤 6&lt;/li>
-&lt;li>如果规则是 prefix 类型，记住当前匹配的 prefix 规则，选为待定，至步骤 3&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>逐个遍历 case-sensitive regex 规则和 case-insensitive regex 规则（&lt;strong>按照这些规则定义的前后顺序&lt;/strong>）:
-&lt;ul>
-&lt;li>如果规则匹配，则遍历终止，至步骤 6&lt;/li>
-&lt;li>如果规则没有匹配，则继续&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>如果之前有 prefix 规则条目被选择为待定，至步骤 6&lt;/li>
-&lt;li>匹配失败，返回404，结束&lt;/li>
-&lt;li>选择当前规则，使用其配置，结束&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-28/21577003.jpg" alt="">&lt;/p>
-&lt;h1 id="faq">FAQ&lt;/h1>
-&lt;p>有人可能会困惑，如果 prefix 与 disable regex prefix 规则相同，比如，&lt;/p>
-&lt;pre>&lt;code>location /static/ {
-....
-}
-location ^~ /static/ {
-....
-}
-&lt;/code>&lt;/pre>&lt;p>最终会匹配哪一条规则？是否应该继续查找 regex 规则？&lt;/p>
-&lt;p>实际上，这种情况 nginx 会报错，&lt;code>nginx: [emerg] duplicate location &amp;quot;/static/&amp;quot; in /etc/nginx/conf.d/location.conf&lt;/code>，
-所以这种情况是不用考虑的。&lt;/p>
-&lt;h1 id="示例">示例&lt;/h1>
-&lt;p>示例项目在 &lt;a href="https://github.com/DreamAndDead/nginx-example">nginx example&lt;/a>，
-参考 readme 文件，在本地启动 nginx server。&lt;/p>
-&lt;p>其中对 nginx 的配置如下，使用 curl 进行检测。&lt;/p>
-&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/nginx-example/blob/master/location/conf.d/location.conf?footer=minimal&amp;slice=0:34">&lt;/script>
-&lt;p>exact uri 规则先于所有规则（与规则定义的顺序无关），所以这里匹配了 &lt;code>= /&lt;/code> exact uri 规则而不是 &lt;code>/&lt;/code> prefix 规则。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/
-uri &amp;quot;/&amp;quot;: exact match &amp;quot;location = /&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>exact uri 规则先于所有规则（与规则定义的顺序无关），所以这里没有匹配 &lt;code>^~ /static/&lt;/code> disable regex prefix 和 &lt;code>~* \.PNG$&lt;/code>，&lt;code>~ \.png$&lt;/code> regex 规则。&lt;/p>
-&lt;p>正是因为 exact uri 规则的这种属性，如果有高频率使用的 uri，建议使用 exact uri 匹配，加快匹配速度。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/static/logo.png
-uri &amp;quot;/static/logo.png&amp;quot;: exact uri match &amp;quot;location = /static/logo.png&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>prefix 规则中，匹配 uri 长度最长的规则会选中，所以没有选中 &lt;code>/&lt;/code> prefix 规则。同样的，从这一点来看，&lt;code>/api&lt;/code> 和 &lt;code>/api/&lt;/code> 是不一样的。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/api
-uri &amp;quot;/api&amp;quot;: prefix match &amp;quot;location /api&amp;quot;
-$ curl http://localhost:8080/api/
-uri &amp;quot;/api/&amp;quot;: prefix match &amp;quot;location /api/&amp;quot;
-$ curl http://localhost:8080/api/v1
-uri &amp;quot;/api/v1&amp;quot;: prefix match &amp;quot;location /api/&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>如果匹配了 &lt;code>^~ /static/&lt;/code> disable regex prefix 规则，则不再去搜索之后的 regex 规则。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/static/thinkpad.png
-uri &amp;quot;/static/thinkpad.png&amp;quot;: disable regex prefix match &amp;quot;location ^~ /static/&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>在 regex 规则的匹配中，定义的先后顺序是重要的，所以 &lt;code>~ \.png$&lt;/code> case-sensitive 规则永远不会被匹配。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/files/large.png
-uri &amp;quot;/files/large.png&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
-$ curl http://localhost:8080/files/large.PNG
-uri &amp;quot;/files/large.PNG&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>即使先匹配了 &lt;code>/api/&lt;/code> prefix 规则作为待定，但是也匹配了 regex 规则，优先使用 regex 规则。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/api/v1/file/logo.png
-uri &amp;quot;/api/v1/file/logo.png&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
-&lt;/code>&lt;/pre>&lt;p>存在 &lt;code>/&lt;/code> prefix 规则是有益的，收容所有未明确定位的 uri，再做错误处理。&lt;/p>
-&lt;pre>&lt;code>$ curl http://localhost:8080/no-where
-uri &amp;quot;/no-where&amp;quot;: prefix match &amp;quot;location /&amp;quot;
-&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/nginx-location/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;p>既然 Debian Squeeze 已经不再更新，apt source 也划入了 archive，这个方案应该是最“长治久安”的。&lt;/p>- https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ - DreamAndDead 2014-2021</description></item></channel></rss>

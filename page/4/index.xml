@@ -1,4 +1,135 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>记一次 Jmeter 分布式测试故障调试过程</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</link><pubDate>Fri, 25 May 2018 02:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</guid><description>时长N年半 https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ -&lt;p>之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>How uri match nginx location</title><link>https://dreamanddead.github.io/post/nginx-location/</link><pubDate>Mon, 28 May 2018 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/nginx-location/</guid><description>时长N年半 https://dreamanddead.github.io/post/nginx-location/ -&lt;p>location 是 nginx 配置中出现最频繁的配置项，一个 uri 是如何与多个 location 进行匹配的？
+在有多个 location 都匹配的情况下，如何决定使用哪一个 location 作为匹配结果？&lt;/p>
+&lt;p>清晰内部机制之后，疑问自然迎刃而解。&lt;/p>
+&lt;h1 id="location-规则类型">location 规则类型&lt;/h1>
+&lt;p>根据&lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location">官方文档&lt;/a>，location 配置语法如下&lt;/p>
+&lt;pre>&lt;code>Syntax: location [ = | ~ | ~* | ^~ ] uri { ... }
+location @name { ... }
+Default: —
+Context: server, location
+&lt;/code>&lt;/pre>&lt;p>其语法对应了 location 规则的 5 种类型：&lt;/p>
+&lt;h2 id="prefix">prefix&lt;/h2>
+&lt;p>前缀匹配规则，如果 uri 包含相应的前缀，则匹配成功。&lt;/p>
+&lt;p>语法上， location 之后单纯跟上 uri，没有任何操作符。&lt;/p>
+&lt;pre>&lt;code>location /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h2 id="exact-uri">exact uri&lt;/h2>
+&lt;p>完全匹配规则，如果 uri 和规则完全相同，则匹配成功。&lt;/p>
+&lt;p>语法上，使用 = 操作符。&lt;/p>
+&lt;pre>&lt;code>location = /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h2 id="case-sensitive-regex">case-sensitive regex&lt;/h2>
+&lt;p>区分大小写的正则表达式匹配规则，如果 uri 与正则表达式相匹配，则匹配成功。
+正则表达式使用 &lt;a href="https://www.pcre.org/">pcre library&lt;/a>，语法和 perl 兼容。&lt;/p>
+&lt;p>语法上，使用 ~ 操作符。&lt;/p>
+&lt;p>这里有一个细节，uri 作为一个 string，只要 regex 匹配其中的一部分，即可算作匹配。
+比如有如下的规则，&lt;/p>
+&lt;pre>&lt;code>location ~ /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;p>可以匹配 uri&lt;/p>
+&lt;ul>
+&lt;li>/api/v1/login&lt;/li>
+&lt;li>/pod/api/v1&lt;/li>
+&lt;/ul>
+&lt;p>如果想要匹配整个 string，则要使用 &lt;code>^ $&lt;/code>。
+比如，&lt;/p>
+&lt;pre>&lt;code>location ~ ^/api/v1.*$ {
+....
+}
+&lt;/code>&lt;/pre>&lt;p>可以匹配 uri&lt;/p>
+&lt;ul>
+&lt;li>/api/v1/login&lt;/li>
+&lt;/ul>
+&lt;p>不可以匹配&lt;/p>
+&lt;ul>
+&lt;li>/pod/api/v1&lt;/li>
+&lt;/ul>
+&lt;h2 id="case-insensitive-regex">case-insensitive regex&lt;/h2>
+&lt;p>规则同上，区别只在于，正则表达式不区分大小写。
+&lt;strong>不&lt;/strong>区分大小写的正则表达式匹配规则，如果 uri 与正则表达式相匹配，则匹配成功。&lt;/p>
+&lt;p>语法上，使用 &lt;code>~*&lt;/code> 操作符。&lt;/p>
+&lt;pre>&lt;code>location ~* /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h2 id="disable-regex-prefix">disable regex prefix&lt;/h2>
+&lt;p>匹配流程与 prefix 规则相同，有一点区别在于，如果最长匹配是当前规则，则之后不进行 正则表达式 规则的搜索。
+这一点可能有些难以理解，后面会详细讲解。&lt;/p>
+&lt;p>语法上，使用 &lt;code>^~&lt;/code> 操作符。&lt;/p>
+&lt;pre>&lt;code>location ^~ /api/v1 {
+....
+}
+&lt;/code>&lt;/pre>&lt;h1 id="uri-如何选择-location">uri 如何选择 location&lt;/h1>
+&lt;p>前面讲到，location 规则有 5 种类型，那么 uri 如何在多种不同类型的 location 规则之间，
+最终选择到唯一的 location 规则呢？&lt;/p>
+&lt;p>根据&lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location">官方文档&lt;/a>的描述，详细规则如下：&lt;/p>
+&lt;ol>
+&lt;li>如果存在 exact uri 规则与 uri 匹配，至步骤 6&lt;/li>
+&lt;li>在所有 prefix 规则和 disable regex prefix 规则中进行匹配（&lt;strong>与这些规则定义的顺序无关&lt;/strong>），
+如果没有匹配到规则，至步骤 3；如果存在匹配的规则，选择出最长匹配 uri 的规则：
+&lt;ul>
+&lt;li>如果规则是 disable regex prefix 类型，至步骤 6&lt;/li>
+&lt;li>如果规则是 prefix 类型，记住当前匹配的 prefix 规则，选为待定，至步骤 3&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>逐个遍历 case-sensitive regex 规则和 case-insensitive regex 规则（&lt;strong>按照这些规则定义的前后顺序&lt;/strong>）:
+&lt;ul>
+&lt;li>如果规则匹配，则遍历终止，至步骤 6&lt;/li>
+&lt;li>如果规则没有匹配，则继续&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>如果之前有 prefix 规则条目被选择为待定，至步骤 6&lt;/li>
+&lt;li>匹配失败，返回404，结束&lt;/li>
+&lt;li>选择当前规则，使用其配置，结束&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-28/21577003.jpg" alt="">&lt;/p>
+&lt;h1 id="faq">FAQ&lt;/h1>
+&lt;p>有人可能会困惑，如果 prefix 与 disable regex prefix 规则相同，比如，&lt;/p>
+&lt;pre>&lt;code>location /static/ {
+....
+}
+location ^~ /static/ {
+....
+}
+&lt;/code>&lt;/pre>&lt;p>最终会匹配哪一条规则？是否应该继续查找 regex 规则？&lt;/p>
+&lt;p>实际上，这种情况 nginx 会报错，&lt;code>nginx: [emerg] duplicate location &amp;quot;/static/&amp;quot; in /etc/nginx/conf.d/location.conf&lt;/code>，
+所以这种情况是不用考虑的。&lt;/p>
+&lt;h1 id="示例">示例&lt;/h1>
+&lt;p>示例项目在 &lt;a href="https://github.com/DreamAndDead/nginx-example">nginx example&lt;/a>，
+参考 readme 文件，在本地启动 nginx server。&lt;/p>
+&lt;p>其中对 nginx 的配置如下，使用 curl 进行检测。&lt;/p>
+&lt;script src="https://gist-it.appspot.com/github/DreamAndDead/nginx-example/blob/master/location/conf.d/location.conf?footer=minimal&amp;slice=0:34">&lt;/script>
+&lt;p>exact uri 规则先于所有规则（与规则定义的顺序无关），所以这里匹配了 &lt;code>= /&lt;/code> exact uri 规则而不是 &lt;code>/&lt;/code> prefix 规则。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/
+uri &amp;quot;/&amp;quot;: exact match &amp;quot;location = /&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>exact uri 规则先于所有规则（与规则定义的顺序无关），所以这里没有匹配 &lt;code>^~ /static/&lt;/code> disable regex prefix 和 &lt;code>~* \.PNG$&lt;/code>，&lt;code>~ \.png$&lt;/code> regex 规则。&lt;/p>
+&lt;p>正是因为 exact uri 规则的这种属性，如果有高频率使用的 uri，建议使用 exact uri 匹配，加快匹配速度。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/static/logo.png
+uri &amp;quot;/static/logo.png&amp;quot;: exact uri match &amp;quot;location = /static/logo.png&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>prefix 规则中，匹配 uri 长度最长的规则会选中，所以没有选中 &lt;code>/&lt;/code> prefix 规则。同样的，从这一点来看，&lt;code>/api&lt;/code> 和 &lt;code>/api/&lt;/code> 是不一样的。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/api
+uri &amp;quot;/api&amp;quot;: prefix match &amp;quot;location /api&amp;quot;
+$ curl http://localhost:8080/api/
+uri &amp;quot;/api/&amp;quot;: prefix match &amp;quot;location /api/&amp;quot;
+$ curl http://localhost:8080/api/v1
+uri &amp;quot;/api/v1&amp;quot;: prefix match &amp;quot;location /api/&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>如果匹配了 &lt;code>^~ /static/&lt;/code> disable regex prefix 规则，则不再去搜索之后的 regex 规则。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/static/thinkpad.png
+uri &amp;quot;/static/thinkpad.png&amp;quot;: disable regex prefix match &amp;quot;location ^~ /static/&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>在 regex 规则的匹配中，定义的先后顺序是重要的，所以 &lt;code>~ \.png$&lt;/code> case-sensitive 规则永远不会被匹配。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/files/large.png
+uri &amp;quot;/files/large.png&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
+$ curl http://localhost:8080/files/large.PNG
+uri &amp;quot;/files/large.PNG&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>即使先匹配了 &lt;code>/api/&lt;/code> prefix 规则作为待定，但是也匹配了 regex 规则，优先使用 regex 规则。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/api/v1/file/logo.png
+uri &amp;quot;/api/v1/file/logo.png&amp;quot;: case-insesitive regex match &amp;quot;location ~* \.PNG(dollar)&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>存在 &lt;code>/&lt;/code> prefix 规则是有益的，收容所有未明确定位的 uri，再做错误处理。&lt;/p>
+&lt;pre>&lt;code>$ curl http://localhost:8080/no-where
+uri &amp;quot;/no-where&amp;quot;: prefix match &amp;quot;location /&amp;quot;
+&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/nginx-location/ - DreamAndDead 2014-2021</description></item><item><title>记一次 Jmeter 分布式测试故障调试过程</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</link><pubDate>Fri, 25 May 2018 02:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/</guid><description>时长N年半 https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ -&lt;p>之前总结了 jmeter 分布式测试的过程，在部署过程中提到，要在 system.properties 中配置自己的 IP。&lt;/p>
 &lt;p>至于为什么要这么做，源于这一次 debug 的过程。&lt;/p>
 &lt;h1 id="运行环境">运行环境&lt;/h1>
 &lt;p>mint, ubuntu 两台主机作为 master 节点，一台 win server 作为 slave 节点，采用分布式的方式，
@@ -2953,221 +3084,4 @@ pigz: &amp;lt;stdin&amp;gt; OK, has trailing junk which was ignored
 &lt;/code>&lt;/pre>&lt;p>可见两个版本的a.out并没有存储两份，delta部分数据量尤其的小，节省了50%的空间。&lt;/p>
 &lt;p>不幸的是，虽然按照 &lt;a href="https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-format.txt#L112">官方文档&lt;/a> 的方式解开了OBJ_OFS_DELTA的内容，
 但是我却不知道如何解读，这方面并没有详细的记载，只有找到唯一 &lt;a href="https://github.com/git/git/blob/v2.7.4/Documentation/technical/pack-heuristics.txt">官方又有些诙谐的文档&lt;/a> ，可以读一下，very funny。&lt;/p>
-&lt;p>希望后续有时间深入源码，再来详细的解释delta(dark corner of git)部分。&lt;/p>- https://dreamanddead.github.io/post/git-internals/ - DreamAndDead 2014-2021</description></item><item><title>Understanding ssh port forwarding</title><link>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</link><pubDate>Wed, 13 Dec 2017 00:00:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-ssh-tunnel/</guid><description>时长N年半 https://dreamanddead.github.io/post/understanding-ssh-tunnel/ -&lt;p>这篇文件旨在理好的理解ssh隧道的原理与用法。&lt;/p>
-&lt;h1 id="port-forwarding">Port forwarding&lt;/h1>
-&lt;p>端口转发是ssh内建的机制，在已经建立的ssh通道之上，转发应用层的流量。
-大家也形象地称之为ssh隧道（ssh tunnel）。&lt;/p>
-&lt;p>端口转发分为3类：&lt;/p>
-&lt;ul>
-&lt;li>local forwarding，将client端口流量转发到server端&lt;/li>
-&lt;li>remote forwarding，与local forwarding相反，将server端口流量转发到client端&lt;/li>
-&lt;li>dynamic forwarding，本质与前两类相同，流量转发地址由流量访问地址动态决定，和proxy有相似的效果&lt;/li>
-&lt;/ul>
-&lt;p>server是运行sshd服务的主机，client是ssh远程连接server的主机&lt;/p>
-&lt;h1 id="local-forwarding">Local Forwarding&lt;/h1>
-&lt;h2 id="meaning">meaning&lt;/h2>
-&lt;p>举一个简单的例子相对容易理解。&lt;/p>
-&lt;p>比如server主机运行web服务，端口80，client使用ssh远程连接server&lt;/p>
-&lt;pre>&lt;code>ssh -L 7000:127.0.0.1:80 root@server_ip
-&lt;/code>&lt;/pre>&lt;p>和普通的ssh连接一样，开启一个新的shell，控制server主机，与此同时，ssh也在client主机监听7000端口。&lt;/p>
-&lt;pre>&lt;code>curl -X GET http://localhost:7000
-&lt;/code>&lt;/pre>&lt;p>在client访问7000端口，流量会通过与server建立的ssh通道，转发至server的127.0.0.1:80，
-等同于访问了server的web服务，amazing！&lt;/p>
-&lt;p>先来解释下示例的命令&lt;/p>
-&lt;ul>
-&lt;li>root@server_ip，server ip与用户，与常规使用ssh是一样的&lt;/li>
-&lt;li>-L，L means Local，local forwarding&lt;/li>
-&lt;li>7000，本地端口，访问此端口的流量会被转发&lt;/li>
-&lt;li>127.0.0.1:80，重点，127.0.0.1:80是相对于server而言，也就是server_ip:80&lt;/li>
-&lt;/ul>
-&lt;h2 id="usage">usage&lt;/h2>
-&lt;p>from man page&lt;/p>
-&lt;pre>&lt;code>-L [bind_address:]port:host:hostport
--L [bind_address:]port:remote_socket
--L local_socket:host:hostport
--L local_socket:remote_socket
-&lt;/code>&lt;/pre>&lt;p>参数分为4类，从中看到，端口不仅可以是tcp socket，也可以是unix socket。&lt;/p>
-&lt;p>对参数的理解要清晰&lt;/p>
-&lt;ol>
-&lt;li>bind_address，可以为以下值
-&lt;ul>
-&lt;li>localhost：client主机的port为转发端口，但是，client_ip:port不能转发来自client LAN其它主机的流量&lt;/li>
-&lt;li>忽略：效果同localhost&lt;/li>
-&lt;li>*：端口绑定没有变化，区别在于，client_ip:port可以转发来自client LAN其它主机的流量&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>host:hostport，转发流量所至的端口。host:hostport是相对于server_ip而言，这点非常重要，比如
-&lt;ul>
-&lt;li>参数为localhost:80，意味着转发至server_ip:80&lt;/li>
-&lt;li>参数为another_ip:80，如果another_ip:80对于server_ip是可以访问的，最终会将client_ip:port的流量转发至another_ip:80,server只是作为流量中转。
-another_ip通常取server局域网内其它主机的ip 或 server内其它网桥的ip（如docker）&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>local_socket,remote_socket，socket文件路径，分别相对于client主机与server主机&lt;/li>
-&lt;/ol>
-&lt;h2 id="example">example&lt;/h2>
-&lt;figure>
-&lt;img src="images/ssh-tunnel-local-forwarding.png"
-alt="网络示意图"/> &lt;figcaption>
-&lt;p>网络示意图&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>假如，存在Client LAN与Server LAN，
-Client LAN内有两台主机&lt;/p>
-&lt;ul>
-&lt;li>192.168.0.2，ssh与server连接&lt;/li>
-&lt;li>192.168.0.3
-Server LAN有两台主机&lt;/li>
-&lt;li>10.27.0.2，运行sshd服务，自身有公网ip 47.52.20.34，同时
-&lt;ul>
-&lt;li>主机内运行dockerd服务，使用/var/run/docker.sock进程间通信&lt;/li>
-&lt;li>运行nginx容器，容器ip 172.168.0.2，web端口80&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>10.27.0.3
-&lt;ul>
-&lt;li>主机运行ElasticSearch服务，端口9200，可供LAN其它主机连接&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>注：以下所有的ssh连接都是在client_A执行&lt;/p>
-&lt;h3 id="访问nginx">访问nginx&lt;/h3>
-&lt;p>因为nginx运行在docker网桥，属于内部网络，没有端口映射到主机，不能通过47.52.20.24:80访问。&lt;/p>
-&lt;pre>&lt;code>ssh -L *:7000:172.168.0.2:80 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>将在client_A主机7000端口，对client LAN提供server_A的nginx服务。&lt;/p>
-&lt;p>client_B也从中受益，借助client_A访问nginx&lt;/p>
-&lt;pre>&lt;code>curl -X GET http://192.168.0.2:7000
-&lt;/code>&lt;/pre>&lt;h3 id="访问elasticsearch">访问ElasticSearch&lt;/h3>
-&lt;p>因为server_B没有公网ip，所以访问要借助server_A作为跳板&lt;/p>
-&lt;pre>&lt;code>ssh -L 9200:10.27.0.3:9200 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>仅仅可以在client_A内部的9200访问server_B的ES，不对client LAN分享&lt;/p>
-&lt;h3 id="访问docker">访问docker&lt;/h3>
-&lt;p>server_A本身运行dockerd服务，但是使用unix socket，只限于在主机内部docker command才可以通信。&lt;/p>
-&lt;pre>&lt;code>ssh -L 6112:/var/run/docker.sock root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>这时在client_A主机上，运行&lt;/p>
-&lt;pre>&lt;code>docker -H localhost:6112 ps
-&lt;/code>&lt;/pre>&lt;p>可以查看server_A的docker容器情况！&lt;/p>
-&lt;p>如果client也使用unix socket&lt;/p>
-&lt;pre>&lt;code>ssh -L /tmp/docker.sock:/var/run/docker.sock root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>路径要使用unix://，达到同样的效果&lt;/p>
-&lt;pre>&lt;code>docker -H unix:///tmp/docker.sock ps
-&lt;/code>&lt;/pre>&lt;h1 id="remote-forwarding">Remote Forwarding&lt;/h1>
-&lt;h2 id="meaning-1">meaning&lt;/h2>
-&lt;p>Remote Forwarding与Local Forwarding是相对的，区别仅仅在于，
-Local Forwarding将client端口流量转发至server，而Remote Forwarding将
-server端口流量转发至client。&lt;/p>
-&lt;p>假如在client主机执行&lt;/p>
-&lt;pre>&lt;code>ssh -R 7000:127.0.0.1:80 root@server_ip
-&lt;/code>&lt;/pre>&lt;p>将会在server主机开启7000端口，并将所有流向server_ip:7000的流量转发至client_ip:80，
-达到内网穿透的效果。
-同样的类比，127.0.0.1:80是相对client主机来说的。&lt;/p>
-&lt;h2 id="usage-1">usage&lt;/h2>
-&lt;pre>&lt;code>-R [bind_address:]port:host:hostport
--R [bind_address:]port:local_socket
--R remote_socket:host:hostport
--R remote_socket:local_socket
--R [bind_address:]port
-&lt;/code>&lt;/pre>&lt;p>参数整体与Local Forwarding是相似的，主要是以下区别&lt;/p>
-&lt;ul>
-&lt;li>-R的参数与-L是相反的，bind_address:port对应的是server主机，而host:hostport与local_socket对应的
-是client主机&lt;/li>
-&lt;li>bind_address对于LAN的可见性与Local Forwarding相同&lt;/li>
-&lt;li>第5类用法是Local Forwarding中没有的，到&lt;a href="#dynamic-forwarding">Dynamic Forwarding&lt;/a>中再做提及&lt;/li>
-&lt;/ul>
-&lt;p>需要注意的是，当bind_address要使用0.0.0.0/*时，需要在sshd_config中&lt;a href="https://serverfault.com/questions/666532/remote-port-forwarding-not-working">配置选项&lt;/a>并重启sshd&lt;/p>
-&lt;pre>&lt;code>GatewayPorts yes
-&lt;/code>&lt;/pre>&lt;h2 id="example-1">example&lt;/h2>
-&lt;figure>
-&lt;img src="images/ssh-tunnel-remote-forwarding.png"
-alt="网络示意图"/> &lt;figcaption>
-&lt;p>网络示意图&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>网络结构同Local Forwarding，区别在于之前在server LAN中的服务，现在运行于client LAN。
-通过Remote Forwarding，可以在外网访问到内网的服务，达到网络穿透的效果。&lt;/p>
-&lt;p>注：以下所有的ssh连接都是在client_A执行&lt;/p>
-&lt;h3 id="访问nginx-1">访问nginx&lt;/h3>
-&lt;p>server_A并没有运行web服务，下面命令将内网client_A主机的web服务暴露至外网访问&lt;/p>
-&lt;pre>&lt;code>ssh -R *:80:172.168.0.2:80 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>server LAN中的server_B可以通过10.27.0.2:80访问，其它用户可通过公网ip 47.52.20.34:80访问&lt;/p>
-&lt;h3 id="访问elasticsearch-1">访问ElasticSearch&lt;/h3>
-&lt;pre>&lt;code>ssh -R *:9200:192.168.0.3:9200 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>将client_B主机的ES服务暴露于外网访问&lt;/p>
-&lt;h3 id="访问docker-1">访问docker&lt;/h3>
-&lt;p>使用unix socket参数，访问内网client_A主机的dockerd服务&lt;/p>
-&lt;pre>&lt;code>ssh -R 6112:/var/run/docker.sock root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>在server_A通过&lt;/p>
-&lt;pre>&lt;code>docker -H localhost:6112 ps
-&lt;/code>&lt;/pre>&lt;p>查看client_A主机docker容器情况&lt;/p>
-&lt;p>如果使用unix socket&lt;/p>
-&lt;pre>&lt;code>ssh -R /tmp/docker.sock:/var/run/docker.sock root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>在server_A通过&lt;/p>
-&lt;pre>&lt;code>docker -H unix:///tmp/docker.sock ps
-&lt;/code>&lt;/pre>&lt;p>达到同样的效果&lt;/p>
-&lt;h1 id="dynamic-forwarding">Dynamic Forwarding&lt;/h1>
-&lt;h2 id="meaning-2">meaning&lt;/h2>
-&lt;p>Dynamic Forwarding望名生义，动态的端口转发。
-动态体现在它可以由来源流量所流向的地址决定转发的地址。
-在这种意义上，它有些像一个proxy。&lt;/p>
-&lt;p>举例来看，网络结构同Local Forwarding章节&lt;/p>
-&lt;figure>
-&lt;img src="images/ssh-tunnel-dynamic-local-forwarding.png"
-alt="网络示意图"/> &lt;figcaption>
-&lt;p>网络示意图&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>在client_A执行&lt;/p>
-&lt;pre>&lt;code>ssh -D *:1080 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>将会在client_A运行一个socks服务器，监听1080端口，转发访问1080的流量&lt;/p>
-&lt;pre>&lt;code>export http{s,}_proxy=socks5://127.0.0.1:1080
-curl -X GET http://172.168.0.2
-curl -X GET https://google.com
-&lt;/code>&lt;/pre>&lt;p>设置http代理为127.0.0.1:1080&lt;/p>
-&lt;ul>
-&lt;li>访问172.168.0.2，即代理至server_A的web服务&lt;/li>
-&lt;li>访问google.com，便达到了翻墙的效果！&lt;/li>
-&lt;/ul>
-&lt;h2 id="usage-2">usage&lt;/h2>
-&lt;pre>&lt;code>-D [bind_address:]port
--R [bind_address:]port
-&lt;/code>&lt;/pre>&lt;p>-D表示Local Dynamic Forwarding，-R表示Remote Dynamic Forwarding。
-至于为什么不用-L而用-D，不得而知。&lt;/p>
-&lt;p>虽然称为Dynamic Forwarding，但是端口转发的本质并没有变化&lt;/p>
-&lt;ul>
-&lt;li>Local/Remote Forwarding只可以限定某个特定的socket，Dynamic Forwarding可以转发至多个tcp socket&lt;/li>
-&lt;li>Dynamic Forwarding不可以转发至unix socket&lt;/li>
-&lt;/ul>
-&lt;p>Dynamic Forwarding使用socks协议，在相应端口运行一个socks服务器，进行动态转发&lt;/p>
-&lt;ul>
-&lt;li>Local Dynamic Forwarding是在client端开启socks服务器，将流量转发至server&lt;/li>
-&lt;li>Remote Dynamic Forwarding与之相反，在server端开启socks服务器，将流量转发至client&lt;/li>
-&lt;/ul>
-&lt;p>socks协议工作在传输层之上，应用层之下，所以可以转发所有应用层的流量，而对于下层则无能为力。&lt;/p>
-&lt;p>注：以下所有的ssh连接都是在client_A执行&lt;/p>
-&lt;h2 id="example-2">example&lt;/h2>
-&lt;h3 id="cross-the-wall">cross the wall&lt;/h3>
-&lt;figure>
-&lt;img src="images/ssh-tunnel-dynamic-local-forwarding.png"
-alt="网络示意图"/> &lt;figcaption>
-&lt;p>网络示意图&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>在client_A运行一个socks服务器，监听1080端口&lt;/p>
-&lt;pre>&lt;code>ssh -D *:1080 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>client LAN主机设置代理地址，达到内网翻墙的效果&lt;/p>
-&lt;pre>&lt;code>export http{s,}_proxy=socks5://192.168.0.2:1080
-curl -X GET https://google.com
-&lt;/code>&lt;/pre>&lt;h3 id="内网穿透">内网穿透&lt;/h3>
-&lt;figure>
-&lt;img src="images/ssh-tunnel-dynamic-remote-forwarding.png"
-alt="网络示意图"/> &lt;figcaption>
-&lt;p>网络示意图&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>在server_A运行一个socks服务器，监听1080端口&lt;/p>
-&lt;pre>&lt;code>ssh -R *:1080 root@47.52.20.34
-&lt;/code>&lt;/pre>&lt;p>设置公网ip代理地址，进行内网穿透&lt;/p>
-&lt;pre>&lt;code>export http_proxy=socks5://47.52.20.34:1080
-curl -X GET http://172.168.0.2:80
-curl -X GET http://192.168.0.3:9200
-&lt;/code>&lt;/pre>&lt;p>访问nginx服务与ES服务&lt;/p>- https://dreamanddead.github.io/post/understanding-ssh-tunnel/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;p>希望后续有时间深入源码，再来详细的解释delta(dark corner of git)部分。&lt;/p>- https://dreamanddead.github.io/post/git-internals/ - DreamAndDead 2014-2021</description></item></channel></rss>

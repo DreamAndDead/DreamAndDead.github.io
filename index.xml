@@ -611,7 +611,390 @@ title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0
 &lt;/li>
 &lt;/ol>
 &lt;/section>
-- https://dreamanddead.github.io/post/algo-basic-enum-perm/ - DreamAndDead 2014-2021</description></item><item><title>Graphviz Examples</title><link>https://dreamanddead.github.io/post/graphviz-examples/</link><pubDate>Mon, 22 Mar 2021 14:48:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/graphviz-examples/</guid><description>时长N年半 https://dreamanddead.github.io/post/graphviz-examples/ -&lt;h2 id="usage">usage&lt;/h2>
+- https://dreamanddead.github.io/post/algo-basic-enum-perm/ - DreamAndDead 2014-2021</description></item><item><title>人生理论之目标管理</title><link>https://dreamanddead.github.io/post/goal-theory/</link><pubDate>Tue, 23 Mar 2021 16:05:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/goal-theory/</guid><description>时长N年半 https://dreamanddead.github.io/post/goal-theory/ -&lt;p>如何更好地度过一生？很多人都没有答案。
+曾有多时，感觉工作如坐针毡；
+多少年末，发现自己依旧在原地；
+屡次被噩梦惊醒，惶恐会一直平凡下去。
+压抑本心的生活，漫无目的的生活，都是无法长久的。&lt;/p>
+&lt;blockquote>
+&lt;p>人生需要管理&lt;/p>
+&lt;/blockquote>
+&lt;p>管理可能是一个答案。
+管理，意味着设立目标，跟进进度，安排时间，调度资源等等。&lt;/p>
+&lt;p>现实中，很多人讨厌“管理”这个词。
+它使人联想到规则，束缚，压制，冰冷。
+的确，有些管理方式是不近人情的，
+只给出一条一条指令，指示如何如何去做。
+反过来想，正是因为反人情，才更能催促人去做正确的事，
+因为每个人都有惰性。
+拿假期来说，
+周末两天，可以在工作之余得到放松；
+而长达两个月的寒暑假，人会在其中失去时间观念，觉得时间难以消磨，无聊，乏味。&lt;/p>
+&lt;p>关于自我管理，前人已经总结了多种方法，个人从其中受益匪浅。
+从 todo 管理，时间管理，到精力管理，都和自身需求差一些契合。
+todolist 缺少长期连续性，使人沉浸在打勾的快感中；
+时间管理过于关注效率，缺少对个人成长与长期目标的关注；
+精力管理注重高质量的时间，而没有质的改变。&lt;/p>
+&lt;p>本文的目的在于，
+尝试根据自身经验，结合多个理论的优点，
+设计一种“改进”的自我管理方法。&lt;/p>
+&lt;h2 id="常见陷阱">常见陷阱&lt;/h2>
+&lt;p>人生有很多陷阱。
+我曾沉陷于某些陷阱无法自拔，想必它们也困住了很多人。&lt;/p>
+&lt;p>&lt;strong>方向分散。&lt;/strong>
+当我还是软件专业的大一新生时，曾问过学长，
+“在你的学习过程中遇到的最大问题是什么？”
+他想了想说，
+“这个专业涉及的东西太多了，
+一不小心就会偏到别的方向去。”
+之前无法体会，现在深以为然。
+回想自己的学习生涯，总是抱着过于新奇的心态，
+顺从内心贪婪的冲动，不断尝试新的东西，
+觉得广泛涉猎比深入挖掘更具“充实感”，
+最终没有在一个领域深入积累，精力在多个方向的挥霍中涣散了。
+公司的 CEO 对我说，“积累是重要的，要在某个方向有所积累”。
+一个人时间有限，精力有限，不可能做到全部，
+能在一个方向一个点，将事情做满，已经很不错了。
+这也是我看到 “T型人才” 理论时震惊而醒悟的原因。
+“T型人才” 理论提倡人在一个专业方向有深度，如 T 的竖线；
+同时涉猎广泛，有其它专业的广度，如 T 的横线，
+专业的前沿结合新奇的想法，可以探索出一些新东西。
+若以这个理论评价自己，应该是 “. 型人”，自觉羞愧。&lt;/p>
+&lt;p>&lt;strong>时间错觉。&lt;/strong>
+对时间的认知有两种，客观时间与心理时间。
+时间是客观的，一小时长度永远不变；
+但是人的心理是在变化的，对时间往往有自己的主观感知。
+有的觉得时间过得飞快，而有时度日如年，
+这就是人的心理在作祟。
+合理的时间观念，应该逐渐顺应客观时间，
+而很多人（如我）有着非常不成熟的时间观念。
+高估自己的效率，以为只需要很少的时间；
+认为几年之后一定可以做成某件事，以为自己的时间充裕。
+当对时间抱有不切实际的幻想时，往往行动拖延，
+而没有认识到，白白浪费今天的一小时，
+和浪费明天的一小时是一样的。&lt;/p>
+&lt;p>&lt;strong>内心分裂。&lt;/strong>
+很多时候会陷入迷茫的状态，不停的自我追问，
+自己到底在做什么？在做的事有什么意义？
+未来会走到哪里？人生的价值在哪里？
+这个时候只想逃离工作，逃离生活，
+想放空自我，想静心思考，给自己一个答案。
+其实每个人的内心都是分裂的，
+自我感知到的是意识，还有绝大部分的潜意识无法感知。
+意识只能控制人体的一部分，
+无法控制如肠胃蠕动，血液循环等潜在意识的范围。
+当两者各有自己的主张，
+如何协调两者的关系，就成了人生中的大问题。&lt;/p>
+&lt;h2 id="目的地">目的地&lt;/h2>
+&lt;p>在现在的我看来，落入陷阱的最大原因在于，
+太多人不知道，自己最终要到哪里，
+只是一步一步乱走一通，
+随波逐流，随遇而安。&lt;/p>
+&lt;p>每个人都应该在生命中尽早回答这样一个问题，
+自己的终点在哪里？
+如何定义终点，就是如何定义你人生的意义。
+这是一种以终为始的思路，
+当你遇到内心冲突，
+反思现实困境和与梦想目标的偏差，
+始终知道自己的方向在哪里。&lt;/p>
+&lt;p>每个人的终点是不同的。这一点要结合自己。
+多数人盲目崇拜的成功可能不是你的终点，
+环境与时遇可遇不可求。
+切合自己的实际，毕竟，每个人都有自己的性格，兴趣，喜好，认知。
+没有人的命运是相同的。&lt;/p>
+&lt;p>在个人的差异上，提出一个通用的假设，&lt;/p>
+&lt;blockquote>
+&lt;p>人生的意义就是价值的最大化&lt;/p>
+&lt;/blockquote>
+&lt;p>价值，就是所谓价值认同，价值观，中的价值二字。
+每个人的价值观都不同，有人热衷财富，有人追求幸福感，
+有人只想环游世界，对于不同的观点，我们应该尊重不同。&lt;/p>
+&lt;p>遵从价值的方向才是最为充实的方向。
+比如听到人说，“这么做没意义，没有价值，简直是浪费时间。”
+这时他就在谈论意义和价值。
+只有合乎自身价值认同的，人才会感觉到充实，
+因为自己所做的，和价值方向相同的。
+如果不追求价值，平凡的度过一生，很难找到自身的意义，
+更糟糕的是，逆向而行，去破坏去减少价值，内心势必是痛苦的。&lt;/p>
+&lt;h2 id="理论">理论&lt;/h2>
+&lt;p>在上面的基础上，提出一种理论，
+如何以终点为目标，做好自我管理。&lt;/p>
+&lt;h3 id="定义">定义&lt;/h3>
+&lt;h4 id="agent-and-state">Agent &amp;amp; State&lt;/h4>
+&lt;p>Agent 是一个广泛的概念，可以代表一个人，一个公司，或者一个国家，
+取决于划分的层次。&lt;/p>
+&lt;p>从量化的角度看，更乐意如下定义，&lt;/p>
+&lt;blockquote>
+&lt;p>Agent 是一个资产集合体&lt;/p>
+&lt;/blockquote>
+&lt;p>资产可划分为身内之物和身外之物。
+于个人而言，人生在世，身内之物是与生俱来的。包括自己的&lt;/p>
+&lt;ul>
+&lt;li>身体，组成自身的物质基础&lt;/li>
+&lt;li>精神，自我意识所在&lt;/li>
+&lt;li>智力，做事能力，思考能力&lt;/li>
+&lt;li>情感，共情力，与他人的共鸣&lt;/li>
+&lt;/ul>
+&lt;p>而身外之物是逐渐积累起来，为自己所有，所用的，常见如&lt;/p>
+&lt;ul>
+&lt;li>金钱&lt;/li>
+&lt;li>人际关系&lt;/li>
+&lt;li>权力&lt;/li>
+&lt;li>声望&lt;/li>
+&lt;/ul>
+&lt;p>每种资产都是可比较的。
+如身体的强壮与瘦弱，精神的高尚与卑劣，
+智力 IQ 的高低，财富的多寡，
+权倾朝野与默默无名。&lt;/p>
+&lt;p>同时，每种资产都是可变的。
+这也是人生游戏的魅力所在，
+身体素质会在 996 中消退，也会在锻炼中更加强壮；
+智力与技艺可在练习中逐渐提高，也会在网络游戏的沉沦中消退；
+有人一夜暴富，有人顷刻破产；&lt;/p>
+&lt;blockquote>
+&lt;p>State 是 Agent 的资产状态&lt;/p>
+&lt;/blockquote>
+&lt;p>自我管理，就是管理好自己的资产。&lt;/p>
+&lt;h4 id="value">Value&lt;/h4>
+&lt;blockquote>
+&lt;p>Value 是 Agent 对不同资产的认可度&lt;/p>
+&lt;/blockquote>
+&lt;p>Value 即是所谓价值。&lt;/p>
+&lt;p>价值是主观意愿存在的。
+每个个体都有自己的主观认同，
+这因人而异。
+也因如此，几乎没有普世的价值认同。
+有人舍生取义，有人重利轻生。
+甚至连和平都不是被普世认同的，
+极端分子无时不在挑战这个美好愿景。&lt;/p>
+&lt;p>价值认同也可以分为内外两部分。
+注重内在价值的人，崇尚内修，
+磨砺心智，寻求精神的一；
+注重外在价值的人，追逐现实，
+积极创造。&lt;/p>
+&lt;p>我认为，价值认同不宜走极端，应内外兼修，
+虽然每个个体的价值观是平等的，值得尊重的。
+内修之人，容易陷入精神胜利法，
+逃避现实，活在自己的精神胜利中；
+外修的人，往往为名利遮蔽眼睛，
+为外物所玩弄，失去真正的自我。&lt;/p>
+&lt;h4 id="object">Object&lt;/h4>
+&lt;blockquote>
+&lt;p>Object 是 Agent 的目标 State&lt;/p>
+&lt;/blockquote>
+&lt;p>Object 是依据 Agent 的价值认同而设定的目标状态。
+根据价值最大化的原则，价值认同的更高的资产，
+我们会希望获得更多。&lt;/p>
+&lt;p>目标是可以分解的。
+个人目标往往是宏大的，遥远的，
+而最终目标需要一步一步慢慢的来实现，
+这就需要将目标分解
+以指导人生规划。
+从资产上看，目标可分解到不同资产层面；
+从时间上看，长期目标可分解为短期目标。
+这样一个个子目标串联起来，
+共同组成最终的目标。&lt;/p>
+&lt;h4 id="thing">Thing&lt;/h4>
+&lt;blockquote>
+&lt;p>Thing 是两个 State 之间的连接&lt;/p>
+&lt;/blockquote>
+&lt;p>Thing 是所谓“做事”中的事。
+在当今分工合作的社会中，往往强调将事情做好。
+事情可以将不同状态连接起来，做事可以改变 Agent 的状态。
+假如终日什么都不做，必定停留在原地，一动不动。&lt;/p>
+&lt;p>状态改变的关键在于投入与回报。
+事情本身有相应的投入与回报。
+投入是做事的成本，消耗相应的资产；
+事情达成之后，便会带来相应的资产回报。
+两者之间的差值，造就了 Agent 资产状态的变化。
+从当下到目标，有多个子状态相互连接。
+Agent 通过做事，来逐渐改变状态，慢慢向目标靠近，达成目标。&lt;/p>
+&lt;h3 id="流程">流程&lt;/h3>
+&lt;p>上一节解释了核心部分的定义，后面解释
+如何用一种行之有效的流程，将这些关键概念串联起来，
+进行自我管理。&lt;/p>
+&lt;figure>
+&lt;img src="images/theory-loop.png"/>
+&lt;/figure>
+&lt;ol>
+&lt;li>Evaluate Self，评估自身，明确资产情况；认知自我，探讨自己的价值观&lt;/li>
+&lt;li>Set Object，制定符合自身价值的长期目标&lt;/li>
+&lt;li>Plan Things，目标分解，分解为短期目标，安排事情&lt;/li>
+&lt;li>Execute Things，执行计划，做事&lt;/li>
+&lt;li>Refresh Self，更新状态，对比目标设定，总结经验&lt;/li>
+&lt;li>Loop，自身状态已发生变化，重新开始这个循环，从重新评估开始&lt;/li>
+&lt;/ol>
+&lt;h4 id="evaluate-self">Evaluate Self&lt;/h4>
+&lt;blockquote>
+&lt;p>认识你自己&lt;/p>
+&lt;/blockquote>
+&lt;p>评估自身，主要分为两部分，明确资产情况 和 探讨自己的价值观。&lt;/p>
+&lt;p>明确资产情况，就是明确你已拥有的。
+正如定义中讲到的，资产分为多个类型，
+建议按类型，各自进行评估。&lt;/p>
+&lt;p>探讨价值观就是明确自己当下的价值取向。
+正如开篇提到的，很多人并不了解自己，往往在某个瞬间，
+觉得失去了真我，行为和内心是相背离的。
+那是因为从一开始没有认清楚自身，不断被外界推着走，
+被忽略的内心迟早会来提醒你。
+所以认知自己要什么，认为什么是有价值的，明确对各方资产的内心评价，
+自己的方向才会更加明确。&lt;/p>
+&lt;p>关于如何分析自我，如何评估自己的价值取向，推荐两个方法：&lt;/p>
+&lt;ol>
+&lt;li>找一张空白的纸，分成六竖栏，写下自己喜欢和不喜欢的事；写下自己羡慕和讨厌的事；
+写下自己擅长与不擅长的事。相信在书写的过程中，会对自身有所启发&lt;/li>
+&lt;li>尝试接触新事物。我们的圈子往往趋于稳定，接触了解的事物是有限的，
+而对事物的有限接触，不足以说明你就是什么样的人，没有其它的可能性。
+尝试接触新事物，可能会找到热爱。&lt;/li>
+&lt;/ol>
+&lt;p>更新：&lt;/p>
+&lt;p>什么是内心？
+首先，内心不是心脏，而自己的大脑，自己的思想，自己的意识。
+其次，每个人的内心都是分裂和冲突的。
+因为内心有两部分，理性与感性，意识与潜意识。
+如果意识之光是人类独一无二的天赋，
+那潜意识的不受控制就是人类才独有的痛苦。&lt;/p>
+&lt;p>什么是真正的内心？
+借用《象与骑象人》中的比喻，你认为自己是象，还是骑象人？
+太多人（包括我）误以为自己是象，每次内心的冲突，
+都是被内心的大象牵着走，都会向潜意识妥协。
+“如果成为那样的人，就不是自己了”，
+“正是因为自己是那样的人，才会是今天的自己”。
+它拒绝改变，拼命维护自己的地位。
+但是象是不会思考的，它不是理性。&lt;/p>
+&lt;p>“理性”的处境是非常艰难的。
+意识的诞生不过是近千年来的事情，
+而潜意识自生物存在那一刻就存在了。
+当潜意识想要做什么，意识是没有力量与其直接抗衡的。&lt;/p>
+&lt;p>真正的内心应该以理性为主，“我思故我在”。
+“我”应该是可主动的，可掌握的，而不是被盲目的冲动牵着走。
+骑象人应该慢慢成长，慢慢教化大象潜在“蛮横”的部分，这正是人生的修行。&lt;/p>
+&lt;p>一个人是否要改变自己？
+有人认为改变自己是不可能的，如古语“江山易改，本性难移”；
+有人认为改变是无时无刻的，哲学上的辩题，一艘不断更换零件的船从什么时候开始不是自己？
+事实上改变是必须的，现代竞争无处不在，几近是进化论的社会版，
+只有最适应环境的改变才会存在。&lt;/p>
+&lt;p>重点是，内心中总有些疑惑存在，我是否要改变自己？
+改变之后我还是我吗？我的朋友会怎么看待我？
+我不想变成自己讨厌的人，朋友不认识的陌生人。
+如果仔细推敲，这些问题都是站不住脚的，
+而且都来自于内心的潜意味部分，
+原因或者是因为恐惧，或者是因为拖延心理，
+或者因为懒惰不想努力的借口。
+所以，大胆向前走吧，接受过去，接受新事物，
+人生有无限可能。&lt;/p>
+&lt;h4 id="set-object">Set Object&lt;/h4>
+&lt;blockquote>
+&lt;p>如果不知道去哪里，那么到达哪里也无所谓了。&lt;/p>
+&lt;/blockquote>
+&lt;p>目标由价值而来。目标表示一个自我设立的状态，想要到达的状态，
+而这个状态是由自我的价值观所引导的。
+本着贪婪的原则，最看重的价值，在目标中占据的最多；
+同时应该坚持平衡的原则，不应完全摒弃所有其它资产，
+这样是坚持无法长远的。&lt;/p>
+&lt;p>目标分裂是痛苦的。现代人多数背负着外部的目标，
+比如家庭的目标，公司的目标。
+只有当外部目标与个人目标有高度重合的时候，才是契合的，
+是最有效率的，否则目标的分裂会占据自己稀少的时间，
+同时带来内心价值的缺失，这势必是痛苦的。&lt;/p>
+&lt;p>目标是一个探索过程。
+目标宏大，遥远，对于当前的自己很难直接看到一条实现的路径。
+因为当前的自己知识与眼界都有局限，
+无法分析的非常长远。
+所以设立目标固然重要，但如果目之所及，只有目标，就容易错过了其它的新事物，
+而新事物往往对目标有所转机。
+所以在自己的目标中，应该存在接受新消息，新事物的目标。&lt;/p>
+&lt;h4 id="plan-things">Plan Things&lt;/h4>
+&lt;blockquote>
+&lt;p>始计&lt;/p>
+&lt;/blockquote>
+&lt;p>计划主要做两件事，分解目标和安排事情。&lt;/p>
+&lt;p>分解目标，即将大目标分解为逐个力之所及的子目标。
+可以在资产维度上进行分解，也可以在时间维度上进行分解。&lt;/p>
+&lt;p>安排事情，就是找到子目标间，成本最小的做事路径，
+并安排时间作为 todo 事项。
+每件事都对应着资产成本，如身体，金钱，人脉，这就是成本。
+实现一个子目标，有多种做事的途径来达成，
+最优的计划就是找到成本最小的做事方式。&lt;/p>
+&lt;figure>
+&lt;img src="images/overview.png"/>
+&lt;/figure>
+&lt;h4 id="execute-things">Execute Things&lt;/h4>
+&lt;blockquote>
+&lt;p>再天才的计划也需要执行才能实现&lt;/p>
+&lt;/blockquote>
+&lt;p>目标通过计划分解为事项，事项再安排为 todo。
+执行就是根据时间表，调动相应精力和资产去处理。&lt;/p>
+&lt;p>执行需要人的自律，坚持，不拖延，
+而且坚持一定的做事原则是必要的。&lt;/p>
+&lt;ul>
+&lt;li>能早即早，事情要提前尝试，对于意外的变故才有缓冲的余地&lt;/li>
+&lt;li>保持好精力，注意劳逸结合&lt;/li>
+&lt;li>少做计划之外的事，很多时间无法按捺即刻的冲动，
+殊不知时间都在分毫间消失了&lt;/li>
+&lt;/ul>
+&lt;h4 id="refresh-self">Refresh Self&lt;/h4>
+&lt;blockquote>
+&lt;p>Version 1.0 -&amp;gt; 2.0 -&amp;gt; 3.0&lt;/p>
+&lt;/blockquote>
+&lt;p>上面的理论规划的看似完美，其实有一个致命的局限性，
+那就是没有考虑到个人的成长性。&lt;/p>
+&lt;p>为什么考虑成长性是必要的？
+在向目标前进的过程中，自己不断经历新的事情，
+智力会成长，精神会变化。
+个人总体在向上提升，而价值观，目标，计划相比之下就是“旧版本”的。
+最初可能年轻气盛，价值观并不成熟，偏激且凌厉，
+从而制定不合理的目标。
+而且由于眼界的限制，看不清到达目标的路，
+制定的计划也不完美。
+对于明显可达的目标，计划是明确有效的；
+对于不明显的目标，迷雾重重，只能根据设想，去猜测一条路径，
+其中少不了试错的过程，慢慢看清眼前的迷雾，扩大自己的认知范围，
+这些都是宝贵的经验。&lt;/p>
+&lt;p>所以在过程中，要不断回头审视，总结经验，更新自己。&lt;/p>
+&lt;h4 id="loop">Loop&lt;/h4>
+&lt;blockquote>
+&lt;p>I&amp;rsquo;m a wired loop&lt;/p>
+&lt;/blockquote>
+&lt;p>当更新结束之后，就要回头，以新的面貌，
+重新开始这个过程。&lt;/p>
+&lt;p>整个循环中，周期是关键的。
+推荐&lt;/p>
+&lt;ul>
+&lt;li>一天，反思自己的周度目标&lt;/li>
+&lt;li>一周，反思自己的月度目标&lt;/li>
+&lt;li>一月，反思自己的季度目标&lt;/li>
+&lt;li>季度，反思年度目标&lt;/li>
+&lt;li>年度，反思 5 年目标&lt;/li>
+&lt;li>5 年，反思人生目标&lt;/li>
+&lt;/ul>
+&lt;p>在发现偏差时，以新的自我去积极修正。&lt;/p>
+&lt;h2 id="致谢">致谢&lt;/h2>
+&lt;p>在阅读《奇特的一生》之后，
+内心震撼之余，后悔自己浪费了太多时间，
+从而开始接触时间管理。&lt;/p>
+&lt;p>《高效能人士的七个习惯》总结了多个经典原则，
+如以终为始，不断更新在文中借鉴。&lt;/p>
+&lt;p>强化学习是一个精致的理论。
+理论设定一个智能体，通过和环境交互，影响环境，不断从环境中得到反馈，
+来进行学习。同时提出 Exploration 与 Exploitation 的矛盾。
+这个理论对自己后续的学习方式带来很大的影响。
+文中的 “Agent” 即来源这个理论。&lt;/p>
+&lt;p>Object 取自 OKR 理论的 O，无论是企业还是个人，Object 都是通用的。&lt;/p>
+&lt;p>计划事项安排为 todo 来执行同 GTD 理论，
+事情的投入与回报是则是投资理论的基础。&lt;/p>
+&lt;p>《拖延心理学》是一本杰作，从中看到太多自己在执行方面的漏洞。&lt;/p>
+&lt;p>从《象与骑象人》中了解到内心的分裂的冲突是必然的，
+原来自己一直都在错误维护象的地位。&lt;/p>
+&lt;h2 id="license">License&lt;/h2>
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+&lt;img
+src="https://dreamanddead.github.io/img/license.png"
+alt="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
+title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
+/>
+&lt;/a>
+- https://dreamanddead.github.io/post/goal-theory/ - DreamAndDead 2014-2021</description></item><item><title>Graphviz Examples</title><link>https://dreamanddead.github.io/post/graphviz-examples/</link><pubDate>Mon, 22 Mar 2021 14:48:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/graphviz-examples/</guid><description>时长N年半 https://dreamanddead.github.io/post/graphviz-examples/ -&lt;h2 id="usage">usage&lt;/h2>
 &lt;p>安装相应软件包&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -S graphviz xdot
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>新建 &lt;code>test.dot&lt;/code> 文件，保存绘图代码。&lt;/p>
@@ -1412,123 +1795,4 @@ manjaro-choot .
 &lt;pre>&lt;code>sudo pacman -S linux
 &lt;/code>&lt;/pre>&lt;p>更新引导&lt;/p>
 &lt;pre>&lt;code>sudo update-grub
-&lt;/code>&lt;/pre>&lt;p>再次重启就恢复正常。&lt;/p>- https://dreamanddead.github.io/post/rescue-manjaro-boot/ - DreamAndDead 2014-2021</description></item><item><title>Bellman Equation Deduction</title><link>https://dreamanddead.github.io/post/bellman-equation/</link><pubDate>Thu, 27 Aug 2020 11:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/bellman-equation/</guid><description>时长N年半 https://dreamanddead.github.io/post/bellman-equation/ -&lt;p>详细理解 Bellman 方程的证明过程。&lt;/p>
-&lt;h1 id="prequisite">Prequisite&lt;/h1>
-&lt;h2 id="条件概率和独立性">条件概率和独立性&lt;/h2>
-&lt;p>条件概率是概率论是最为基础的概念。在事件 B 发生的条件下，A 事件发生的概率等于 A B 事件同时发生的概率除以 B 事件发生的概率。&lt;/p>
-&lt;p>$$
-P(A|B) = P(AB) / P(B)
-$$&lt;/p>
-&lt;p>移项得到&lt;/p>
-&lt;p>$$
-\begin{equation} \label{cond}
-P(AB) = P(A|B)P(B) \tag{1}
-\end{equation}
-$$&lt;/p>
-&lt;p>如果 A B 两个事件相互独立，彼此没有依赖关系，则 A B 同时发生的概率等于 A 事件发生的概率乘以 B 事件发生的概率。&lt;/p>
-&lt;p>$$
-P(AB) = P(A)P(B)
-$$&lt;/p>
-&lt;p>在相互独立的前提下，综合可知&lt;/p>
-&lt;p>$$
-\begin{equation} \label{ind}
-P(A|B) = P(A) \tag{2}
-\end{equation}
-$$&lt;/p>
-&lt;h2 id="全概率公式">全概率公式&lt;/h2>
-&lt;p>若事件 $B_1, B_2, &amp;hellip;, B_n$ 是全空间 $\Omega$ 的一个划分，&lt;/p>
-&lt;p>$$
-\sum_{i=1}^n P(B_i) = 1
-$$&lt;/p>
-&lt;p>则&lt;/p>
-&lt;p>$$
-P(A) = \sum_{i=1}^n P(AB_i)
-$$&lt;/p>
-&lt;p>进一步地，根据 $\eqref{cond}$ 可得&lt;/p>
-&lt;p>$$
-\begin{equation} \label{full}
-P(A) = \sum_{i=1}^n P(A | B_i) P(B_i) \tag{3}
-\end{equation}
-$$&lt;/p>
-&lt;p>$\eqref{full}$ 是理解之后公式变化的要点。&lt;/p>
-&lt;h1 id="value-function">Value function&lt;/h1>
-&lt;p>RL 的基础思想很简洁，Agent 不断和 Env 相交互，以最大化收益为目标。&lt;/p>
-&lt;p>在 MDP 框架下，Agent 选择 Action 影响 Env，Env 反馈 State 和 Reward。&lt;/p>
-&lt;p>$$
-S_0, A_0, R_1, S_1, A_1, R_2, S_2, A_2, &amp;hellip;
-$$&lt;/p>
-&lt;p>Env 的行为完全由 $p(s', r|s, a)$ 来决定，&lt;/p>
-&lt;p>$$
-\sum_{s'} \sum_r p(s', r|s, a) = 1
-$$&lt;/p>
-&lt;p>Agent 在 t 时刻之后所能得到的全部收益为&lt;/p>
-&lt;p>$$
-\begin{equation}
-G_t = \sum_{k=0}^{\infty} \gamma^k R_{k+t+1}
-\end{equation}
-$$&lt;/p>
-&lt;p>当然 $G_t$ 不是孤立的存在，因为后续的收益和 agent 当前所处的状态以及后续使用的策略（policy）相关。&lt;/p>
-&lt;p>定义 state value function，衡量 agent 在 t 时刻处于 s 状态，后续使用策略 $\pi$ 可得到的累计收益。&lt;/p>
-&lt;p>$$
-V_\pi(s) = E_\pi[G_t | S_t = s]
-$$&lt;/p>
-&lt;p>进一步地，假如 agent 已经 在 t 时刻已经采取某一动作 a，定义 state action value function 为在此之后可得到的累计收益。&lt;/p>
-&lt;p>$$
-Q_\pi(s, a) = E_\pi[G_t| S_t = s, A_t = a]
-$$&lt;/p>
-&lt;p>事实上，由于行为和反馈不断循环的特性，$V_\pi(s)$ 和 $Q_\pi(s, a)$ 存在着一定的关系。&lt;/p>
-&lt;p>\begin{align}
-V_\pi(s) &amp;amp;= E_\pi[G_t | S_t = s] \nonumber \\\&lt;br>
-&amp;amp;= \sum_a \pi(a|s) E_\pi[G_t| S_t = s, A_t = a] \nonumber \\\&lt;br>
-&amp;amp;= \sum_a \pi(a|s) Q_\pi(s, a) \label{vq} \tag{4}
-\end{align}&lt;/p>
-&lt;p>推导过程利用了 \eqref{full}，其中&lt;/p>
-&lt;p>$$
-\sum_a \pi(a|s) = 1
-$$&lt;/p>
-&lt;p>至于 Q 则复杂一点，&lt;/p>
-&lt;p>\begin{align}
-Q_\pi(s, a) &amp;amp;= E_\pi[G_t| S_t = s, A_t = a] \nonumber \\\&lt;br>
-&amp;amp;= E_\pi[R_{t+1} + \gamma G_{t+1}| S_t = s, A_t = a] \nonumber \\\&lt;br>
-&amp;amp;= E_\pi[R_{t+1} | S_t = s, A_t = a] + \gamma E_\pi[G_{t+1}| S_t = s, A_t = a] \nonumber
-\end{align}&lt;/p>
-&lt;p>分成两部分来看，前一部分，&lt;/p>
-&lt;p>$$
-E_\pi[R_{t+1}| S_t = s, A_t = a] = \sum_r p(r | s, a) r
-$$&lt;/p>
-&lt;p>而&lt;/p>
-&lt;p>$$
-p(r | s, a) = \sum_{s'} p(s', r | s, a)
-$$&lt;/p>
-&lt;p>（依旧是 \eqref{full}，看出来了吗）&lt;/p>
-&lt;p>综合可得&lt;/p>
-&lt;p>$$
-E_\pi[R_{t+1}| S_t = s, A_t = a] = \sum_r p(r | s, a) r = \sum_r \sum_{s'} p(s', r | s, a) r
-$$&lt;/p>
-&lt;p>再来看另一项&lt;/p>
-&lt;p>$$
-E_\pi[G_{t+1}| S_t = s, A_t = a] = \sum_{s'} p(s' | s, a) E_\pi [G_{t+1} | S_{t+1} = s', S_t = s, A_t = a ]
-$$&lt;/p>
-&lt;p>（依旧是 \eqref{full}）&lt;/p>
-&lt;p>其中&lt;/p>
-&lt;p>$$
-p(s' | s, a) = \sum_r p(s', r | s, a)
-$$&lt;/p>
-&lt;p>（依旧是 \eqref{full}）&lt;/p>
-&lt;p>根据 MDP 的定义， $S_t A_t$ 只影响 $R_{t+1}$，和 $R_{t+2}$ 并不相关（相互独立），回忆 \eqref{ind}，综合可知&lt;/p>
-&lt;p>$$
-E_\pi[G_{t+1}| S_t = s, A_t = a] = \sum_{s'} \sum_r p(s', r | s, a) E_\pi [G_{t+1} | S_{t+1} = s'] = \sum_{s'} \sum_r p(s', r | s, a) V_\pi(s')
-$$&lt;/p>
-&lt;p>$$
-\begin{equation} \label{qv}
-Q_\pi(s, a) = E_\pi[G_t| S_t = s, A_t = a] = \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma V_\pi(s')] \tag{5}
-\end{equation}
-$$&lt;/p>
-&lt;h1 id="recursive-format">Recursive format&lt;/h1>
-&lt;p>利用 \eqref{vq} 和 \eqref{qv}，进一步推出各自 value function 的递归形式，&lt;/p>
-&lt;p>$$
-V_\pi(s) = \sum_a \pi(a|s) Q_\pi(s, a) = \sum_a \pi(a|s) \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma V_\pi(s')]
-$$&lt;/p>
-&lt;p>$$
-Q_\pi(s, a) = \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma V_\pi(s')] = \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma \sum_{a'} \pi(a'|s') Q_\pi(s', a')]
-$$&lt;/p>- https://dreamanddead.github.io/post/bellman-equation/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;p>再次重启就恢复正常。&lt;/p>- https://dreamanddead.github.io/post/rescue-manjaro-boot/ - DreamAndDead 2014-2021</description></item></channel></rss>

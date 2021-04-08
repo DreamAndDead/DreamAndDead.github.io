@@ -1,4 +1,123 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>connect two pc with a wire</title><link>https://dreamanddead.github.io/post/connect-pc-with-wire/</link><pubDate>Fri, 10 Apr 2020 18:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/connect-pc-with-wire/</guid><description>时长N年半 https://dreamanddead.github.io/post/connect-pc-with-wire/ -&lt;p>先前&lt;a href="https://dreamanddead.github.io/2020/03/25/compose-deep-learning-machine.html">组装了一台用于深度学习的服务器&lt;/a>，连接在一个局域网内使用。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 25 Mar 2021 15:10:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Bellman Equation Deduction</title><link>https://dreamanddead.github.io/post/bellman-equation/</link><pubDate>Thu, 27 Aug 2020 11:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/bellman-equation/</guid><description>时长N年半 https://dreamanddead.github.io/post/bellman-equation/ -&lt;p>详细理解 Bellman 方程的证明过程。&lt;/p>
+&lt;h1 id="prequisite">Prequisite&lt;/h1>
+&lt;h2 id="条件概率和独立性">条件概率和独立性&lt;/h2>
+&lt;p>条件概率是概率论是最为基础的概念。在事件 B 发生的条件下，A 事件发生的概率等于 A B 事件同时发生的概率除以 B 事件发生的概率。&lt;/p>
+&lt;p>$$
+P(A|B) = P(AB) / P(B)
+$$&lt;/p>
+&lt;p>移项得到&lt;/p>
+&lt;p>$$
+\begin{equation} \label{cond}
+P(AB) = P(A|B)P(B) \tag{1}
+\end{equation}
+$$&lt;/p>
+&lt;p>如果 A B 两个事件相互独立，彼此没有依赖关系，则 A B 同时发生的概率等于 A 事件发生的概率乘以 B 事件发生的概率。&lt;/p>
+&lt;p>$$
+P(AB) = P(A)P(B)
+$$&lt;/p>
+&lt;p>在相互独立的前提下，综合可知&lt;/p>
+&lt;p>$$
+\begin{equation} \label{ind}
+P(A|B) = P(A) \tag{2}
+\end{equation}
+$$&lt;/p>
+&lt;h2 id="全概率公式">全概率公式&lt;/h2>
+&lt;p>若事件 $B_1, B_2, &amp;hellip;, B_n$ 是全空间 $\Omega$ 的一个划分，&lt;/p>
+&lt;p>$$
+\sum_{i=1}^n P(B_i) = 1
+$$&lt;/p>
+&lt;p>则&lt;/p>
+&lt;p>$$
+P(A) = \sum_{i=1}^n P(AB_i)
+$$&lt;/p>
+&lt;p>进一步地，根据 $\eqref{cond}$ 可得&lt;/p>
+&lt;p>$$
+\begin{equation} \label{full}
+P(A) = \sum_{i=1}^n P(A | B_i) P(B_i) \tag{3}
+\end{equation}
+$$&lt;/p>
+&lt;p>$\eqref{full}$ 是理解之后公式变化的要点。&lt;/p>
+&lt;h1 id="value-function">Value function&lt;/h1>
+&lt;p>RL 的基础思想很简洁，Agent 不断和 Env 相交互，以最大化收益为目标。&lt;/p>
+&lt;p>在 MDP 框架下，Agent 选择 Action 影响 Env，Env 反馈 State 和 Reward。&lt;/p>
+&lt;p>$$
+S_0, A_0, R_1, S_1, A_1, R_2, S_2, A_2, &amp;hellip;
+$$&lt;/p>
+&lt;p>Env 的行为完全由 $p(s', r|s, a)$ 来决定，&lt;/p>
+&lt;p>$$
+\sum_{s'} \sum_r p(s', r|s, a) = 1
+$$&lt;/p>
+&lt;p>Agent 在 t 时刻之后所能得到的全部收益为&lt;/p>
+&lt;p>$$
+\begin{equation}
+G_t = \sum_{k=0}^{\infty} \gamma^k R_{k+t+1}
+\end{equation}
+$$&lt;/p>
+&lt;p>当然 $G_t$ 不是孤立的存在，因为后续的收益和 agent 当前所处的状态以及后续使用的策略（policy）相关。&lt;/p>
+&lt;p>定义 state value function，衡量 agent 在 t 时刻处于 s 状态，后续使用策略 $\pi$ 可得到的累计收益。&lt;/p>
+&lt;p>$$
+V_\pi(s) = E_\pi[G_t | S_t = s]
+$$&lt;/p>
+&lt;p>进一步地，假如 agent 已经 在 t 时刻已经采取某一动作 a，定义 state action value function 为在此之后可得到的累计收益。&lt;/p>
+&lt;p>$$
+Q_\pi(s, a) = E_\pi[G_t| S_t = s, A_t = a]
+$$&lt;/p>
+&lt;p>事实上，由于行为和反馈不断循环的特性，$V_\pi(s)$ 和 $Q_\pi(s, a)$ 存在着一定的关系。&lt;/p>
+&lt;p>\begin{align}
+V_\pi(s) &amp;amp;= E_\pi[G_t | S_t = s] \nonumber \\\&lt;br>
+&amp;amp;= \sum_a \pi(a|s) E_\pi[G_t| S_t = s, A_t = a] \nonumber \\\&lt;br>
+&amp;amp;= \sum_a \pi(a|s) Q_\pi(s, a) \label{vq} \tag{4}
+\end{align}&lt;/p>
+&lt;p>推导过程利用了 \eqref{full}，其中&lt;/p>
+&lt;p>$$
+\sum_a \pi(a|s) = 1
+$$&lt;/p>
+&lt;p>至于 Q 则复杂一点，&lt;/p>
+&lt;p>\begin{align}
+Q_\pi(s, a) &amp;amp;= E_\pi[G_t| S_t = s, A_t = a] \nonumber \\\&lt;br>
+&amp;amp;= E_\pi[R_{t+1} + \gamma G_{t+1}| S_t = s, A_t = a] \nonumber \\\&lt;br>
+&amp;amp;= E_\pi[R_{t+1} | S_t = s, A_t = a] + \gamma E_\pi[G_{t+1}| S_t = s, A_t = a] \nonumber
+\end{align}&lt;/p>
+&lt;p>分成两部分来看，前一部分，&lt;/p>
+&lt;p>$$
+E_\pi[R_{t+1}| S_t = s, A_t = a] = \sum_r p(r | s, a) r
+$$&lt;/p>
+&lt;p>而&lt;/p>
+&lt;p>$$
+p(r | s, a) = \sum_{s'} p(s', r | s, a)
+$$&lt;/p>
+&lt;p>（依旧是 \eqref{full}，看出来了吗）&lt;/p>
+&lt;p>综合可得&lt;/p>
+&lt;p>$$
+E_\pi[R_{t+1}| S_t = s, A_t = a] = \sum_r p(r | s, a) r = \sum_r \sum_{s'} p(s', r | s, a) r
+$$&lt;/p>
+&lt;p>再来看另一项&lt;/p>
+&lt;p>$$
+E_\pi[G_{t+1}| S_t = s, A_t = a] = \sum_{s'} p(s' | s, a) E_\pi [G_{t+1} | S_{t+1} = s', S_t = s, A_t = a ]
+$$&lt;/p>
+&lt;p>（依旧是 \eqref{full}）&lt;/p>
+&lt;p>其中&lt;/p>
+&lt;p>$$
+p(s' | s, a) = \sum_r p(s', r | s, a)
+$$&lt;/p>
+&lt;p>（依旧是 \eqref{full}）&lt;/p>
+&lt;p>根据 MDP 的定义， $S_t A_t$ 只影响 $R_{t+1}$，和 $R_{t+2}$ 并不相关（相互独立），回忆 \eqref{ind}，综合可知&lt;/p>
+&lt;p>$$
+E_\pi[G_{t+1}| S_t = s, A_t = a] = \sum_{s'} \sum_r p(s', r | s, a) E_\pi [G_{t+1} | S_{t+1} = s'] = \sum_{s'} \sum_r p(s', r | s, a) V_\pi(s')
+$$&lt;/p>
+&lt;p>$$
+\begin{equation} \label{qv}
+Q_\pi(s, a) = E_\pi[G_t| S_t = s, A_t = a] = \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma V_\pi(s')] \tag{5}
+\end{equation}
+$$&lt;/p>
+&lt;h1 id="recursive-format">Recursive format&lt;/h1>
+&lt;p>利用 \eqref{vq} 和 \eqref{qv}，进一步推出各自 value function 的递归形式，&lt;/p>
+&lt;p>$$
+V_\pi(s) = \sum_a \pi(a|s) Q_\pi(s, a) = \sum_a \pi(a|s) \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma V_\pi(s')]
+$$&lt;/p>
+&lt;p>$$
+Q_\pi(s, a) = \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma V_\pi(s')] = \sum_{s'} \sum_r p(s', r | s, a)[r + \gamma \sum_{a'} \pi(a'|s') Q_\pi(s', a')]
+$$&lt;/p>- https://dreamanddead.github.io/post/bellman-equation/ - DreamAndDead 2014-2021</description></item><item><title>connect two pc with a wire</title><link>https://dreamanddead.github.io/post/connect-pc-with-wire/</link><pubDate>Fri, 10 Apr 2020 18:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/connect-pc-with-wire/</guid><description>时长N年半 https://dreamanddead.github.io/post/connect-pc-with-wire/ -&lt;p>先前&lt;a href="https://dreamanddead.github.io/2020/03/25/compose-deep-learning-machine.html">组装了一台用于深度学习的服务器&lt;/a>，连接在一个局域网内使用。
 通过 ssh 远程连接，tmux 终端复用，nfs 挂载编辑代码，vnc 远程桌面，一切运行的都很流畅。&lt;/p>
 &lt;p>不过最不适的在于，速度太慢了，一时想将开发机中 10G 的数据集传递到服务器，scp rsync nfs 都没有速度。
 尤其经常在 nfs 挂载目录查看图片文件，文件数量繁多，预览等待的时间很长，完全没有操作本地文件相似的体验。&lt;/p>
@@ -1509,252 +1628,4 @@ alt="bounding box optimization"/> &lt;figcaption>
 &lt;ul>
 &lt;li>thanks &lt;a href="https://www.cs.umd.edu/~mount/420/">CMSC 420 lesson&lt;/a>, most pictures are from its &lt;a href="https://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/kd-tree/KD-Trees-CMSC-420.pdf">lesson note&lt;/a>&lt;/li>
 &lt;li>thanks &lt;a href="https://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/kd-tree/assignment-3-kdtree.pdf">CS106 assignment in stanford&lt;/a>, from it we get how to do k nearest neighbors searching&lt;/li>
-&lt;/ul>- https://dreamanddead.github.io/post/kd-tree/ - DreamAndDead 2014-2021</description></item><item><title>How to Customize Keymap in Linux</title><link>https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/</link><pubDate>Mon, 12 Aug 2019 10:29:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/</guid><description>时长N年半 https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/ -&lt;p>最近刚开始使用 emacs ，太多 Ctrl Alt 相关的快捷键，边侧的手指不舒服，于是想法将部分键盘按键进行改键。&lt;/p>
-&lt;p>如果 Caps Lock 可以作为 BackSpace，删除字符的时候就不需要右侧的小指离的太远。
-如果将 Menu 键改为 Ctrl，这样就可以用小指的指根来按压，方便进行快捷键操作。&lt;/p>
-&lt;p>针对这样的需求，开始在网上寻找相关改键的方案，搜索结果几乎一致统一的，在 Xorg 环境下，使用 xmodmap 来修改是最合适的。&lt;/p>
-&lt;h1 id="key-concept">key concept&lt;/h1>
-&lt;p>在开始之前，我们先了解一下 Xorg 环境下，关于键盘的&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap">一些概念&lt;/a>。&lt;/p>
-&lt;p>在 Xorg 中，有两种键盘值，分别是 keycode 和 keysym。&lt;/p>
-&lt;p>keycode 本质是一组数字表示，和键盘上的按键是一一对应的。
-在按键被按下后，相关信号传递给内核，内核看到的就是这个 keycode 数字。&lt;/p>
-&lt;p>而 keysym 是和 keycode 相关联的值，可以理解为是键盘的功能，比如输入字符 a，删除字符等等。
-它是内核对应相应按键所调用的处理方法。&lt;/p>
-&lt;p>它们两者的关系就是一个 map 结构，keycode 是 key，keysym 是value。
-于是，按键就和按键的功能关联起来。&lt;/p>
-&lt;p>这种对应结构管理由 Xorg 来管理，被称为 keymap table，它可以用 xmodmap 来查看和修改。&lt;/p>
-&lt;p>所以说，修改了关联关系，就达到了改键的目的。&lt;/p>
-&lt;h1 id="browse-keymap-table">browse keymap table&lt;/h1>
-&lt;p>通过命令，我们可以查看当前的 keymap table。&lt;/p>
-&lt;pre>&lt;code>$ xmodmap -pke
-keycode 8 =
-keycode 9 = Escape NoSymbol Escape
-keycode 10 = 1 exclam 1 exclam
-keycode 11 = 2 at 2 at
-...............................................
-...............................................
-...............................................
-keycode 23 = Tab ISO_Left_Tab Tab ISO_Left_Tab
-keycode 24 = q Q q Q
-keycode 25 = w W w W
-...............................................
-...............................................
-...............................................
-keycode 254 = XF86WWAN NoSymbol XF86WWAN
-keycode 255 = XF86RFKill NoSymbol XF86RFKill
-&lt;/code>&lt;/pre>
-&lt;p>可以观察到，一个 keycode 对应了多个 keysym。&lt;/p>
-&lt;p>其实第一个是按键本身按下所对应的 keysym，后面的 keysym 对应于&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">当修饰键所按下时的情况&lt;/a>&lt;/p>
-&lt;ol>
-&lt;li>Key&lt;/li>
-&lt;li>Shift+Key&lt;/li>
-&lt;li>Mode_switch+Key&lt;/li>
-&lt;li>Mode_switch+Shift+Key&lt;/li>
-&lt;li>etc&lt;/li>
-&lt;/ol>
-&lt;p>我们通常只需要了解前两个就足够了，即按键本身和 shift 加按键两种情况。&lt;/p>
-&lt;p>每个 keycode 用数字来标识，而 keysym 有相应的名称，比如 n N BackSpace，表达相应的功能含义。
-如果想设置为空值，可以设置为 NoSymbol。&lt;/p>
-&lt;h1 id="check-out-specific-key">check out specific key&lt;/h1>
-&lt;p>通过 xev 工具，&lt;/p>
-&lt;pre>&lt;code>$ xev -event keyboard
-&lt;/code>&lt;/pre>
-&lt;p>可以监听到所有的键盘消息，并打印出 log。&lt;/p>
-&lt;p>通过这种方式，我们就可以检测出当前键盘的按键对应的 keycode 是什么，调用了什么 keysym。&lt;/p>
-&lt;p>比如在按下字符 d 之后，可以从 log 中看到 keycode 是 40 ，使用的 keysym 为 d，数字标识为 0x64&lt;/p>
-&lt;pre>&lt;code>KeyPress event, serial 28, synthetic NO, window 0x6e00001,
-root 0x1d5, subw 0x0, time 34680022, (634,241), root:(3198,270),
-state 0x0, keycode 40 (keysym 0x64, d), same_screen YES,
-XLookupString gives 1 bytes: (64) &amp;quot;d&amp;quot;
-XmbLookupString gives 1 bytes: (64) &amp;quot;d&amp;quot;
-XFilterEvent returns: False
-KeyRelease event, serial 28, synthetic NO, window 0x6e00001,
-root 0x1d5, subw 0x0, time 34680062, (634,241), root:(3198,270),
-state 0x0, keycode 40 (keysym 0x64, d), same_screen YES,
-XLookupString gives 1 bytes: (64) &amp;quot;d&amp;quot;
-XFilterEvent returns: False
-&lt;/code>&lt;/pre>
-&lt;h1 id="configure-keymap-table">configure keymap table&lt;/h1>
-&lt;p>修改按键就是使用 xmodmap 配置 keymap table 的过程。&lt;/p>
-&lt;p>第一种方法，可以通过命令，直接进行修改，使一行配置生效。&lt;/p>
-&lt;pre>&lt;code>$ xmodmap -e 'keycode 38 = b E'
-&lt;/code>&lt;/pre>
-&lt;p>另外一种方法，可以将配置写在文件中，载入文件进行批量修改。&lt;/p>
-&lt;pre>&lt;code>$ xmodmap ~/.Xmodmap
-&lt;/code>&lt;/pre>
-&lt;p>另外在配置的过程中，如果有修改不合适的地方，可以使用&lt;/p>
-&lt;pre>&lt;code>$ setxkbmap
-&lt;/code>&lt;/pre>
-&lt;p>来重置 keymap table 到默认状态。&lt;/p>
-&lt;h2 id="grammar">grammar&lt;/h2>
-&lt;p>通过&lt;/p>
-&lt;pre>&lt;code>$ xmodmap -grammar
-&lt;/code>&lt;/pre>
-&lt;p>可以查看 xmodmap 配置所使用的语法规则，&lt;/p>
-&lt;pre>&lt;code>xmodmap accepts the following input expressions:
-pointer = default reset pointer buttons to default
-pointer = NUMBER ... set pointer button codes
-keycode NUMBER = [KEYSYM ...] map keycode to given keysyms
-keysym KEYSYM = [KEYSYM ...] look up keysym and do a keycode operation
-clear MODIFIER remove all keys for this modifier
-add MODIFIER = KEYSYM ... add the keysyms to the modifier
-remove MODIFIER = KEYSYM ... remove the keysyms from the modifier
-where NUMBER is a decimal, octal, or hex constant; KEYSYM is a valid
-Key Symbol name; and MODIFIER is one of the eight modifier names: Shift,
-Lock, Control, Mod1, Mod2, Mod3, Mod4, or Mod5. Lines beginning with
-an exclamation mark (!) are taken as comments. Case is significant except
-for MODIFIER names.
-Keysyms on the left hand side of the = sign are looked up before any changes
-are made; keysyms on the right are looked up after all of those on the left
-have been resolved. This makes it possible to swap modifier keys.
-&lt;/code>&lt;/pre>&lt;p>pointer 是和鼠标事件相关的，这里先不讨论。
-至于后面的 5 种规则，我们之后详细的从实践角度分析一下它们的作用。&lt;/p>
-&lt;h2 id="keycode-">keycode =&lt;/h2>
-&lt;p>首先我们来看，&lt;/p>
-&lt;pre>&lt;code>keycode NUMBER = [KEYSYM ...] map keycode to given keysyms
-&lt;/code>&lt;/pre>
-&lt;p>这个配置是万能配置，可以将任何键盘按键映射到任何按键处理方法上。&lt;/p>
-&lt;p>我们在 xev 中看到键盘 a 的 keycode 是 38，我们现在将它映射到 shift 方法上。&lt;/p>
-&lt;pre>&lt;code>$ xmodmap -e 'keycode 38 = Shift_L A'
-&lt;/code>&lt;/pre>
-&lt;p>如同去前面说的，第一个是单独按键的 keysym，第二个是有 shift 修饰的时候的 keysym。&lt;/p>
-&lt;p>（大家可以体会一下这个示例，观察一下 a 按键的行为，修改之后变得非常微妙。记得使用 &lt;code>setxkbmap&lt;/code> 重置成正常的布局~）&lt;/p>
-&lt;h2 id="keysym-">keysym =&lt;/h2>
-&lt;p>另外一种配置方法是&lt;/p>
-&lt;pre>&lt;code>keysym KEYSYM = [KEYSYM ...] look up keysym and do a keycode operation
-&lt;/code>&lt;/pre>
-&lt;p>这个配置就有些微妙了。
-它可以将相应 keysym 代表的处理方法，赋值给另一个　keysym。&lt;/p>
-&lt;p>比如&lt;/p>
-&lt;pre>&lt;code>$ xmodmap -e 'keysym a = b'
-$ xmodmap -pke | grep 38
-keycode 38 = b B b B
-&lt;/code>&lt;/pre>
-&lt;p>可以看到原来绑定的 a 方法都绑定成为了 b 方法，而且附带修饰键的 keysym 也一并修改了。
-也就是我们按 a 键的时候，其实输入的是 b。&lt;/p>
-&lt;p>但如果&lt;/p>
-&lt;pre>&lt;code>$ xmodmap -e 'keysym a = b c'
-$ xmodmap -pke | grep 38
-keycode 38 = b c b c
-&lt;/code>&lt;/pre>
-&lt;p>它则会这样的绑定结果。
-因为没有具体的文档告诉我们这样配置后的规则到底是什么，所以不推荐用这种方法来配置。&lt;/p>
-&lt;p>有意思的是，文档中提到，这种方法可以用来交换两个按键。&lt;/p>
-&lt;pre>&lt;code>Keysyms on the left hand side of the = sign are looked up before any changes
-are made; keysyms on the right are looked up after all of those on the left
-have been resolved. This makes it possible to swap modifier keys.
-&lt;/code>&lt;/pre>
-&lt;p>keysym = keysym，左侧解析在前，右侧在左侧解析后再解析。&lt;/p>
-&lt;p>所以如果我们载入这样的配置&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">keysym a = b
-keysym b = a
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>发现 a b 两个按键互换了。&lt;/p>
-&lt;p>从某种意义上，这种交换很像 python 中变量的交换。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">a, b = b, a
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>左侧的 a b 先解析成对象的地址，右侧的 a b 解析为对象的值，然后统一赋值。&lt;/p>
-&lt;p>这样来看的话，keysym 的符号表示更像是一个变量指针。&lt;/p>
-&lt;h2 id="modifier">modifier&lt;/h2>
-&lt;p>下面来看 modifier 的部分。&lt;/p>
-&lt;p>一共有 8 个修饰键，通过&lt;/p>
-&lt;pre>&lt;code>$ xmodmap -pm
-&lt;/code>&lt;/pre>
-&lt;p>可以查看当前状态。&lt;/p>
-&lt;pre>&lt;code>xmodmap: up to 4 keys per modifier, (keycodes in parentheses):
-shift Shift_L (0x32), Shift_R (0x3e)
-lock Caps_Lock (0x42)
-control Control_L (0x25), Control_R (0x69)
-mod1 Alt_L (0x40), Alt_R (0x6c), Meta_L (0xcd)
-mod2 Num_Lock (0x4d)
-mod3
-mod4 Super_L (0x85), Super_R (0x86), Super_L (0xce), Hyper_L (0xcf)
-mod5 ISO_Level3_Shift (0x5c), Mode_switch (0xcb)
-&lt;/code>&lt;/pre>
-&lt;p>我们可以发现，不同于之前 keycode 和 keysym 的对应关系，修饰键是一个分类，其中包括了一些 keysym。&lt;/p>
-&lt;p>前 4 个我们可以轻易的看出是 shift capslock control alt 分类。&lt;/p>
-&lt;p>每个 keysym 有自己的含义，比如 a，当使用这个 keysym 的时候，系统会输入 a 字符。
-modifier 是一个分类，当某个 keysym 归于这个分类的时候，它就同时附加了相应 modifier 的功能。&lt;/p>
-&lt;p>关于 modifier，语法规定可以这样修改&lt;/p>
-&lt;pre>&lt;code>clear MODIFIER remove all keys for this modifier
-add MODIFIER = KEYSYM ... add the keysyms to the modifier
-remove MODIFIER = KEYSYM ... remove the keysyms from the modifier
-&lt;/code>&lt;/pre>
-&lt;p>clear 可以清空某个 modifier 包含的全部 keysym；
-add 可以添加对应的 keysym 到 modifier；
-remove 可以删除相应 modifier 下的 keysym。&lt;/p>
-&lt;p>remove 不如 clear 常用，因为一般的修改都直接 clear 相关的 modifier，再添加相应的 keysym，这样逻辑清晰，不容易出错。&lt;/p>
-&lt;p>在改动 modifier 按键的时候要考虑两点：&lt;/p>
-&lt;p>一是，尽量不要将有一定功能含义的 keysym 加入到 modifier 中。&lt;/p>
-&lt;p>假如我们将 a 加入到 shift 组中，&lt;/p>
-&lt;pre>&lt;code>xmodmap -e 'add shift = a'
-&lt;/code>&lt;/pre>
-&lt;p>会发生非常不舒服的情况，单独按 a 还是会输入 a，当 a 按下，再按别的键，它又成了 shift （可以体会一下）。&lt;/p>
-&lt;p>所以，将像 a 这样的 keysym 加入 modifier，并不会消除它本身的含义，导致它本身的含义和 modifier 的含义发生混乱。
-但是像 Shift_L 这样的 keysym，如果它不在 modifier 组中，它什么功能都没有，天生就适合作为 modifier。&lt;/p>
-&lt;p>二是，两种修改方法的结果有一些差异。&lt;/p>
-&lt;pre>&lt;code>keycode NUMBER = [KEYSYM ...] map keycode to given keysyms
-keysym KEYSYM = [KEYSYM ...] look up keysym and do a keycode operation
-&lt;/code>&lt;/pre>
-&lt;p>这两种方法都可以进行改键。
-假如我们想将键盘上的 caps lock 改成 control 按键，
-用第一种方法，我们先找到 caps lock 的 keycode 是 66，然后载入配置&lt;/p>
-&lt;pre>&lt;code>clear shift
-clear lock
-keycode 66 = Shift_L
-add shift = Shift_L Shift_R
-&lt;/code>&lt;/pre>
-&lt;p>打印目前的 modifier 结果，&lt;/p>
-&lt;pre>&lt;code>$ xmodmap -pm
-xmodmap: up to 4 keys per modifier, (keycodes in parentheses):
-shift Shift_L (0x32), Shift_R (0x3e), Shift_L (0x42)
-lock
-control Control_L (0x25), Control_R (0x69)
-mod1 Alt_L (0x40), Alt_R (0x6c), Meta_L (0xcd)
-mod2 Num_Lock (0x4d)
-mod3
-mod4 Super_L (0x85), Super_R (0x86), Super_L (0xce), Hyper_L (0xcf)
-mod5 ISO_Level3_Shift (0x5c), Mode_switch (0xcb)
-&lt;/code>&lt;/pre>
-&lt;p>发现 shift 中多了一个 Shift_L 键，那是新加的 caps lock 键。&lt;/p>
-&lt;p>假如我们用第二种方式，改变 keysym Caps_Lock 的含义。&lt;/p>
-&lt;pre>&lt;code>clear lock
-keysym Caps_Lock = Shift_L
-&lt;/code>&lt;/pre>
-&lt;p>然后查看当前 modifier 的状态，&lt;/p>
-&lt;pre>&lt;code>$ xmodmap -pm
-xmodmap: up to 4 keys per modifier, (keycodes in parentheses):
-shift Shift_L (0x32), Shift_R (0x3e)
-lock
-control Control_L (0x25), Control_R (0x69)
-mod1 Alt_L (0x40), Alt_R (0x6c), Meta_L (0xcd)
-mod2 Num_Lock (0x4d)
-mod3
-mod4 Super_L (0x85), Super_R (0x86), Super_L (0xce), Hyper_L (0xcf)
-mod5 ISO_Level3_Shift (0x5c), Mode_switch (0xcb)
-&lt;/code>&lt;/pre>
-&lt;p>我们发现，shift 中只有两个按键，相当于我们将 caps lock 修改成了 shift，利用这一点，可以突破最多 4 个按键绑定的限制。&lt;/p>
-&lt;p>但是综合来看，我还是&lt;strong>建议使用 keycode 的方法&lt;/strong>来修改，这样相对清晰，稳妥。&lt;/p>
-&lt;h1 id="modification">modification&lt;/h1>
-&lt;p>在具体了解 xmodmap 之后，再按照我们的想法来修改按键就很简单了。&lt;/p>
-&lt;p>比如我目前用的键盘，配合 emacs，很适合将 caps lock 换成 backSpace 键，右边的 menu 换成 ctrl 键。&lt;/p>
-&lt;figure>
-&lt;img src="images/penixx-keyboard.jpg"/>
-&lt;/figure>
-&lt;pre>&lt;code>clear lock
-clear control
-keycode 66 = BackSpace BackSpace
-keycode 135 = Control_R
-add control = Control_L Control_R
-&lt;/code>&lt;/pre>
-&lt;h1 id="load-at-boot">load at boot&lt;/h1>
-&lt;p>在修改之后，我们想在启动的时候，自动载入改键的配置。&lt;/p>
-&lt;p>可以在 &lt;code>~/.xinitrc&lt;/code> 文件中，加入&lt;/p>
-&lt;pre>&lt;code>[[ -f ~/.Xmodmap ]] &amp;amp;&amp;amp; xmodmap ~/.Xmodmap
-&lt;/code>&lt;/pre>
-&lt;p>而一般情况下，&lt;code>.xinitrc&lt;/code> 中已经有了相应的配置，不需要另外再添加。&lt;/p>
-&lt;h1 id="refs">refs&lt;/h1>
-&lt;ul>
-&lt;li>&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap">arch wiki&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://www.zouyesheng.com/xmodmap-usage.html">xmodmap tutorial&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://wiki.archlinux.org/index.php/Xmodmap_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">arch wiki cn&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://askubuntu.com/questions/29603/how-do-i-clear-xmodmap-settings">reset xmodmap&lt;/a>&lt;/li>
-&lt;/ul>- https://dreamanddead.github.io/post/how-to-customize-keymap-in-linux/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;/ul>- https://dreamanddead.github.io/post/kd-tree/ - DreamAndDead 2014-2021</description></item></channel></rss>
