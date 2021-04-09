@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-09T11:08:20+08:00
+lastmod: 2021-04-09T16:29:39+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -655,6 +655,22 @@ series: ["test"]
 
     <!--list-separator-->
 
+    -  大规模软件系统
+
+        <!--list-separator-->
+
+        -  数据系统
+
+        <!--list-separator-->
+
+        -  操作系统
+
+        <!--list-separator-->
+
+        -  分布式系统
+
+    <!--list-separator-->
+
     -  记忆
 
         <!--list-separator-->
@@ -934,6 +950,9 @@ series: ["test"]
 #### 润色 {#润色}
 
 
+#### submit to awesome lua {#submit-to-awesome-lua}
+
+
 ### csapp {#csapp}
 
 
@@ -962,6 +981,18 @@ series: ["test"]
 
 
 ## 支言片语 {#支言片语}
+
+
+### 有一些网站需要时时打理，它们存储了自己的些许部分，需要时时更新 {#有一些网站需要时时打理-它们存储了自己的些许部分-需要时时更新}
+
+
+#### 邮件 {#邮件}
+
+
+#### github {#github}
+
+
+#### 豆瓣 {#豆瓣}
 
 
 ### 当心灵困惑时，就会到艺术中寻找安慰 {#当心灵困惑时-就会到艺术中寻找安慰}

@@ -94,7 +94,6 @@ return fname
 
 #+RESULTS: plot
 
-
 #+call: plot(data=power_2_data, filename="images/py_power_2.png")
 
 #+RESULTS:
