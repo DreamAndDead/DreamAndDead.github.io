@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-09T16:29:39+08:00
+lastmod: 2021-04-10T18:34:11+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -597,21 +597,15 @@ series: ["test"]
 
 <!--list-separator-->
 
--  深入研究一个领域
+-  T | 领域
 
     <!--list-separator-->
 
-    -  从优秀项目中寻找
-
-        <!--list-separator-->
-
-        -  explore github
-
-            <https://github.com/explore>
+    -  github topic
 
     <!--list-separator-->
 
-    -  从大学研究项目方向来选择？
+    -  大学研究
 
         <!--list-separator-->
 
@@ -766,6 +760,10 @@ series: ["test"]
 
     -  量子计算
 
+<!--list-separator-->
+
+-  T - 领域
+
 
 #### 和学习成长的矛盾 {#和学习成长的矛盾}
 
@@ -814,6 +812,15 @@ series: ["test"]
 
 
 ## 理论 {#理论}
+
+
+### 系统论 {#系统论}
+
+
+#### 自己运转 1688 代发，就是一个系统 {#自己运转-1688-代发-就是一个系统}
+
+
+#### 和其它系统的相似性 {#和其它系统的相似性}
 
 
 ### 创业理论 {#创业理论}

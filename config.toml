@@ -25,7 +25,7 @@ ignoreFiles = ["d@d-pc.*"]
     tabWidth = 4
 
 [params]
-subtitle = "关于技术，系统，智能"
+subtitle = "技术，系统，智能，认知"
 enableReadingTime=true
 disableAutoCollapse=true
 disqusShortname = "dreamanddead"
@@ -37,7 +37,7 @@ enableTwitterCards = true
 # will set 'og:site_name'
 title = "时长N年半"
 # will set 'og:description'
-description = "关于技术，系统，智能"
+description = "技术，系统，智能，认知"
 
 [taxonomies]
 tag = "tags"
