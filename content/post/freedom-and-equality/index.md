@@ -2,7 +2,7 @@
 title: "自由与平等"
 author: ["DreamAndDead"]
 date: 2021-04-03T17:47:00+08:00
-lastmod: 2021-04-04T22:32:08+08:00
+lastmod: 2021-04-12T14:33:33+08:00
 tags: ["mind", "society", "life"]
 categories: ["Mind"]
 draft: true
@@ -16,7 +16,7 @@ featured_image: "images/featured.jpg"
 
 先让一部分人富起来
 
-理想主义者的现实自救
+理想主义者的现实自救指南
 
 
 ## 资本与自由 {#资本与自由}
