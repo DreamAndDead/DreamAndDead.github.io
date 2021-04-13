@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-13T11:31:19+08:00
+lastmod: 2021-04-13T16:36:54+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -499,9 +499,6 @@ series: ["test"]
 
 #### 什么是复杂系统 {#什么是复杂系统}
 
-
-#### 如 {#如}
-
 <!--list-separator-->
 
 -  人
@@ -513,8 +510,9 @@ series: ["test"]
 
 #### 如何认知与对抗 {#如何认知与对抗}
 
+<!--list-separator-->
 
-#### 良好的设计 {#良好的设计}
+-  良好的设计
 
 
 ## 自我认知 {#自我认知}
@@ -538,10 +536,6 @@ series: ["test"]
 <!--list-separator-->
 
 -  自动化和控制化
-
-<!--list-separator-->
-
--  象与骑象人
 
 <!--list-separator-->
 

@@ -169,11 +169,10 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 *** 宿命论，人的性格，决定了自己的道
 ** 复杂系统
 *** 什么是复杂系统
-*** 如
 **** 人
 **** 公司 组织
 *** 如何认知与对抗
-*** 良好的设计
+**** 良好的设计
 
 * 自我认知
 ** 理解自己
@@ -182,7 +181,6 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 *** 内心本就是分裂的
 **** 意识和潜意识
 **** 自动化和控制化
-**** 象与骑象人
 **** 长期以来处于对抗状态
 *** 追求幸福，而放弃追逐资产，是逃避者的行为
 *** 拖延心理

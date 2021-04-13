@@ -1,22 +1,19 @@
 ---
-title: "写在 OJ 前"
+title: "在尝试 OJ 之前"
 author: ["DreamAndDead"]
 date: 2021-04-07T18:21:00+08:00
-lastmod: 2021-04-13T10:16:54+08:00
+lastmod: 2021-04-13T16:59:16+08:00
 tags: ["algorithm", "oj", "programing"]
 categories: ["Algorithm"]
-draft: true
-comment: false
+draft: false
 featured_image: "images/featured.jpg"
 series: ["基础算法"]
 ---
 
 OJ 是锻炼算法的好去处。
-很多经典的题目，考察算法的方方面面，磨练思维能力。
-有意义，有趣。
+有很多经典的题目，考察算法的方方面面，磨练思维能力。
 
-每个题目都需要的
-适用于每个算法的
+本文整理一些相关基础知识，用于提高思考的严谨性。
 
 
 ## 语言 {#语言}
@@ -40,7 +37,7 @@ C++ 接近底层，
 算法的时间和空间效率常常用复杂度来衡量。
 对于一般的算法分析，常常只简化使用大 O 表示法。
 
-常见的复杂度有 `O(logN) O(N) O(NlogN) O(N^2) O(N!) O(2^N)` ，
+常见的复杂度有 `O(logN)`, `O(N)`, `O(NlogN)`, `O(N^2)`, `O(N!)` 和 `O(2^N)` ，
 N 是数据集规模。
 
 不同复杂度的增长速度是不同的。
@@ -152,7 +149,7 @@ N 是数据集规模。
     ```
 
     ```text
-    running time: 1714.57ms
+    running time: 1675.56ms
     ```
 
     用 `2.8Ghz` 的 cpu 运行 `1G` 条基础指令，消耗时间 `1.68s` 。
@@ -163,147 +160,154 @@ N 是数据集规模。
 
 -  io 时间
 
-    memset 大数组
+    多数题目中，io 时间不是考察的重点，可以忽略。
+    但是某些情况，大数据量加上某些 io 操作可能导致超时。
 
-    for loop 重置
-
-    scanf 和 cin 的速度
+    默认情况下，scanf 和 cin 的速度是不同的[^fn:3]，
+    scanf 比 cin 要快。
+    当遇到由 io 引起的超时，可以尝试修改 io 方法来减少运行时间。
 
 
 #### 空间估计 {#空间估计}
 
-<!--list-separator-->
+程序在内存中运行，计算过程中，所有需要的空间放在内存中。
 
--  131072k 是什么概念
+内存的最小单位为字节(1 byte = 8 bits)，4G 内存就是 `4*1024*1024*1024 bytes` 。
 
-    内存管理的最小单位为 字节(1 byte = 8 bits)，4G 内存对应 `4*1024*1024*1024` bytes。
+c++ 中，类型直接对应空间，可用 `sizeof` 计算相应类型变量占用的字节数。
 
-    cpp 中类型直接对应空间的大小，也用字节表示，用 `sizeof` 计算。
+```cpp
+#include <cstdio>
 
-    ```cpp
-    #include <cstdio>
+int main(void) {
+  printf("bytes of char = %d\n", sizeof(char));
+  printf("bytes of bool = %d\n", sizeof(bool));
+  printf("bytes of short = %d\n", sizeof(short));
+  printf("bytes of int = %d\n", sizeof(int));
+  printf("bytes of long = %d\n", sizeof(long));
+  printf("bytes of long long = %d\n", sizeof(long long));
+  printf("bytes of float = %d\n", sizeof(float));
+  printf("bytes of double = %d\n", sizeof(double));
+  printf("bytes of void* = %d\n", sizeof(void*));
 
-    int main(void) {
-      printf("bytes of char = %d\n", sizeof(char));
-      printf("bytes of bool = %d\n", sizeof(bool));
-      printf("bytes of short = %d\n", sizeof(short));
-      printf("bytes of int = %d\n", sizeof(int));
-      printf("bytes of long = %d\n", sizeof(long));
-      printf("bytes of longlong = %d\n", sizeof(long long));
-      printf("bytes of float = %d\n", sizeof(float));
-      printf("bytes of double = %d\n", sizeof(double));
-      printf("bytes of void = %d\n", sizeof(void));
-      printf("bytes of void* = %d\n", sizeof(void*));
+  printf("bytes of int[1000] = %d\n", sizeof(int[1000]));
+}
+```
 
-      printf("bytes of int[1000] = %d\n", sizeof(int[1000]));
-    }
-    ```
+```text
+bytes of char = 1
+bytes of bool = 1
+bytes of short = 2
+bytes of int = 4
+bytes of long = 8
+bytes of long long = 8
+bytes of float = 4
+bytes of double = 8
+bytes of void* = 8
+bytes of int[1000] = 4000
+```
 
-    ```text
-    bytes of char = 1
-    bytes of bool = 1
-    bytes of short = 2
-    bytes of int = 4
-    bytes of long = 8
-    bytes of longlong = 8
-    bytes of float = 4
-    bytes of double = 8
-    bytes of void = 1
-    bytes of void* = 8
-    bytes of int[1000] = 4000
-    ```
+空间的计算方式是非常直白的。
+单个变量对应固定大小的空间；
+对于数组而言， `数组空间 = 类型大小 * 数组长度` 。
 
-    `空间 = 类型大小 * 数组长度`
-
-    -   `int[1000]` 占用空间 4k
-    -   `int[1000 000]` 占用空间 4000 k
-    -   `int[1000 000 000]` 占用空间 4000 000k
+-   `int[1000]` 占用空间 4K bytes
+-   `int[1000 000]` 占用空间 4M bytes
+-   `int[1000 000 000]` 占用空间 4G bytes
 
 
 ## 解题过程 {#解题过程}
 
-某种意义上，算法就是分析模型，针对问题代入模型
-从问题中抽象得到，再应用于问题，采用相似性
+  某种意义上，解题就是匹配模型的过程。
+算法就是你分析过的模型，
+如果一个问题，
+可以抽象成树，就用递归的方法来解决；
+可以抽象为 DAG，就可以用图论的相关算法来解决。
+算法学习，核心就是抽象建模的能力，以及匹配模型的能力。
+
+在遇到一个问题时，为自己设定一个思考框架，
+可以在编码前，全面的考虑问题，减少思维的漏洞。
+
+以下是我常用的解题过程，望有所启发。
+
+1.  问题
+    -   明确问题细节
+    -   抽象问题模型
+2.  算法
+    -   提出解题过程
+3.  时间估计
+    -   时间复杂度
+    -   最大计算周期数
+4.  空间估计
+    -   空间复杂度
+    -   最大空间占用
+5.  溢出
+    -   数字溢出？
+    -   递归栈溢出？
+6.  边界
+    -   案例情况
+    -   最简单情况
+    -   最大边界情况
 
 
-### 问题 {#问题}
+## 如何调试 {#如何调试}
 
+很多题目都不会一次 AC，常见的错误有[^fn:4]
 
-### 算法 {#算法}
-
-
-### 复杂度估计 {#复杂度估计}
-
-
-#### 时间 {#时间}
-
-
-#### 空间 {#空间}
-
-
-### 溢出 {#溢出}
-
-
-#### 整数溢出 {#整数溢出}
-
-
-#### 递归栈溢出 {#递归栈溢出}
-
-
-### 边界 {#边界}
-
-
-#### 最简单情况 {#最简单情况}
-
-
-#### 最大边界情况 {#最大边界情况}
-
-
-## 调试方法 {#调试方法}
+-   PE，Presentation Error，输出不合规范
+-   TLE，Time Limit Exceed，超时
+-   MLE，Memory Limit Exceed，内存超限
+-   WA，Wrong Anwser，错误
 
 
 ### PE {#pe}
 
-空行的问题
+这是一个好信号，说明你离 AC 非常接近，只需要调整一点点格式。
 
-输出的间隔之间存在空行
+多数时候是空行的问题，比如以下两种表述是不同的（常见于 UVA）。
 
-最后不存在空格，PR error
-
+```text
 there is a blank line after each test case
-
+vs
 there is a blank line between each test case
+```
 
-是不同的
+前者在每个输出之 **后** 都有空行；
+后者在每个输出之 **中** 才有空行。
+差别就是前者比后者在最后一行多了空行。
+
+
+### TLE {#tle}
+
+多数情况下，是程序的复杂度过高，无法在规定时间内解决大规模问题，
+这意味着需要改进算法。
+
+另外，死循环也是一种可能。
+
+
+### MLE {#mle}
+
+MLE 是相对少见的，因为空间估计比时间估计更为准确。
+
+实在无法减少，可以尝试用时间换空间。
 
 
 ### WA {#wa}
 
+WA 是最常见的。说明程序不完全正确，存在思维漏洞。
 
-#### printf {#printf}
+出错就要调试，可以使用多种方式
 
-
-#### gdb {#gdb}
-
-cgdb .out -ex "b main" -ex "r"
-
-$home/.cgdb/cgdbrc
-
-```nil
-set winsplit=even
-set wso=vertical
-```
-
-<!--list-separator-->
-
--  gdb 的检查指令
-
-    如何查看数字的不同格式
+-   printf 打印变量，是否符合预期
+-   gdb 调试
+-   寻找数据集，比如针对 UVA 的 UDebug
 
 
-#### 寻找数据集 {#寻找数据集}
+## License {#license}
 
-uva udebug
+{{< license >}}
 
 [^fn:1]: : <https://blog.csdn.net/qq%5F30763385/article/details/104580790>
 [^fn:2]: : <https://zhuanlan.zhihu.com/p/90829922>
+[^fn:3]: : <https://blog.csdn.net/yujuan%5FMao/article/details/8119529>
+[^fn:4]: : <https://blog.csdn.net/weixin%5F43719765/article/details/84633771>
