@@ -202,6 +202,9 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 ***** github topic
 ***** 大学研究
 ****** 计算摄影
+***** 计算机视觉
+****** 自动化处理一些事情
+****** 快速处理信息成电子格式
 ***** system design
 ****** 复杂系统的认知
 ******* 可视化是有力的工具

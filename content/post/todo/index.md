@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-10T18:34:11+08:00
+lastmod: 2021-04-13T11:31:19+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -610,6 +610,18 @@ series: ["test"]
         <!--list-separator-->
 
         -  计算摄影
+
+    <!--list-separator-->
+
+    -  计算机视觉
+
+        <!--list-separator-->
+
+        -  自动化处理一些事情
+
+        <!--list-separator-->
+
+        -  快速处理信息成电子格式
 
     <!--list-separator-->
 

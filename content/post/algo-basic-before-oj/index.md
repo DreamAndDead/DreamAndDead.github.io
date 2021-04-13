@@ -2,7 +2,7 @@
 title: "写在 OJ 前"
 author: ["DreamAndDead"]
 date: 2021-04-07T18:21:00+08:00
-lastmod: 2021-04-12T14:22:55+08:00
+lastmod: 2021-04-13T10:16:54+08:00
 tags: ["algorithm", "oj", "programing"]
 categories: ["Algorithm"]
 draft: true
@@ -152,7 +152,7 @@ N 是数据集规模。
     ```
 
     ```text
-    running time: 1709.61ms
+    running time: 1714.57ms
     ```
 
     用 `2.8Ghz` 的 cpu 运行 `1G` 条基础指令，消耗时间 `1.68s` 。
@@ -180,18 +180,38 @@ N 是数据集规模。
 
     cpp 中类型直接对应空间的大小，也用字节表示，用 `sizeof` 计算。
 
-    | bytes | of | char      | = | 1    |
-    |-------|----|-----------|---|------|
-    | bytes | of | bool      | = | 1    |
-    | bytes | of | short     | = | 2    |
-    | bytes | of | int       | = | 4    |
-    | bytes | of | long      | = | 8    |
-    | bytes | of | longlong  | = | 8    |
-    | bytes | of | float     | = | 4    |
-    | bytes | of | double    | = | 8    |
-    | bytes | of | void      | = | 1    |
-    | bytes | of | void\*    | = | 8    |
-    | bytes | of | int[1000] | = | 4000 |
+    ```cpp
+    #include <cstdio>
+
+    int main(void) {
+      printf("bytes of char = %d\n", sizeof(char));
+      printf("bytes of bool = %d\n", sizeof(bool));
+      printf("bytes of short = %d\n", sizeof(short));
+      printf("bytes of int = %d\n", sizeof(int));
+      printf("bytes of long = %d\n", sizeof(long));
+      printf("bytes of longlong = %d\n", sizeof(long long));
+      printf("bytes of float = %d\n", sizeof(float));
+      printf("bytes of double = %d\n", sizeof(double));
+      printf("bytes of void = %d\n", sizeof(void));
+      printf("bytes of void* = %d\n", sizeof(void*));
+
+      printf("bytes of int[1000] = %d\n", sizeof(int[1000]));
+    }
+    ```
+
+    ```text
+    bytes of char = 1
+    bytes of bool = 1
+    bytes of short = 2
+    bytes of int = 4
+    bytes of long = 8
+    bytes of longlong = 8
+    bytes of float = 4
+    bytes of double = 8
+    bytes of void = 1
+    bytes of void* = 8
+    bytes of int[1000] = 4000
+    ```
 
     `空间 = 类型大小 * 数组长度`
 

@@ -315,7 +315,7 @@ OJ 平台的运行机器参数是不透明的，粗略用 ~1G~ 指令对应 ~1.5
 
   cpp 中类型直接对应空间的大小，也用字节表示，用 ~sizeof~ 计算。
 
-  #+begin_src cpp :exports results
+  #+begin_src cpp :exports both :results output
   #include <cstdio>
 
   int main(void) {
@@ -335,17 +335,19 @@ OJ 平台的运行机器参数是不透明的，粗略用 ~1G~ 指令对应 ~1.5
   #+end_src
 
   #+RESULTS:
-  | bytes | of | char      | = |    1 |
-  | bytes | of | bool      | = |    1 |
-  | bytes | of | short     | = |    2 |
-  | bytes | of | int       | = |    4 |
-  | bytes | of | long      | = |    8 |
-  | bytes | of | longlong  | = |    8 |
-  | bytes | of | float     | = |    4 |
-  | bytes | of | double    | = |    8 |
-  | bytes | of | void      | = |    1 |
-  | bytes | of | void*     | = |    8 |
-  | bytes | of | int[1000] | = | 4000 |
+  #+begin_example
+  bytes of char = 1
+  bytes of bool = 1
+  bytes of short = 2
+  bytes of int = 4
+  bytes of long = 8
+  bytes of longlong = 8
+  bytes of float = 4
+  bytes of double = 8
+  bytes of void = 1
+  bytes of void* = 8
+  bytes of int[1000] = 4000
+  #+end_example
 
   ~空间 = 类型大小 * 数组长度~
 
