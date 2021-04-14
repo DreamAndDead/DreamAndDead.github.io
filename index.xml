@@ -1,48 +1,44 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>在尝试 OJ 之前</title><link>https://dreamanddead.github.io/post/algo-basic-before-oj/</link><pubDate>Wed, 07 Apr 2021 18:21:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/algo-basic-before-oj/</guid><description>时长N年半 https://dreamanddead.github.io/post/algo-basic-before-oj/ -&lt;p>OJ 是锻炼算法的好去处。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>在尝试 OJ 之前</title><link>https://dreamanddead.github.io/post/algo-basic-before-oj/</link><pubDate>Wed, 07 Apr 2021 18:21:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/algo-basic-before-oj/</guid><description>时长N年半 https://dreamanddead.github.io/post/algo-basic-before-oj/ -&lt;p>OJ 是学习和锻炼算法的好去处。
 有很多经典的题目，考察算法的方方面面，磨练思维能力。&lt;/p>
-&lt;p>本文整理一些相关基础知识，用于提高思考的严谨性。&lt;/p>
+&lt;p>本文整理一些相关基础知识，用于提高思考时的严谨性。&lt;/p>
 &lt;h2 id="语言">语言&lt;/h2>
-&lt;p>解决问题需要算法，算法需要组织成程序，程序需要用语言编写。&lt;/p>
-&lt;p>个人推荐使用 C++ 语言。
+&lt;p>选择一项合适的语言是重要的。
+解决问题需要算法，算法需要表达成程序，程序需要用语言编写。&lt;/p>
+&lt;p>推荐使用 C++。
 C++ 接近底层，
-方便估计数据结构的空间消耗，以及算法运行的时间效率。
-虽然 Python Java 都是优秀的语言，
-但是都存在独立的 vm 层，
+方便估计数据结构的空间消耗，以及程序运行的时间效率。
+虽然 Python 和 Java 都是优秀的语言，
+但都存在 vm 层，
 而且很多高阶数据结构和方法的实现对使用者是不透明的，
-不利于估计空间消耗与时间效率。&lt;/p>
+不利于估计程序的空间消耗与时间效率。&lt;/p>
 &lt;h2 id="复杂度">复杂度&lt;/h2>
 &lt;h3 id="大-o">大 O&lt;/h3>
-&lt;p>算法的时间和空间效率常常用复杂度来衡量。
-对于一般的算法分析，常常只简化使用大 O 表示法。&lt;/p>
-&lt;p>常见的复杂度有 &lt;code>O(logN)&lt;/code>, &lt;code>O(N)&lt;/code>, &lt;code>O(NlogN)&lt;/code>, &lt;code>O(N^2)&lt;/code>, &lt;code>O(N!)&lt;/code> 和 &lt;code>O(2^N)&lt;/code> ，
-N 是数据集规模。&lt;/p>
-&lt;p>不同复杂度的增长速度是不同的。&lt;/p>
+&lt;p>算法的时间效率与空间效率用复杂度来衡量。
+对于简化版的算法分析，通常只使用大 O 表示法。&lt;/p>
+&lt;p>常见复杂度有 &lt;code>O(logN)&lt;/code>, &lt;code>O(N)&lt;/code>, &lt;code>O(NlogN)&lt;/code>, &lt;code>O(N^2)&lt;/code>, &lt;code>O(N!)&lt;/code> 和 &lt;code>O(2^N)&lt;/code> 。
+N 表示数据集的规模。&lt;/p>
 &lt;figure>
 &lt;img src="images/complexity.png"
 alt="Figure 1: 不同复杂度的增长速度"/> &lt;figcaption>
 &lt;p>Figure 1: 不同复杂度的增长速度&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>虽然不同复杂度的增速不同，
-考虑问题时也要有绝对性。
+&lt;p>在分析问题时，不单衡量复杂度的增速，也要考虑绝对性。
 时间复杂度为 &lt;code>O(N!)&lt;/code> 的算法虽然比 &lt;code>O(N)&lt;/code> 慢，
-但如果 N 很小，在时间约束下也是可以完成的，
+但如果 N 不是很大，在时间约束下也是可以完成的，
 同样是可接受的算法。&lt;/p>
 &lt;h3 id="绝对估计">绝对估计&lt;/h3>
-&lt;p>一般题目都会限定输入规模的范围，以及相应的时间/空间上限。&lt;/p>
-&lt;p>所以只明确算法复杂度还是不够的，应该代入具体的输入规模，
-对比是否超出了时空上限。&lt;/p>
-&lt;p>这便是对算法效率的绝对估计。&lt;/p>
-&lt;h4 id="常见公式">常见公式&lt;/h4>
-&lt;p>进行绝对估计前，先来看一些常见公式的数值，
-做到心中有数。&lt;/p>
+&lt;p>一般题目都会限定程序运行的时间/空间上限，以及相应的输入规模范围。
+所以只明确复杂度还是不够的，应该代入具体的输入规模，
+估计绝对值，对比是否超出了时空上限。&lt;/p>
+&lt;h4 id="常见数值估计">常见数值估计&lt;/h4>
+&lt;p>先来看一些常见公式的数值，做到心中有数。&lt;/p>
 &lt;!-- raw HTML omitted -->
 &lt;ul>
 &lt;li>
 &lt;p>阶乘&lt;/p>
-&lt;p>在所有常见复杂度的公式中，阶乘的增速是最快的。&lt;/p>
-&lt;p>&lt;code>30! ~= 1e30&lt;/code> ， &lt;code>300! ~= 1e600&lt;/code> 。&lt;/p>
-&lt;p>位数近似随着 n 线性增加，这是非常可怕的。&lt;/p>
+&lt;p>在常见复杂度的公式中，阶乘的增速是最快的。 &lt;code>30! ~= 1e30&lt;/code> ， &lt;code>300! ~= 1e600&lt;/code> 。&lt;/p>
+&lt;p>位数随着 n 近似线性增加，这是非常可怕的。&lt;/p>
 &lt;figure>
 &lt;img src="images/factor.png"/>
 &lt;/figure>
@@ -52,8 +48,7 @@ alt="Figure 1: 不同复杂度的增长速度"/> &lt;figcaption>
 &lt;ul>
 &lt;li>
 &lt;p>2 的幂&lt;/p>
-&lt;p>2 的幂对应的位数随 n 线性增长，斜率为 &lt;code>log10(2) ~= 0.3&lt;/code> 。&lt;/p>
-&lt;p>所以&lt;/p>
+&lt;p>2 的幂对应的位数随 n 线性增长，斜率为 &lt;code>log10(2) ~= 0.3&lt;/code> 。即&lt;/p>
 &lt;ul>
 &lt;li>
 &lt;p>&lt;code>2^8 = 1e2.4&lt;/code>&lt;/p>
@@ -74,27 +69,25 @@ alt="Figure 1: 不同复杂度的增长速度"/> &lt;figcaption>
 &lt;ul>
 &lt;li>
 &lt;p>组合数&lt;/p>
-&lt;p>排列数对应阶乘。组合数 &lt;code>C(n, k)&lt;/code> 随 k 的增加先增大后减小，
-k = n/2 时，组合数最大的。&lt;/p>
-&lt;p>&lt;code>C(n, n/2)&lt;/code> 的趋势和 2 的幂是相近的，因为 &lt;code>sum(C(n, k)) = 2^n&lt;/code> 。&lt;/p>
+&lt;p>排列数对应阶乘，组合数则和 2 的幂有关。&lt;/p>
+&lt;p>&lt;code>C(n, k)&lt;/code> 随 k 的增加先增大后减小，~k = n/2~ 时，组合数是最大的。&lt;/p>
+&lt;p>&lt;code>C(n, n/2)&lt;/code> 的趋势和 2 的幂是相近的，因为 &lt;code>sum_k(C(n, k)) = 2^n&lt;/code> 。&lt;/p>
 &lt;figure>
 &lt;img src="images/comb.png"/>
 &lt;/figure>
 &lt;/li>
 &lt;/ul>
 &lt;h4 id="时间估计">时间估计&lt;/h4>
-&lt;p>一道 OJ 题目限定时间 3000ms，具体对应什么，怎么和复杂度关联起来？&lt;/p>
-&lt;p>程序总体运行时间大致可分成 cpu 时间和 io 时间。&lt;/p>
+&lt;p>程序运行时间大致可分成 cpu 时间和 io 时间。&lt;/p>
 &lt;!-- raw HTML omitted -->
 &lt;ul>
 &lt;li>
 &lt;p>cpu 时间&lt;/p>
 &lt;p>对于单线程程序， &lt;code>cpu 运行时间 = cpu 周期时间 * 每个指令的周期数 * 运行指令数&lt;/code> &lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>。&lt;/p>
-&lt;p>cpu 的重要参数为主频，周期时间为主频的倒数&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>。
-如 &lt;code>Intel(R) Core(TM) i7-3840QM CPU @ 2.80GHz&lt;/code> ，周期时间为 &lt;code>1/2.8G&lt;/code> 。&lt;/p>
+&lt;p>cpu 的重要参数为主频，周期时间是主频的倒数&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>。
+如 &lt;code>Intel(R) Core(TM) i7-3840QM CPU @ 2.80GHz&lt;/code> ，周期时间为 &lt;code>1/2.8G s&lt;/code> 。&lt;/p>
 &lt;p>不同的指令需要不同的周期数，如乘法指令比加法指令消耗更多周期。&lt;/p>
 &lt;p>运行指令数是由程序生成的指令与数据规模共同决定的。&lt;/p>
-&lt;p>对照上面的因素，对于我们可控的因素只有程序，运行更少的指令去解决问题。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;ctime&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
@@ -108,11 +101,11 @@ start = clock();
 i++;
 }
 end = clock();
-cout &amp;lt;&amp;lt;&lt;span style="color:#cd5555">&amp;#34;running time: &amp;#34;&lt;/span> &amp;lt;&amp;lt; (&lt;span style="color:#00688b;font-weight:bold">float&lt;/span>)(end-start)*&lt;span style="color:#b452cd">1000.0&lt;/span>/CLOCKS_PER_SEC &amp;lt;&amp;lt; &lt;span style="color:#cd5555">&amp;#34;ms&amp;#34;&lt;/span> &amp;lt;&amp;lt; endl;
+cout &amp;lt;&amp;lt; &lt;span style="color:#cd5555">&amp;#34;running time: &amp;#34;&lt;/span> &amp;lt;&amp;lt; (&lt;span style="color:#00688b;font-weight:bold">float&lt;/span>)(end-start)*&lt;span style="color:#b452cd">1000.0&lt;/span>/CLOCKS_PER_SEC &amp;lt;&amp;lt; &lt;span style="color:#cd5555">&amp;#34;ms&amp;#34;&lt;/span> &amp;lt;&amp;lt; endl;
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">running time: 1675.56ms
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>用 &lt;code>2.8Ghz&lt;/code> 的 cpu 运行 &lt;code>1G&lt;/code> 条基础指令，消耗时间 &lt;code>1.68s&lt;/code> 。&lt;/p>
-&lt;p>OJ 平台的运行机器参数是不透明的，粗略用 &lt;code>1G&lt;/code> 指令对应 &lt;code>1.5s&lt;/code> 时间来估计。&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">running time: 1871.4ms
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>2.8Ghz&lt;/code> 的 cpu 运行 &lt;code>1G&lt;/code> 条基础指令，大约消耗时间 &lt;code>1.68s&lt;/code> 。&lt;/p>
+&lt;p>OJ 平台的运行机器参数是不透明的，粗略用 &lt;code>1G&lt;/code> 指令对应 &lt;code>1.5s&lt;/code> 时间来估计即可。&lt;/p>
 &lt;/li>
 &lt;/ul>
 &lt;!-- raw HTML omitted -->
@@ -120,16 +113,16 @@ cout &amp;lt;&amp;lt;&lt;span style="color:#cd5555">&amp;#34;running time: &amp;
 &lt;li>
 &lt;p>io 时间&lt;/p>
 &lt;p>多数题目中，io 时间不是考察的重点，可以忽略。
-但是某些情况，大数据量加上某些 io 操作可能导致超时。&lt;/p>
-&lt;p>默认情况下，scanf 和 cin 的速度是不同的&lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>，
-scanf 比 cin 要快。
+但是某些情况下，大数据量加上不当的 io 操作可能超时。&lt;/p>
+&lt;p>因为默认设定下，scanf 和 cin 的速度是不同的&lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>，
+scanf 比 cin 要快 10 倍（粗略估计）。
 当遇到由 io 引起的超时，可以尝试修改 io 方法来减少运行时间。&lt;/p>
 &lt;/li>
 &lt;/ul>
 &lt;h4 id="空间估计">空间估计&lt;/h4>
-&lt;p>程序在内存中运行，计算过程中，所有需要的空间放在内存中。&lt;/p>
-&lt;p>内存的最小单位为字节(1 byte = 8 bits)，4G 内存就是 &lt;code>4*1024*1024*1024 bytes&lt;/code> 。&lt;/p>
-&lt;p>c++ 中，类型直接对应空间，可用 &lt;code>sizeof&lt;/code> 计算相应类型变量占用的字节数。&lt;/p>
+&lt;p>程序运行过程中，所有需要的空间都放在内存中。
+内存的最小单位为字节(1 byte = 8 bits)，4G 内存就是 &lt;code>4*1024*1024*1024&lt;/code> bytes 。&lt;/p>
+&lt;p>在 C++ 中，类型直接对应空间，可用 &lt;code>sizeof&lt;/code> 计算相应类型的变量占用的字节数。&lt;/p>
 &lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
 &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
@@ -166,12 +159,12 @@ bytes of int[1000] = 4000
 &lt;p>某种意义上，解题就是匹配模型的过程。
 算法就是你分析过的模型，
 如果一个问题，
-可以抽象成树，就用递归的方法来解决；
-可以抽象为 DAG，就可以用图论的相关算法来解决。
+可以抽象成树，尝试用递归的方法来解决；
+可以抽象为 DAG，尝试用图论的相关算法来解决。
 算法学习，核心就是抽象建模的能力，以及匹配模型的能力。&lt;/p>
-&lt;p>在遇到一个问题时，为自己设定一个思考框架，
+&lt;p>在遇到问题时，为自己设定一个思考框架，
 可以在编码前，全面的考虑问题，减少思维的漏洞。&lt;/p>
-&lt;p>以下是我常用的解题过程，望有所启发。&lt;/p>
+&lt;p>以下是我常用的思考框架，&lt;/p>
 &lt;ol>
 &lt;li>问题
 &lt;ul>
@@ -187,7 +180,7 @@ bytes of int[1000] = 4000
 &lt;li>时间估计
 &lt;ul>
 &lt;li>时间复杂度&lt;/li>
-&lt;li>最大计算周期数&lt;/li>
+&lt;li>最大计算周期&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>空间估计
@@ -240,7 +233,7 @@ there is a blank line between each test case
 &lt;ul>
 &lt;li>printf 打印变量，是否符合预期&lt;/li>
 &lt;li>gdb 调试&lt;/li>
-&lt;li>寻找数据集，比如针对 UVA 的 UDebug&lt;/li>
+&lt;li>寻找数据集，比如针对 UVA 的 &lt;a href="https://www.udebug.com/">uDebug&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="license">License&lt;/h2>
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
