@@ -1,4 +1,72 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>记一次修复 manjaro 引导的过程</title><link>https://dreamanddead.github.io/post/rescue-manjaro-boot/</link><pubDate>Tue, 01 Sep 2020 10:23:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/rescue-manjaro-boot/</guid><description>时长N年半 https://dreamanddead.github.io/post/rescue-manjaro-boot/ -&lt;p>manjaro 发行版最具特色的即是持续不断的软件更新和系统更新，时刻更新自然是一种最佳实践。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>浅谈全景图</title><link>https://dreamanddead.github.io/post/a-little-talk-about-panorama/</link><pubDate>Sun, 27 Sep 2020 14:02:58 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-little-talk-about-panorama/</guid><description>时长N年半 https://dreamanddead.github.io/post/a-little-talk-about-panorama/ -&lt;p>全景图本身并不神秘。&lt;/p>
+&lt;p>普通的图片，记录的只是在一个位置，一个视角下观察到的场景；
+而全景图可以记录一个位置，所有视角可观察到的场景。&lt;/p>
+&lt;p>全景图虽起名全景，但本质还是图片，可以和普通图片对比着来理解。&lt;/p>
+&lt;h1 id="图片文件">图片文件&lt;/h1>
+&lt;p>图片也是文件，是文件就需要存储。&lt;/p>
+&lt;p>普通图片一般存储为 jpg/png 等格式，全景图也不例外，同样使用相同格式来存储，
+不过存储的内容有些许不同。&lt;/p>
+&lt;p>全景图既然记录了所有视角的场景，必然在内容方面和普通图片有所区别，本质区别在于&lt;a href="https://wiki.panotools.org/Panorama_formats">投影变换&lt;/a>。&lt;/p>
+&lt;figure>
+&lt;img src="images/world-map.png"/> &lt;figcaption>
+&lt;p>inflate world to panorama map&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>上图所有人都不陌生。将地球球体映射到圆柱，再将圆柱展开，成为 2：1 的一张图片，就是常见的世界地图。&lt;/p>
+&lt;p>其本质就是一种主流的存储全景图的方法 &lt;a href="https://wiki.panotools.org/Equirectangular_Projection">equirectangular&lt;/a>。&lt;/p>
+&lt;p>还有另一种存储全景图的方法 &lt;a href="https://wiki.panotools.org/Cubic_Projection">cubic&lt;/a>，以观察点为中心，用六张图片记录 前，后，左，右，上，下 立方体包围盒的六个面。&lt;/p>
+&lt;figure>
+&lt;img src="images/cubic-map.png"/> &lt;figcaption>
+&lt;p>panorama in cubic way&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>可以将包围盒理解为是球体的内接立方体，两者在场景存储方面是等价的。&lt;/p>
+&lt;p>比如 &lt;a href="https://jaxry.github.io/panorama-to-cubemap/">Panorama to Cubemap&lt;/a>，就可以将 equirectangular 转换为 cubic 格式。&lt;/p>
+&lt;h1 id="图片浏览器">图片浏览器&lt;/h1>
+&lt;p>存储图片文件之后，需要图片浏览器来查看图片。&lt;/p>
+&lt;p>普通图片的浏览器，只是简单读取矩阵像素点，呈现在平面屏幕。&lt;/p>
+&lt;p>而全景图保留了全部视角，就需要另外的一种浏览方式，允许各个视角进行切换。&lt;/p>
+&lt;p>&lt;a href="https://wiki.panotools.org/Panorama_Viewers">相应的浏览器&lt;/a>有很多，本质都是将全景图中投影的数据，通过算法计算，还原到任意视角上。&lt;/p>
+&lt;p>下面示例使用 js 实现的全景图浏览器 &lt;a href="https://pannellum.org/documentation/overview/">pannellum&lt;/a>。&lt;/p>
+&lt;iframe src="https://cdn.pannellum.org/2.5/pannellum.htm#panorama=https://pannellum.org/images/alma.jpg" width="100%" height="400px"
+frameborder="0"
+scrolling="no">
+&lt;/iframe>
+&lt;p>其中查看的 equirectangular 全景图是&lt;/p>
+&lt;figure>
+&lt;img src="images/panorama-rect.jpg"/>
+&lt;/figure>
+&lt;p>转换为 cubic 方式，则如下图&lt;/p>
+&lt;figure>
+&lt;img src="images/panorama-cubic.png"/>
+&lt;/figure>
+&lt;h1 id="图片生成">图片生成&lt;/h1>
+&lt;p>普通图片只需要一个镜头，在一个视角下感光即可，记录所有颜色的矩阵，即保留为图片。&lt;/p>
+&lt;p>对于全景图，假如使用 cubic 记录的方式（因为等价），则需要通过镜头来记录 6 张图，即包围盒的六个面。&lt;/p>
+&lt;p>假如使用单镜头拍摄，在现实中做到这一点并不容易。&lt;/p>
+&lt;ol>
+&lt;li>6 张图片需要使用 fov = 90 的广角来拍摄，大部分设备是不支持的。&lt;/li>
+&lt;li>即使得到 6 张相应的图片，并不能保证边角是严丝合缝的，可能存在误差引起的断裂痕迹。&lt;/li>
+&lt;/ol>
+&lt;p>普通的用户如果想通过这种方式得到完美的全景图，远远没有拍摄一张图片加美颜那么简单。&lt;/p>
+&lt;p>如果把拍摄放到虚拟世界中呢？&lt;/p>
+&lt;p>想像在 3D 游戏中，实时看到的场景是通过线性代数计算出来的，想要得到一个角度的场景图片轻而易举，
+并且数学计算十分严密，边界是完全吻合的。相机被抽象为点，没有实体相机的大小误差。&lt;/p>
+&lt;p>简单的实践，可以在 FPS 游戏中，完全的第一视角，在分辨率 1：1 的情况下，记录下 fov = 90 的 前，后，左，右，上，下
+6 张图片，完全可以充当全景图浏览器的输入！&lt;/p>
+&lt;h1 id="更多">更多&lt;/h1>
+&lt;ul>
+&lt;li>普通手机如何拍摄全景图？&lt;/li>
+&lt;/ul>
+&lt;p>目前存在拍摄全景图的相机应用，考虑手机只有一个摄像头，且 fov 调整空间有限，分辨率各不相同，
+拍摄全景图就需要相机应用引导用户拍摄多个视角下的场景，覆盖全景所有的面，最后通过合成算法合成全景图。&lt;/p>
+&lt;p>相应地也存在一些优秀的合成工具，如 microsoft 的 &lt;a href="https://www.microsoft.com/en-us/research/product/computational-photography-applications/image-composite-editor/">ICE&lt;/a>，和 开源的 &lt;a href="https://www.ptgui.com/">PTGui&lt;/a>。&lt;/p>
+&lt;ul>
+&lt;li>有哪些拍摄全景图的设备？&lt;/li>
+&lt;/ul>
+&lt;p>市场存在很多不同的拍摄全景图的设备，拍摄全景的原理并没有发生变化，只不过其使用多个固定的镜头，
+使输入易预测，加上部分冗余和一些算法处理，可以一步生成相应的全景图。&lt;/p>
+&lt;p>详细可参考 &lt;a href="https://www.leiphone.com/news/201512/bMLT4bE88swBjG19.html">this link&lt;/a>。&lt;/p>- https://dreamanddead.github.io/post/a-little-talk-about-panorama/ - DreamAndDead 2014-2021</description></item><item><title>记一次修复 manjaro 引导的过程</title><link>https://dreamanddead.github.io/post/rescue-manjaro-boot/</link><pubDate>Tue, 01 Sep 2020 10:23:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/rescue-manjaro-boot/</guid><description>时长N年半 https://dreamanddead.github.io/post/rescue-manjaro-boot/ -&lt;p>manjaro 发行版最具特色的即是持续不断的软件更新和系统更新，时刻更新自然是一种最佳实践。&lt;/p>
 &lt;pre>&lt;code>sudo pacman -Syu
 &lt;/code>&lt;/pre>&lt;p>但是今天出现更新过程意外中断，中途报错出现段错误。重启之后，无法进入系统。&lt;/p>
 &lt;pre>&lt;code>error: file '/vmlinuz-5.7-x86_64' not found.
@@ -1499,26 +1567,4 @@ $$&lt;/p>
 &lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/CS229%20Lecture%20Review%20note%203.pdf">CS229 Lecture Review note 3&lt;/a> &lt;a href="#fnref:8" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section>- https://dreamanddead.github.io/post/support-vector-machine/ - DreamAndDead 2014-2021</description></item><item><title>python virtual env with conda</title><link>https://dreamanddead.github.io/post/pipenv-with-conda/</link><pubDate>Fri, 20 Sep 2019 09:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/pipenv-with-conda/</guid><description>时长N年半 https://dreamanddead.github.io/post/pipenv-with-conda/ -&lt;p>Anaconda 是一个非常流行的 python 集成环境，用于科学计算，机器学习等。
-它主要的优势在于，新的包管理器 conda 比 pip 更容易管理 numpy scipy 之类的工具包（安装涉及 C 代码编译）。&lt;/p>
-&lt;p>另外在开发过程中，保持不同项目使用各自独立的开发环境是一个良好的习惯。
-在 python 世界，virtualenv 是最广泛的选择，pipenv 的底层使用的也是它。
-conda 内部也有 env 的概念（默认是 base），可以针对不同的项目进行环境的分离，并且对一些开发工具有良好的支持（比如 VS Code 中的 Anaconda 插件）。&lt;/p>
-&lt;p>最近在配置 emacs 下的 python 开发环境，相比之下在 Anaconda 方面的插件还没有那么成熟，经过搜索发现，
-存在可以集成 pipenv&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> 和 conda env 的方案&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ pipenv --python=&lt;span style="color:#8b008b;font-weight:bold">$(&lt;/span>conda run which python&lt;span style="color:#8b008b;font-weight:bold">)&lt;/span> --site-packages
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令，可以将 conda env 作为 pipenv virtualenv 来使用，集成了所有 Anaconda 集成的开发库！&lt;/p>
-&lt;p>更可贵的是，在使用 conda 升级开发库之后，可以再次重建 virtualenv 获得更新带来的好处。
-并且，virtualenv 环境更容易被其它编码工具支持，比如 emacs :)。&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
-&lt;hr>
-&lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
-&lt;p>&lt;a href="https://pipenv.readthedocs.io/en/latest/advanced/#pipenv-and-other-python-distributions">https://pipenv.readthedocs.io/en/latest/advanced/#pipenv-and-other-python-distributions&lt;/a> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:2" role="doc-endnote">
-&lt;p>&lt;a href="https://stackoverflow.com/questions/50546339/pipenv-with-conda">https://stackoverflow.com/questions/50546339/pipenv-with-conda&lt;/a> &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;/section>
-- https://dreamanddead.github.io/post/pipenv-with-conda/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;/section>- https://dreamanddead.github.io/post/support-vector-machine/ - DreamAndDead 2014-2021</description></item></channel></rss>

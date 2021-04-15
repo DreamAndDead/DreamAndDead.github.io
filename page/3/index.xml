@@ -1,4 +1,26 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>KD Tree</title><link>https://dreamanddead.github.io/post/kd-tree/</link><pubDate>Thu, 22 Aug 2019 15:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/kd-tree/</guid><description>时长N年半 https://dreamanddead.github.io/post/kd-tree/ -&lt;p>之前了解学习了机器学习中的 KNN 算法，它的本质是从“已有经验”中找出最相似的案例，来“预测”新的未出现过的情况。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>python virtual env with conda</title><link>https://dreamanddead.github.io/post/pipenv-with-conda/</link><pubDate>Fri, 20 Sep 2019 09:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/pipenv-with-conda/</guid><description>时长N年半 https://dreamanddead.github.io/post/pipenv-with-conda/ -&lt;p>Anaconda 是一个非常流行的 python 集成环境，用于科学计算，机器学习等。
+它主要的优势在于，新的包管理器 conda 比 pip 更容易管理 numpy scipy 之类的工具包（安装涉及 C 代码编译）。&lt;/p>
+&lt;p>另外在开发过程中，保持不同项目使用各自独立的开发环境是一个良好的习惯。
+在 python 世界，virtualenv 是最广泛的选择，pipenv 的底层使用的也是它。
+conda 内部也有 env 的概念（默认是 base），可以针对不同的项目进行环境的分离，并且对一些开发工具有良好的支持（比如 VS Code 中的 Anaconda 插件）。&lt;/p>
+&lt;p>最近在配置 emacs 下的 python 开发环境，相比之下在 Anaconda 方面的插件还没有那么成熟，经过搜索发现，
+存在可以集成 pipenv&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> 和 conda env 的方案&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ pipenv --python=&lt;span style="color:#8b008b;font-weight:bold">$(&lt;/span>conda run which python&lt;span style="color:#8b008b;font-weight:bold">)&lt;/span> --site-packages
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令，可以将 conda env 作为 pipenv virtualenv 来使用，集成了所有 Anaconda 集成的开发库！&lt;/p>
+&lt;p>更可贵的是，在使用 conda 升级开发库之后，可以再次重建 virtualenv 获得更新带来的好处。
+并且，virtualenv 环境更容易被其它编码工具支持，比如 emacs :)。&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>&lt;a href="https://pipenv.readthedocs.io/en/latest/advanced/#pipenv-and-other-python-distributions">https://pipenv.readthedocs.io/en/latest/advanced/#pipenv-and-other-python-distributions&lt;/a> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2" role="doc-endnote">
+&lt;p>&lt;a href="https://stackoverflow.com/questions/50546339/pipenv-with-conda">https://stackoverflow.com/questions/50546339/pipenv-with-conda&lt;/a> &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>
+- https://dreamanddead.github.io/post/pipenv-with-conda/ - DreamAndDead 2014-2021</description></item><item><title>KD Tree</title><link>https://dreamanddead.github.io/post/kd-tree/</link><pubDate>Thu, 22 Aug 2019 15:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/kd-tree/</guid><description>时长N年半 https://dreamanddead.github.io/post/kd-tree/ -&lt;p>之前了解学习了机器学习中的 KNN 算法，它的本质是从“已有经验”中找出最相似的案例，来“预测”新的未出现过的情况。&lt;/p>
 &lt;p>在 sklearn 的 KNN 算法描述中，其中提到使用 KD Tree 结构可以加速 nearest neighbors 的查找，从而提高 KNN 算法的效率。&lt;/p>
 &lt;p>这里就来讨论一下 KD Tree 数据结构。&lt;/p>
 &lt;h1 id="intro">intro&lt;/h1>
@@ -1533,133 +1555,4 @@ $ ./dbsake frmdump [frm-file-path]
 &lt;ul>
 &lt;li>&lt;a href="https://docs.oracle.com/cd/E17952_01/mysql-utilities-1.6-en/mysqlfrm.html">mysqlfrm official doc&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://dbsake.readthedocs.io/en/latest/commands/frmdump.html">dbsake project doc&lt;/a>&lt;/li>
-&lt;/ul>- https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ - DreamAndDead 2014-2021</description></item><item><title>mysql table suddenly doesn't exists</title><link>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</link><pubDate>Thu, 27 Sep 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</guid><description>时长N年半 https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ -&lt;p>最近内部的 mysql 数据库发生了一件奇怪的事，其中有一个表 users625 突然出现问题，
-所有对它的操作都报错误 &lt;code>数据表不存在&lt;/code>。&lt;/p>
-&lt;pre>&lt;code>mysql&amp;gt; select count(*) from users625;
-ERROR 1146 (42S02): Table 'km8.users625' doesn't exist
-&lt;/code>&lt;/pre>&lt;p>&lt;code>show tables&lt;/code> 它还显示在列表里，在 mysql 数据目录中也可以找到对应的表文件，也没有
-进行过删除操作，突然出现这样的错误非常奇怪。&lt;/p>
-&lt;p>内部运行环境：&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align:center">名称&lt;/th>
-&lt;th style="text-align:center">值&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align:center">OS&lt;/td>
-&lt;td style="text-align:center">Debian Squeeze x64&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">mysql 版本&lt;/td>
-&lt;td style="text-align:center">5.1&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align:center">mysql 引擎&lt;/td>
-&lt;td style="text-align:center">innodb&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h1 id="发生了什么">发生了什么&lt;/h1>
-&lt;p>突然出现这种情况，第一反应必定是想办法将表中的用户数据找回，但是目前发生问题的情况与原因都不明晰，
-不能轻举妄动。&lt;/p>
-&lt;p>查看 mysql 日志，在操作出错的时候，日志这样显示：&lt;/p>
-&lt;pre>&lt;code>mysqld: 180926 11:10:53 InnoDB: cannot calculate statistics for table km8/users625
-mysqld: InnoDB: because the .ibd file is missing. For help, please refer to
-mysqld: InnoDB: http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html
-mysqld: 180926 11:10:53 [ERROR] MySQL is trying to open a table handle but the .ibd file for
-mysqld: table km8/users625 does not exist.
-mysqld: Have you deleted the .ibd file from the database directory under
-mysqld: the MySQL datadir, or have you used DISCARD TABLESPACE?
-mysqld: See http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html
-mysqld: how you can resolve the problem.
-&lt;/code>&lt;/pre>&lt;p>其中提到3个可追溯的点：&lt;/p>
-&lt;ul>
-&lt;li>ibd file&lt;/li>
-&lt;li>DISCARD TABLESPACE&lt;/li>
-&lt;li>&lt;a href="http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html">http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>了解这3点提到的内容，应该对判断情况有很好的帮助。&lt;/p>
-&lt;h2 id="ibd-file">ibd file&lt;/h2>
-&lt;p>日志中提问，是否丢失了 ibd 文件？先到 mysql 数据目录下查找，&lt;/p>
-&lt;pre>&lt;code>.
-├── ibdata1
-├── .......
-├── .......
-└── km8
-├── ............
-├── ............
-├── users625.frm
-├── users625.ibd
-├── ............
-└── ............
-&lt;/code>&lt;/pre>&lt;p>users625 的 ibd 文件是存在的，与之一起的还有文件 users625.frm 。&lt;/p>
-&lt;p>根据官方文档&lt;a href="https://dev.mysql.com/doc/internals/en/frm-file-format.html">对 frm 文件的描述&lt;/a>，frm 文件是用来保存 table 表结构（即 table 的定义）的，无论使用什么存储引擎。&lt;/p>
-&lt;p>与之相对的，ibd 文件是用来存储表数据（即行数据）的，通常情况下，所有数据都会存储在系统的 ibd 文件，
-但是当开启选项 &lt;a href="https://dev.mysql.com/doc/refman/5.5/en/innodb-parameters.html#sysvar_innodb_file_per_table">innodb_file_per_table&lt;/a> 的时候，每个表的数据会使用单独的 ibd 文件来存储。&lt;/p>
-&lt;p>当前的 mysql 就开启了这个选项，&lt;/p>
-&lt;pre>&lt;code>[mysqld]
-innodb_file_per_table=1
-&lt;/code>&lt;/pre>&lt;p>目前 frm 与 ibd 文件都存在，从中恢复数据便存在一些希望。&lt;/p>
-&lt;h2 id="discard-tablespace">DISCARD TABLESPACE&lt;/h2>
-&lt;p>日志中提到的 &lt;code>DISCARD TABLESPACE&lt;/code> 其实是在猜测导致 ibd 文件丢失的原因，因为它会删除相应 table 的 ibd 文件（所谓 tablespace）。&lt;/p>
-&lt;pre>&lt;code>&amp;gt; ALTER TABLE km8.users625 DISCARD TABLESPACE;
-&lt;/code>&lt;/pre>&lt;p>底层的 users625.ibd 文件就会被删除，丢失所有表数据。&lt;/p>
-&lt;p>根据目前情况来看， ibd 文件还存在，所以它不是导致错误的原因。&lt;/p>
-&lt;h2 id="trouble-shooting-doc">trouble shooting doc&lt;/h2>
-&lt;p>&lt;a href="http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html">日志中提到的参考链接&lt;/a>，其中列举了多种情况，和当前问题相关的是一个&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-troubleshooting-datadict.html">子链接&lt;/a>，
-按照它提供的方法，尝试进行数据恢复。&lt;/p>
-&lt;h1 id="数据恢复">数据恢复&lt;/h1>
-&lt;p>官方文档提到的&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-troubleshooting-datadict.html">恢复数据&lt;/a>的方法，思路很清晰：&lt;/p>
-&lt;ol>
-&lt;li>启用相同版本的 mysql 实例（启用选项 innodb_file_per_table）&lt;/li>
-&lt;li>建立同样结构的数据表&lt;/li>
-&lt;li>替换 ibd 文件（保持文件权限一致）&lt;/li>
-&lt;li>导入 ibd 文件中的数据&lt;/li>
-&lt;li>使用 mysqldump，导出数据&lt;/li>
-&lt;li>将导出的数据导入原数据库&lt;/li>
-&lt;/ol>
-&lt;p>我按照这种方式尝试恢复数据，并不是那么顺利：&lt;/p>
-&lt;h2 id="如何获得-table-表结构">如何获得 table 表结构？&lt;/h2>
-&lt;p>在第2步，需要建立同样结构的数据表，目前只有 frm 和 ibd 文件，怎么样得到 &lt;code>create table&lt;/code> 命令？&lt;/p>
-&lt;p>根据底层数据存储的理解，table 表结构存储在 frm 文件中，而目前已经有&lt;a href="https://www.cnblogs.com/dreamanddead/p/recover-mysql-table-structure-from-frm-file.html">相应的方法&lt;/a>从中提取出 &lt;code>create table&lt;/code> 命令，
-这样就可以用于在新的 mysql 实例中建立 table 。&lt;/p>
-&lt;h2 id="tablespace-id-不对应">tablespace id 不对应？&lt;/h2>
-&lt;p>在第4步，尝试导入数据的时候，&lt;/p>
-&lt;pre>&lt;code>&amp;gt; ALTER TABLE km8.users625 IMPORT TABLESPACE;
-ERROR 1030 (HY000): Got error -1 from storage engine
-&lt;/code>&lt;/pre>&lt;p>总是出现失败，同时在 mysql 新实例的日志中发现这样的错误：&lt;/p>
-&lt;pre>&lt;code>mysqld: InnoDB: Error: tablespace id in file './km8/users625.ibd' is 18446744073709551615, but in the InnoDB
-mysqld: InnoDB: data dictinary it is 1.
-&lt;/code>&lt;/pre>&lt;p>原来在内部，ibd 文件本身有一个 id，必须和 mysql innodb 内部的 table 元数据相对应，才可以进行导入。&lt;/p>
-&lt;p>根据错误信息搜索到&lt;a href="http://www.chriscalender.com/recovering-an-innodb-table-from-only-an-ibd-file/">一篇文章&lt;/a>，其中提到两种办法：&lt;/p>
-&lt;ol>
-&lt;li>重复建表，因为 mysql 内部的 tablespace id 是累计递增的，预先建立 （18446744073709551615 - 1）张表，再建立
-users625 表，就可以对应 id，并进行导入。&lt;/li>
-&lt;li>修改 ibd 文件，因为 tablespace id 存储于 ibd 文件，找到它并将其修改为 1，使之与内部的 id 对应，就可以进行导入。&lt;/li>
-&lt;/ol>
-&lt;p>考虑第 1 种方法，要预先建立上亿张空表？！这根本不可能。&lt;/p>
-&lt;p>于是尝试第 2 种方法，研究 ibd 的文件格式，修改对应 id。&lt;/p>
-&lt;p>用二进制编辑器打开 users625.ibd 文件，&lt;/p>
-&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-27/5492997.jpg" alt="users625-ibd-hexdump">&lt;/p>
-&lt;pre>&lt;code>18:26:08 UTC - mysqld got signal 6. This could be because you hit a bug. It is also possible that this
-binary or one of the libraries it was linked against is corrupt, improperly built or misconfigured.
-This error can also be cuased by malfunctioning hardware.
-&lt;/code>&lt;/pre>&lt;p>不敢相信自己的眼睛，居然有错误 log 在二进制文件里？！ibd 的文件格式可没有这么说明过。&lt;/p>
-&lt;p>随便找一个邻居表正常的 ibd 文件作对比，&lt;/p>
-&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-27/50479657.jpg" alt="normal-ibd-hexdump">&lt;/p>
-&lt;p>看来是出现了 bug ，崩溃的环境直接将数据文件给毁了，这也解释了为什么 tablespace id 会那么大，因为 log
-覆盖了原本的 id 字段，使 mysql 解读出了一个好笑的数字。&lt;/p>
-&lt;h2 id="暂时放弃">暂时放弃&lt;/h2>
-&lt;p>这种情况下，还没有办法将数据恢复回来，只能暂时将表删除，新建空表，保证上层应用程序可以运行。
-将 ibd 文件备份下来，看后续还没有其它的办法将其恢复。&lt;/p>
-&lt;h1 id="检测所有-table-状态">检测所有 table 状态&lt;/h1>
-&lt;p>当前只发现一个出现问题的 table ，可能同时也有其它的 table 出现问题。对此需要做一个全面的检测，
-检测有没有其它的表受到牵连。&lt;/p>
-&lt;pre>&lt;code>$ mysqlcheck --all-databases
-&lt;/code>&lt;/pre>&lt;h1 id="写在最后">写在最后&lt;/h1>
-&lt;p>数据库的备份是非常重要的！直接导入备份数据，是解决问题最保险最便捷的办法。
-如果没有备份，遇到 bug 丢失数据，只能怪时运不济。&lt;/p>
-&lt;p>同时数据库也最好选择稳定的版本，降低出现 bug 的概率。&lt;/p>- https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;/ul>- https://dreamanddead.github.io/post/recover-mysql-table-structure-from-frm-file/ - DreamAndDead 2014-2021</description></item></channel></rss>

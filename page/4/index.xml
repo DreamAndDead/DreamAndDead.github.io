@@ -1,4 +1,133 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Configure apt rightly for debian squeeze</title><link>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</link><pubDate>Wed, 26 Sep 2018 16:50:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</guid><description>时长N年半 https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ -&lt;p>本想在 Debian Squeeze 上安装一些依赖，没想到刚执行 &lt;code>apt-get update&lt;/code> ，就出现这样的错误信息。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>mysql table suddenly doesn't exists</title><link>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</link><pubDate>Thu, 27 Sep 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/</guid><description>时长N年半 https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ -&lt;p>最近内部的 mysql 数据库发生了一件奇怪的事，其中有一个表 users625 突然出现问题，
+所有对它的操作都报错误 &lt;code>数据表不存在&lt;/code>。&lt;/p>
+&lt;pre>&lt;code>mysql&amp;gt; select count(*) from users625;
+ERROR 1146 (42S02): Table 'km8.users625' doesn't exist
+&lt;/code>&lt;/pre>&lt;p>&lt;code>show tables&lt;/code> 它还显示在列表里，在 mysql 数据目录中也可以找到对应的表文件，也没有
+进行过删除操作，突然出现这样的错误非常奇怪。&lt;/p>
+&lt;p>内部运行环境：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">名称&lt;/th>
+&lt;th style="text-align:center">值&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">OS&lt;/td>
+&lt;td style="text-align:center">Debian Squeeze x64&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">mysql 版本&lt;/td>
+&lt;td style="text-align:center">5.1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">mysql 引擎&lt;/td>
+&lt;td style="text-align:center">innodb&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h1 id="发生了什么">发生了什么&lt;/h1>
+&lt;p>突然出现这种情况，第一反应必定是想办法将表中的用户数据找回，但是目前发生问题的情况与原因都不明晰，
+不能轻举妄动。&lt;/p>
+&lt;p>查看 mysql 日志，在操作出错的时候，日志这样显示：&lt;/p>
+&lt;pre>&lt;code>mysqld: 180926 11:10:53 InnoDB: cannot calculate statistics for table km8/users625
+mysqld: InnoDB: because the .ibd file is missing. For help, please refer to
+mysqld: InnoDB: http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html
+mysqld: 180926 11:10:53 [ERROR] MySQL is trying to open a table handle but the .ibd file for
+mysqld: table km8/users625 does not exist.
+mysqld: Have you deleted the .ibd file from the database directory under
+mysqld: the MySQL datadir, or have you used DISCARD TABLESPACE?
+mysqld: See http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html
+mysqld: how you can resolve the problem.
+&lt;/code>&lt;/pre>&lt;p>其中提到3个可追溯的点：&lt;/p>
+&lt;ul>
+&lt;li>ibd file&lt;/li>
+&lt;li>DISCARD TABLESPACE&lt;/li>
+&lt;li>&lt;a href="http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html">http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>了解这3点提到的内容，应该对判断情况有很好的帮助。&lt;/p>
+&lt;h2 id="ibd-file">ibd file&lt;/h2>
+&lt;p>日志中提问，是否丢失了 ibd 文件？先到 mysql 数据目录下查找，&lt;/p>
+&lt;pre>&lt;code>.
+├── ibdata1
+├── .......
+├── .......
+└── km8
+├── ............
+├── ............
+├── users625.frm
+├── users625.ibd
+├── ............
+└── ............
+&lt;/code>&lt;/pre>&lt;p>users625 的 ibd 文件是存在的，与之一起的还有文件 users625.frm 。&lt;/p>
+&lt;p>根据官方文档&lt;a href="https://dev.mysql.com/doc/internals/en/frm-file-format.html">对 frm 文件的描述&lt;/a>，frm 文件是用来保存 table 表结构（即 table 的定义）的，无论使用什么存储引擎。&lt;/p>
+&lt;p>与之相对的，ibd 文件是用来存储表数据（即行数据）的，通常情况下，所有数据都会存储在系统的 ibd 文件，
+但是当开启选项 &lt;a href="https://dev.mysql.com/doc/refman/5.5/en/innodb-parameters.html#sysvar_innodb_file_per_table">innodb_file_per_table&lt;/a> 的时候，每个表的数据会使用单独的 ibd 文件来存储。&lt;/p>
+&lt;p>当前的 mysql 就开启了这个选项，&lt;/p>
+&lt;pre>&lt;code>[mysqld]
+innodb_file_per_table=1
+&lt;/code>&lt;/pre>&lt;p>目前 frm 与 ibd 文件都存在，从中恢复数据便存在一些希望。&lt;/p>
+&lt;h2 id="discard-tablespace">DISCARD TABLESPACE&lt;/h2>
+&lt;p>日志中提到的 &lt;code>DISCARD TABLESPACE&lt;/code> 其实是在猜测导致 ibd 文件丢失的原因，因为它会删除相应 table 的 ibd 文件（所谓 tablespace）。&lt;/p>
+&lt;pre>&lt;code>&amp;gt; ALTER TABLE km8.users625 DISCARD TABLESPACE;
+&lt;/code>&lt;/pre>&lt;p>底层的 users625.ibd 文件就会被删除，丢失所有表数据。&lt;/p>
+&lt;p>根据目前情况来看， ibd 文件还存在，所以它不是导致错误的原因。&lt;/p>
+&lt;h2 id="trouble-shooting-doc">trouble shooting doc&lt;/h2>
+&lt;p>&lt;a href="http://dev.mysql.com/doc/refman/5.1/en/innodb-troubleshooting.html">日志中提到的参考链接&lt;/a>，其中列举了多种情况，和当前问题相关的是一个&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-troubleshooting-datadict.html">子链接&lt;/a>，
+按照它提供的方法，尝试进行数据恢复。&lt;/p>
+&lt;h1 id="数据恢复">数据恢复&lt;/h1>
+&lt;p>官方文档提到的&lt;a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-troubleshooting-datadict.html">恢复数据&lt;/a>的方法，思路很清晰：&lt;/p>
+&lt;ol>
+&lt;li>启用相同版本的 mysql 实例（启用选项 innodb_file_per_table）&lt;/li>
+&lt;li>建立同样结构的数据表&lt;/li>
+&lt;li>替换 ibd 文件（保持文件权限一致）&lt;/li>
+&lt;li>导入 ibd 文件中的数据&lt;/li>
+&lt;li>使用 mysqldump，导出数据&lt;/li>
+&lt;li>将导出的数据导入原数据库&lt;/li>
+&lt;/ol>
+&lt;p>我按照这种方式尝试恢复数据，并不是那么顺利：&lt;/p>
+&lt;h2 id="如何获得-table-表结构">如何获得 table 表结构？&lt;/h2>
+&lt;p>在第2步，需要建立同样结构的数据表，目前只有 frm 和 ibd 文件，怎么样得到 &lt;code>create table&lt;/code> 命令？&lt;/p>
+&lt;p>根据底层数据存储的理解，table 表结构存储在 frm 文件中，而目前已经有&lt;a href="https://www.cnblogs.com/dreamanddead/p/recover-mysql-table-structure-from-frm-file.html">相应的方法&lt;/a>从中提取出 &lt;code>create table&lt;/code> 命令，
+这样就可以用于在新的 mysql 实例中建立 table 。&lt;/p>
+&lt;h2 id="tablespace-id-不对应">tablespace id 不对应？&lt;/h2>
+&lt;p>在第4步，尝试导入数据的时候，&lt;/p>
+&lt;pre>&lt;code>&amp;gt; ALTER TABLE km8.users625 IMPORT TABLESPACE;
+ERROR 1030 (HY000): Got error -1 from storage engine
+&lt;/code>&lt;/pre>&lt;p>总是出现失败，同时在 mysql 新实例的日志中发现这样的错误：&lt;/p>
+&lt;pre>&lt;code>mysqld: InnoDB: Error: tablespace id in file './km8/users625.ibd' is 18446744073709551615, but in the InnoDB
+mysqld: InnoDB: data dictinary it is 1.
+&lt;/code>&lt;/pre>&lt;p>原来在内部，ibd 文件本身有一个 id，必须和 mysql innodb 内部的 table 元数据相对应，才可以进行导入。&lt;/p>
+&lt;p>根据错误信息搜索到&lt;a href="http://www.chriscalender.com/recovering-an-innodb-table-from-only-an-ibd-file/">一篇文章&lt;/a>，其中提到两种办法：&lt;/p>
+&lt;ol>
+&lt;li>重复建表，因为 mysql 内部的 tablespace id 是累计递增的，预先建立 （18446744073709551615 - 1）张表，再建立
+users625 表，就可以对应 id，并进行导入。&lt;/li>
+&lt;li>修改 ibd 文件，因为 tablespace id 存储于 ibd 文件，找到它并将其修改为 1，使之与内部的 id 对应，就可以进行导入。&lt;/li>
+&lt;/ol>
+&lt;p>考虑第 1 种方法，要预先建立上亿张空表？！这根本不可能。&lt;/p>
+&lt;p>于是尝试第 2 种方法，研究 ibd 的文件格式，修改对应 id。&lt;/p>
+&lt;p>用二进制编辑器打开 users625.ibd 文件，&lt;/p>
+&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-27/5492997.jpg" alt="users625-ibd-hexdump">&lt;/p>
+&lt;pre>&lt;code>18:26:08 UTC - mysqld got signal 6. This could be because you hit a bug. It is also possible that this
+binary or one of the libraries it was linked against is corrupt, improperly built or misconfigured.
+This error can also be cuased by malfunctioning hardware.
+&lt;/code>&lt;/pre>&lt;p>不敢相信自己的眼睛，居然有错误 log 在二进制文件里？！ibd 的文件格式可没有这么说明过。&lt;/p>
+&lt;p>随便找一个邻居表正常的 ibd 文件作对比，&lt;/p>
+&lt;p>&lt;img src="http://on7blnbb0.bkt.clouddn.com/18-9-27/50479657.jpg" alt="normal-ibd-hexdump">&lt;/p>
+&lt;p>看来是出现了 bug ，崩溃的环境直接将数据文件给毁了，这也解释了为什么 tablespace id 会那么大，因为 log
+覆盖了原本的 id 字段，使 mysql 解读出了一个好笑的数字。&lt;/p>
+&lt;h2 id="暂时放弃">暂时放弃&lt;/h2>
+&lt;p>这种情况下，还没有办法将数据恢复回来，只能暂时将表删除，新建空表，保证上层应用程序可以运行。
+将 ibd 文件备份下来，看后续还没有其它的办法将其恢复。&lt;/p>
+&lt;h1 id="检测所有-table-状态">检测所有 table 状态&lt;/h1>
+&lt;p>当前只发现一个出现问题的 table ，可能同时也有其它的 table 出现问题。对此需要做一个全面的检测，
+检测有没有其它的表受到牵连。&lt;/p>
+&lt;pre>&lt;code>$ mysqlcheck --all-databases
+&lt;/code>&lt;/pre>&lt;h1 id="写在最后">写在最后&lt;/h1>
+&lt;p>数据库的备份是非常重要的！直接导入备份数据，是解决问题最保险最便捷的办法。
+如果没有备份，遇到 bug 丢失数据，只能怪时运不济。&lt;/p>
+&lt;p>同时数据库也最好选择稳定的版本，降低出现 bug 的概率。&lt;/p>- https://dreamanddead.github.io/post/recover-mysql-innodb-table-data-from-ibd-file/ - DreamAndDead 2014-2021</description></item><item><title>Configure apt rightly for debian squeeze</title><link>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</link><pubDate>Wed, 26 Sep 2018 16:50:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/</guid><description>时长N年半 https://dreamanddead.github.io/post/configure-debian-squeeze-apt-source/ -&lt;p>本想在 Debian Squeeze 上安装一些依赖，没想到刚执行 &lt;code>apt-get update&lt;/code> ，就出现这样的错误信息。&lt;/p>
 &lt;pre>&lt;code>W: GPG error: http://mirrors.163.com squeeze Release: The following signatures were invalid: KEYEXPIRED 1520281423 KEYEXPIRED 1501892461
 E: Release file expired, ignoring http://mirrors.163.com/debian-archive/dists/squeeze-lts/Release (invalid since 923d 19h 26min 3s)
 &lt;/code>&lt;/pre>&lt;h1 id="问题出在哪里">问题出在哪里&lt;/h1>
@@ -1233,793 +1362,4 @@ Flags: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 c
 }
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>这里的配置，对于 ssl 的支持有一些瑕疵，在&lt;a href="https://dreamanddead.github.io/2018/05/17/serve-http-https-same-time.html">这篇文章&lt;/a>里，做了相关修正。
-Remember to check it :)&lt;/p>- https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ - DreamAndDead 2014-2021</description></item><item><title>Play curl with http</title><link>https://dreamanddead.github.io/post/play-curl-with-http/</link><pubDate>Mon, 09 Apr 2018 10:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/play-curl-with-http/</guid><description>时长N年半 https://dreamanddead.github.io/post/play-curl-with-http/ -&lt;p>curl是一款强大的网络传输工具，支持多种协议，在HTTP的支持方面尤其为人称道。
-对curl的使用越深入，对HTTP也会有更深的理解。&lt;/p>
-&lt;h1 id="a-little-http">a little http&lt;/h1>
-&lt;p>http是应用层协议，其设计非常简单，灵活。请求与响应是HTTP概念的核心，从本质上讲，
-请求与响应也极其简单。更多可参考&lt;a href="http://liuwangshu.cn/application/network/1-http.html">HTTP协议原理&lt;/a>&lt;/p>
-&lt;h2 id="请求报文">请求报文&lt;/h2>
-&lt;p>通常，一个HTTP请求报文由请求行、请求报头、空行、和请求数据4个部分组成。&lt;/p>
-&lt;figure>
-&lt;img src="images/http-request-format.png"
-alt="http request format"/> &lt;figcaption>
-&lt;p>http request format&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;ul>
-&lt;li>请求行
-&lt;ul>
-&lt;li>Method：请求方法，如GET，POST&lt;/li>
-&lt;li>URI：请求地址&lt;/li>
-&lt;li>HTTP Version：协议版本&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>请求报头
-&lt;ul>
-&lt;li>key/value组成的键值对，非常有拓展性&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>请求数据
-&lt;ul>
-&lt;li>client向server传输的数据&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="响应报文">响应报文&lt;/h2>
-&lt;p>HTTP的响应报文由状态行、消息报头、空行、响应正文组成。
-响应正文是服务器返回的资源的内容。&lt;/p>
-&lt;figure>
-&lt;img src="images/http-response-format.png"
-alt="http response format"/> &lt;figcaption>
-&lt;p>http response format&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;ul>
-&lt;li>状态行
-&lt;ul>
-&lt;li>HTTP Version：协议版本&lt;/li>
-&lt;li>Status Code： 状态码，常见的如200，404&lt;/li>
-&lt;li>Reason Phrase：状态码的描述，如200对应OK&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>消息报头
-&lt;ul>
-&lt;li>key/value组成的键值对&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>响应正文
-&lt;ul>
-&lt;li>server返回client的数据&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="简单示例">简单示例&lt;/h2>
-&lt;p>访问baidu，观察HTTP协议请求与响应&lt;/p>
-&lt;pre>&lt;code>$ curl -v http://baidu.com
-&amp;gt; GET / HTTP/1.1
-&amp;gt; Host: baidu.com
-&amp;gt; User-Agent: curl/7.47.0
-&amp;gt; Accept: */*
-&amp;gt;
-&amp;lt; HTTP/1.1 200 OK
-&amp;lt; Date: Sun, 08 Apr 2018 06:01:23 GMT
-&amp;lt; Server: Apache
-&amp;lt; Last-Modified: Tue, 12 Jan 2010 13:48:00 GMT
-&amp;lt; ETag: &amp;quot;51-47cf7e6ee8400&amp;quot;
-&amp;lt; Accept-Ranges: bytes
-&amp;lt; Content-Length: 81
-&amp;lt; Cache-Control: max-age=86400
-&amp;lt; Expires: Mon, 09 Apr 2018 06:01:23 GMT
-&amp;lt; Connection: Keep-Alive
-&amp;lt; Content-Type: text/html
-&amp;lt;
-&amp;lt;html&amp;gt;
-&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code>&lt;/pre>&lt;p>分析请求&lt;/p>
-&lt;ul>
-&lt;li>使用GET Method，请求/ URI，协议版本HTTP/1.1&lt;/li>
-&lt;li>请求报头，键值数据&lt;/li>
-&lt;li>空行&lt;/li>
-&lt;li>没有请求数据&lt;/li>
-&lt;/ul>
-&lt;p>分析响应&lt;/p>
-&lt;ul>
-&lt;li>协议版本HTTP/1.1，状态码200，状态OK&lt;/li>
-&lt;li>消息报头，键值数据&lt;/li>
-&lt;li>空行&lt;/li>
-&lt;li>响应正文：文本数据，以text/html的格式来解析&lt;/li>
-&lt;/ul>
-&lt;p>简单易懂&lt;/p>
-&lt;h1 id="play-curl">play curl&lt;/h1>
-&lt;h2 id="fetch-data">fetch data&lt;/h2>
-&lt;p>curl最基础的功能，获取url资源，打印到stdout。&lt;/p>
-&lt;p>这里所输出的内容，只是HTTP响应正文的数据，也通常是我们最关心的&lt;/p>
-&lt;pre>&lt;code>$ curl http://baidu.com
-&amp;lt;html&amp;gt;
-&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code>&lt;/pre>&lt;p>url内容，可存储于文件（即下载）&lt;/p>
-&lt;p>可以使用重定向的方式&lt;/p>
-&lt;pre>&lt;code>$ curl http://www.baidu.com &amp;gt; baidu.index.html
-&lt;/code>&lt;/pre>&lt;p>或者使用-o选项&lt;/p>
-&lt;pre>&lt;code>$ curl -o manual.html http://www.gnu.org/software/gettext/manual/gettext.html
-&lt;/code>&lt;/pre>&lt;p>有时url只返回重定向，真正的内容在重定向的链接中&lt;/p>
-&lt;p>&lt;em>&lt;code>-L, --location&lt;/code>，跟随重定向，获取重定向url的内容&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl -L http://httpbin.org/redirect-to?url=http://baidu.com
-&amp;lt;html&amp;gt;
-&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code>&lt;/pre>&lt;p>有两种重定向方式是浏览器支持而curl不支持的&lt;/p>
-&lt;ul>
-&lt;li>html包含meta refresh标签，如&lt;code>&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;&lt;/code>&lt;/li>
-&lt;li>js代码实现重定向&lt;/li>
-&lt;/ul>
-&lt;p>上面输出的都是响应正文，curl也可以输出响应头信息&lt;/p>
-&lt;p>&lt;em>&lt;code>-i, --include&lt;/code>, 将响应头与响应正文一并输出&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl -i http://www.example.com
-HTTP/1.1 200 OK
-Cache-Control: max-age=604800
-Content-Type: text/html
-Date: Sun, 08 Apr 2018 08:00:09 GMT
-Etag: &amp;quot;1541025663+ident&amp;quot;
-Expires: Sun, 15 Apr 2018 08:00:09 GMT
-Last-Modified: Fri, 09 Aug 2013 23:54:35 GMT
-Server: ECS (sjc/4F91)
-Vary: Accept-Encoding
-X-Cache: HIT
-Content-Length: 1270
-&amp;lt;!doctype html&amp;gt;
-&amp;lt;html&amp;gt;
-&amp;lt;head&amp;gt;
-&amp;lt;title&amp;gt;Example Domain&amp;lt;/title&amp;gt;
-&amp;lt;meta charset=&amp;quot;utf-8&amp;quot; /&amp;gt;
-&amp;lt;meta http-equiv=&amp;quot;Content-type&amp;quot; content=&amp;quot;text/html; charset=utf-8&amp;quot; /&amp;gt;
-&amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1&amp;quot; /&amp;gt;
-.................................
-.................................
-.................................
-.................................
-.................................
-&lt;/code>&lt;/pre>&lt;p>使用HEAD Method，只请求响应头。
-虽然同样输出了响应头，但是同&lt;code>-i&lt;/code>的本质不同。&lt;/p>
-&lt;p>&lt;em>&lt;code>-I, --head&lt;/code>, 用HEAD Method进行请求并输出&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl -I http://www.example.com
-HTTP/1.1 200 OK
-Content-Encoding: gzip
-Accept-Ranges: bytes
-Cache-Control: max-age=604800
-Content-Type: text/html
-Date: Sun, 08 Apr 2018 07:59:29 GMT
-Etag: &amp;quot;1541025663&amp;quot;
-Expires: Sun, 15 Apr 2018 07:59:29 GMT
-Last-Modified: Fri, 09 Aug 2013 23:54:35 GMT
-Server: ECS (sjc/4E44)
-X-Cache: HIT
-Content-Length: 606
-&lt;/code>&lt;/pre>&lt;p>curl还可以提取其它有意思的信息。&lt;/p>
-&lt;p>&lt;em>&lt;code>-w, --write-out &amp;lt;format&amp;gt;&lt;/code>，在一次传输之后，输出其它的信息至stdout。format 可包含\n，\t，变量用%{var_name}标识&lt;/em>&lt;/p>
-&lt;p>比如，提取响应头的content type&lt;/p>
-&lt;pre>&lt;code>$ curl -o $(mktemp) -s -w 'content type is %{content_type}\n' www.baidu.com
-content type is text/html
-&lt;/code>&lt;/pre>&lt;p>常用的变量列表&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>var name&lt;/th>
-&lt;th>description&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>content_type&lt;/td>
-&lt;td>响应头中的Content-Type&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>http_code&lt;/td>
-&lt;td>响应状态码&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>redirect_url&lt;/td>
-&lt;td>没有-L选项时，输出实际重定向的地址&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>url_effective&lt;/td>
-&lt;td>当使用-L选项，最终重定向所访问的地址&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>local_ip&lt;/td>
-&lt;td>client ip，此次请求中的客户端IP（IP层）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>local_port&lt;/td>
-&lt;td>client port，此次请求中的客户端端口（tcp层）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>remote_ip&lt;/td>
-&lt;td>server ip，服务器端IP（IP层）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>remote_port&lt;/td>
-&lt;td>server port，服务器端端口（tcp层）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>size_download&lt;/td>
-&lt;td>响应正文的总字节数&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>size_upload&lt;/td>
-&lt;td>请求正文的总字节数&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>size_header&lt;/td>
-&lt;td>响应头的总字节数&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>size_request&lt;/td>
-&lt;td>请求头的总字节数&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>time_total&lt;/td>
-&lt;td>传输耗费的总时间&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>speed_download&lt;/td>
-&lt;td>数据传输的下行速度&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>speed_upload&lt;/td>
-&lt;td>上行速度&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h2 id="progress-bar">progress bar&lt;/h2>
-&lt;p>如果curl没有将url内容输出到stdout（比如另存为文件），就会输出progress信息到stderr&lt;/p>
-&lt;p>默认样式如下&lt;/p>
-&lt;pre>&lt;code>$ curl -o index.html http://baidu.com
-% Total % Received % Xferd Average Speed Time Time Time Current
-Dload Upload Total Spent Left Speed
-100 81 100 81 0 0 17 0 0:00:04 0:00:04 --:--:-- 17
-&lt;/code>&lt;/pre>&lt;p>可以用&lt;code>-&lt;/code> &lt;code>#&lt;/code>组成的progress bar来代替默认样式&lt;/p>
-&lt;pre>&lt;code>$ curl -o index.html -# http://baidu.com
-######################################################################## 100.0%
-&lt;/code>&lt;/pre>&lt;p>不显示任何progress信息&lt;/p>
-&lt;p>&lt;em>&lt;code>-s, --silent&lt;/code>, silent mode&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl -o index.html -s http://baidu.com
-&lt;/code>&lt;/pre>&lt;h2 id="debug">debug&lt;/h2>
-&lt;h3 id="which-interface">which interface&lt;/h3>
-&lt;p>多网卡情况下，指定特定网卡进行传输&lt;/p>
-&lt;pre>&lt;code>$ curl --interface eth0 http://www.example.com
-&lt;/code>&lt;/pre>&lt;h3 id="limit-band-width">limit band width&lt;/h3>
-&lt;p>手动限制网络传输速度，借此观察传输情况&lt;/p>
-&lt;pre>&lt;code>$ curl --limit-rate 1000B http://www.gnu.org/software/gettext/manual/gettext.html
-&lt;/code>&lt;/pre>&lt;h3 id="proxy">proxy&lt;/h3>
-&lt;p>使用代理&lt;/p>
-&lt;p>&lt;code>-x, --proxy &amp;lt;[protocol://][user:password@]proxyhost[:port]&amp;gt;&lt;/code>&lt;/p>
-&lt;pre>&lt;code>$ curl -x socks5://10.27.2.200:2024 http://google.com
-&lt;/code>&lt;/pre>&lt;h3 id="dns">dns&lt;/h3>
-&lt;p>自定义域名dns解析的ip地址&lt;/p>
-&lt;p>&lt;code>--resolve host:port:address&lt;/code>&lt;/p>
-&lt;p>当curl访问host:port，host就解析为address，最终访问的地址是address:port。
-如果访问的host:port其中一个不对应，则host就不会解析为address&lt;/p>
-&lt;pre>&lt;code>$ curl --resolve www.example.com:5000:127.0.0.1 http://www.example.com:5000
-# 最终访问的地址是127.0.0.1:5000
-&lt;/code>&lt;/pre>&lt;p>使用其它dns服务器&lt;/p>
-&lt;pre>&lt;code>$ curl --dns-servers 8.8.8.8,1.1.1.1 http://www.example.com
-&lt;/code>&lt;/pre>&lt;h3 id="verbose">verbose&lt;/h3>
-&lt;p>verbose option， 输出HTTP请求与响应交互的所有内容&lt;/p>
-&lt;pre>&lt;code>$ curl -v http://www.baidu.com
-* Rebuilt URL to: http://www.baidu.com/
-* Trying 14.215.177.39...
-* Connected to www.baidu.com (14.215.177.39) port 80 (#0)
-&amp;gt; GET / HTTP/1.1
-&amp;gt; Host: www.baidu.com
-&amp;gt; User-Agent: curl/7.47.0
-&amp;gt; Accept: */*
-&amp;gt;
-&amp;lt; HTTP/1.1 200 OK
-&amp;lt; Server: bfe/1.0.8.18
-&amp;lt; Date: Thu, 29 Mar 2018 08:54:41 GMT
-&amp;lt; Content-Type: text/html
-&amp;lt; Content-Length: 2381
-......
-......
-&lt;/code>&lt;/pre>&lt;h3 id="trace">trace&lt;/h3>
-&lt;p>trace option, 更加详细地输出HTTP交互的所有内容&lt;/p>
-&lt;p>&lt;em>&lt;code>--trace &amp;lt;file&amp;gt;&lt;/code>，dump所有交互数据&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --trace - http://www.example.com
-== Info: Rebuilt URL to: http://www.baidu.com/
-== Info: Trying 14.215.177.38...
-== Info: Connected to www.baidu.com (14.215.177.38) port 80 (#0)
-=&amp;gt; Send header, 77 bytes (0x4d)
-0000: 47 45 54 20 2f 20 48 54 54 50 2f 31 2e 31 0d 0a GET / HTTP/1.1..
-0010: 48 6f 73 74 3a 20 77 77 77 2e 62 61 69 64 75 2e Host: www.baidu.
-.........................
-.........................
-&lt;/code>&lt;/pre>&lt;p>&lt;em>&lt;code>--trace-ascii &amp;lt;file&amp;gt;&lt;/code>，不显示hex部分&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --trace-ascii - http://www.example.com
-== Info: Rebuilt URL to: http://www.example.com/
-== Info: Trying 93.184.216.34...
-== Info: Connected to www.example.com (93.184.216.34) port 80 (#0)
-=&amp;gt; Send header, 79 bytes (0x4f)
-0000: GET / HTTP/1.1
-0010: Host: www.example.com
-0027: User-Agent: curl/7.47.0
-.........................
-.........................
-&lt;/code>&lt;/pre>&lt;p>&lt;em>&lt;code>--trace-time&lt;/code>，同&lt;code>-v/--trace&lt;/code>一起使用，打印出每一行trace的时间戳&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl -v --trace-time http://www.example.com
-15:44:37.251685 * Rebuilt URL to: http://www.example.com/
-15:44:37.524262 * Connected to www.example.com (93.184.216.34) port 80 (#0)
-15:44:37.524415 &amp;gt; GET / HTTP/1.1
-15:44:37.524415 &amp;gt; Host: www.example.com
-................
-................
-&lt;/code>&lt;/pre>&lt;h2 id="custom-headers">custom headers&lt;/h2>
-&lt;h3 id="referer">referer&lt;/h3>
-&lt;p>referer代表的意思是，当前请求是从哪一个页面链接过来。
-一些网站用此来判断来自外部网站的链接，进行防盗链的保护&lt;/p>
-&lt;p>&lt;em>&lt;code>-e, --referer&lt;/code>，修改请求头referer字段&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --referer http://www.I.come http://httpbin.org/get
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;Referer&amp;quot;: &amp;quot;http://www.I.come&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="user-agent">user agent&lt;/h3>
-&lt;p>user agent在HTTP头部中，标识浏览器类型，修改此header可以隐藏真实浏览器的类型&lt;/p>
-&lt;p>&lt;em>&lt;code>--user-agent&lt;/code>，修改user-agent头部&lt;/em>&lt;/p>
-&lt;p>将curl扮演为Internet Explorer 5&lt;/p>
-&lt;pre>&lt;code>$ curl --user-agent &amp;quot;Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)&amp;quot; http://httpbin.org/get
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="cookie">cookie&lt;/h3>
-&lt;p>自定义要传输的cookie&lt;/p>
-&lt;p>&lt;em>&lt;code>--cookie [&amp;lt;file&amp;gt;]&lt;/code>，设置传输cookie&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --cookie &amp;quot;name=Daniel&amp;quot; http://httpbin.org/get
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Cookie&amp;quot;: &amp;quot;name=Daniel&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>一般自定义cookie的情况是很少的，通常由服务器设置cookie，浏览器每次连接都带上所设置的cookie，用于标识session&lt;/p>
-&lt;p>&lt;em>&lt;code>--cookie-jar &amp;lt;file&amp;gt;&lt;/code>，存储cookie至文件&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --cookie-jar cookies.txt http://httpbin.org/cookies/set?from=httpbin
-$ cat cookies.txt
-# Netscape HTTP Cookie File
-# http://curl.haxx.se/docs/http-cookies.html
-# This file was generated by libcurl! Edit at your own risk.
-httpbin.org FALSE / FALSE 0 from httpbin
-$ curl --cookie cookies.txt http://httpbin.org/get
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Cookie&amp;quot;: &amp;quot;from=httpbin&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="all-in-one">all in one&lt;/h3>
-&lt;p>可以设置所有header，包括上面提到的几种，是万能的方法。&lt;/p>
-&lt;p>&lt;em>&lt;code>-H, --header&lt;/code>，设置HTTP请求头信息，可同时设置多个&lt;/em>&lt;/p>
-&lt;p>自定义数据类型为json&lt;/p>
-&lt;pre>&lt;code>$ curl -H &amp;quot;Content-type: application/json&amp;quot; -H &amp;quot;Accept: application/json&amp;quot; --data '{&amp;quot;user&amp;quot;: &amp;quot;who&amp;quot;}' http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;{\&amp;quot;user\&amp;quot;: \&amp;quot;who\&amp;quot;}&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;application/json&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;15&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/json&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: {
-&amp;quot;user&amp;quot;: &amp;quot;who&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h2 id="restful-api">RESTful api&lt;/h2>
-&lt;p>通常RESTful api使用POST，DELETE，GET，PUT Method代表增删查改，四种对资源的操作。&lt;/p>
-&lt;p>每种操作都可以携带参数，
-参数可以通过两种方式传递&lt;/p>
-&lt;ul>
-&lt;li>query： 一般在URI之后，以key=value的形式组织，多个用&amp;amp;相连接&lt;/li>
-&lt;li>body： HTTP请求报文的数据部分，参数可组织为任何形式，服务器通过Content-Type来解读参数&lt;/li>
-&lt;/ul>
-&lt;p>通常情况下&lt;/p>
-&lt;ul>
-&lt;li>四种Method都可以使用query传递参数&lt;/li>
-&lt;li>POST，PUT，DELETE可以使用body传递参数，GET不使用body&lt;/li>
-&lt;li>query，body两种方式可以同时使用&lt;/li>
-&lt;/ul>
-&lt;h3 id="post">POST&lt;/h3>
-&lt;h4 id="post-with-body">post with body&lt;/h4>
-&lt;p>&lt;em>&lt;code>-d, --data&lt;/code>, 默认使用POST Method，Content-type=application/x-www-form-urlencoded，进行HTTP请求&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --data 'tool=curl' --data 'os=linux' http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
-&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;18&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;183.240.202.4&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>&lt;code>--data&lt;/code>不会对数据进行url encode，如果传递的参数为&lt;code>tool=curl and linux&lt;/code>，其中的空格就需要url encode为%20，
-再进行请求。
-好在curl提供了&lt;code>--data-urlencode&lt;/code>选项来帮助我们做这件事&lt;/p>
-&lt;p>&lt;em>&lt;code>--data-urlencode&lt;/code>，与&lt;code>--data&lt;/code>功能相似，对value进行url encode，再进行传输。
-当Content-Type=application/x-www-form-urlencoded，推荐使用此选项&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --data-urlencode 'tool=curl and linux' http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;23&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;183.240.202.4&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h4 id="different-content-type">different content type&lt;/h4>
-&lt;p>Content-Type的意义在于&lt;/p>
-&lt;ul>
-&lt;li>对于client，form数据用哪一种方式存储到请求body中&lt;/li>
-&lt;li>对于server，取到请求body的时候，如何解读其中的数据&lt;/li>
-&lt;/ul>
-&lt;p>当Content-Type=application/x-www-form-urlencoded，所有key/value数据组织为类似url query的形式&lt;/p>
-&lt;ul>
-&lt;li>以key=value存储，并进行url encode&lt;/li>
-&lt;li>多个key=value用&amp;amp;来连接&lt;/li>
-&lt;/ul>
-&lt;p>如果用来传输二进制文件，对所有非alphanumeric字符进行url encode编码，单字节需要用三个字节来存储，效率非常低。
-于是标准提出了新的Content-Type，multipart/form-data，来解决这个问题。更多可参考&lt;a href="https://stackoverflow.com/questions/4007969/application-x-www-form-urlencoded-or-multipart-form-data">form-urlencode-or-form-data&lt;/a>&lt;/p>
-&lt;p>具体两种方式的存储方式有什么区别，我们用&lt;code>--trace&lt;/code>来看清楚&lt;/p>
-&lt;p>application/x-www-form-urlencoded，参数以类似query的形式，存储在body中，POST到服务器&lt;/p>
-&lt;pre>&lt;code>$ curl --trace - --data 'tool=curl' --data 'os=linux' http://httpbin.org/post
-................
-................
-=&amp;gt; Send header, 149 bytes (0x95)
-0000: 50 4f 53 54 20 2f 70 6f 73 74 20 48 54 54 50 2f POST /post HTTP/
-0010: 31 2e 31 0d 0a 48 6f 73 74 3a 20 68 74 74 70 62 1.1..Host: httpb
-0020: 69 6e 2e 6f 72 67 0d 0a 55 73 65 72 2d 41 67 65 in.org..User-Age
-0030: 6e 74 3a 20 63 75 72 6c 2f 37 2e 34 37 2e 30 0d nt: curl/7.47.0.
-0040: 0a 41 63 63 65 70 74 3a 20 2a 2f 2a 0d 0a 43 6f .Accept: */*..Co
-0050: 6e 74 65 6e 74 2d 4c 65 6e 67 74 68 3a 20 31 38 ntent-Length: 18
-0060: 0d 0a 43 6f 6e 74 65 6e 74 2d 54 79 70 65 3a 20 ..Content-Type:
-0070: 61 70 70 6c 69 63 61 74 69 6f 6e 2f 78 2d 77 77 application/x-ww
-0080: 77 2d 66 6f 72 6d 2d 75 72 6c 65 6e 63 6f 64 65 w-form-urlencode
-0090: 64 0d 0a 0d 0a d....
-=&amp;gt; Send data, 18 bytes (0x12)
-0000: 74 6f 6f 6c 3d 63 75 72 6c 26 6f 73 3d 6c 69 6e tool=curl&amp;amp;os=lin
-0010: 75 78 ux
-== Info: upload completely sent off: 18 out of 18 bytes
-................
-................
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
-&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;18&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>multipart/form-data则使用了不同的方式，其中定义一个boundary，所有form字段以
-boundary分隔开来，每一段都有&lt;code>Content-Disposition&lt;/code>，&lt;code>name&lt;/code>头部，内容不进行url encode处理&lt;/p>
-&lt;pre>&lt;code>$ curl --trace - --form 'tool=curl' --form 'os=linux' http://httpbin.org/post
-................
-................
-0000: 50 4f 53 54 20 2f 70 6f 73 74 20 48 54 54 50 2f POST /post HTTP/
-0010: 31 2e 31 0d 0a 48 6f 73 74 3a 20 68 74 74 70 62 1.1..Host: httpb
-0020: 69 6e 2e 6f 72 67 0d 0a 55 73 65 72 2d 41 67 65 in.org..User-Age
-0030: 6e 74 3a 20 63 75 72 6c 2f 37 2e 34 37 2e 30 0d nt: curl/7.47.0.
-0040: 0a 41 63 63 65 70 74 3a 20 2a 2f 2a 0d 0a 43 6f .Accept: */*..Co
-0050: 6e 74 65 6e 74 2d 4c 65 6e 67 74 68 3a 20 32 33 ntent-Length: 23
-0060: 39 0d 0a 45 78 70 65 63 74 3a 20 31 30 30 2d 63 9..Expect: 100-c
-0070: 6f 6e 74 69 6e 75 65 0d 0a 43 6f 6e 74 65 6e 74 ontinue..Content
-0080: 2d 54 79 70 65 3a 20 6d 75 6c 74 69 70 61 72 74 -Type: multipart
-0090: 2f 66 6f 72 6d 2d 64 61 74 61 3b 20 62 6f 75 6e /form-data; boun
-00a0: 64 61 72 79 3d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d dary=-----------
-00b0: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 -------------800
-00c0: 66 32 31 62 37 32 65 33 38 35 30 30 39 0d 0a 0d f21b72e385009...
-00d0: 0a .
-=&amp;gt; Send data, 239 bytes (0xef)
-0000: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d ----------------
-0010: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 66 32 31 ----------800f21
-0020: 62 37 32 65 33 38 35 30 30 39 0d 0a 43 6f 6e 74 b72e385009..Cont
-0030: 65 6e 74 2d 44 69 73 70 6f 73 69 74 69 6f 6e 3a ent-Disposition:
-0040: 20 66 6f 72 6d 2d 64 61 74 61 3b 20 6e 61 6d 65 form-data; name
-0050: 3d 22 74 6f 6f 6c 22 0d 0a 0d 0a 63 75 72 6c 0d =&amp;quot;tool&amp;quot;....curl.
-0060: 0a 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d .---------------
-0070: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 66 32 -----------800f2
-0080: 31 62 37 32 65 33 38 35 30 30 39 0d 0a 43 6f 6e 1b72e385009..Con
-0090: 74 65 6e 74 2d 44 69 73 70 6f 73 69 74 69 6f 6e tent-Disposition
-00a0: 3a 20 66 6f 72 6d 2d 64 61 74 61 3b 20 6e 61 6d : form-data; nam
-00b0: 65 3d 22 6f 73 22 0d 0a 0d 0a 6c 69 6e 75 78 0d e=&amp;quot;os&amp;quot;....linux.
-00c0: 0a 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d .---------------
-00d0: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 66 32 -----------800f2
-00e0: 31 62 37 32 65 33 38 35 30 30 39 2d 2d 0d 0a 1b72e385009--..
-......................
-......................
-......................
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
-&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;239&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------800f21b72e385009&amp;quot;,
-&amp;quot;Expect&amp;quot;: &amp;quot;100-continue&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h4 id="upload-file">upload file&lt;/h4>
-&lt;p>利用Content-Type=multipart/form-data，上传文件&lt;/p>
-&lt;p>&lt;em>&lt;code>-F, --form&lt;/code>，默认以Content-Type=multipart/form-data，POST Method进行HTTP请求。&lt;code>--data&lt;/code>不支持文件上传，
-&lt;code>--form&lt;/code>可以用&lt;code>@&amp;lt;filename&amp;gt;&lt;/code>进行文件上传&lt;/em>&lt;/p>
-&lt;pre>&lt;code>$ curl --form source=@test.c --form lang=c http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {
-&amp;quot;source&amp;quot;: &amp;quot;#include &amp;lt;stdio.h&amp;gt;\n\nint main(void) {\n return 0;\n}\n&amp;quot;
-},
-&amp;quot;form&amp;quot;: {
-&amp;quot;lang&amp;quot;: &amp;quot;c&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;347&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------5c6f4eef4965c408&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;183.240.198.140&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>上传文件时，可以同时标明文件MIME，供服务器参考&lt;/p>
-&lt;pre>&lt;code>$ curl --form &amp;quot;page=@index.html;type=text/html&amp;quot; http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {
-&amp;quot;page&amp;quot;: &amp;quot;&amp;lt;html&amp;gt;\n&amp;lt;meta http-equiv=\&amp;quot;refresh\&amp;quot; content=\&amp;quot;0;url=http://www.baidu.com/\&amp;quot;&amp;gt;\n&amp;lt;/html&amp;gt;\n&amp;quot;
-},
-&amp;quot;form&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;268&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------c3339e8e79db4cb4&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;183.240.202.4&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h4 id="post-with-query">post with query&lt;/h4>
-&lt;p>如果POST想使用query来传递参数，必须自己手动输入在URI之后，curl没有选项来做这一件事。
-POST使用query的麻烦之处在于，要求我们注意URL的编码&lt;/p>
-&lt;pre>&lt;code>$ curl --data-urlencode 'tool=curl and linux' http://httpbin.org/post?reverse%20order=linux%20and%20curl
-{
-&amp;quot;args&amp;quot;: {
-&amp;quot;reverse order&amp;quot;: &amp;quot;linux and curl&amp;quot;
-},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;23&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post?reverse order=linux and curl&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>可以使用其它辅助命令来帮助我们做url encode。&lt;/p>
-&lt;p>urlencode命令来自于包 gridsite-clients，或者使用&lt;a href="https://stackoverflow.com/questions/296536/how-to-urlencode-data-for-curl-command">其它相同功能的工具&lt;/a>&lt;/p>
-&lt;pre>&lt;code>$ curl --data-urlencode 'tool=curl and linux' http://httpbin.org/post?$(urlencode 'reverse order')=$(urlencode 'linux and curl')
-{
-&amp;quot;args&amp;quot;: {
-&amp;quot;reverse order&amp;quot;: &amp;quot;linux and curl&amp;quot;
-},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;23&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post?reverse order=linux and curl&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="put">PUT&lt;/h3>
-&lt;p>PUT与POST相似，只不过Method不同&lt;/p>
-&lt;p>&lt;em>&lt;code>-X Method&lt;/code>，指定curl请求所使用的方法&lt;/em>&lt;/p>
-&lt;p>application/x-www-form-urlencoded示例&lt;/p>
-&lt;pre>&lt;code>$ curl -X PUT --data 'tool=curl' --data 'os=linux' http://httpbin.org/put
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {
-&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
-&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;18&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/put&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;p>multipart/form-data示例&lt;/p>
-&lt;pre>&lt;code>$ curl -X PUT --form source=@test.c --form lang=c http://httpbin.org/put
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
-&amp;quot;files&amp;quot;: {
-&amp;quot;source&amp;quot;: &amp;quot;#include &amp;lt;stdio.h&amp;gt;\n\nint main(void) {\n return 0;\n}\n&amp;quot;
-},
-&amp;quot;form&amp;quot;: {
-&amp;quot;lang&amp;quot;: &amp;quot;c&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;347&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------e73fa892cfebd218&amp;quot;,
-&amp;quot;Expect&amp;quot;: &amp;quot;100-continue&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: null,
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/put&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="delete">DELETE&lt;/h3>
-&lt;p>DELETE同POST，PUT，只是Method不同。
-使用&lt;code>-X DELETE&lt;/code>即可&lt;/p>
-&lt;h3 id="get">GET&lt;/h3>
-&lt;p>GET只使用query来传递参数&lt;/p>
-&lt;p>&lt;em>&lt;code>-G, --get&lt;/code>，这个选项会使所有&lt;code>-d, --data, --data-urlencode&lt;/code>的数据附加在URL之后作为query，而不是POST body，默认使用GET Method&lt;/em>&lt;/p>
-&lt;p>参考&lt;a href="https://stackoverflow.com/a/14284519/9167165">curl url param&lt;/a>&lt;/p>
-&lt;pre>&lt;code>$ curl -G --data-urlencode 'tool=curl and linux' http://httpbin.org/get
-{
-&amp;quot;args&amp;quot;: {
-&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
-},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get?tool=curl and linux&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h3 id="json">JSON&lt;/h3>
-&lt;p>通常使用RESTful api，配合使用的Content-Type都为application/json。
-结合自定义header的功能，修改Content-Type，用json进行C/S交互&lt;/p>
-&lt;pre>&lt;code>$ curl -H &amp;quot;Content-type: application/json&amp;quot; -H &amp;quot;Accept: application/json&amp;quot; --data '{&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;, &amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;}' http://httpbin.org/post
-{
-&amp;quot;args&amp;quot;: {},
-&amp;quot;data&amp;quot;: &amp;quot;{\&amp;quot;tool\&amp;quot;: \&amp;quot;curl\&amp;quot;, \&amp;quot;os\&amp;quot;: \&amp;quot;linux\&amp;quot;}&amp;quot;,
-&amp;quot;files&amp;quot;: {},
-&amp;quot;form&amp;quot;: {},
-&amp;quot;headers&amp;quot;: {
-&amp;quot;Accept&amp;quot;: &amp;quot;application/json&amp;quot;,
-&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
-&amp;quot;Content-Length&amp;quot;: &amp;quot;31&amp;quot;,
-&amp;quot;Content-Type&amp;quot;: &amp;quot;application/json&amp;quot;,
-&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
-&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
-},
-&amp;quot;json&amp;quot;: {
-&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
-&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
-},
-&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
-&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
-}
-&lt;/code>&lt;/pre>&lt;h1 id="more-help">more help&lt;/h1>
-&lt;p>command line&lt;/p>
-&lt;pre>&lt;code>$ man curl
-$ curl --help
-$ curl --manual
-&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://curl.haxx.se/docs/httpscripting.html">curl docs online&lt;/a>&lt;/p>- https://dreamanddead.github.io/post/play-curl-with-http/ - DreamAndDead 2014-2021</description></item></channel></rss>
+Remember to check it :)&lt;/p>- https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ - DreamAndDead 2014-2021</description></item></channel></rss>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>kindle on 时长N年半</title><link>https://dreamanddead.github.io/tags/kindle/</link><description>Recent content in kindle on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 31 Mar 2021 18:15:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/tags/kindle/index.xml" rel="self" type="application/rss+xml"/><item><title>Useful Tips for Kindle</title><link>https://dreamanddead.github.io/post/kindle-kf8-mobi/</link><pubDate>Wed, 31 Mar 2021 18:15:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/kindle-kf8-mobi/</guid><description>图书馆服务是 kindle 阅读器的一大亮点。 服务器存储个人上传的电子书，而且支持多端同步注释与阅读进度。
+本文介绍几个建议，如何更好的使用这项服务。
+Use KF8 Mobi 电子书的本质并不复杂。通过 html 来组织内容，通过 css 控制样式。 电子书和阅读器的关系近似于网页和浏览器的关系。
+常见电子书格式有 4 种，epub，mobi，azw 和 azw31。 epub 是开源格式。 amazon 认为 epub 由社区发展， 不能很快符合自身的发展需求，于是在之上开发了 mobi。 当前使用的 mobi 有两个版本，KF6 和 KF8， azw 和 azw3 就是分别在 mobi KF6 和 KF8 上添加了一层“外壳”， 用于版权保护2。
+KF8 相比 KF6 可以在 kindle 阅读器上 呈现更丰富的样式， 支持自定义更换字体， 缺点是无法呈现书籍封面缩略图（在 android kindle app 可以，在 kindle 阅读器上不行）。
+邮件传书不支持 azw3 格式，只支持 mobi3， 为了阅读 KF8 的电子书，需要将 azw3 转换为 mobi KF8。
+calibre 支持转换为 KF8 格式，但是经实践， 转换得到的电子书无法通过 amazon 审核，发送不成功。</description></item></channel></rss>

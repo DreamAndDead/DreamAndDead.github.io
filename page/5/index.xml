@@ -1,4 +1,793 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Git Internals</title><link>https://dreamanddead.github.io/post/git-internals/</link><pubDate>Wed, 03 Jan 2018 08:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/git-internals/</guid><description>时长N年半 https://dreamanddead.github.io/post/git-internals/ -&lt;p>这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Play curl with http</title><link>https://dreamanddead.github.io/post/play-curl-with-http/</link><pubDate>Mon, 09 Apr 2018 10:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/play-curl-with-http/</guid><description>时长N年半 https://dreamanddead.github.io/post/play-curl-with-http/ -&lt;p>curl是一款强大的网络传输工具，支持多种协议，在HTTP的支持方面尤其为人称道。
+对curl的使用越深入，对HTTP也会有更深的理解。&lt;/p>
+&lt;h1 id="a-little-http">a little http&lt;/h1>
+&lt;p>http是应用层协议，其设计非常简单，灵活。请求与响应是HTTP概念的核心，从本质上讲，
+请求与响应也极其简单。更多可参考&lt;a href="http://liuwangshu.cn/application/network/1-http.html">HTTP协议原理&lt;/a>&lt;/p>
+&lt;h2 id="请求报文">请求报文&lt;/h2>
+&lt;p>通常，一个HTTP请求报文由请求行、请求报头、空行、和请求数据4个部分组成。&lt;/p>
+&lt;figure>
+&lt;img src="images/http-request-format.png"
+alt="http request format"/> &lt;figcaption>
+&lt;p>http request format&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;ul>
+&lt;li>请求行
+&lt;ul>
+&lt;li>Method：请求方法，如GET，POST&lt;/li>
+&lt;li>URI：请求地址&lt;/li>
+&lt;li>HTTP Version：协议版本&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>请求报头
+&lt;ul>
+&lt;li>key/value组成的键值对，非常有拓展性&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>请求数据
+&lt;ul>
+&lt;li>client向server传输的数据&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="响应报文">响应报文&lt;/h2>
+&lt;p>HTTP的响应报文由状态行、消息报头、空行、响应正文组成。
+响应正文是服务器返回的资源的内容。&lt;/p>
+&lt;figure>
+&lt;img src="images/http-response-format.png"
+alt="http response format"/> &lt;figcaption>
+&lt;p>http response format&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;ul>
+&lt;li>状态行
+&lt;ul>
+&lt;li>HTTP Version：协议版本&lt;/li>
+&lt;li>Status Code： 状态码，常见的如200，404&lt;/li>
+&lt;li>Reason Phrase：状态码的描述，如200对应OK&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>消息报头
+&lt;ul>
+&lt;li>key/value组成的键值对&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>响应正文
+&lt;ul>
+&lt;li>server返回client的数据&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="简单示例">简单示例&lt;/h2>
+&lt;p>访问baidu，观察HTTP协议请求与响应&lt;/p>
+&lt;pre>&lt;code>$ curl -v http://baidu.com
+&amp;gt; GET / HTTP/1.1
+&amp;gt; Host: baidu.com
+&amp;gt; User-Agent: curl/7.47.0
+&amp;gt; Accept: */*
+&amp;gt;
+&amp;lt; HTTP/1.1 200 OK
+&amp;lt; Date: Sun, 08 Apr 2018 06:01:23 GMT
+&amp;lt; Server: Apache
+&amp;lt; Last-Modified: Tue, 12 Jan 2010 13:48:00 GMT
+&amp;lt; ETag: &amp;quot;51-47cf7e6ee8400&amp;quot;
+&amp;lt; Accept-Ranges: bytes
+&amp;lt; Content-Length: 81
+&amp;lt; Cache-Control: max-age=86400
+&amp;lt; Expires: Mon, 09 Apr 2018 06:01:23 GMT
+&amp;lt; Connection: Keep-Alive
+&amp;lt; Content-Type: text/html
+&amp;lt;
+&amp;lt;html&amp;gt;
+&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>分析请求&lt;/p>
+&lt;ul>
+&lt;li>使用GET Method，请求/ URI，协议版本HTTP/1.1&lt;/li>
+&lt;li>请求报头，键值数据&lt;/li>
+&lt;li>空行&lt;/li>
+&lt;li>没有请求数据&lt;/li>
+&lt;/ul>
+&lt;p>分析响应&lt;/p>
+&lt;ul>
+&lt;li>协议版本HTTP/1.1，状态码200，状态OK&lt;/li>
+&lt;li>消息报头，键值数据&lt;/li>
+&lt;li>空行&lt;/li>
+&lt;li>响应正文：文本数据，以text/html的格式来解析&lt;/li>
+&lt;/ul>
+&lt;p>简单易懂&lt;/p>
+&lt;h1 id="play-curl">play curl&lt;/h1>
+&lt;h2 id="fetch-data">fetch data&lt;/h2>
+&lt;p>curl最基础的功能，获取url资源，打印到stdout。&lt;/p>
+&lt;p>这里所输出的内容，只是HTTP响应正文的数据，也通常是我们最关心的&lt;/p>
+&lt;pre>&lt;code>$ curl http://baidu.com
+&amp;lt;html&amp;gt;
+&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>url内容，可存储于文件（即下载）&lt;/p>
+&lt;p>可以使用重定向的方式&lt;/p>
+&lt;pre>&lt;code>$ curl http://www.baidu.com &amp;gt; baidu.index.html
+&lt;/code>&lt;/pre>&lt;p>或者使用-o选项&lt;/p>
+&lt;pre>&lt;code>$ curl -o manual.html http://www.gnu.org/software/gettext/manual/gettext.html
+&lt;/code>&lt;/pre>&lt;p>有时url只返回重定向，真正的内容在重定向的链接中&lt;/p>
+&lt;p>&lt;em>&lt;code>-L, --location&lt;/code>，跟随重定向，获取重定向url的内容&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl -L http://httpbin.org/redirect-to?url=http://baidu.com
+&amp;lt;html&amp;gt;
+&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>有两种重定向方式是浏览器支持而curl不支持的&lt;/p>
+&lt;ul>
+&lt;li>html包含meta refresh标签，如&lt;code>&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;0;url=http://www.baidu.com/&amp;quot;&amp;gt;&lt;/code>&lt;/li>
+&lt;li>js代码实现重定向&lt;/li>
+&lt;/ul>
+&lt;p>上面输出的都是响应正文，curl也可以输出响应头信息&lt;/p>
+&lt;p>&lt;em>&lt;code>-i, --include&lt;/code>, 将响应头与响应正文一并输出&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl -i http://www.example.com
+HTTP/1.1 200 OK
+Cache-Control: max-age=604800
+Content-Type: text/html
+Date: Sun, 08 Apr 2018 08:00:09 GMT
+Etag: &amp;quot;1541025663+ident&amp;quot;
+Expires: Sun, 15 Apr 2018 08:00:09 GMT
+Last-Modified: Fri, 09 Aug 2013 23:54:35 GMT
+Server: ECS (sjc/4F91)
+Vary: Accept-Encoding
+X-Cache: HIT
+Content-Length: 1270
+&amp;lt;!doctype html&amp;gt;
+&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+&amp;lt;title&amp;gt;Example Domain&amp;lt;/title&amp;gt;
+&amp;lt;meta charset=&amp;quot;utf-8&amp;quot; /&amp;gt;
+&amp;lt;meta http-equiv=&amp;quot;Content-type&amp;quot; content=&amp;quot;text/html; charset=utf-8&amp;quot; /&amp;gt;
+&amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1&amp;quot; /&amp;gt;
+.................................
+.................................
+.................................
+.................................
+.................................
+&lt;/code>&lt;/pre>&lt;p>使用HEAD Method，只请求响应头。
+虽然同样输出了响应头，但是同&lt;code>-i&lt;/code>的本质不同。&lt;/p>
+&lt;p>&lt;em>&lt;code>-I, --head&lt;/code>, 用HEAD Method进行请求并输出&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl -I http://www.example.com
+HTTP/1.1 200 OK
+Content-Encoding: gzip
+Accept-Ranges: bytes
+Cache-Control: max-age=604800
+Content-Type: text/html
+Date: Sun, 08 Apr 2018 07:59:29 GMT
+Etag: &amp;quot;1541025663&amp;quot;
+Expires: Sun, 15 Apr 2018 07:59:29 GMT
+Last-Modified: Fri, 09 Aug 2013 23:54:35 GMT
+Server: ECS (sjc/4E44)
+X-Cache: HIT
+Content-Length: 606
+&lt;/code>&lt;/pre>&lt;p>curl还可以提取其它有意思的信息。&lt;/p>
+&lt;p>&lt;em>&lt;code>-w, --write-out &amp;lt;format&amp;gt;&lt;/code>，在一次传输之后，输出其它的信息至stdout。format 可包含\n，\t，变量用%{var_name}标识&lt;/em>&lt;/p>
+&lt;p>比如，提取响应头的content type&lt;/p>
+&lt;pre>&lt;code>$ curl -o $(mktemp) -s -w 'content type is %{content_type}\n' www.baidu.com
+content type is text/html
+&lt;/code>&lt;/pre>&lt;p>常用的变量列表&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>var name&lt;/th>
+&lt;th>description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>content_type&lt;/td>
+&lt;td>响应头中的Content-Type&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>http_code&lt;/td>
+&lt;td>响应状态码&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>redirect_url&lt;/td>
+&lt;td>没有-L选项时，输出实际重定向的地址&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>url_effective&lt;/td>
+&lt;td>当使用-L选项，最终重定向所访问的地址&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>local_ip&lt;/td>
+&lt;td>client ip，此次请求中的客户端IP（IP层）&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>local_port&lt;/td>
+&lt;td>client port，此次请求中的客户端端口（tcp层）&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>remote_ip&lt;/td>
+&lt;td>server ip，服务器端IP（IP层）&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>remote_port&lt;/td>
+&lt;td>server port，服务器端端口（tcp层）&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>size_download&lt;/td>
+&lt;td>响应正文的总字节数&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>size_upload&lt;/td>
+&lt;td>请求正文的总字节数&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>size_header&lt;/td>
+&lt;td>响应头的总字节数&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>size_request&lt;/td>
+&lt;td>请求头的总字节数&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>time_total&lt;/td>
+&lt;td>传输耗费的总时间&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>speed_download&lt;/td>
+&lt;td>数据传输的下行速度&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>speed_upload&lt;/td>
+&lt;td>上行速度&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="progress-bar">progress bar&lt;/h2>
+&lt;p>如果curl没有将url内容输出到stdout（比如另存为文件），就会输出progress信息到stderr&lt;/p>
+&lt;p>默认样式如下&lt;/p>
+&lt;pre>&lt;code>$ curl -o index.html http://baidu.com
+% Total % Received % Xferd Average Speed Time Time Time Current
+Dload Upload Total Spent Left Speed
+100 81 100 81 0 0 17 0 0:00:04 0:00:04 --:--:-- 17
+&lt;/code>&lt;/pre>&lt;p>可以用&lt;code>-&lt;/code> &lt;code>#&lt;/code>组成的progress bar来代替默认样式&lt;/p>
+&lt;pre>&lt;code>$ curl -o index.html -# http://baidu.com
+######################################################################## 100.0%
+&lt;/code>&lt;/pre>&lt;p>不显示任何progress信息&lt;/p>
+&lt;p>&lt;em>&lt;code>-s, --silent&lt;/code>, silent mode&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl -o index.html -s http://baidu.com
+&lt;/code>&lt;/pre>&lt;h2 id="debug">debug&lt;/h2>
+&lt;h3 id="which-interface">which interface&lt;/h3>
+&lt;p>多网卡情况下，指定特定网卡进行传输&lt;/p>
+&lt;pre>&lt;code>$ curl --interface eth0 http://www.example.com
+&lt;/code>&lt;/pre>&lt;h3 id="limit-band-width">limit band width&lt;/h3>
+&lt;p>手动限制网络传输速度，借此观察传输情况&lt;/p>
+&lt;pre>&lt;code>$ curl --limit-rate 1000B http://www.gnu.org/software/gettext/manual/gettext.html
+&lt;/code>&lt;/pre>&lt;h3 id="proxy">proxy&lt;/h3>
+&lt;p>使用代理&lt;/p>
+&lt;p>&lt;code>-x, --proxy &amp;lt;[protocol://][user:password@]proxyhost[:port]&amp;gt;&lt;/code>&lt;/p>
+&lt;pre>&lt;code>$ curl -x socks5://10.27.2.200:2024 http://google.com
+&lt;/code>&lt;/pre>&lt;h3 id="dns">dns&lt;/h3>
+&lt;p>自定义域名dns解析的ip地址&lt;/p>
+&lt;p>&lt;code>--resolve host:port:address&lt;/code>&lt;/p>
+&lt;p>当curl访问host:port，host就解析为address，最终访问的地址是address:port。
+如果访问的host:port其中一个不对应，则host就不会解析为address&lt;/p>
+&lt;pre>&lt;code>$ curl --resolve www.example.com:5000:127.0.0.1 http://www.example.com:5000
+# 最终访问的地址是127.0.0.1:5000
+&lt;/code>&lt;/pre>&lt;p>使用其它dns服务器&lt;/p>
+&lt;pre>&lt;code>$ curl --dns-servers 8.8.8.8,1.1.1.1 http://www.example.com
+&lt;/code>&lt;/pre>&lt;h3 id="verbose">verbose&lt;/h3>
+&lt;p>verbose option， 输出HTTP请求与响应交互的所有内容&lt;/p>
+&lt;pre>&lt;code>$ curl -v http://www.baidu.com
+* Rebuilt URL to: http://www.baidu.com/
+* Trying 14.215.177.39...
+* Connected to www.baidu.com (14.215.177.39) port 80 (#0)
+&amp;gt; GET / HTTP/1.1
+&amp;gt; Host: www.baidu.com
+&amp;gt; User-Agent: curl/7.47.0
+&amp;gt; Accept: */*
+&amp;gt;
+&amp;lt; HTTP/1.1 200 OK
+&amp;lt; Server: bfe/1.0.8.18
+&amp;lt; Date: Thu, 29 Mar 2018 08:54:41 GMT
+&amp;lt; Content-Type: text/html
+&amp;lt; Content-Length: 2381
+......
+......
+&lt;/code>&lt;/pre>&lt;h3 id="trace">trace&lt;/h3>
+&lt;p>trace option, 更加详细地输出HTTP交互的所有内容&lt;/p>
+&lt;p>&lt;em>&lt;code>--trace &amp;lt;file&amp;gt;&lt;/code>，dump所有交互数据&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl --trace - http://www.example.com
+== Info: Rebuilt URL to: http://www.baidu.com/
+== Info: Trying 14.215.177.38...
+== Info: Connected to www.baidu.com (14.215.177.38) port 80 (#0)
+=&amp;gt; Send header, 77 bytes (0x4d)
+0000: 47 45 54 20 2f 20 48 54 54 50 2f 31 2e 31 0d 0a GET / HTTP/1.1..
+0010: 48 6f 73 74 3a 20 77 77 77 2e 62 61 69 64 75 2e Host: www.baidu.
+.........................
+.........................
+&lt;/code>&lt;/pre>&lt;p>&lt;em>&lt;code>--trace-ascii &amp;lt;file&amp;gt;&lt;/code>，不显示hex部分&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl --trace-ascii - http://www.example.com
+== Info: Rebuilt URL to: http://www.example.com/
+== Info: Trying 93.184.216.34...
+== Info: Connected to www.example.com (93.184.216.34) port 80 (#0)
+=&amp;gt; Send header, 79 bytes (0x4f)
+0000: GET / HTTP/1.1
+0010: Host: www.example.com
+0027: User-Agent: curl/7.47.0
+.........................
+.........................
+&lt;/code>&lt;/pre>&lt;p>&lt;em>&lt;code>--trace-time&lt;/code>，同&lt;code>-v/--trace&lt;/code>一起使用，打印出每一行trace的时间戳&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl -v --trace-time http://www.example.com
+15:44:37.251685 * Rebuilt URL to: http://www.example.com/
+15:44:37.524262 * Connected to www.example.com (93.184.216.34) port 80 (#0)
+15:44:37.524415 &amp;gt; GET / HTTP/1.1
+15:44:37.524415 &amp;gt; Host: www.example.com
+................
+................
+&lt;/code>&lt;/pre>&lt;h2 id="custom-headers">custom headers&lt;/h2>
+&lt;h3 id="referer">referer&lt;/h3>
+&lt;p>referer代表的意思是，当前请求是从哪一个页面链接过来。
+一些网站用此来判断来自外部网站的链接，进行防盗链的保护&lt;/p>
+&lt;p>&lt;em>&lt;code>-e, --referer&lt;/code>，修改请求头referer字段&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl --referer http://www.I.come http://httpbin.org/get
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;Referer&amp;quot;: &amp;quot;http://www.I.come&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;h3 id="user-agent">user agent&lt;/h3>
+&lt;p>user agent在HTTP头部中，标识浏览器类型，修改此header可以隐藏真实浏览器的类型&lt;/p>
+&lt;p>&lt;em>&lt;code>--user-agent&lt;/code>，修改user-agent头部&lt;/em>&lt;/p>
+&lt;p>将curl扮演为Internet Explorer 5&lt;/p>
+&lt;pre>&lt;code>$ curl --user-agent &amp;quot;Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)&amp;quot; http://httpbin.org/get
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)&amp;quot;
+},
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;h3 id="cookie">cookie&lt;/h3>
+&lt;p>自定义要传输的cookie&lt;/p>
+&lt;p>&lt;em>&lt;code>--cookie [&amp;lt;file&amp;gt;]&lt;/code>，设置传输cookie&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl --cookie &amp;quot;name=Daniel&amp;quot; http://httpbin.org/get
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Cookie&amp;quot;: &amp;quot;name=Daniel&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;p>一般自定义cookie的情况是很少的，通常由服务器设置cookie，浏览器每次连接都带上所设置的cookie，用于标识session&lt;/p>
+&lt;p>&lt;em>&lt;code>--cookie-jar &amp;lt;file&amp;gt;&lt;/code>，存储cookie至文件&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl --cookie-jar cookies.txt http://httpbin.org/cookies/set?from=httpbin
+$ cat cookies.txt
+# Netscape HTTP Cookie File
+# http://curl.haxx.se/docs/http-cookies.html
+# This file was generated by libcurl! Edit at your own risk.
+httpbin.org FALSE / FALSE 0 from httpbin
+$ curl --cookie cookies.txt http://httpbin.org/get
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Cookie&amp;quot;: &amp;quot;from=httpbin&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;h3 id="all-in-one">all in one&lt;/h3>
+&lt;p>可以设置所有header，包括上面提到的几种，是万能的方法。&lt;/p>
+&lt;p>&lt;em>&lt;code>-H, --header&lt;/code>，设置HTTP请求头信息，可同时设置多个&lt;/em>&lt;/p>
+&lt;p>自定义数据类型为json&lt;/p>
+&lt;pre>&lt;code>$ curl -H &amp;quot;Content-type: application/json&amp;quot; -H &amp;quot;Accept: application/json&amp;quot; --data '{&amp;quot;user&amp;quot;: &amp;quot;who&amp;quot;}' http://httpbin.org/post
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;data&amp;quot;: &amp;quot;{\&amp;quot;user\&amp;quot;: \&amp;quot;who\&amp;quot;}&amp;quot;,
+&amp;quot;files&amp;quot;: {},
+&amp;quot;form&amp;quot;: {},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;application/json&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;15&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;application/json&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: {
+&amp;quot;user&amp;quot;: &amp;quot;who&amp;quot;
+},
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;h2 id="restful-api">RESTful api&lt;/h2>
+&lt;p>通常RESTful api使用POST，DELETE，GET，PUT Method代表增删查改，四种对资源的操作。&lt;/p>
+&lt;p>每种操作都可以携带参数，
+参数可以通过两种方式传递&lt;/p>
+&lt;ul>
+&lt;li>query： 一般在URI之后，以key=value的形式组织，多个用&amp;amp;相连接&lt;/li>
+&lt;li>body： HTTP请求报文的数据部分，参数可组织为任何形式，服务器通过Content-Type来解读参数&lt;/li>
+&lt;/ul>
+&lt;p>通常情况下&lt;/p>
+&lt;ul>
+&lt;li>四种Method都可以使用query传递参数&lt;/li>
+&lt;li>POST，PUT，DELETE可以使用body传递参数，GET不使用body&lt;/li>
+&lt;li>query，body两种方式可以同时使用&lt;/li>
+&lt;/ul>
+&lt;h3 id="post">POST&lt;/h3>
+&lt;h4 id="post-with-body">post with body&lt;/h4>
+&lt;p>&lt;em>&lt;code>-d, --data&lt;/code>, 默认使用POST Method，Content-type=application/x-www-form-urlencoded，进行HTTP请求&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl --data 'tool=curl' --data 'os=linux' http://httpbin.org/post
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
+&amp;quot;files&amp;quot;: {},
+&amp;quot;form&amp;quot;: {
+&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
+&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
+},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;18&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: null,
+&amp;quot;origin&amp;quot;: &amp;quot;183.240.202.4&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;p>&lt;code>--data&lt;/code>不会对数据进行url encode，如果传递的参数为&lt;code>tool=curl and linux&lt;/code>，其中的空格就需要url encode为%20，
+再进行请求。
+好在curl提供了&lt;code>--data-urlencode&lt;/code>选项来帮助我们做这件事&lt;/p>
+&lt;p>&lt;em>&lt;code>--data-urlencode&lt;/code>，与&lt;code>--data&lt;/code>功能相似，对value进行url encode，再进行传输。
+当Content-Type=application/x-www-form-urlencoded，推荐使用此选项&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl --data-urlencode 'tool=curl and linux' http://httpbin.org/post
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
+&amp;quot;files&amp;quot;: {},
+&amp;quot;form&amp;quot;: {
+&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
+},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;23&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: null,
+&amp;quot;origin&amp;quot;: &amp;quot;183.240.202.4&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;h4 id="different-content-type">different content type&lt;/h4>
+&lt;p>Content-Type的意义在于&lt;/p>
+&lt;ul>
+&lt;li>对于client，form数据用哪一种方式存储到请求body中&lt;/li>
+&lt;li>对于server，取到请求body的时候，如何解读其中的数据&lt;/li>
+&lt;/ul>
+&lt;p>当Content-Type=application/x-www-form-urlencoded，所有key/value数据组织为类似url query的形式&lt;/p>
+&lt;ul>
+&lt;li>以key=value存储，并进行url encode&lt;/li>
+&lt;li>多个key=value用&amp;amp;来连接&lt;/li>
+&lt;/ul>
+&lt;p>如果用来传输二进制文件，对所有非alphanumeric字符进行url encode编码，单字节需要用三个字节来存储，效率非常低。
+于是标准提出了新的Content-Type，multipart/form-data，来解决这个问题。更多可参考&lt;a href="https://stackoverflow.com/questions/4007969/application-x-www-form-urlencoded-or-multipart-form-data">form-urlencode-or-form-data&lt;/a>&lt;/p>
+&lt;p>具体两种方式的存储方式有什么区别，我们用&lt;code>--trace&lt;/code>来看清楚&lt;/p>
+&lt;p>application/x-www-form-urlencoded，参数以类似query的形式，存储在body中，POST到服务器&lt;/p>
+&lt;pre>&lt;code>$ curl --trace - --data 'tool=curl' --data 'os=linux' http://httpbin.org/post
+................
+................
+=&amp;gt; Send header, 149 bytes (0x95)
+0000: 50 4f 53 54 20 2f 70 6f 73 74 20 48 54 54 50 2f POST /post HTTP/
+0010: 31 2e 31 0d 0a 48 6f 73 74 3a 20 68 74 74 70 62 1.1..Host: httpb
+0020: 69 6e 2e 6f 72 67 0d 0a 55 73 65 72 2d 41 67 65 in.org..User-Age
+0030: 6e 74 3a 20 63 75 72 6c 2f 37 2e 34 37 2e 30 0d nt: curl/7.47.0.
+0040: 0a 41 63 63 65 70 74 3a 20 2a 2f 2a 0d 0a 43 6f .Accept: */*..Co
+0050: 6e 74 65 6e 74 2d 4c 65 6e 67 74 68 3a 20 31 38 ntent-Length: 18
+0060: 0d 0a 43 6f 6e 74 65 6e 74 2d 54 79 70 65 3a 20 ..Content-Type:
+0070: 61 70 70 6c 69 63 61 74 69 6f 6e 2f 78 2d 77 77 application/x-ww
+0080: 77 2d 66 6f 72 6d 2d 75 72 6c 65 6e 63 6f 64 65 w-form-urlencode
+0090: 64 0d 0a 0d 0a d....
+=&amp;gt; Send data, 18 bytes (0x12)
+0000: 74 6f 6f 6c 3d 63 75 72 6c 26 6f 73 3d 6c 69 6e tool=curl&amp;amp;os=lin
+0010: 75 78 ux
+== Info: upload completely sent off: 18 out of 18 bytes
+................
+................
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
+&amp;quot;files&amp;quot;: {},
+&amp;quot;form&amp;quot;: {
+&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
+&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
+},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;18&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: null,
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;p>multipart/form-data则使用了不同的方式，其中定义一个boundary，所有form字段以
+boundary分隔开来，每一段都有&lt;code>Content-Disposition&lt;/code>，&lt;code>name&lt;/code>头部，内容不进行url encode处理&lt;/p>
+&lt;pre>&lt;code>$ curl --trace - --form 'tool=curl' --form 'os=linux' http://httpbin.org/post
+................
+................
+0000: 50 4f 53 54 20 2f 70 6f 73 74 20 48 54 54 50 2f POST /post HTTP/
+0010: 31 2e 31 0d 0a 48 6f 73 74 3a 20 68 74 74 70 62 1.1..Host: httpb
+0020: 69 6e 2e 6f 72 67 0d 0a 55 73 65 72 2d 41 67 65 in.org..User-Age
+0030: 6e 74 3a 20 63 75 72 6c 2f 37 2e 34 37 2e 30 0d nt: curl/7.47.0.
+0040: 0a 41 63 63 65 70 74 3a 20 2a 2f 2a 0d 0a 43 6f .Accept: */*..Co
+0050: 6e 74 65 6e 74 2d 4c 65 6e 67 74 68 3a 20 32 33 ntent-Length: 23
+0060: 39 0d 0a 45 78 70 65 63 74 3a 20 31 30 30 2d 63 9..Expect: 100-c
+0070: 6f 6e 74 69 6e 75 65 0d 0a 43 6f 6e 74 65 6e 74 ontinue..Content
+0080: 2d 54 79 70 65 3a 20 6d 75 6c 74 69 70 61 72 74 -Type: multipart
+0090: 2f 66 6f 72 6d 2d 64 61 74 61 3b 20 62 6f 75 6e /form-data; boun
+00a0: 64 61 72 79 3d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d dary=-----------
+00b0: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 -------------800
+00c0: 66 32 31 62 37 32 65 33 38 35 30 30 39 0d 0a 0d f21b72e385009...
+00d0: 0a .
+=&amp;gt; Send data, 239 bytes (0xef)
+0000: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d ----------------
+0010: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 66 32 31 ----------800f21
+0020: 62 37 32 65 33 38 35 30 30 39 0d 0a 43 6f 6e 74 b72e385009..Cont
+0030: 65 6e 74 2d 44 69 73 70 6f 73 69 74 69 6f 6e 3a ent-Disposition:
+0040: 20 66 6f 72 6d 2d 64 61 74 61 3b 20 6e 61 6d 65 form-data; name
+0050: 3d 22 74 6f 6f 6c 22 0d 0a 0d 0a 63 75 72 6c 0d =&amp;quot;tool&amp;quot;....curl.
+0060: 0a 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d .---------------
+0070: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 66 32 -----------800f2
+0080: 31 62 37 32 65 33 38 35 30 30 39 0d 0a 43 6f 6e 1b72e385009..Con
+0090: 74 65 6e 74 2d 44 69 73 70 6f 73 69 74 69 6f 6e tent-Disposition
+00a0: 3a 20 66 6f 72 6d 2d 64 61 74 61 3b 20 6e 61 6d : form-data; nam
+00b0: 65 3d 22 6f 73 22 0d 0a 0d 0a 6c 69 6e 75 78 0d e=&amp;quot;os&amp;quot;....linux.
+00c0: 0a 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d .---------------
+00d0: 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 2d 38 30 30 66 32 -----------800f2
+00e0: 31 62 37 32 65 33 38 35 30 30 39 2d 2d 0d 0a 1b72e385009--..
+......................
+......................
+......................
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
+&amp;quot;files&amp;quot;: {},
+&amp;quot;form&amp;quot;: {
+&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
+&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
+},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;239&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------800f21b72e385009&amp;quot;,
+&amp;quot;Expect&amp;quot;: &amp;quot;100-continue&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: null,
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;h4 id="upload-file">upload file&lt;/h4>
+&lt;p>利用Content-Type=multipart/form-data，上传文件&lt;/p>
+&lt;p>&lt;em>&lt;code>-F, --form&lt;/code>，默认以Content-Type=multipart/form-data，POST Method进行HTTP请求。&lt;code>--data&lt;/code>不支持文件上传，
+&lt;code>--form&lt;/code>可以用&lt;code>@&amp;lt;filename&amp;gt;&lt;/code>进行文件上传&lt;/em>&lt;/p>
+&lt;pre>&lt;code>$ curl --form source=@test.c --form lang=c http://httpbin.org/post
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
+&amp;quot;files&amp;quot;: {
+&amp;quot;source&amp;quot;: &amp;quot;#include &amp;lt;stdio.h&amp;gt;\n\nint main(void) {\n return 0;\n}\n&amp;quot;
+},
+&amp;quot;form&amp;quot;: {
+&amp;quot;lang&amp;quot;: &amp;quot;c&amp;quot;
+},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;347&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------5c6f4eef4965c408&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: null,
+&amp;quot;origin&amp;quot;: &amp;quot;183.240.198.140&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;p>上传文件时，可以同时标明文件MIME，供服务器参考&lt;/p>
+&lt;pre>&lt;code>$ curl --form &amp;quot;page=@index.html;type=text/html&amp;quot; http://httpbin.org/post
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
+&amp;quot;files&amp;quot;: {
+&amp;quot;page&amp;quot;: &amp;quot;&amp;lt;html&amp;gt;\n&amp;lt;meta http-equiv=\&amp;quot;refresh\&amp;quot; content=\&amp;quot;0;url=http://www.baidu.com/\&amp;quot;&amp;gt;\n&amp;lt;/html&amp;gt;\n&amp;quot;
+},
+&amp;quot;form&amp;quot;: {},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;268&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------c3339e8e79db4cb4&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.58.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: null,
+&amp;quot;origin&amp;quot;: &amp;quot;183.240.202.4&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;h4 id="post-with-query">post with query&lt;/h4>
+&lt;p>如果POST想使用query来传递参数，必须自己手动输入在URI之后，curl没有选项来做这一件事。
+POST使用query的麻烦之处在于，要求我们注意URL的编码&lt;/p>
+&lt;pre>&lt;code>$ curl --data-urlencode 'tool=curl and linux' http://httpbin.org/post?reverse%20order=linux%20and%20curl
+{
+&amp;quot;args&amp;quot;: {
+&amp;quot;reverse order&amp;quot;: &amp;quot;linux and curl&amp;quot;
+},
+&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
+&amp;quot;files&amp;quot;: {},
+&amp;quot;form&amp;quot;: {
+&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
+},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;23&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: null,
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post?reverse order=linux and curl&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;p>可以使用其它辅助命令来帮助我们做url encode。&lt;/p>
+&lt;p>urlencode命令来自于包 gridsite-clients，或者使用&lt;a href="https://stackoverflow.com/questions/296536/how-to-urlencode-data-for-curl-command">其它相同功能的工具&lt;/a>&lt;/p>
+&lt;pre>&lt;code>$ curl --data-urlencode 'tool=curl and linux' http://httpbin.org/post?$(urlencode 'reverse order')=$(urlencode 'linux and curl')
+{
+&amp;quot;args&amp;quot;: {
+&amp;quot;reverse order&amp;quot;: &amp;quot;linux and curl&amp;quot;
+},
+&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
+&amp;quot;files&amp;quot;: {},
+&amp;quot;form&amp;quot;: {
+&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
+},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;23&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: null,
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post?reverse order=linux and curl&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;h3 id="put">PUT&lt;/h3>
+&lt;p>PUT与POST相似，只不过Method不同&lt;/p>
+&lt;p>&lt;em>&lt;code>-X Method&lt;/code>，指定curl请求所使用的方法&lt;/em>&lt;/p>
+&lt;p>application/x-www-form-urlencoded示例&lt;/p>
+&lt;pre>&lt;code>$ curl -X PUT --data 'tool=curl' --data 'os=linux' http://httpbin.org/put
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
+&amp;quot;files&amp;quot;: {},
+&amp;quot;form&amp;quot;: {
+&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
+&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
+},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;18&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;application/x-www-form-urlencoded&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: null,
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/put&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;p>multipart/form-data示例&lt;/p>
+&lt;pre>&lt;code>$ curl -X PUT --form source=@test.c --form lang=c http://httpbin.org/put
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;data&amp;quot;: &amp;quot;&amp;quot;,
+&amp;quot;files&amp;quot;: {
+&amp;quot;source&amp;quot;: &amp;quot;#include &amp;lt;stdio.h&amp;gt;\n\nint main(void) {\n return 0;\n}\n&amp;quot;
+},
+&amp;quot;form&amp;quot;: {
+&amp;quot;lang&amp;quot;: &amp;quot;c&amp;quot;
+},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;347&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;multipart/form-data; boundary=------------------------e73fa892cfebd218&amp;quot;,
+&amp;quot;Expect&amp;quot;: &amp;quot;100-continue&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: null,
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/put&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;h3 id="delete">DELETE&lt;/h3>
+&lt;p>DELETE同POST，PUT，只是Method不同。
+使用&lt;code>-X DELETE&lt;/code>即可&lt;/p>
+&lt;h3 id="get">GET&lt;/h3>
+&lt;p>GET只使用query来传递参数&lt;/p>
+&lt;p>&lt;em>&lt;code>-G, --get&lt;/code>，这个选项会使所有&lt;code>-d, --data, --data-urlencode&lt;/code>的数据附加在URL之后作为query，而不是POST body，默认使用GET Method&lt;/em>&lt;/p>
+&lt;p>参考&lt;a href="https://stackoverflow.com/a/14284519/9167165">curl url param&lt;/a>&lt;/p>
+&lt;pre>&lt;code>$ curl -G --data-urlencode 'tool=curl and linux' http://httpbin.org/get
+{
+&amp;quot;args&amp;quot;: {
+&amp;quot;tool&amp;quot;: &amp;quot;curl and linux&amp;quot;
+},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/get?tool=curl and linux&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;h3 id="json">JSON&lt;/h3>
+&lt;p>通常使用RESTful api，配合使用的Content-Type都为application/json。
+结合自定义header的功能，修改Content-Type，用json进行C/S交互&lt;/p>
+&lt;pre>&lt;code>$ curl -H &amp;quot;Content-type: application/json&amp;quot; -H &amp;quot;Accept: application/json&amp;quot; --data '{&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;, &amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;}' http://httpbin.org/post
+{
+&amp;quot;args&amp;quot;: {},
+&amp;quot;data&amp;quot;: &amp;quot;{\&amp;quot;tool\&amp;quot;: \&amp;quot;curl\&amp;quot;, \&amp;quot;os\&amp;quot;: \&amp;quot;linux\&amp;quot;}&amp;quot;,
+&amp;quot;files&amp;quot;: {},
+&amp;quot;form&amp;quot;: {},
+&amp;quot;headers&amp;quot;: {
+&amp;quot;Accept&amp;quot;: &amp;quot;application/json&amp;quot;,
+&amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;,
+&amp;quot;Content-Length&amp;quot;: &amp;quot;31&amp;quot;,
+&amp;quot;Content-Type&amp;quot;: &amp;quot;application/json&amp;quot;,
+&amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,
+&amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.47.0&amp;quot;
+},
+&amp;quot;json&amp;quot;: {
+&amp;quot;os&amp;quot;: &amp;quot;linux&amp;quot;,
+&amp;quot;tool&amp;quot;: &amp;quot;curl&amp;quot;
+},
+&amp;quot;origin&amp;quot;: &amp;quot;121.35.211.97&amp;quot;,
+&amp;quot;url&amp;quot;: &amp;quot;http://httpbin.org/post&amp;quot;
+}
+&lt;/code>&lt;/pre>&lt;h1 id="more-help">more help&lt;/h1>
+&lt;p>command line&lt;/p>
+&lt;pre>&lt;code>$ man curl
+$ curl --help
+$ curl --manual
+&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://curl.haxx.se/docs/httpscripting.html">curl docs online&lt;/a>&lt;/p>- https://dreamanddead.github.io/post/play-curl-with-http/ - DreamAndDead 2014-2021</description></item><item><title>Git Internals</title><link>https://dreamanddead.github.io/post/git-internals/</link><pubDate>Wed, 03 Jan 2018 08:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/git-internals/</guid><description>时长N年半 https://dreamanddead.github.io/post/git-internals/ -&lt;p>这篇文章旨在介绍git的关键概念与内部存储形式，相比对git的使用，关注的重点更底层。&lt;/p>
 &lt;p>所有示例使用git版本 2.7.4，
 示例仓库可见于github: &lt;a href="https://github.com/DreamAndDead/git-internals-example">https://github.com/DreamAndDead/git-internals-example&lt;/a>&lt;/p>
 &lt;h1 id="git-folder">.git folder&lt;/h1>
