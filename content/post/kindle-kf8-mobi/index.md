@@ -2,50 +2,52 @@
 title: "Useful Tips for Kindle"
 author: ["DreamAndDead"]
 date: 2021-03-31T18:15:00+08:00
-lastmod: 2021-04-15T16:00:48+08:00
+lastmod: 2021-04-15T21:53:06+08:00
 tags: ["kindle", "mobi", "reading"]
 categories: ["Tool"]
-draft: true
-comment: false
+draft: false
 featured_image: "images/featured.jpg"
 ---
 
-Kindle 图书馆服务是 kindle 的一大亮点。
-可以存储个人上传的书，而且多端同步注释与阅读进度。
+图书馆服务是 kindle 阅读器的一大亮点。
+服务器存储个人上传的电子书，而且支持多端同步注释与阅读进度。
 
-本文来介绍几个 tip，如何更好的使用这项服务。
+本文介绍几个建议，如何更好的使用这项服务。
 
 
 ## Use KF8 Mobi {#use-kf8-mobi}
 
-电子书的本质并不复杂。内容通过 html 标签来组织，通过 css 控制样式。
+电子书的本质并不复杂。通过 html 来组织内容，通过 css 控制样式。
 电子书和阅读器的关系近似于网页和浏览器的关系。
 
 常见电子书格式有 4 种，epub，mobi，azw 和 azw3[^fn:1]。
-epub 是开源格式；amazon 认为 epub 由社区发展，
+epub 是开源格式。
+amazon 认为 epub 由社区发展，
 不能很快符合自身的发展需求，于是在之上开发了 mobi。
-当前使用的 mobi 有两个版本，KF6 和 KF8。
+当前使用的 mobi 有两个版本，KF6 和 KF8，
 azw 和 azw3 就是分别在 mobi KF6 和 KF8 上添加了一层“外壳”，
 用于版权保护[^fn:2]。
 
-mobi KF8 相比 KF6 有如下优势，可以在 kindle 阅读器上
+KF8 相比 KF6 可以在 kindle 阅读器上
 呈现更丰富的样式，
 支持自定义更换字体，
-但是缺点是无法呈现书籍封面缩略图（在 android kindle app 可以，在阅读器不行）。
+缺点是无法呈现书籍封面缩略图（在 android kindle app 可以，在 kindle 阅读器上不行）。
 
 邮件传书不支持 azw3 格式，只支持 mobi[^fn:3]，
-为了阅读 KF8 的电子书，需要将 azw3 转换为 KF8 mobi。
+为了阅读 KF8 的电子书，需要将 azw3 转换为 mobi KF8。
 
-calibre 支持转换为 KF8 mobi，但是经实践，
-转换得到的电子书无法通过 amazon 审核。
+calibre 支持转换为 KF8 格式，但是经实践，
+转换得到的电子书无法通过 amazon 审核，发送不成功。
 
 {{< figure src="images/convert.png" caption="Figure 1: calibre 支持转换 KF8 的选项" >}}
 
-另外转换的方式来自论坛 [mobileread](https://www.mobileread.com/forums/)。
-先使用 python 脚本解包 azw3 电子书[^fn:4]，
-再使用官方提供的 kindlegen 工具加工生成 KF8 mobi 电子书[^fn:5]。
+另一种转换的方式来自论坛 [mobileread](https://www.mobileread.com/forums/)。
+使用 python 脚本解包 azw3 电子书[^fn:4]，
+配合官方 kindlegen 工具加工生成 mobi KF8 电子书[^fn:5]。
 
-先下载 [KindleUnpack-081.zip](https://www.mobileread.com/forums/attachment.php?attachmentid=168073&d=1543614967)，解压内容如下，
+其过程并不复杂。
+
+下载 python 脚本 [KindleUnpack-081.zip](https://www.mobileread.com/forums/attachment.php?attachmentid=168073&d=1543614967)，解压如下，
 
 ```text
 kindleunpack/
@@ -84,7 +86,7 @@ kindleunpack/
 └── README.md
 ```
 
-这是一个 gui 版本的程序，只需要使用命令相关的功能即可。
+查看其帮助选项，
 
 ```text
 $ python kindleunpack/lib/kindleunpack.py --help
@@ -114,11 +116,13 @@ Options:
     -r                 write raw data to the output folder
 ```
 
-以 十分钟冥想.azw3 为例，
+以电子书 [十分钟冥想.azw3](images/十分钟冥想.azw3) 为例，解压到 `unpack_output` 目录，
 
 ```text
 $ python kindleunpack/lib/kindleunpack.py -i -s ./十分钟冥想.azw3 ./unpack_output/
 ```
+
+解压内容如下，
 
 ```text
 $ tree ./unpack_output/
@@ -137,7 +141,6 @@ unpack_output/
 │       └── image00136.jpeg
 └── mobi8
     ├── 十分钟冥想.epub
-    ├── 十分钟冥想.mobi
     ├── META-INF
     │   └── container.xml
     ├── mimetype
@@ -208,31 +211,49 @@ Options:
       nl: Dutch
 ```
 
-转换为 mobi，
+将解包得到的 epub KF8 转换为 mobi，
 
 ```text
 $ kindlegen unpack_output/mobi8/十分钟冥想.epub -c2 -verbose -o 十分钟冥想.mobi
 ```
 
-生成文件路径为 `unpack_output/mobi8/十分钟冥想.mobi` 。
+文件生成到 `unpack_output/mobi8/十分钟冥想.mobi` 。
 
-用 calibre viewer 打开，可以看到 KF8 的标识，
-说明转换成功了。
+用 calibre viewer 打开，可以看到 KF8 的标识，说明转换成功。
 
 {{< figure src="images/kf8.png" caption="Figure 2: kf8 标识" >}}
 
--   部分文件无法转换
--   部分文件转换出乱码
+当然，这种方式也不是百试百灵的，可能小概率会遇到以下问题
+
+-   部分文件使用 kindlegen 转换失败，无法生成 mobi
+-   部分文件使用 kindlegen 转换得到的 mobi 内容是乱码
+
+如果遇到以上问题，建议使用其它 azw3 文件再试一下。
 
 
 ## 配置 calibre 邮件发送 {#配置-calibre-邮件发送}
 
-直接配置
+kindle 图书馆服务中的电子书是通过邮件附件来上传的（没错，在 21 世纪）。
+如果每次都使用邮箱客户端来发送，未免太不方便。
+可以在 calibre 中进行配置 smtp，直接一键传书，更为便捷。
 
-以 qq 邮箱为例
+以 qq 邮箱为例，在设置-帐户中，开启 smtp 服务，同时得到授权码。
 
-在后台开启 smtp
-记住授权码
+{{< figure src="images/service.png" caption="Figure 3: 开启 smtp 服务" >}}
+
+在 calibre 的设置-电子邮件分享选项板，
+
+-   电子邮件为 kindle 图书馆的邮箱地址，格式选择 mobi
+-   发信人地址填写 qq 邮箱
+-   主机名:端口为 `smtp.qq.com:465`
+-   用户名为邮箱地址，密码为授权码
+-   协议选择 SSL
+
+{{< figure src="images/share.png" caption="Figure 4: calibre 配置邮件共享" >}}
+
+配置结束后，就可以一键上传书籍。
+
+{{< figure src="images/send.png" caption="Figure 5: 一键上传书籍" >}}
 
 
 ## License {#license}
