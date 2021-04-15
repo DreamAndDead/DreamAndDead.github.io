@@ -2,7 +2,7 @@
 title: "基础算法之 C++ 基础"
 author: ["DreamAndDead"]
 date: 2021-04-14T18:15:00+08:00
-lastmod: 2021-04-14T18:33:51+08:00
+lastmod: 2021-04-14T20:20:48+08:00
 tags: ["algorithm", "oj", "programing"]
 categories: ["Algorithm"]
 draft: true
@@ -56,11 +56,19 @@ cout 如何输出二进制数
 <https://www.techiedelight.com/binary-representation-number/>
 
 
-## c++ stl {#c-plus-plus-stl}
+## stl {#stl}
 
 stl source
 
 <https://codechina.csdn.net/mirrors/gcc-mirror/gcc/-/tree/master/libstdc%2B%2B-v3>
+
+
+### container {#container}
+
+
+### iterator {#iterator}
+
+pure [] and iterator
 
 
 ### string {#string}
@@ -133,21 +141,6 @@ no front(), just top()
 <https://www.cnblogs.com/huashanqingzhu/p/11040390.html>
 
 
-### math {#math}
-
-combine function
-
-<https://stackoverflow.com/a/42285958/9167165>
-
-TODO 恰好整除
-
-<numeric>
-
-std::accumulate
-
-chapter 17
-
-
 ### set {#set}
 
 find 方法，返回 iter
@@ -165,6 +158,21 @@ find 方法，返回 iter
 -   类内，
 
 如果是类内重载，无法用于 set 的比较
+
+
+### math {#math}
+
+combine function
+
+<https://stackoverflow.com/a/42285958/9167165>
+
+TODO 恰好整除
+
+<numeric>
+
+std::accumulate
+
+chapter 17
 
 
 ### algo {#algo}
@@ -202,18 +210,6 @@ compare two ranges
 only 3 arguments, enough
 
 
-### pure [] and iterator {#pure-and-iterator}
-
-
-### mem function {#mem-function}
-
-memcpy
-
-memset
-
-单位是 byte，注意使用 n \* sizeof(type)
-
-
 ### lambda {#lambda}
 
 
@@ -229,25 +225,34 @@ next perm 数组通用化
 
 ## class {#class}
 
-自定义类
+-   定义类
+    -   构造函数
+    -   默认值
+    -   快速初始化
 
-重载运算符
+-   重载运算符
 
 <https://www.runoob.com/cplusplus/cpp-overloading.html>
 
-比较方法
+-   比较方法
 
-静态成员
+-   静态成员
 
 <http://c.biancheng.net/cpp/biancheng/view/209.html>
 
 <https://blog.csdn.net/vict%5Fwang/article/details/80994894>
 
-构造函数
 
-默认值
+## careful {#careful}
 
-快速初始化
+
+### mem function {#mem-function}
+
+memcpy
+
+memset
+
+单位是 byte，注意使用 n \* sizeof(type)
 
 
 ## gdb {#gdb}

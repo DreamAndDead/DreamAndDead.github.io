@@ -55,11 +55,17 @@ cout 如何输出二进制数
 https://www.techiedelight.com/binary-representation-number/
 
 
-* c++ stl
+* stl
 
 stl source
 
 https://codechina.csdn.net/mirrors/gcc-mirror/gcc/-/tree/master/libstdc%2B%2B-v3
+
+** container
+
+** iterator
+
+   pure [] and iterator
 
 ** string
 
@@ -135,22 +141,6 @@ array<int, n>
 
  https://www.cnblogs.com/huashanqingzhu/p/11040390.html
 
-** math
-
-combine function
-
-https://stackoverflow.com/a/42285958/9167165   
-
-TODO 恰好整除
-
-
-<numeric>
-
-std::accumulate
-
-
-chapter 17
-
 ** set
   
  find 方法，返回 iter
@@ -171,6 +161,22 @@ chapter 17
  - 类内，
 
  如果是类内重载，无法用于 set 的比较
+
+** math
+
+combine function
+
+https://stackoverflow.com/a/42285958/9167165   
+
+TODO 恰好整除
+
+
+<numeric>
+
+std::accumulate
+
+
+chapter 17
 
 ** algo
 
@@ -215,15 +221,6 @@ compare two ranges
 
 only 3 arguments, enough
 
-** pure [] and iterator
-** mem function
-
-memcpy
-
-memset
-
-单位是 byte，注意使用 n * sizeof(type)
-
 ** lambda
 ** 模板 template
 
@@ -233,32 +230,36 @@ https://blog.csdn.net/qq_35637562/article/details/55194097
 
 ** cpp traits
 
-
 * class
 
-自定义类
+- 定义类
+  - 构造函数
+  - 默认值
+  - 快速初始化
 
-重载运算符
+- 重载运算符
 
 https://www.runoob.com/cplusplus/cpp-overloading.html
 
+- 比较方法
 
-比较方法
-
-
-
-静态成员
+- 静态成员
 
 http://c.biancheng.net/cpp/biancheng/view/209.html
 
 https://blog.csdn.net/vict_wang/article/details/80994894
 
+* careful
 
-构造函数
+** mem function
 
-默认值
+memcpy
 
-快速初始化
+memset
+
+单位是 byte，注意使用 n * sizeof(type)
+
+
 
 
 * gdb
