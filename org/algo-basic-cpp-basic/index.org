@@ -10,58 +10,57 @@
 #+hugo_draft: true
 #+hugo_custom_front_matter: :featured_image images/featured.jpg :series '("基础算法")
 
-算法中的语言知识点
+oj 中，不会用到太多
+
+涉及到算法中的语言知识点
+
+更方便
 
 * io
 
-scanf 输入 %s %c，针对 换行的问题
-
-和 getchar 的区别
-
-getchar == scanf %c ?
+** input
 
 https://blog.csdn.net/oneline_/article/details/80746759
 
+- getchar == scanf %c
+- scanf 输入 %s %c
+- scanf 针对换行的问题
+- cin 的返回值，scanf 的返回值
+  比如输入 0 终止
+  while (cin >> N)
+  vs
+  while (scanf())
+- 输入遇到 EOF 的时候，cin 和 scanf 的效果
 
-** cin & scanf 的用法
+** output
 
-比如输入 0 终止
-
-cin 的返回值
-scanf 的返回值
-
-while (cin >> N)
-vs
-while (scanf())
-
-输入遇到 EOF 的时候，cin 和 scanf 的效果
-
-** cout & printf
-
-printf 更容易控制格式
-
-相应的格式化字符列表
-
-‰5d？输出 5 个长度
-%05d 不足补0？
-
-%lld 输出 long long?
-
-cout 在于泛型
-
-
-cout 如何输出二进制数
+- cout & printf
+  - printf 更容易控制格式
+    ‰5d？输出 5 个长度
+    %05d 不足补0？
+  - printf 相应的格式化字符列表
+    %lld 输出 long long
+- cout 在于泛型
+- cout 如何输出二进制数
 
 https://www.techiedelight.com/binary-representation-number/
 
+* c stdlib
+
+** mem
+
+=<cstring>=
+   
+memcpy/memset
+
+int A[10]，
+
+mem 单位是 byte，注意使用 sizeof(A)
 
 * stl
-
-stl source
-
-https://codechina.csdn.net/mirrors/gcc-mirror/gcc/-/tree/master/libstdc%2B%2B-v3
-
 ** container
+
+   数据结构的核心
 
 ** iterator
 
@@ -69,28 +68,25 @@ https://codechina.csdn.net/mirrors/gcc-mirror/gcc/-/tree/master/libstdc%2B%2B-v3
 
 ** string
 
-char[] char*
+string char[] char*
 
-strlen
+.size()  strlen
 
 
-stringstream
-
-用于存储输出
-
-how to clear stringstream
+- stringstream
+  - 用于存储输出
+  - how to clear stringstream
 
 https://stackoverflow.com/questions/20731/how-do-you-clear-a-stringstream-variable
-
 
  =string= 和 =cstring= 是不一样的
 
 
- TODO how to copy a string instance?
+- how to copy a string instance?
 
  https://stackoverflow.com/questions/12678819/how-to-copy-a-string-of-stdstring-type-in-c
 
- string and char*
+- string and char*
 
  https://cloud.tencent.com/developer/article/1525205
 
@@ -162,22 +158,6 @@ array<int, n>
 
  如果是类内重载，无法用于 set 的比较
 
-** math
-
-combine function
-
-https://stackoverflow.com/a/42285958/9167165   
-
-TODO 恰好整除
-
-
-<numeric>
-
-std::accumulate
-
-
-chapter 17
-
 ** algo
 
 
@@ -221,14 +201,21 @@ compare two ranges
 
 only 3 arguments, enough
 
-** lambda
-** 模板 template
+** math
 
-next perm 数组通用化
+combine function
 
-https://blog.csdn.net/qq_35637562/article/details/55194097
+https://stackoverflow.com/a/42285958/9167165   
 
-** cpp traits
+TODO 恰好整除
+
+
+<numeric>
+
+std::accumulate
+
+
+chapter 17
 
 * class
 
@@ -249,25 +236,15 @@ http://c.biancheng.net/cpp/biancheng/view/209.html
 
 https://blog.csdn.net/vict_wang/article/details/80994894
 
-* careful
+* high level
+** lambda
+** 模板 template
 
-** mem function
+next perm 数组通用化
 
-memcpy
+https://blog.csdn.net/qq_35637562/article/details/55194097
 
-memset
-
-单位是 byte，注意使用 n * sizeof(type)
-
-
-
-
-* gdb
-
-gdb 调试 段错误
-
-https://blog.csdn.net/deutschester/article/details/6739861
-
+** cpp traits
 * c++ profile
 
 https://blog.csdn.net/absurd/article/details/1477532

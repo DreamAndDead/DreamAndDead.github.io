@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-14T18:33:51+08:00
+lastmod: 2021-04-16T14:11:15+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -143,9 +143,6 @@ series: ["test"]
 -  指定编译器
 
     <https://tlanyan.me/cmake-specify-compiler/>
-
-
-#### kindle kf8 mobi 制作 {#kindle-kf8-mobi-制作}
 
 
 #### Cli {#cli}
@@ -585,6 +582,9 @@ series: ["test"]
 
 
 #### 由需求驱动 {#由需求驱动}
+
+
+#### 结合对未来的思考 {#结合对未来的思考}
 
 
 #### 用自己的特长，解决现实问题 {#用自己的特长-解决现实问题}

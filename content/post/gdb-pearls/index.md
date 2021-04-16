@@ -133,4 +133,5 @@ clear commands
 
 [sheet]: http://www.yolinux.com/TUTORIALS/GDB-Commands.html#STLDEREF
 
+[fn:1]: gdb 调试段错误 https://blog.csdn.net/deutschester/article/details/6739861
 

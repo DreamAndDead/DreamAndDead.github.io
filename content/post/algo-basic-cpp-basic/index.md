@@ -2,7 +2,7 @@
 title: "基础算法之 C++ 基础"
 author: ["DreamAndDead"]
 date: 2021-04-14T18:15:00+08:00
-lastmod: 2021-04-14T20:20:48+08:00
+lastmod: 2021-04-16T17:32:49+08:00
 tags: ["algorithm", "oj", "programing"]
 categories: ["Algorithm"]
 draft: true
@@ -10,60 +10,65 @@ featured_image: "images/featured.jpg"
 series: ["基础算法"]
 ---
 
-算法中的语言知识点
+oj 中，不会用到太多
+
+涉及到算法中的语言知识点
+
+更方便
 
 
 ## io {#io}
 
-scanf 输入 %s %c，针对 换行的问题
 
-和 getchar 的区别
-
-getchar == scanf %c ?
+### input {#input}
 
 <https://blog.csdn.net/oneline%5F/article/details/80746759>
 
-
-### cin & scanf 的用法 {#cin-and-scanf-的用法}
-
-比如输入 0 终止
-
-cin 的返回值
-scanf 的返回值
-
-while (cin >> N)
-vs
-while (scanf())
-
-输入遇到 EOF 的时候，cin 和 scanf 的效果
+-   getchar == scanf %c
+-   scanf 输入 %s %c
+-   scanf 针对换行的问题
+-   cin 的返回值，scanf 的返回值
+    比如输入 0 终止
+    while (cin >> N)
+    vs
+    while (scanf())
+-   输入遇到 EOF 的时候，cin 和 scanf 的效果
 
 
-### cout & printf {#cout-and-printf}
+### output {#output}
 
-printf 更容易控制格式
-
-相应的格式化字符列表
-
-‰5d？输出 5 个长度
-%05d 不足补0？
-
-%lld 输出 long long?
-
-cout 在于泛型
-
-cout 如何输出二进制数
+-   cout & printf
+    -   printf 更容易控制格式
+        ‰5d？输出 5 个长度
+        %05d 不足补0？
+    -   printf 相应的格式化字符列表
+        %lld 输出 long long
+-   cout 在于泛型
+-   cout 如何输出二进制数
 
 <https://www.techiedelight.com/binary-representation-number/>
 
 
+## c stdlib {#c-stdlib}
+
+
+### mem {#mem}
+
+`<cstring>`
+
+memcpy/memset
+
+int A[10]，
+
+mem 单位是 byte，注意使用 sizeof(A)
+
+
 ## stl {#stl}
-
-stl source
-
-<https://codechina.csdn.net/mirrors/gcc-mirror/gcc/-/tree/master/libstdc%2B%2B-v3>
 
 
 ### container {#container}
+
+数据结构的核心
 
 
 ### iterator {#iterator}
@@ -73,27 +78,25 @@ pure [] and iterator
 
 ### string {#string}
 
-char[] char\*
+string char[] char\*
 
-strlen
+.size()  strlen
 
-stringstream
-
-用于存储输出
-
-how to clear stringstream
+-   stringstream
+    -   用于存储输出
+    -   how to clear stringstream
 
 <https://stackoverflow.com/questions/20731/how-do-you-clear-a-stringstream-variable>
 
 `string` 和 `cstring` 是不一样的
 
-TODO how to copy a string instance?
+-   how to copy a string instance?
 
-<https://stackoverflow.com/questions/12678819/how-to-copy-a-string-of-stdstring-type-in-c>
+    <https://stackoverflow.com/questions/12678819/how-to-copy-a-string-of-stdstring-type-in-c>
 
-string and char\*
+-   string and char\*
 
-<https://cloud.tencent.com/developer/article/1525205>
+    <https://cloud.tencent.com/developer/article/1525205>
 
 
 ### pair {#pair}
@@ -160,21 +163,6 @@ find 方法，返回 iter
 如果是类内重载，无法用于 set 的比较
 
 
-### math {#math}
-
-combine function
-
-<https://stackoverflow.com/a/42285958/9167165>
-
-TODO 恰好整除
-
-<numeric>
-
-std::accumulate
-
-chapter 17
-
-
 ### algo {#algo}
 
 std::copy
@@ -210,17 +198,19 @@ compare two ranges
 only 3 arguments, enough
 
 
-### lambda {#lambda}
+### math {#math}
 
+combine function
 
-### 模板 template {#模板-template}
+<https://stackoverflow.com/a/42285958/9167165>
 
-next perm 数组通用化
+TODO 恰好整除
 
-<https://blog.csdn.net/qq%5F35637562/article/details/55194097>
+<numeric>
 
+std::accumulate
 
-### cpp traits {#cpp-traits}
+chapter 17
 
 
 ## class {#class}
@@ -243,23 +233,20 @@ next perm 数组通用化
 <https://blog.csdn.net/vict%5Fwang/article/details/80994894>
 
 
-## careful {#careful}
+## high level {#high-level}
 
 
-### mem function {#mem-function}
-
-memcpy
-
-memset
-
-单位是 byte，注意使用 n \* sizeof(type)
+### lambda {#lambda}
 
 
-## gdb {#gdb}
+### 模板 template {#模板-template}
 
-gdb 调试 段错误
+next perm 数组通用化
 
-<https://blog.csdn.net/deutschester/article/details/6739861>
+<https://blog.csdn.net/qq%5F35637562/article/details/55194097>
+
+
+### cpp traits {#cpp-traits}
 
 
 ## c++ profile {#c-plus-plus-profile}

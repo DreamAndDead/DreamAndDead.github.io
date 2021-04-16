@@ -55,7 +55,6 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 
      https://tlanyan.me/cmake-specify-compiler/
 
-*** kindle kf8 mobi 制作
 *** Cli
 **** fzf
 **** rg
@@ -195,6 +194,7 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 *** 构建有用的东西
 **** 如 窦唯 般优秀的创造者
 *** 由需求驱动
+*** 结合对未来的思考
 *** 用自己的特长，解决现实问题
 **** T | 领域
 ***** github topic
