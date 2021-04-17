@@ -2,7 +2,7 @@
 title: "创业理论"
 author: ["DreamAndDead"]
 date: 2021-03-24T15:44:00+08:00
-lastmod: 2021-04-13T11:31:35+08:00
+lastmod: 2021-04-17T15:32:39+08:00
 tags: ["life", "theory", "bussiness"]
 categories: ["Startup"]
 draft: true
@@ -293,6 +293,10 @@ featured_image: "images/featured.jpg"
 <!--list-separator-->
 
 -  衡量创业指标
+
+<!--list-separator-->
+
+-  record and replay
 
 
 #### 分布在世界各地的主机，对网站进行测试 {#分布在世界各地的主机-对网站进行测试}

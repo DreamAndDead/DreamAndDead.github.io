@@ -3,7 +3,7 @@
 #+hugo_bundle: algo-basic-before-oj
 #+export_file_name: index
 
-#+title: 在尝试 OJ 之前
+#+title: 基础算法之写在 OJ 之前
 #+date: <2021-04-07 三 18:21>
 #+hugo_categories: Algorithm
 #+hugo_tags: algorithm oj programing

@@ -1,8 +1,8 @@
 ---
-title: "在尝试 OJ 之前"
+title: "基础算法之写在 OJ 之前"
 author: ["DreamAndDead"]
 date: 2021-04-07T18:21:00+08:00
-lastmod: 2021-04-14T10:49:51+08:00
+lastmod: 2021-04-17T15:33:03+08:00
 tags: ["algorithm", "oj", "programing"]
 categories: ["Algorithm"]
 draft: false
@@ -135,7 +135,7 @@ N 表示数据集的规模。
     ```
 
     ```text
-    running time: 1871.4ms
+    running time: 1699.55ms
     ```
 
     `2.8Ghz` 的 cpu 运行 `1G` 条基础指令，大约消耗时间 `1.68s` 。

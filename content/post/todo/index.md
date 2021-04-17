@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-16T14:11:15+08:00
+lastmod: 2021-04-17T15:36:03+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -170,6 +170,22 @@ series: ["test"]
 <!--list-separator-->
 
 -  autojump
+
+<!--list-separator-->
+
+-  find
+
+    <!--list-separator-->
+
+    -  -delete, a better way
+
+<!--list-separator-->
+
+-  sed
+
+    <!--list-separator-->
+
+    -  删除匹配行
 
 <!--list-separator-->
 
@@ -586,6 +602,10 @@ series: ["test"]
 
 #### 结合对未来的思考 {#结合对未来的思考}
 
+<!--list-separator-->
+
+-  未来趋势
+
 
 #### 用自己的特长，解决现实问题 {#用自己的特长-解决现实问题}
 
@@ -652,6 +672,14 @@ series: ["test"]
         <!--list-separator-->
 
         -  架构师
+
+            <!--list-separator-->
+
+            -  软件开发架构
+
+            <!--list-separator-->
+
+            -  运维服务架构
 
     <!--list-separator-->
 
@@ -783,6 +811,77 @@ series: ["test"]
 
 
 #### 追随成功的项目 {#追随成功的项目}
+
+
+### 下一份工作 {#下一份工作}
+
+
+#### 简历 {#简历}
+
+<!--list-separator-->
+
+-  原则？
+
+
+#### 面试准备 {#面试准备}
+
+<!--list-separator-->
+
+-  项目经验？
+
+<!--list-separator-->
+
+-  算法？
+
+<!--list-separator-->
+
+-  工具的深入理解
+
+    <!--list-separator-->
+
+    -  从架构到末结
+
+    <!--list-separator-->
+
+    -  nginx?
+
+    <!--list-separator-->
+
+    -  mysql?
+
+    <!--list-separator-->
+
+    -  docker?
+
+
+#### 结合创业理论 {#结合创业理论}
+
+<!--list-separator-->
+
+-  其它实力的成长
+
+
+#### 公司预选 {#公司预选}
+
+<!--list-separator-->
+
+-  收集信息
+
+    <!--list-separator-->
+
+    -  官网
+
+    <!--list-separator-->
+
+    -  业务
+
+    <!--list-separator-->
+
+    -  挑战
+
+    <!--list-separator-->
+
+    -  技术博客
 
 
 ### 如何做事 {#如何做事}
@@ -1045,6 +1144,21 @@ series: ["test"]
 
 
 #### 自己的认知总在进步，相应的文章，作品都要随之更新进步 {#自己的认知总在进步-相应的文章-作品都要随之更新进步}
+
+
+#### 经验 {#经验}
+
+<!--list-separator-->
+
+-  开句，明段落综义
+
+<!--list-separator-->
+
+-  段落综义间的过渡关系
+
+<!--list-separator-->
+
+-  有节制的，向中心靠拢，删除多余内容，不乱跑
 
 
 ### 工夫在诗外 {#工夫在诗外}

@@ -17,6 +17,14 @@ import math
 math.comb(n, k)
 math.perm(n)
 #+end_example
-   
 
 
+* internal
+
+* high efficiency
+
+* hacks
+
+* one line
+
+* project

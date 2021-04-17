@@ -190,6 +190,7 @@
 *** anki server service
 *** 统计网站用户行为
 **** 衡量创业指标
+**** record and replay
 *** 分布在世界各地的主机，对网站进行测试
 **** ping
 **** 功能测试
