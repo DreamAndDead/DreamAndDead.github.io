@@ -1,4 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>在尝试 OJ 之前</title><link>https://dreamanddead.github.io/post/algo-basic-before-oj/</link><pubDate>Wed, 07 Apr 2021 18:21:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/algo-basic-before-oj/</guid><description>时长N年半 https://dreamanddead.github.io/post/algo-basic-before-oj/ -&lt;p>OJ 是学习和锻炼算法的好去处。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>基础算法之写在 OJ 之前</title><link>https://dreamanddead.github.io/post/algo-basic-before-oj/</link><pubDate>Wed, 07 Apr 2021 18:21:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/algo-basic-before-oj/</guid><description>时长N年半 https://dreamanddead.github.io/post/algo-basic-before-oj/ -&lt;p>OJ 是学习和锻炼算法的好去处。
 有很多经典的题目，考察算法的方方面面，磨练思维能力。&lt;/p>
 &lt;p>本文整理一些相关基础知识，用于提高思考时的严谨性。&lt;/p>
 &lt;h2 id="语言">语言&lt;/h2>
@@ -103,7 +103,7 @@ i++;
 end = clock();
 cout &amp;lt;&amp;lt; &lt;span style="color:#cd5555">&amp;#34;running time: &amp;#34;&lt;/span> &amp;lt;&amp;lt; (&lt;span style="color:#00688b;font-weight:bold">float&lt;/span>)(end-start)*&lt;span style="color:#b452cd">1000.0&lt;/span>/CLOCKS_PER_SEC &amp;lt;&amp;lt; &lt;span style="color:#cd5555">&amp;#34;ms&amp;#34;&lt;/span> &amp;lt;&amp;lt; endl;
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">running time: 1871.4ms
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">running time: 1699.55ms
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>2.8Ghz&lt;/code> 的 cpu 运行 &lt;code>1G&lt;/code> 条基础指令，大约消耗时间 &lt;code>1.68s&lt;/code> 。&lt;/p>
 &lt;p>OJ 平台的运行机器参数是不透明的，粗略用 &lt;code>1G&lt;/code> 指令对应 &lt;code>1.5s&lt;/code> 时间来估计即可。&lt;/p>
 &lt;/li>
@@ -2187,4 +2187,5 @@ when reading source code.&lt;/p>
 &lt;h1 id="other-resource">other resource&lt;/h1>
 &lt;ul>
 &lt;li>&lt;a href="http://www.yolinux.com/TUTORIALS/GDB-Commands.html#STLDEREF">gdb cheat sheet&lt;/a>&lt;/li>
-&lt;/ul>- https://dreamanddead.github.io/post/gdb-pearls/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;/ul>
+&lt;p>[fn:1]: gdb 调试段错误 &lt;a href="https://blog.csdn.net/deutschester/article/details/6739861">https://blog.csdn.net/deutschester/article/details/6739861&lt;/a>&lt;/p>- https://dreamanddead.github.io/post/gdb-pearls/ - DreamAndDead 2014-2021</description></item></channel></rss>
