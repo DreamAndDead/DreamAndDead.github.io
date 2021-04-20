@@ -2,7 +2,7 @@
 title: "基础算法之状态空间搜索"
 author: ["DreamAndDead"]
 date: 2021-04-14T11:08:00+08:00
-lastmod: 2021-04-14T11:15:48+08:00
+lastmod: 2021-04-19T17:39:35+08:00
 tags: ["algorithm", "oj", "programing"]
 categories: ["Algorithm"]
 draft: true
@@ -11,6 +11,24 @@ series: ["基础算法"]
 ---
 
 ## 状态空间搜索 {#状态空间搜索}
+
+
+### 搜索 {#搜索}
+
+
+#### BFS {#bfs}
+
+
+#### DFS {#dfs}
+
+
+#### 双向 BFS {#双向-bfs}
+
+
+#### 迭代加深 {#迭代加深}
+
+
+#### 和 dijkstra 的关系 {#和-dijkstra-的关系}
 
 路径查找
 

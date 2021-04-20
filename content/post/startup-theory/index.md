@@ -2,13 +2,27 @@
 title: "创业理论"
 author: ["DreamAndDead"]
 date: 2021-03-24T15:44:00+08:00
-lastmod: 2021-04-17T15:32:39+08:00
+lastmod: 2021-04-19T16:49:13+08:00
 tags: ["life", "theory", "bussiness"]
 categories: ["Startup"]
 draft: true
 comment: false
 featured_image: "images/featured.jpg"
 ---
+
+如何从空白开始驱动？
+
+从小循环开始，不断壮大，多方面成长
+从个人到团队
+
+经营者本身是全知者，是资源的统筹者，
+团结者，领导者，
+将各个子方向的位置逐渐交出。
+
+核心矛盾，既然企业经营者不会接触代码层面的工作，
+自己辛苦钻研的目的何在呢？
+跨越 GAP 的方式是什么呢？
+
 
 ## 为什么 {#为什么}
 
@@ -261,6 +275,42 @@ featured_image: "images/featured.jpg"
 
 
 #### 表情包 {#表情包}
+
+<!--list-separator-->
+
+-  简笔画
+
+<!--list-separator-->
+
+-  编程领域的故事
+
+<!--list-separator-->
+
+-  公司成长史
+
+<!--list-separator-->
+
+-  程序员
+
+<!--list-separator-->
+
+-  PM
+
+<!--list-separator-->
+
+-  小鸡鸭
+
+<!--list-separator-->
+
+-  小黄牛，牛年说牛
+
+<!--list-separator-->
+
+-  生肖系列
+
+<!--list-separator-->
+
+-  小草鱼
 
 
 #### 图书推荐引擎 {#图书推荐引擎}

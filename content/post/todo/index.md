@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-17T15:36:03+08:00
+lastmod: 2021-04-20T13:55:02+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -15,32 +15,6 @@ series: ["test"]
 
 
 ### 算法 {#算法}
-
-
-#### 回溯 {#回溯}
-
-<!--list-separator-->
-
--  优化条件
-
-
-#### 搜索 {#搜索}
-
-<!--list-separator-->
-
--  BFS
-
-<!--list-separator-->
-
--  vs DFS
-
-<!--list-separator-->
-
--  双向 BFS
-
-<!--list-separator-->
-
--  和 dijkstra 的关系
 
 
 #### 可视化模型 {#可视化模型}
@@ -67,31 +41,11 @@ series: ["test"]
 
 #### cpp {#cpp}
 
-<!--list-separator-->
-
--  stl
-
-    <!--list-separator-->
-
-    -  algo
-
-    <!--list-separator-->
-
-    -  data struct
-
 
 #### python {#python}
 
-<!--list-separator-->
 
--  decorator
-
-<!--list-separator-->
-
--  other 高级特性
-
-
-### git tricks (update anytime) {#git-tricks--update-anytime}
+### git tricks {#git-tricks}
 
 
 #### gh-pages and master {#gh-pages-and-master}
@@ -115,6 +69,10 @@ series: ["test"]
 
 <!--list-separator-->
 
+-  8 space auto be 1 tab in c++ code
+
+<!--list-separator-->
+
 -  tab space 的处理
 
     select region
@@ -122,10 +80,6 @@ series: ["test"]
     <https://www.masteringemacs.org/article/converting-tabs-whitespace>
 
     <http://ergoemacs.org/emacs/emacs%5Ftabs%5Fspace%5Findentation%5Fsetup.html>
-
-<!--list-separator-->
-
--  8 space auto be 1 tab in c++ code
 
 <!--list-separator-->
 
@@ -173,6 +127,14 @@ series: ["test"]
 
 <!--list-separator-->
 
+-  bash
+
+    loop files
+
+    <https://exceptionshub.com/bash-how-to-loop-over-files-in-directory-and-change-path-and-add-suffix-to-filename.html>
+
+<!--list-separator-->
+
 -  find
 
     <!--list-separator-->
@@ -215,7 +177,15 @@ series: ["test"]
 ### 数学 {#数学}
 
 
-#### 反证法的正确性 （充分性  必要性） {#反证法的正确性-充分性-必要性}
+#### 反证法的正确性 {#反证法的正确性}
+
+<!--list-separator-->
+
+-  充分性
+
+<!--list-separator-->
+
+-  必要性
 
 
 ## 兴趣 {#兴趣}
@@ -320,7 +290,10 @@ series: ["test"]
 ## 论题 {#论题}
 
 
-### 学习理论（学习如何学习） {#学习理论-学习如何学习}
+### 学习理论 {#学习理论}
+
+
+#### 学习如何学习 {#学习如何学习}
 
 
 #### 归纳，再演绎 {#归纳-再演绎}
@@ -334,9 +307,6 @@ series: ["test"]
 <!--list-separator-->
 
 -  不容易遗忘，由零星回忆起全部的脉络
-
-
-#### 如何成为 pro {#如何成为-pro}
 
 
 #### 专注的方向 {#专注的方向}
@@ -355,6 +325,9 @@ series: ["test"]
     <!--list-separator-->
 
     -  没有目的，各个方向
+
+
+#### 如何成为 pro {#如何成为-pro}
 
 
 #### 参考大师的作品 {#参考大师的作品}
@@ -518,7 +491,11 @@ series: ["test"]
 
 <!--list-separator-->
 
--  公司 组织
+-  公司组织
+
+<!--list-separator-->
+
+-  智能
 
 
 #### 如何认知与对抗 {#如何认知与对抗}
@@ -884,6 +861,17 @@ series: ["test"]
     -  技术博客
 
 
+#### 内推 {#内推}
+
+<!--list-separator-->
+
+-  朋友
+
+<!--list-separator-->
+
+-  内推群
+
+
 ### 如何做事 {#如何做事}
 
 
@@ -1090,6 +1078,64 @@ series: ["test"]
 
 
 ### oreilly generator {#oreilly-generator}
+
+
+## 问题 {#问题}
+
+
+### 职业选择 {#职业选择}
+
+7 分工程 3 分学术
+
+解决现实问题
+
+对创业准备有帮助的
+
+
+### 孩子 {#孩子}
+
+-   前提
+    -   没有压力的工作
+    -   生育保险的准备
+    -   生育花费
+-   过程
+    -   如何备孕
+    -   怀孕过程
+    -   分娩
+-   抚养
+    -   谁
+    -   在哪里
+-   教育
+
+
+### 住房 {#住房}
+
+-   定居地点
+
+| 深圳    | 非深圳 |
+|-------|-----|
+| 高薪    |     |
+| 更优秀的人 |     |
+| 良好的创业环境 |     |
+| 自由市场之城 |     |
+| 前沿的思想 |     |
+| 高房价  |     |
+| 学区房  |     |
+
+-   房产市场了解
+-   购房花费
+-   房产买卖过程
+-   安居房？
+-   公租房？
+
+
+### 养老 {#养老}
+
+保险
+
+生病就医
+
+照顾
 
 
 ## 支言片语 {#支言片语}
@@ -1407,6 +1453,75 @@ be free 成为了软件开发和使用的宗旨
 自由的世界是非常灵活的
 
 不知为何，大家总活在固定的模式中，且不敢突破这些模式，对异样的生活方式存在强烈的恐惧
+
+
+### 快速失败，快速迭代 {#快速失败-快速迭代}
+
+
+### 不同人有不同的生活方式，观察他人是如何赚钱的 {#不同人有不同的生活方式-观察他人是如何赚钱的}
+
+
+### 人生是动态的平衡，而不是死板的“中庸”之学 {#人生是动态的平衡-而不是死板的-中庸-之学}
+
+
+### 构建计划就像素描 {#构建计划就像素描}
+
+大的目标决定了整体 只需要了了的勾勒 也不可能非常清晰
+越向下的小目标就要非常明确 到细节
+中间内容则是在慢慢过渡 填充 衔接
+
+
+### 从整体到部分的安排计划 {#从整体到部分的安排计划}
+
+可以将不同事情分配到成块的时间
+而如果每天现订目标 需要转换的事项太多 没有主次感
+
+
+### 当前目标管理的缺陷 {#当前目标管理的缺陷}
+
+只计划出了每天要做的事 没有和更大的目标关联起来
+
+大目标不明确 每日目标没有得到量化 无法。对比。进度
+
+
+### 冲突发生时，羞愧于内心的软弱 {#冲突发生时-羞愧于内心的软弱}
+
+
+### 记录下的想法 呆在一个地方 {#记录下的想法-呆在一个地方}
+
+就会失去活力 慢慢死去
+应该随着时间 逐渐更新
+
+
+### 写作经验 {#写作经验}
+
+随意自由书写
+后聚类
+整合成一个主题
+去重
+精化
+
+
+### 慢慢尝试 慢慢积累 到一个特定点 发现机会 发现转机 然后一鼓作气 {#慢慢尝试-慢慢积累-到一个特定点-发现机会-发现转机-然后一鼓作气}
+
+
+### 表情包 {#表情包}
+
+线稿和色块分离
+立体需要阴影
+涂鸦色块工具
+
+由简单到复杂
+充满噪声 不规则的叠加形成的一面
+
+在于形和色
+不关心图层 只管用
+由草稿勾勒而来
+
+
+### 在商业 现实的压制下 是无法安心进行学习 研究的 {#在商业-现实的压制下-是无法安心进行学习-研究的}
+
+应该像 page gates 一样 从无财务问题之后 再开始潜心研究也不迟
 
 
 ## License {#license}

@@ -12,13 +12,6 @@
 
 * 博客
 ** 算法
-*** 回溯
-**** 优化条件
-*** 搜索
-**** BFS
-**** vs DFS
-**** 双向 BFS
-**** 和 dijkstra 的关系
 *** 可视化模型
 **** 树模型
 ***** 枚举
@@ -26,19 +19,15 @@
 ***** 八数码
 ** 编程语言
 *** cpp
-**** stl
-***** algo
-***** data struct
 *** python
-**** decorator
-**** other 高级特性
-** git tricks (update anytime)
+** git tricks
 *** gh-pages and master
 **** only merge master
 **** graph theory
 *** git submodule 中项目指定 hash
 ** tool
 *** emacs
+**** 8 space auto be 1 tab in c++ code
 **** tab space 的处理
 
 select region
@@ -47,7 +36,6 @@ https://www.masteringemacs.org/article/converting-tabs-whitespace
 
 http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 
-**** 8 space auto be 1 tab in c++ code
 **** key bindings
 ***** 研究与配置
 *** cmake
@@ -62,6 +50,12 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 **** silver search
 **** bat
 **** autojump
+**** bash
+
+     loop files
+
+     https://exceptionshub.com/bash-how-to-loop-over-files-in-directory-and-change-path-and-add-suffix-to-filename.html
+
 **** find
 ***** -delete, a better way
 **** sed
@@ -73,8 +67,9 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 ***** grep
 ***** awk
 ** 数学
-*** 反证法的正确性 （充分性  必要性）
-
+*** 反证法的正确性
+**** 充分性
+**** 必要性
 * 兴趣
 ** 税收
 *** 个税
@@ -113,17 +108,18 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 *** 认知疗法
 *** GEB
 * 论题
-** 学习理论（学习如何学习）
+** 学习理论
+*** 学习如何学习
 *** 归纳，再演绎
 *** 来自实践，走向实践
 *** 系统认知，建立关联
 **** 不容易遗忘，由零星回忆起全部的脉络
-*** 如何成为 pro
 *** 专注的方向
 *** 每日积累
 **** 必须有形式承载
 **** 人生就是在涣散中消逝
 ***** 没有目的，各个方向
+*** 如何成为 pro
 *** 参考大师的作品
 *** 分析优秀的作品
 *** 模仿
@@ -173,10 +169,10 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 ** 复杂系统
 *** 什么是复杂系统
 **** 人
-**** 公司 组织
+**** 公司组织
+**** 智能
 *** 如何认知与对抗
 **** 良好的设计
-
 * 自我认知
 ** 理解自己
 *** 接触多方面的东西
@@ -297,6 +293,9 @@ https://book.douban.com/subject/25741352/
 ***** 业务
 ***** 挑战
 ***** 技术博客
+*** 内推
+**** 朋友
+**** 内推群
 ** 如何做事
 *** 要事第一
 **** 未来折扣理论
@@ -306,7 +305,6 @@ https://book.douban.com/subject/25741352/
 **** 重要不紧急的事
 **** 提高效率的事
 **** 时刻刷新自己，接受新事物
-
 * 理论
 ** 系统论
 *** 自己运转 1688 代发，就是一个系统
@@ -340,7 +338,6 @@ https://book.douban.com/subject/25741352/
 *** 谈判
 *** 识人用人
 ** 基金购买方法
-
 * 项目整理
 ** 将项目当作生意来经营
 *** 用创业的心态去经营
@@ -361,6 +358,58 @@ https://book.douban.com/subject/25741352/
 ** captcha
 ** joker
 ** oreilly generator
+* 问题
+** 职业选择
+
+7 分工程 3 分学术
+
+解决现实问题
+
+对创业准备有帮助的
+
+** 孩子
+
+- 前提   
+  - 没有压力的工作
+  - 生育保险的准备
+  - 生育花费
+- 过程
+  - 如何备孕
+  - 怀孕过程
+  - 分娩
+- 抚养
+  - 谁
+  - 在哪里
+- 教育
+
+** 住房
+
+- 定居地点
+
+| 深圳           | 非深圳 |
+|----------------+--------|
+| 高薪           |        |
+| 更优秀的人     |        |
+| 良好的创业环境 |        |
+| 自由市场之城   |        |
+| 前沿的思想     |        |
+|----------------+--------|
+| 高房价         |        |
+| 学区房         |        |
+
+- 房产市场了解
+- 购房花费
+- 房产买卖过程
+- 安居房？
+- 公租房？
+
+** 养老
+
+保险
+
+生病就医
+
+照顾
 
 * 支言片语
 ** 有一些网站需要时时打理，它们存储了自己的些许部分，需要时时更新
@@ -622,6 +671,51 @@ be free 成为了软件开发和使用的宗旨
 自由的世界是非常灵活的
 
 不知为何，大家总活在固定的模式中，且不敢突破这些模式，对异样的生活方式存在强烈的恐惧
+
+** 快速失败，快速迭代
+
+** 不同人有不同的生活方式，观察他人是如何赚钱的
+
+** 人生是动态的平衡，而不是死板的“中庸”之学
+** 构建计划就像素描
+   
+大的目标决定了整体 只需要了了的勾勒 也不可能非常清晰
+越向下的小目标就要非常明确 到细节
+中间内容则是在慢慢过渡 填充 衔接
+** 从整体到部分的安排计划
+可以将不同事情分配到成块的时间
+而如果每天现订目标 需要转换的事项太多 没有主次感
+** 当前目标管理的缺陷
+只计划出了每天要做的事 没有和更大的目标关联起来
+
+大目标不明确 每日目标没有得到量化 无法。对比。进度
+
+** 冲突发生时，羞愧于内心的软弱
+** 记录下的想法 呆在一个地方
+就会失去活力 慢慢死去
+应该随着时间 逐渐更新
+** 写作经验
+随意自由书写
+后聚类
+整合成一个主题
+去重
+精化
+** 慢慢尝试 慢慢积累 到一个特定点 发现机会 发现转机 然后一鼓作气
+** 表情包
+
+线稿和色块分离
+立体需要阴影
+涂鸦色块工具
+
+由简单到复杂
+充满噪声 不规则的叠加形成的一面
+
+在于形和色
+不关心图层 只管用
+由草稿勾勒而来
+** 在商业 现实的压制下 是无法安心进行学习 研究的
+
+应该像 page gates 一样 从无财务问题之后 再开始潜心研究也不迟
 
 
 * License
