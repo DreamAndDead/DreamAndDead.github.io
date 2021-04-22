@@ -2,7 +2,7 @@
 title: "基础算法之 C++ 基础"
 author: ["DreamAndDead"]
 date: 2021-04-14T18:15:00+08:00
-lastmod: 2021-04-16T17:32:49+08:00
+lastmod: 2021-04-22T13:27:54+08:00
 tags: ["algorithm", "oj", "programing"]
 categories: ["Algorithm"]
 draft: true
@@ -211,6 +211,14 @@ TODO 恰好整除
 std::accumulate
 
 chapter 17
+
+<cmath>
+
+std::log
+log2
+
+max\_element, return int\*
+range
 
 
 ## class {#class}

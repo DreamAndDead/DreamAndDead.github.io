@@ -217,6 +217,16 @@ std::accumulate
 
 chapter 17
 
+
+<cmath>
+
+std::log
+log2
+
+
+max_element, return int*
+range
+
 * class
 
 - 定义类
