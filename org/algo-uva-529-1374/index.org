@@ -7,7 +7,6 @@
 #+date: <2021-04-22 四 13:27>
 #+hugo_categories: Algorithm
 #+hugo_tags: algorithm oj programing
-#+hugo_draft: true
 #+hugo_custom_front_matter: :featured_image images/featured.png :series '("基础算法")
 
 uva 529 和 1374 两道题目比较相似，都是考察 迭代加深搜索 的题目。
@@ -116,21 +115,159 @@ digraph {
 #+RESULTS:
 [[file:images/1374-bfs-last-num.png]]
 
-那么问题来了，为什么这种搜索方式是正确的？
+这种解法可以 AC，那么问题来了，为什么这种搜索方式是正确的？
 网络博客都没有给出相应的证明，甚至在紫书上，也只是附上一句，
 “限于水平，笔者无法证明这个猜想，但是 1000 以内没有找到反例”。
+
+带着这个问题，来看 UVA 529。
 
 * UVA 529
 
 #+caption: uva 529 题目描述
 [[file:images/uva529.png]]
 
-题意很简单，从 1 开始，递增的序列，如何最短的增长到 n 。
+题意和 UVA 1374 相同，差别在于只允许加法，不使用减法。
 
+#+begin_src dot :file images/529-bfs.png
+digraph {
+  node[shape=none];
 
+  s0[label="{1}"];
+  s1[label="{1, 2}"];
+  s21[label="{1, 2, 4}"];
+  s22[label="{1, 2, 3}"];
+  s31[label="{1, 2, 4, 8}"];
+  s32[label="{1, 2, 4, 6}"];
+  s33[label="{1, 2, 4, 5}"];
+  s34[label="{1, 2, 4, 3}", color="red", style=filled];
 
+  s35[label="{1, 2, 3, 6}"];
+  s36[label="{1, 2, 3, 5}"];
+  s37[label="{1, 2, 3, 4}"];
 
+  s0 -> s1;
 
+  s1 -> s21;
+  s1 -> s22;
+
+  s21 -> s31;
+  s21 -> s32;
+  s21 -> s33;
+  s21 -> s34;
+
+  s22 -> s35;
+  s22 -> s36;
+  s22 -> s37;
+}
+#+end_src
+
+#+RESULTS:
+[[file:images/529-bfs.png]]
+
+题意相同，则解法也类似，使用迭代加深，DFS 过程中，使用上一个生成的数字，
+加剩下的数字生成下一个状态，直到到达 n 为止。
+
+问题是同样的，为什么 DFS 过程中，只使用上一步生成的数字来生成下一个状态？
+
+由于 UVA 529 比较简单，就从它来证明。
+
+需要明确的是，使用最少步数到达 n 有多种计算方式，
+“只使用上一步生成的数字来生成下一个状态” 是其中特别的一类。
+我们要证明的是，对于任意 n，这一类计算方式总是存在的。
+
+举例来说，当 ~n = 7~ 时，最少通过 4 步加法到达。
+
+下图是一种计算方式，其中每个圆代表一次加法。
+
+#+begin_src dot :file images/normal-7.png
+graph {
+  node[shape=circle];
+
+  s0[label="7"];
+  s1[label="3"];
+  s2[label="4"];
+  s3[label="2"];
+  s4[label="1", shape=none];
+  s5[label="2", shape=none];
+  s6[label="2", shape=none];
+  s7[label="1", shape=none];
+  s8[label="1", shape=none];
+
+  s0 -- s1;
+  s0 -- s2;
+
+  s1 -- s3;
+  s1 -- s4;
+
+  s2 -- s5;
+  s2 -- s6;
+
+  s3 -- s7;
+  s3 -- s8;
+}
+#+end_src
+
+#+RESULTS:
+[[file:images/normal-7.png]]
+
+在上一步生成 3 之后，没有继续使用 3，而回头使用 ~2 + 2 = 4~ ，
+说明它没有使用上一步生成的数字。
+
+下面我们将过程修改为“只使用上一步生成的数字”的计算方式。
+
+其实只需要小小的改动，在上一步生成 3 之后，下一步计算必须让 3 再次参与，
+则可以将 ~2 + 2 = 4~ 这一步加法分拆到 3 这里，类似于加法结合律 ~a + (b + c) = (a + b) + c~ ，
+
+于是计算方式变为下图，计算步数依然是 4 步，不过过程变为“只使用上一步生成的数字来生成下一个状态”。
+
+#+begin_src dot :file images/special-7.png
+graph {
+  node[shape=circle];
+
+  s00[label="7"];
+  s0[label="5"];
+  s1[label="3"];
+  s2[label="2", shape=none];
+  s3[label="2"];
+  s4[label="1", shape=none];
+  s7[label="1", shape=none];
+  s8[label="1", shape=none];
+
+  s01[label="2", shape=none];
+
+  s00 -- s0;
+  s00 -- s01;
+
+  s0 -- s1;
+  s0 -- s2;
+
+  s1 -- s3;
+  s1 -- s4;
+
+  s3 -- s7;
+  s3 -- s8;
+}
+#+end_src
+
+#+RESULTS:
+[[file:images/special-7.png]]
+
+使用这种分拆方式，总可以转化出这一类特殊的计算方式，同时不改变计算步数，即得以证明。
+
+所以在 DFS 过程中，只使用上一步生成的数字来生成下一个状态，这种搜索方式一定能得到正确答案。
+
+UVA 529 只存在加法，UVA 1374 无非多了减法，
+证明思路是相似的，只不过需要分成 4 种子情况来分拆，读者可自行尝试。
+- ~a + (b + c) = (a + b) + c~
+- ~a + (b - c) = (a + b) - c~
+- ~a - (b + c) = (a - b) - c~
+- ~a - (b - c) = (a - b) + c~
+
+* License
+
+#+begin_export markdown
+{{< license >}}
+#+end_export
 
 
 
