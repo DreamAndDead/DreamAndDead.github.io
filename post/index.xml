@@ -1,4 +1,14 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 时长N年半</title><link>https://dreamanddead.github.io/post/</link><description>Recent content in Posts on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>基础算法之写在 OJ 之前</title><link>https://dreamanddead.github.io/post/algo-basic-before-oj/</link><pubDate>Wed, 07 Apr 2021 18:21:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/algo-basic-before-oj/</guid><description>OJ 是学习和锻炼算法的好去处。 有很多经典的题目，考察算法的方方面面，磨练思维能力。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 时长N年半</title><link>https://dreamanddead.github.io/post/</link><description>Recent content in Posts on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 22 Apr 2021 13:27:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>基础算法之 UVA 529 1374 题解</title><link>https://dreamanddead.github.io/post/algo-uva-529-1374/</link><pubDate>Thu, 22 Apr 2021 13:27:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/algo-uva-529-1374/</guid><description>uva 529 和 1374 两道题目比较相似，都是考察 迭代加深搜索 的题目。
+但是网上诸多题解给出了解答方式，却没有回答为什么可以这样搜索， 本文旨在给出一种证明，回答这个问题。
+UVA 1374 Figure 1: uva 1374 题目描述
+题意很简单，从 x^1 开始，通过 * / 运算，最快到达 x^n 的步数。
+幂的乘除就是指数的加减。将可达到的指数看作一个集合， 整体生成过程如下图所示，
+BFS 层序遍历显然可以解决问题， 但是随着步数的增加，状态变得越来越多。
+这种情况下，迭代加深搜索是一个不错的选择。 每次选定一个搜索深度，使用 DFS 从起始状态开始搜索。
+奇特的是，即使使用这个思路，对于一些数，计算时间非常的长，会 TLE。
+网上诸多博客给出的答案也是同样的思路，不过有一些小小的区别， 即每次 DFS 时，只使用上一步生成的数和剩下的数相加减，生成新状态， 而不用全部数之间相加减来生成新状态。
+举例来说，当搜索到 {1, 2, 4, 8} 时， 下一步有 8 种可能的状态，但是上一步生成的数字是 8， 用 8 和剩下的数，只能生成前 6 种状态， 后 2 种状态无法生成，故不用遍历。
+这种解法可以 AC，那么问题来了，为什么这种搜索方式是正确的？ 网络博客都没有给出相应的证明，甚至在紫书上，也只是附上一句， “限于水平，笔者无法证明这个猜想，但是 1000 以内没有找到反例”。</description></item><item><title>基础算法之写在 OJ 之前</title><link>https://dreamanddead.github.io/post/algo-basic-before-oj/</link><pubDate>Wed, 07 Apr 2021 18:21:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/algo-basic-before-oj/</guid><description>OJ 是学习和锻炼算法的好去处。 有很多经典的题目，考察算法的方方面面，磨练思维能力。
 本文整理一些相关基础知识，用于提高思考时的严谨性。
 语言 选择一项合适的语言是重要的。 解决问题需要算法，算法需要表达成程序，程序需要用语言编写。
 推荐使用 C++。 C++ 接近底层， 方便估计数据结构的空间消耗，以及程序运行的时间效率。 虽然 Python 和 Java 都是优秀的语言， 但都存在 vm 层， 而且很多高阶数据结构和方法的实现对使用者是不透明的， 不利于估计程序的空间消耗与时间效率。

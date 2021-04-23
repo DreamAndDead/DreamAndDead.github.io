@@ -1,4 +1,92 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>浅谈全景图</title><link>https://dreamanddead.github.io/post/a-little-talk-about-panorama/</link><pubDate>Sun, 27 Sep 2020 14:02:58 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-little-talk-about-panorama/</guid><description>时长N年半 https://dreamanddead.github.io/post/a-little-talk-about-panorama/ -&lt;p>全景图本身并不神秘。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 22 Apr 2021 13:27:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>gdb pearls</title><link>https://dreamanddead.github.io/post/gdb-pearls/</link><pubDate>Mon, 26 Oct 2020 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/gdb-pearls/</guid><description>时长N年半 https://dreamanddead.github.io/post/gdb-pearls/ -&lt;p>GDB is a life saver when you debug programs or assist to inspect
+when reading source code.&lt;/p>
+&lt;p>Here is a little list about some useful things about gdb.&lt;/p>
+&lt;h1 id="help">help&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>help CMD&lt;/code>, hit when curious&lt;/li>
+&lt;li>you can find everything in &lt;a href="https://sourceware.org/gdb/current/onlinedocs/gdb/">gdb manual&lt;/a>, &lt;code>Ctrl-F&lt;/code> it&lt;/li>
+&lt;/ul>
+&lt;h1 id="gui">gui&lt;/h1>
+&lt;ul>
+&lt;li>using &lt;a href="https://cgdb.github.io/docs/cgdb.html">cgdb&lt;/a>, a concise ncurses interface&lt;/li>
+&lt;li>ddd is buggy, leave it&lt;/li>
+&lt;li>typing &lt;code>M-x gdb&lt;/code> in emacs&lt;/li>
+&lt;/ul>
+&lt;h1 id="print">print&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>set print pretty on&lt;/code>, pretty print&lt;/li>
+&lt;li>&lt;code>set print array on&lt;/code>, pretty print array&lt;/li>
+&lt;li>&lt;code>p *array@N&lt;/code>, print array of length N&lt;/li>
+&lt;li>&lt;code>p *pointer&lt;/code>, pretty print struct&lt;/li>
+&lt;li>&lt;code>display VAR&lt;/code>, display when stop&lt;/li>
+&lt;li>&lt;code>ptype EXP&lt;/code>, type of EXP&lt;/li>
+&lt;/ul>
+&lt;h1 id="breakpoint">breakpoint&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>inf b&lt;/code>, list all&lt;/li>
+&lt;li>&lt;code>d N&lt;/code>, del the N&lt;/li>
+&lt;li>&lt;code>d br&lt;/code>, del all&lt;/li>
+&lt;li>&lt;code>en/dis N&lt;/code>, enable/disable the N&lt;/li>
+&lt;li>&lt;code>tb&lt;/code>, temporary, del when hit&lt;/li>
+&lt;li>&lt;code>b WHERE if COND&lt;/code>, conditional break&lt;/li>
+&lt;li>&lt;code>commands N&lt;/code>, eval cmd when hit&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>(gdb) commands 1
+&amp;gt;print argc
+&amp;gt;del 1
+&amp;gt;end
+&lt;/code>&lt;/pre>&lt;p>clear commands&lt;/p>
+&lt;pre>&lt;code>(gdb) commands 1
+&amp;gt;end
+&lt;/code>&lt;/pre>&lt;h1 id="jump">jump&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>s&lt;/code>, step in&lt;/li>
+&lt;li>&lt;code>fin&lt;/code>, step out&lt;/li>
+&lt;li>&lt;code>record&lt;/code> first, then use &lt;code>rn&lt;/code>, &lt;code>rs&lt;/code>, &lt;code>rc&lt;/code> to do &lt;a href="https://www.sourceware.org/gdb/wiki/ProcessRecord/Tutorial">reverse debugging&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h1 id="stack">stack&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>bt&lt;/code>, show stack&lt;/li>
+&lt;li>&lt;code>up/down N&lt;/code>, change to up/down N-th level&lt;/li>
+&lt;li>&lt;code>n 0&lt;/code>, back to top level&lt;/li>
+&lt;li>&lt;code>inf locals&lt;/code>, view locals in current stack level&lt;/li>
+&lt;li>&lt;code>thread apply all bt full&lt;/code>, inspect all threads&lt;/li>
+&lt;/ul>
+&lt;h1 id="args">args&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>$ gdb a.out --args ...&lt;/code>, passing args&lt;/li>
+&lt;li>&lt;code>run ...&lt;/code>, start with args&lt;/li>
+&lt;li>&lt;code>inf args&lt;/code>, show args&lt;/li>
+&lt;/ul>
+&lt;h1 id="macro">macro&lt;/h1>
+&lt;ul>
+&lt;li>&lt;code>CFLAGS = -ggdb3&lt;/code> with gcc, then you can debug macros (the &lt;code>#define&lt;/code> things)&lt;/li>
+&lt;li>&lt;code>inf macros&lt;/code>&lt;/li>
+&lt;li>&lt;code>inf macro NAME&lt;/code>&lt;/li>
+&lt;li>&lt;code>macro expand NAME&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h1 id="remote">remote&lt;/h1>
+&lt;ul>
+&lt;li>install &lt;code>gdbserver&lt;/code>, &lt;a href="https://www.thegeekstuff.com/2014/04/gdbserver-example/">debug remotely&lt;/a>&lt;/li>
+&lt;li>&lt;code>$ gdbserver ip:port prog&lt;/code>, start server&lt;/li>
+&lt;li>&lt;code>$ gdb prog&lt;/code>, start client&lt;/li>
+&lt;li>&lt;code>target remote ip:port&lt;/code>, connect server&lt;/li>
+&lt;/ul>
+&lt;h1 id="hackable">hackable&lt;/h1>
+&lt;ul>
+&lt;li>custom &lt;code>~/.gdbinit&lt;/code> file&lt;/li>
+&lt;li>extending with &lt;a href="https://sourceware.org/gdb/current/onlinedocs/gdb/Sequences.html#Sequences">gdb sequence&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="https://sourceware.org/gdb/wiki/STLSupport?action=AttachFile&amp;amp;do=view&amp;amp;target=stl-views-1.0.3.gdb">stl&lt;/a> is a good example&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>extending with &lt;a href="https://sourceware.org/gdb/current/onlinedocs/gdb/Python.html#Python">python&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h1 id="other-resource">other resource&lt;/h1>
+&lt;ul>
+&lt;li>&lt;a href="http://www.yolinux.com/TUTORIALS/GDB-Commands.html#STLDEREF">gdb cheat sheet&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>[fn:1]: gdb 调试段错误 &lt;a href="https://blog.csdn.net/deutschester/article/details/6739861">https://blog.csdn.net/deutschester/article/details/6739861&lt;/a>&lt;/p>- https://dreamanddead.github.io/post/gdb-pearls/ - DreamAndDead 2014-2021</description></item><item><title>浅谈全景图</title><link>https://dreamanddead.github.io/post/a-little-talk-about-panorama/</link><pubDate>Sun, 27 Sep 2020 14:02:58 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-little-talk-about-panorama/</guid><description>时长N年半 https://dreamanddead.github.io/post/a-little-talk-about-panorama/ -&lt;p>全景图本身并不神秘。&lt;/p>
 &lt;p>普通的图片，记录的只是在一个位置，一个视角下观察到的场景；
 而全景图可以记录一个位置，所有视角可观察到的场景。&lt;/p>
 &lt;p>全景图虽起名全景，但本质还是图片，可以和普通图片对比着来理解。&lt;/p>
@@ -1163,408 +1251,4 @@ $$&lt;/p>
 &lt;p>&lt;a href="https://book.douban.com/subject/26708119/">《机器学习》 周志华&lt;/a> &lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section>- https://dreamanddead.github.io/post/decision-trees/ - DreamAndDead 2014-2021</description></item><item><title>简明 SVM</title><link>https://dreamanddead.github.io/post/support-vector-machine/</link><pubDate>Mon, 14 Oct 2019 14:03:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/support-vector-machine/</guid><description>时长N年半 https://dreamanddead.github.io/post/support-vector-machine/ -&lt;p>最近研究了 SVM 算法&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> &lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>，发现它本身的推导过程真是充满了美感！
-在这里梳理其中的逻辑关系，记录下自己的理解。&lt;/p>
-&lt;h1 id="间隔-margin">间隔 Margin&lt;/h1>
-&lt;h2 id="启发-intuition">启发 Intuition&lt;/h2>
-&lt;p>考虑一个简单的二分类问题，实例的特征(feature)空间有两个维度，实例分类目标值(target)为正例和反例。&lt;/p>
-&lt;p>假如所有实例&lt;strong>完全线性可分&lt;/strong>（存在超平面将正反实例完全分开），&lt;/p>
-&lt;figure>
-&lt;img src="images/intuition.png"
-alt="x 代表正例，o 代表反例"/> &lt;figcaption>
-&lt;p>x 代表正例，o 代表反例&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>上图实线直线（在高维度也称超平面 hyper plane，后面统一简称平面）就是一种可能的分类方法。&lt;/p>
-&lt;p>在当前分类下，直观上看，正例 A 距离分类平面比正例 B 要”远“很多。
-相比之下，我们更容易相信正例 A 在当前分类方法下“更可能”是正确的，因为正例 B 距离平面”太近“了，分类方法稍微有一些参数的调整，比如变成了虚线表示的分类，正例 B 很可能就被划分为反例。&lt;/p>
-&lt;p>根据这个示例，直觉上猜想，实例距离分类平面”越远“，它”更可能“被分类正确。&lt;/p>
-&lt;h2 id="量化间隔">量化间隔&lt;/h2>
-&lt;p>在直觉的基础上，需要进一步量化所谓“远近”这个概念。
-以下使用 &lt;strong>间隔(margin)&lt;/strong> 表示实例与平面之间的距离。&lt;/p>
-&lt;p>在继续之前，先完整定义上面示例的分类问题。&lt;/p>
-&lt;p>实例 feature 有两个维度，用向量 $x$ 表示，$x \in \mathbb{R}^2 $，
-分类 target 分为正例和反例，用整数 $y$ 表示， $ y \in { +1, -1 } $，
-并且假设所有实例完全线性可分。&lt;/p>
-&lt;p>因此分类平面可以用下式来表示，&lt;/p>
-&lt;p>$$ w ^T x + b = 0 $$&lt;/p>
-&lt;p>$w, b$ 是分类平面的参数，$w \in \mathbb{R}^2, b \in \mathbb{R}$。&lt;/p>
-&lt;figure>
-&lt;img src="images/classify.png"/>
-&lt;/figure>
-&lt;p>可以计算，对于所有正例，$ w ^T x + b &amp;gt; 0 $，对于反例，$ w ^T x + b &amp;lt; 0 $，正反例有明显的符号区别。&lt;/p>
-&lt;p>根据符号的不同，就可以构建一个简单的分类假设，&lt;/p>
-&lt;p>$$
-h(x) = g(w ^T x + b)
-$$&lt;/p>
-&lt;p>$$
-g(z) = \begin{cases}
-+1, \text{ when $z &amp;gt; 0$ } \\\&lt;br>
--1, \text{ when $z &amp;lt; 0$ }
-\end{cases}
-$$&lt;/p>
-&lt;figure>
-&lt;img src="images/gz.png"/>
-&lt;/figure>
-&lt;p>在具体公式的基础上，应用最先关于“远近”的直觉，如果一个正例， $w ^T x ^{(i)} + b \gg 0$，则可以认为间隔很大，当前分类正确的可能性更高。&lt;/p>
-&lt;p>这个间隔称其为 &lt;em>函数间隔(functional margin)&lt;/em>，因为它只关心函数计算得到的结果，符号表示为 $\hat \gamma$。&lt;/p>
-&lt;p>$$
-\hat \gamma ^{(i)}= w ^T x ^{(i)} + b
-$$&lt;/p>
-&lt;p>仔细思考会发现，使用函数间隔存在一个问题，对于 $w = [1, 1] ^T, b = 1$ 和 $w = [100, 100]^T, b = 100$，两者表示的是相同的分类平面 $w ^T x + b = 0$，但是后者计算得到的函数间隔是前者的 100 倍，这就有些不合理。&lt;/p>
-&lt;p>从另一个角度来看待间隔，直接在几何平面上考虑实例点到分类平面的距离。这样就克服了上述问题，无论 $w, b$ 怎样放缩变化，只要分类平面不变，间隔就是不变的。&lt;/p>
-&lt;p>这个间隔称为 &lt;em>几何间隔(geometric margin)&lt;/em>，符号定义为 $\gamma$。容易发现，在 $||w|| = 1$ 的情况下，函数间隔和几何间隔相同。&lt;/p>
-&lt;p>$$
-\gamma ^{(i)} = \frac{w ^T x ^{(i)} + b}{||w||}
-$$&lt;/p>
-&lt;p>推导过程主要应用了，向量 $PA$ 长度为单位向量 $\dfrac{w}{||w||}$ 的 $\gamma$ 倍。&lt;/p>
-&lt;figure>
-&lt;img src="images/geometry-distance.png"/>
-&lt;/figure>
-&lt;p>$$
-w ^T (A - \gamma \frac{w}{||w||} ) + b = 0
-$$&lt;/p>
-&lt;p>$$
-w ^T A - \gamma \frac{w^T w}{||w||} + b = 0
-$$&lt;/p>
-&lt;p>$$
-\gamma ||w|| = w ^T A + b
-$$&lt;/p>
-&lt;p>$$
-\gamma = \frac{w^T A + b}{||w||}
-$$&lt;/p>
-&lt;h1 id="最优分类">最优分类&lt;/h1>
-&lt;p>对全部实例应用最开始得到的直觉，最优的分类平面，应该使所有实例到平面的间隔尽可能的远。
-具体的说，就是使所有实例中到平面的最小间隔最大化。&lt;/p>
-&lt;p>给定实例集合，&lt;/p>
-&lt;p>$$
-S = { (x ^{(i)}, y ^{(i)}); i=1,&amp;hellip;,m }
-$$&lt;/p>
-&lt;p>定义 $S$ 到分类平面的间隔为所有实例到平面的最小几何间隔，&lt;/p>
-&lt;p>$$
-||w|| = 1
-$$&lt;/p>
-&lt;p>$$
-\gamma^{(i)} = y^{(i)} * (w ^T x^{(i)} + b)
-$$&lt;/p>
-&lt;p>$$
-\gamma = \min \gamma^{(i)}\ \ \ i=1,&amp;hellip;,m
-$$&lt;/p>
-&lt;p>&lt;em>间隔永远是正值，对于正例，$y^{(i)} = +1, w ^T x^{(i)} + b &amp;gt; 0$，对于反例，$y^{(i)} = -1, w ^T x^{(i)} + b &amp;lt; 0$&lt;/em>&lt;/p>
-&lt;p>最优的分类，就是使 $\gamma$ 最大的分类。&lt;/p>
-&lt;p>$$
-\begin{align}
-&amp;amp; max_{\gamma,w,b}\ \gamma\&lt;br>
-s.t.\ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq \gamma,\ i=1,&amp;hellip;,m\&lt;br>
-&amp;amp; ||w|| = 1
-\end{align}
-$$&lt;/p>
-&lt;p>根据凸优化理论&lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>，$||w|| = 1$ 在这里不是一个仿射函数，优化问题不符合 QCQP 的求解条件。&lt;/p>
-&lt;p>变通地，使用函数间隔改写方程，&lt;/p>
-&lt;p>$$
-\begin{align}
-&amp;amp; max_{\hat \gamma,w,b}\ \frac{\hat \gamma}{||w||}\&lt;br>
-s.t.\ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq \hat \gamma,\ i=1,&amp;hellip;,m
-\end{align}
-$$&lt;/p>
-&lt;p>前面讨论过使用函数间隔遇到的问题，在保持分类平面不变的情况下，函数间隔可以随着 $ w, b $ 的放缩而放缩。
-同样地，在最优解情况，总可以放缩 $w, b$，使得 $\hat \gamma = 1$。&lt;/p>
-&lt;p>于是问题就转化为&lt;/p>
-&lt;p>$$
-\begin{align}
-&amp;amp; max_{w,b}\ \frac{1}{||w||} \&lt;br>
-s.t.\ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq 1,\ i=1,&amp;hellip;,m
-\end{align}
-$$&lt;/p>
-&lt;p>将 $||w||$ 取倒数平方，$max \rightarrow min$，问题就转化成了 QCQP 的形式，可以应用已知的凸优化方法进行求解。&lt;/p>
-&lt;p>$$
-\begin{align}
-&amp;amp; min_{w,b}\ \frac 1 2 ||w||^2 \&lt;br>
-s.t.\ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq 1,\ i=1,&amp;hellip;,m
-\end{align}
-$$&lt;/p>
-&lt;p>求解得到 $w, b$，其参数构成的超平面就是之前假设的最优分类。&lt;/p>
-&lt;h2 id="计算最优化">计算最优化&lt;/h2>
-&lt;p>这个问题是一个经典的凸优化问题，&lt;/p>
-&lt;p>$$
-\begin{align}
-&amp;amp; min_{w,b}\ \frac 1 2 ||w||^2 \&lt;br>
-s.t.\ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq 1,\ i=1,&amp;hellip;,m
-\end{align}
-$$&lt;/p>
-&lt;p>将条件转化为 $\leq$ 的形式，&lt;/p>
-&lt;p>$$
-g_i(w, b) = - y^{(i)} * (w ^T x^{(i)} + b) + 1 \leq 0
-$$&lt;/p>
-&lt;p>使用拉格朗日乘子法&lt;sup id="fnref:4">&lt;a href="#fn:4" class="footnote-ref" role="doc-noteref">4&lt;/a>&lt;/sup> &lt;sup id="fnref:5">&lt;a href="#fn:5" class="footnote-ref" role="doc-noteref">5&lt;/a>&lt;/sup> &lt;sup id="fnref:6">&lt;a href="#fn:6" class="footnote-ref" role="doc-noteref">6&lt;/a>&lt;/sup>，转化为拉格朗日函数(lagrangian)，&lt;/p>
-&lt;p>$$
-\mathcal{L} (w, b, \alpha) = \frac 1 2 ||w||^2 + \sum_{i=1}^{m} \alpha_i \left[- y^{(i)} * (w ^T x^{(i)} + b) + 1 \right]
-$$&lt;/p>
-&lt;p>根据不等式约束的 KKT 条件&lt;sup id="fnref:7">&lt;a href="#fn:7" class="footnote-ref" role="doc-noteref">7&lt;/a>&lt;/sup>，在极值处 $w, b$，存在 $\alpha$ 满足&lt;/p>
-&lt;p>$$
-\triangledown _w \mathcal{L} (w, b, \alpha) = 0
-$$&lt;/p>
-&lt;p>$$
-\triangledown _b \mathcal{L} (w, b, \alpha) = 0
-$$&lt;/p>
-&lt;p>$$
-g_i(w , b ) \le 0
-$$&lt;/p>
-&lt;p>$$
-\alpha_i \geq 0
-$$&lt;/p>
-&lt;p>$$
-\alpha_i g_i(w , b ) = 0
-$$&lt;/p>
-&lt;p>从另外的角度&lt;sup id="fnref:8">&lt;a href="#fn:8" class="footnote-ref" role="doc-noteref">8&lt;/a>&lt;/sup> &lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>来观察拉格朗日函数，
-$\min\limits_{w, b} \max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$ 和约束条件下的 $\min\limits_{w, b} \dfrac 1 2 ||w||^2$ 问题是等价的。&lt;/p>
-&lt;p>假如存在 $g_i &amp;gt; 0$ 脱离了约束，则可以使对应的 $\alpha_i = \infty$，相应的 $\max\limits_{\alpha} \mathcal{L} (w, b, \alpha) = \infty$；
-如果所有 $g_i \le 0$ 满足约束，则只有 $\alpha_i = 0\ (\text{unless } g_i = 0)$ 才能确保 $\max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$ 取最大值，此时 $\max\limits_{\alpha} \mathcal{L} (w, b, \alpha) = \dfrac 1 2 ||w||^2$。&lt;/p>
-&lt;p>所以对于 $\min\limits_{w, b} \max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$，必定在满足 $g_i \le 0$ 的约束时才能取到最小值（表面上没有约束，其实过滤了不满足约束的值）。&lt;/p>
-&lt;p>假设原(primal)问题最优解为 $p^* = \min\limits_{w, b} \max\limits_{\alpha} \mathcal{L} (w, b, \alpha)$，
-考虑其对偶(dual)问题，$d^* = \max\limits_{\alpha} \min\limits_{w, b} \mathcal{L} (w, b, \alpha)$，&lt;/p>
-&lt;p>根据弱对偶性(weak duality)，始终满足&lt;/p>
-&lt;p>$$
-d^* \le p^*
-$$&lt;/p>
-&lt;p>因为，假如原问题最优解取值为 $w_p, b_p, \alpha_p$，对偶问题最优解取值为 $w_d, b_d, \alpha_d$，则&lt;/p>
-&lt;p>$$
-d^* = \mathcal{L} (w_d, b_d, \alpha_d) \le \mathcal{L} (w_p, b_p, \alpha_d) \le \mathcal{L} (w_p, b_p, \alpha_p) = p^*
-$$&lt;/p>
-&lt;p>在这里，问题满足 Slater 条件（&lt;em>充分条件，暂时不讨论&lt;/em>），故问题满足强对偶性(strong duality)，$d^* = p^*$。&lt;/p>
-&lt;p>所以可以通过求解对偶问题，得到原问题的解，以下先求解 $\min\limits_{w, b} \mathcal{L} (w, b, \alpha)$，将 $\alpha$ 看作常量。&lt;/p>
-&lt;p>$$
-\triangledown _w \mathcal{L} (w, b, \alpha) = 0
-$$&lt;/p>
-&lt;p>$$
-w + \sum_{i=1}^{m} \alpha_i (-y ^{(i)} x ^{(i)}) = 0
-$$&lt;/p>
-&lt;p>$$
-w = \sum_{i=1}^{m} \alpha_i y ^{(i)} x ^{(i)}
-$$&lt;/p>
-&lt;p>$$
-\triangledown _b \mathcal{L} (w, b, \alpha) = 0
-$$&lt;/p>
-&lt;p>$$
-\sum_{i=1}^{m} \alpha_i y ^{(i)} = 0
-$$&lt;/p>
-&lt;p>根据上面求得的公式，代入 $\mathcal{L} (w, b, \alpha)$，消去 $w, b$，&lt;/p>
-&lt;p>$$
-\begin{align}
-\mathcal{L} (w, b, \alpha) &amp;amp; = \frac{1}{2} w^T w + \sum_{i=1}^{m} (-w^T \alpha_i y^{(i)} x^{(i)} - \alpha_i y^{(i)} b + \alpha_i) \\\&lt;br>
-&amp;amp; = \frac{1}{2} w^T w + \sum_{i=1}^{m} -w^T \alpha_i y^{(i)} x^{(i)} + \sum_{i=1}^{m} - \alpha_i y^{(i)} b + \sum_{i=1}^{m} \alpha_i \\\&lt;br>
-&amp;amp; = \frac{1}{2} w^T w - w^T w + 0 + \sum_{i=1}^{m} \alpha_i \\\&lt;br>
-&amp;amp; = - \frac{1}{2} w^T w + \sum_{i=1}^{m} \alpha_i \\\&lt;br>
-&amp;amp; = \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\&lt;br>
-\end{align}
-$$&lt;/p>
-&lt;p>现在问题转化为对称问题的最大值问题（之后使用 SMO 算法&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>来求解）。&lt;/p>
-&lt;p>$$
-\begin{align}
-\max \limits_{\alpha} \ &amp;amp; \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\&lt;br>
-\text{s.t.} \ &amp;amp; \alpha_i \geq 0 \\\&lt;br>
-&amp;amp; \sum_{i=1}^{m} \alpha_i y^{(i)} = 0
-\end{align}
-$$&lt;/p>
-&lt;h2 id="支持向量">支持向量&lt;/h2>
-&lt;p>假如已经通过最优化方法求得 $w, b, \alpha$，得到分类平面 $ {w} ^T x + b = 0$，
-对于新的未知分类的实例，可以通过计算 ${w} ^T x + b$，根据符号的正负来进行分类其是正例还是反例。&lt;/p>
-&lt;p>$$
-{w} ^T x + b = \sum_{i=1}^{m} \alpha_i y^{(i)} {x^{(i)}} ^T x + b \\\&lt;br>
-= \sum_{i=1}^{m} \alpha_i y^{(i)} \langle x^{(i)}, x \rangle + b
-$$&lt;/p>
-&lt;p>根据之前讨论的 KKT 条件，&lt;/p>
-&lt;p>$$
-g_i(w, b) \le 0
-$$&lt;/p>
-&lt;p>$$
-\alpha_i \geq 0
-$$&lt;/p>
-&lt;p>$$
-\alpha_i g_i(w , b ) = 0
-$$&lt;/p>
-&lt;p>当 $g_i(w, b) &amp;lt; 0$，即 $y^{(i)} (w^T x^{(i)} + b) &amp;gt; 1$ 时，$\alpha_i= 0$；
-当 $g_i(w, b) = 0$，即 $y^{(i)} (w^T x^{(i)} + b) = 1$ 时，$\alpha_i &amp;gt; 0$。&lt;/p>
-&lt;p>对于 $\alpha_i = 0$ 的部分，都可以在分类计算中省略，只有 $\alpha_i &amp;gt; 0$ 才参与计算，大大减少了计算量。&lt;/p>
-&lt;figure>
-&lt;img src="images/support.png"/>
-&lt;/figure>
-&lt;p>从图形来看，当 $y^{(i)} (w ^T x^{(i)} + b) = 1，\alpha_i &amp;gt; 0$，对应的实例 $(x^{(i)}, y^{(i)})$ 是距离分类平面最近的点，称作支持向量（这也是支持向量机名字的由来），也只有相应的支持向量参与判别新分类的运算。&lt;/p>
-&lt;h1 id="核方法-kernel-trick">核方法 kernel trick&lt;/h1>
-&lt;p>之前的所有讨论，假设限定于所有实例完全线性可分。存在一些情况，在实例空间下，所有实例不能完全线性可分。
-这时可以通过空间的映射 $\phi(x)$，将原空间映射到新空间，在新空间里，实例也许就完全线性可分了。
-在新空间计算得到分类平面后，将其逆向转换回来，在原空间就得到了非线性的分类平面。&lt;/p>
-&lt;figure>
-&lt;img src="images/phi.png"/>
-&lt;/figure>
-&lt;p>假如将所有实例映射到新空间，进行分类平面的求解。
-观察最优化的求解过程，将 $x^{(i)} \rightarrow \phi(x^{(i)})$，并不影响求解过程（因为求解的变量为 $w, b, \alpha$, 而 $x^{(i)}$ 看作常量），只需要将所有的 $x^{(i)} $ 进行替换。&lt;/p>
-&lt;p>相应的在新实例的分类计算中，$ \langle x^{(i)}, x \rangle \rightarrow \langle \phi(x^{(i)}), \phi(x) \rangle$。&lt;/p>
-&lt;p>对于新实例的分类结果，只涉及到 $\langle x^{(i)}, x \rangle$ 的计算，而不涉及 $x^{(i)}$ 单个值的计算。&lt;/p>
-&lt;p>定义核函数来提取这种共性&lt;/p>
-&lt;p>$$
-K(x, z) = \phi(x)^T\phi(z)
-$$&lt;/p>
-&lt;p>原先所有 $\langle x^{(i)}, x^{(j)} \rangle$ 的地方就用 $K(x^{(i)}, x^{(j)} )$ 来代替。&lt;/p>
-&lt;p>$K(x, z)$ 可以是一个显性表示，比如通过具体的 $\phi(x)^T\phi(z)$ 来得到，也可以是一个隐性表示，比如高斯核，&lt;/p>
-&lt;p>$$
-K(x, z) = e^{- ||x-z||^2 / 2 d^2}
-$$&lt;/p>
-&lt;p>并非可以显性的得到 $\phi(x), \phi(z)$ 的表示，但是 $K(x, z)$ 一定是可以分解的，因此它是一个有效的核函数。&lt;/p>
-&lt;p>如何判定一个隐性的核函数是否有效？&lt;/p>
-&lt;p>根据 Mercer 定理，K 是有效的核函数，当且仅当 Kernal matrix 是对称半正定的&lt;/p>
-&lt;p>Kernal martix 是一个矩阵 $K$，$K_{ij} = K(x^{(i)}, x^{(j)})$&lt;/p>
-&lt;p>虽然使用核方法，SVM 可以进行非线性判别，但是并没有明确的准则来决定如何选择一个恰当的空间映射 $\phi(x)$，以及在相应映射下使用什么参数，并不确定哪一种映射可以反映问题的本质。&lt;/p>
-&lt;p>所以在实际中，通常使用 &lt;a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">GridSearch&lt;/a> 来遍历搜索，选择效果最好的核函数和参数。&lt;/p>
-&lt;h1 id="soft-margin-svm">soft margin SVM&lt;/h1>
-&lt;p>之前讨论的方法，假定所有的实例是完全线性可分的，但是也存在不完全线性可分的情况。
-比如，&lt;/p>
-&lt;figure>
-&lt;img src="images/nonlinear.png"/>
-&lt;/figure>
-&lt;p>在这种情况下，可以使用核方法，得到非线性分类．
-但是总体上看，实例还是线性分类的，如果只因为少量的分类错误就使用非线性的方法，代价太大了。&lt;/p>
-&lt;figure>
-&lt;img src="images/soft.png"/>
-&lt;/figure>
-&lt;p>之前假定实例完全线性可分，使用的是*硬间隔(hard margin)&lt;em>的判别方法。
-现在引入一种&lt;/em>软间隔(soft margin)*的判别方法，使分类可以容忍部分错误。&lt;/p>
-&lt;p>引入松弛变量 $\xi$，由软间隔定义的优化问题如下，&lt;/p>
-&lt;p>$$
-\begin{align}
-&amp;amp; \min_{w,b,\xi}\ \frac 1 2 ||w||^2 + C \sum_{i=1}^{m} \xi^{(i)}\&lt;br>
-\text{s.t.} \ &amp;amp; y^{(i)} * (w ^T x^{(i)} + b) \geq 1 - \xi^{(i)},\ i=1,&amp;hellip;,m\&lt;br>
-&amp;amp; \xi^{(i)} \geq 0 \&lt;br>
-\end{align}
-$$&lt;/p>
-&lt;p>相比于之前的硬间隔问题，允许间隔 $&amp;lt; 1$ ，但是计入相应的惩罚，由 $C$ 控制了惩罚的权重，$C$ 越大，对分类错误的容忍度越低。&lt;/p>
-&lt;h2 id="求解最优化">求解最优化&lt;/h2>
-&lt;p>软间隔最优化求解的过程大体和硬间隔相似。&lt;/p>
-&lt;p>$$
-g_i(w, b, \xi) = - y^{(i)} * (w ^T x^{(i)} + b) + 1 - \xi^{(i)} \leq 0
-$$&lt;/p>
-&lt;p>写出拉格朗日函数，&lt;/p>
-&lt;p>$$
-\mathcal{L} (w, b, \xi, \alpha, \beta) = \frac 1 2 ||w||^2 + C \sum_{i=1}^{m} \xi^{(i)} +
-\sum_{i=1}^{m} \alpha_i (1 - \xi^{(i)} - y^{(i)} * (w ^T x^{(i)} + b) + \sum_{i=1}^{m} - \beta_i \xi^{(i)} \&lt;br>
-$$&lt;/p>
-&lt;p>满足 KKT 条件，&lt;/p>
-&lt;p>$$
-g_i(w, b, \xi) \le 0 \&lt;br>
-\alpha_i \geq 0 \&lt;br>
-\alpha_i g_i(w, b, \xi) = 0 \&lt;br>
--\xi^{(i)} \le 0 \&lt;br>
-\beta_i \geq 0 \&lt;br>
-\beta_i \xi^{(i)} = 0 \&lt;br>
-$$&lt;/p>
-&lt;p>求解对偶问题，&lt;/p>
-&lt;p>$$
-\triangledown _w \mathcal{L} (w, b, \xi, \alpha, \beta) = 0
-$$&lt;/p>
-&lt;p>$$
-w = \sum_{i=1}^{m} \alpha_i y^{(i)} x^{(i)}
-$$&lt;/p>
-&lt;p>$$
-\triangledown _b \mathcal{L} (w, b, \xi, \alpha, \beta) = 0
-$$&lt;/p>
-&lt;p>$$
-\sum_{i=1}^{m} \alpha_i y^{(i)} = 0
-$$&lt;/p>
-&lt;p>$$
-\triangledown _{\xi^{(i)}} \mathcal{L} (w, b, \xi, \alpha, \beta) = 0
-$$&lt;/p>
-&lt;p>$$
-C - \alpha_i - \beta_i = 0
-$$&lt;/p>
-&lt;p>$$
-\alpha_i + \beta_i = C
-$$&lt;/p>
-&lt;p>将求导得到的上式代入 $\mathcal{L} (w, b, \xi, \alpha, \beta)$，消去 $w, b, \xi$，&lt;/p>
-&lt;p>$$
-\begin{align}
-\max \limits_{\alpha} \ &amp;amp; \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\&lt;br>
-\text{s.t.} \ &amp;amp; 0 \leq \alpha_i \leq C \ (\text{because } \alpha_i \ge 0, \beta_i \ge 0, \alpha_i + \beta_i = C) \\\&lt;br>
-&amp;amp; \sum_{i=1}^{m} \alpha_i y^{(i)} = 0
-\end{align}
-$$&lt;/p>
-&lt;p>令人惊奇的是，最终结果没有大的改变，只是对 $\alpha^{(i)}$ 多了约束 $\le C$。&lt;/p>
-&lt;p>根据 KKT 条件，&lt;/p>
-&lt;ul>
-&lt;li>当 $\alpha_i = 0,\ \beta_i = C$ 时，$\xi^{(i)} = 0,\ g_i(w, b, \xi) &amp;lt; 0,\ y^{(i)} * (w ^T x^{(i)} + b) &amp;gt; 1$，实例在最大间隔外；&lt;/li>
-&lt;li>当 $\alpha_i = C,\ \beta_i = 0$ 时，$\xi^{(i)} &amp;gt; 0,\ g_i(w, b, \xi) = 0,\ y^{(i)} * (w ^T x^{(i)} + b) = 1 - \xi^{(i)} &amp;lt; 1$，实例落在最大间隔内，当 $\xi^{(i)} &amp;gt; 1$ 时被错误分类；&lt;/li>
-&lt;li>当 $0 &amp;lt; \alpha_i &amp;lt; C,\ 0 &amp;lt; \beta_i &amp;lt; C$ 时，$\xi^{(i)} = 0,\ g_i(w, b, \xi) = 0,\ y^{(i)} * (w ^T x^{(i)} + b) = 1$，实例是支持向量。&lt;/li>
-&lt;/ul>
-&lt;p>至于 $\xi$ 的值，有多种不同的损失函数来计量，这里不讨论。&lt;/p>
-&lt;h1 id="smo-算法">SMO 算法&lt;/h1>
-&lt;p>SMO 算法用来求解上面最优化得到的 $\max \limits_{\alpha}\ &amp;hellip;$ 问题。&lt;/p>
-&lt;p>SMO 启发于坐标上升方法。&lt;/p>
-&lt;p>一个简单的示例，对于一个二维凸函数，每次固定一个维度，选取另一个维度作为变量，进行最大化求解。&lt;/p>
-&lt;p>由等高线来看，在固定一个维度的前提下，找到函数的最大值，即与等高线相切的点，&lt;/p>
-&lt;figure>
-&lt;img src="images/contour.png"/>
-&lt;/figure>
-&lt;p>由三维立体来看，逐个维度取最大值，最终会慢慢接近极值点。&lt;/p>
-&lt;figure>
-&lt;img src="images/contour-3d.png"/>
-&lt;/figure>
-&lt;p>下面类比的来看，用 SMO 求解软间隔的最优化问题，&lt;/p>
-&lt;p>$$
-\begin{align}
-&amp;amp; \max \limits_{\alpha} \sum_{i=1}^{m} \alpha_i - \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle \\\&lt;br>
-\text{s.t.} \ &amp;amp; 0 \leq \alpha_i \leq C \\\&lt;br>
-&amp;amp; \sum_{i=1}^{m} \alpha_i y^{(i)} = 0
-\end{align}
-$$&lt;/p>
-&lt;p>使用同样的思路，不过在这里维度有所增加，变成了 m 维。
-逐个 $\alpha_i $ 作为变量，进行坐标上升求极值。&lt;/p>
-&lt;p>但是因为有等式关系存在，&lt;/p>
-&lt;p>$$
-\alpha_1 y^{(1)} = -\sum_{i=2}^{m} \alpha_i y^{(i)}
-$$&lt;/p>
-&lt;p>$\alpha_i $ 受到等式的约束，所以不能通过逐个调整 $\alpha_i $ 来调优。&lt;/p>
-&lt;p>可以变通的同时选择两个 $\alpha_i, \alpha_j $ 作为变量，用 $\alpha_j $ 表示 $\alpha_i $，代入原方程消去 $\alpha_j$，这样问题就符合约束条件，可以在 $\alpha_i$ 维度上进行坐标上升优化。&lt;/p>
-&lt;p>化简后的问题是关于 $\alpha_i$ 的一元二次问题，在相应的范围内求极值，是一个简单的问题。&lt;/p>
-&lt;p>比如对于 $\alpha_1, \alpha_2$，&lt;/p>
-&lt;p>$$
-0 \le \alpha_1 \le 0
-$$&lt;/p>
-&lt;p>$$
-0 \le \alpha_2 \le 0
-$$&lt;/p>
-&lt;p>$$
-\alpha_2 y^{(2)} = - \sum_{i=3}^{m} \alpha_i y^{(i)} - \alpha_1 y^{(1)}
-$$&lt;/p>
-&lt;figure>
-&lt;img src="images/aiaj.png"/>
-&lt;/figure>
-&lt;p>对于不同的情况，$\alpha_i$ 取值范围会受到不同的影响。&lt;/p>
-&lt;p>对于硬间隔问题，没有 $\alpha_i \le C$ 的条件，但是思路是一样的。&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
-&lt;hr>
-&lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
-&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/CS229%20Lecture%20note%203.pdf">CS229 Lecture note 3&lt;/a> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:2" role="doc-endnote">
-&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/A%20Gentle%20Introduction%20to%20Support%20Vector%20Machines%20in%20Biomedicine.pdf">Gentle Introduction to Support Vector Machines in Biomedicine&lt;/a> &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:3" role="doc-endnote">
-&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/CS229%20Lecture%20Review%20note%204.pdf">CS229 Lecture Review note 4&lt;/a> &lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:4" role="doc-endnote">
-&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20%28Com%20S%20477%20577%20Notes%29.pdf">Lagrange Multipliers (Com S 477 577 Notes)&lt;/a> &lt;a href="#fnref:4" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:5" role="doc-endnote">
-&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20without%20Permanent%20Scarring.pdf">Lagrange Multipliers without Permanent Scarring&lt;/a> &lt;a href="#fnref:5" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:6" role="doc-endnote">
-&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20for%20Inequality%20Constraints.pdf">Lagrange Multipliers for Inequality Constraints&lt;/a> &lt;a href="#fnref:6" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:7" role="doc-endnote">
-&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/Lagrange%20Multipliers%20and%20the%20Karush-Kuhn-Tucker%20conditions.pdf">Lagrange Multipliers and the Karush-Kuhn-Tucker conditions&lt;/a> &lt;a href="#fnref:7" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:8" role="doc-endnote">
-&lt;p>&lt;a href="http://dreamanddead-github-io.oss-cn-hongkong.aliyuncs.com/SVM/CS229%20Lecture%20Review%20note%203.pdf">CS229 Lecture Review note 3&lt;/a> &lt;a href="#fnref:8" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;/section>- https://dreamanddead.github.io/post/support-vector-machine/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;/section>- https://dreamanddead.github.io/post/decision-trees/ - DreamAndDead 2014-2021</description></item></channel></rss>

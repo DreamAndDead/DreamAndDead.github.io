@@ -1,4 +1,198 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 07 Apr 2021 18:21:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Play curl with http</title><link>https://dreamanddead.github.io/post/play-curl-with-http/</link><pubDate>Mon, 09 Apr 2018 10:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/play-curl-with-http/</guid><description>时长N年半 https://dreamanddead.github.io/post/play-curl-with-http/ -&lt;p>curl是一款强大的网络传输工具，支持多种协议，在HTTP的支持方面尤其为人称道。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 22 Apr 2021 13:27:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Comfortable way when testing HTTPS site</title><link>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</link><pubDate>Wed, 11 Apr 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</guid><description>时长N年半 https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ -&lt;p>网站初期一直使用http，近期购买了ssl证书，预期将网站全面升级使用https。&lt;/p>
+&lt;p>当部署https后，居然出现了这种问题&amp;hellip;&lt;/p>
+&lt;h1 id="测试https">测试HTTPS&lt;/h1>
+&lt;h2 id="部署环境">部署环境&lt;/h2>
+&lt;p>在线网实施之前，定要先在内部环境进行测试，确保无误。&lt;/p>
+&lt;p>因为内部有其它服务依赖网站http服务，所以要将http与https同时保留，
+于是简单的在nginx配置了https，也保留了http&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">server&lt;/span> {
+&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">80&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">443&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl&lt;/span> &lt;span style="color:#00688b">on&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.crt&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate_key&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.key&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">location&lt;/span> &lt;span style="color:#cd5555">/&lt;/span> {
+&lt;span style="color:#8b008b;font-weight:bold">include&lt;/span> &lt;span style="color:#cd5555">proxy_params&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">proxy_pass&lt;/span> &lt;span style="color:#cd5555">http://10.28.18.6:8000&lt;/span>;
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="主要问题">主要问题&lt;/h2>
+&lt;p>有人可能会想，理论上，只是变更协议而已，不会引发什么问题，而实际中，有多种限制。&lt;/p>
+&lt;p>对于刚迁移到https的网站，最可能出现的问题就是 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content">mixed content&lt;/a>&lt;/p>
+&lt;blockquote>
+&lt;p>mixed content是一种安全策略，本着http协议是不安全的前提，浏览器https环境下限制对http资源的引用。&lt;/p>
+&lt;/blockquote>
+&lt;p>而很多时候，很多静态链接固定写在html中，这样在https环境下加载就会受到限制&lt;/p>
+&lt;p>详细来说，混合内容（mixed content）分为&lt;/p>
+&lt;ul>
+&lt;li>被动混合内容&lt;/li>
+&lt;li>主动混合内容&lt;/li>
+&lt;/ul>
+&lt;p>假如在https环境下，加载http资源，而所有http资源都可能被黑客从中替换，被动混合内容指的就是即使被恶意替换，也不会
+引起过分安全问题的资源，如&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>&amp;lt;img&amp;gt;&lt;/code>&lt;/li>
+&lt;li>&lt;code>&amp;lt;audio&amp;gt;&lt;/code>&lt;/li>
+&lt;li>&lt;code>&amp;lt;video&amp;gt;&lt;/code>&lt;/li>
+&lt;li>etc&lt;/li>
+&lt;/ul>
+&lt;p>主动混合内容就是相对可能会引发危险的一类，如&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>&amp;lt;script&amp;gt;&lt;/code>&lt;/li>
+&lt;li>&lt;code>&amp;lt;link&amp;gt;&lt;/code>&lt;/li>
+&lt;li>&lt;code>&amp;lt;iframe&amp;gt;&lt;/code>&lt;/li>
+&lt;li>XMLHttpRequest&lt;/li>
+&lt;li>fetch()&lt;/li>
+&lt;li>etc&lt;/li>
+&lt;/ul>
+&lt;p>详细可参考 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content">MDN&lt;/a>&lt;/p>
+&lt;p>对于被动混合内容，浏览器会报warning，但不会阻止加载；
+而主动混合内容，浏览器则直接阻止加载。&lt;/p>
+&lt;p>于是，对于一个新迁移https的网站，就有可能出现网站脚本加载不正常，ajax请求没有返回值之类的问题。&lt;/p>
+&lt;h2 id="strict-mixed-content">strict mixed-content&lt;/h2>
+&lt;p>对于网站的测试，自然是用更严格的要求，正是取乎其上，得乎其中。&lt;/p>
+&lt;p>借助&lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">Content-Security-Policy&lt;/a>其中的&lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy__by_cnvoid/block-all-mixed-content">block-all-mixed-content&lt;/a>规则，禁止所有混合内容的加载。
+可以在nginx中，添加response header来实践&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">server&lt;/span> {
+&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">80&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">443&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl&lt;/span> &lt;span style="color:#00688b">on&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.crt&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate_key&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.key&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">location&lt;/span> &lt;span style="color:#cd5555">/&lt;/span> {
+&lt;span style="color:#8b008b;font-weight:bold">include&lt;/span> &lt;span style="color:#cd5555">proxy_params&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">proxy_pass&lt;/span> &lt;span style="color:#cd5555">http://10.28.18.6:8000&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">add_header&lt;/span> &lt;span style="color:#cd5555">Content-Security-Policy&lt;/span> &lt;span style="color:#cd5555">block-all-mixed-content&lt;/span>;
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="auto-secure-urls">auto secure urls&lt;/h2>
+&lt;p>测试难免会出现有遗漏的情况，如果mixed content的问题被发布到线网，可不是一件开心的事情。&lt;/p>
+&lt;p>好在&lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">Content-Security-Policy&lt;/a> 还提供了 &lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy/upgrade-insecure-requests">upgrade-insecure-requests&lt;/a> 选项，
+告知浏览器自动将不安全的http url替换为https来访问。&lt;/p>
+&lt;p>对于庞大的网站，可以不用重改代码，非常方便。
+对于我们，可以将其作为线网的配置，为网站的正常使用加保险。
+可以在nginx中配置&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">add_header&lt;/span> &lt;span style="color:#cd5555">Content-Security-Policy&lt;/span> &lt;span style="color:#cd5555">upgrade-insecure-requests&lt;/span>;
+&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="hsts">HSTS&lt;/h1>
+&lt;h2 id="http-failed">http failed&lt;/h2>
+&lt;p>目前网站同时开启http与https，
+本以为两协议不同，单独访问并不相关，
+但是在测试时，加载ajax，出现问题&lt;code>Response for preflight is invalid (redirect)&lt;/code>&lt;/p>
+&lt;figure>
+&lt;img src="images/response-for-preflight.png"/>
+&lt;/figure>
+&lt;p>再观察数据包情况&lt;/p>
+&lt;figure>
+&lt;img src="images/307-internal-redirect.png"/>
+&lt;/figure>
+&lt;p>http请求自动重定向为https请求，wired。&lt;/p>
+&lt;p>响应头中有提到，想必它就是导致问题的原因。&lt;/p>
+&lt;pre>&lt;code>Non-Authoritative-Reason: HSTS
+&lt;/code>&lt;/pre>&lt;h2 id="whats-hsts">what&amp;rsquo;s HSTS&lt;/h2>
+&lt;p>全名HTTP Strict Transport Security，是一种技术，目的是为了用户访问网站的安全。&lt;/p>
+&lt;p>网站即使部署https，旧有http入口也应当保留，将其合理的引导到更安全的https网站中，
+一般情况下使用301重定向。&lt;/p>
+&lt;p>严格来讲，这是不够安全的，因为到达https需要一次http的引导，而这唯一一次http访问，可能被黑客利用。
+这也就是HSTS所解决的问题，服务器设置头Strict-Transport-Security，告知浏览器，只使用https来请求网站，省去了用来引导重定向的http请求，
+使访问更加安全。&lt;/p>
+&lt;p>以weibo示例&lt;/p>
+&lt;ul>
+&lt;li>网站开启https，同时保持旧有http服务入口&lt;/li>
+&lt;li>使用301永久重定向，引导至https&lt;/li>
+&lt;li>第一次的引导，是不可避免的，如果没有HSTS，每一次到达https，都会使用http进行重定向，增加安全风险&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>$ curl -v http://weibo.com
+&amp;gt; GET / HTTP/1.1
+&amp;gt; Host: weibo.com
+&amp;gt; User-Agent: curl/7.47.0
+&amp;gt; Accept: */*
+&amp;gt;
+&amp;lt; HTTP/1.1 301 Moved Permanently
+&amp;lt; Server: WeiBo
+&amp;lt; Date: Wed, 11 Apr 2018 00:22:41 GMT
+&amp;lt; Content-Type: text/html
+&amp;lt; Content-Length: 276
+&amp;lt; Connection: keep-alive
+&amp;lt; Location: https://weibo.com/
+&amp;lt; LB_HEADER: venus50
+&amp;lt;
+&amp;lt;!DOCTYPE HTML PUBLIC &amp;quot;-//IETF//DTD HTML 2.0//EN&amp;quot;&amp;gt;
+&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;&amp;lt;title&amp;gt;301 Moved Permanently&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt;
+&amp;lt;body bgcolor=&amp;quot;white&amp;quot;&amp;gt;
+&amp;lt;h1&amp;gt;301 Moved Permanently&amp;lt;/h1&amp;gt;
+&amp;lt;p&amp;gt;The requested resource has been assigned a new permanent URI.&amp;lt;/p&amp;gt;
+&amp;lt;hr/&amp;gt;Powered by WeiBo&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>一旦用户访问了https，HSTS就会发挥作用，设置 Strict-Transport-Security，浏览器缓存HSTS策略，直到过期。
+之后所有http的访问，都会由浏览器主动修改为https，避免了重定向这一步&lt;/p>
+&lt;pre>&lt;code>$ curl -I https://weibo.com
+&amp;gt; GET / HTTP/1.1
+&amp;gt; Host: weibo.com
+&amp;gt; User-Agent: curl/7.47.0
+&amp;gt; Accept: */*
+&amp;gt;
+&amp;lt; HTTP/1.1 302 Moved Temporarily
+&amp;lt; Server: WeiBo/LB
+&amp;lt; Date: Wed, 11 Apr 2018 00:21:38 GMT
+&amp;lt; Content-Type: text/html
+&amp;lt; Transfer-Encoding: chunked
+&amp;lt; Connection: keep-alive
+&amp;lt; Expires: Mon, 26 Jul 1997 05:00:00 GMT
+&amp;lt; Last-Modified: Wed, 11 Apr 2018 00:21:38 GMT
+&amp;lt; Pramga: no-cache
+&amp;lt; Content-Security-Policy: block-all-mixed-content;
+&amp;lt; Cache-Control: no-cache, no-store
+&amp;lt; Location: https://passport.weibo.com/visitor/visitor?entry=miniblog&amp;amp;a=enter&amp;amp;url=https%3A%2F%2Fweibo.com%2F&amp;amp;domain=.weibo.com&amp;amp;ua=php-sso_sdk_client-0.6.23&amp;amp;_rand=1523406098.2996
+&amp;lt; DPOOL_HEADER: dagda26
+&amp;lt; Set-Cookie: YF-Ugrow-G0=57484c7c1ded49566c905773d5d00f82;Path=/
+&amp;lt; LB_HEADER: venus242
+&amp;lt; Strict-Transport-Security: max-age=31536000; preload
+&lt;/code>&lt;/pre>&lt;h2 id="hsts-works">HSTS works&lt;/h2>
+&lt;p>测试时，访问https是这样的&lt;/p>
+&lt;figure>
+&lt;img src="images/upgrade-insecure-requests.png"/>
+&lt;/figure>
+&lt;p>看到来自服务器设置的HSTS&lt;/p>
+&lt;pre>&lt;code>Strict-Transport-Security: max-age=31536000
+&lt;/code>&lt;/pre>&lt;p>浏览器在某个地方保存了这个策略，只需要删除它，就可以临时解决我们的问题。&lt;/p>
+&lt;p>删除之前，仔细观察数据包，在request头部，有一个之前没出现过的字段&lt;/p>
+&lt;pre>&lt;code>Upgrade-Insecure-Requests: 1
+&lt;/code>&lt;/pre>&lt;p>这个字段和mixed content中的upgrade-insecure-requests很像，但是没有绝对关系。&lt;/p>
+&lt;p>作为request的字段，
+浏览器用来告知服务器，自己倾向于使用更安全的方式来使用服务，
+于是在https环境下，服务器设置Strict-Transport-Security。
+具体见&lt;a href="https://stackoverflow.com/questions/31950470/what-is-the-upgrade-insecure-requests-http-header?utm_medium=organic&amp;amp;utm_source=google_rich_qa&amp;amp;utm_campaign=google_rich_qa">stackoverflow&lt;/a>&lt;/p>
+&lt;h2 id="clear-hsts-cache">clear HSTS cache&lt;/h2>
+&lt;p>HSTS有时间周期，在时间内浏览器会应用安全规则。
+浏览器可以清理cookie，自然也可以清理HSTS cache&lt;/p>
+&lt;p>就chrome来说&lt;/p>
+&lt;ol>
+&lt;li>访问链接 &lt;a href="chrome://net-internals/#hsts">chrome://net-internals/#hsts&lt;/a>&lt;/li>
+&lt;li>在&lt;code>Query HSTS/PKP domain&lt;/code>设置里，输入域名进行搜索&lt;/li>
+&lt;li>在&lt;code>Delete domain security policies&lt;/code>设置里，输入域名进行删除&lt;/li>
+&lt;li>再次搜索域名，验证HSTS cache是否已经被删除&lt;/li>
+&lt;/ol>
+&lt;p>firefox删除方法参考&lt;a href="https://www.thesslstore.com/blog/clear-hsts-settings-chrome-firefox/">这里&lt;/a>&lt;/p>
+&lt;h1 id="end">End&lt;/h1>
+&lt;p>清理cache可以临时解决http不可使用的问题，如果每次都需要清理，过于笨拙，不如直接在nginx层面将HSTS删除（&lt;strong>只在内部测试环境！&lt;/strong>）&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">server&lt;/span> {
+&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">80&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">443&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl&lt;/span> &lt;span style="color:#00688b">on&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.crt&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate_key&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.key&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">location&lt;/span> &lt;span style="color:#cd5555">/&lt;/span> {
+&lt;span style="color:#8b008b;font-weight:bold">include&lt;/span> &lt;span style="color:#cd5555">proxy_params&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">proxy_pass&lt;/span> &lt;span style="color:#cd5555">http://10.28.18.6:8000&lt;/span>;
+&lt;span style="color:#228b22"># strict mixed content rule in test environment
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">add_header&lt;/span> &lt;span style="color:#cd5555">Content-Security-Policy&lt;/span> &lt;span style="color:#cd5555">block-all-mixed-content&lt;/span>;
+&lt;span style="color:#228b22"># no HSTS in test environment
+&lt;/span>&lt;span style="color:#228b22">&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">proxy_hide_header&lt;/span> &lt;span style="color:#cd5555">Strict-Transport-Security&lt;/span>;
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里的配置，对于 ssl 的支持有一些瑕疵，在&lt;a href="https://dreamanddead.github.io/2018/05/17/serve-http-https-same-time.html">这篇文章&lt;/a>里，做了相关修正。
+Remember to check it :)&lt;/p>- https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ - DreamAndDead 2014-2021</description></item><item><title>Play curl with http</title><link>https://dreamanddead.github.io/post/play-curl-with-http/</link><pubDate>Mon, 09 Apr 2018 10:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/play-curl-with-http/</guid><description>时长N年半 https://dreamanddead.github.io/post/play-curl-with-http/ -&lt;p>curl是一款强大的网络传输工具，支持多种协议，在HTTP的支持方面尤其为人称道。
 对curl的使用越深入，对HTTP也会有更深的理解。&lt;/p>
 &lt;h1 id="a-little-http">a little http&lt;/h1>
 &lt;p>http是应用层协议，其设计非常简单，灵活。请求与响应是HTTP概念的核心，从本质上讲，
