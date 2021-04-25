@@ -2,7 +2,7 @@
 title: "创业理论"
 author: ["DreamAndDead"]
 date: 2021-03-24T15:44:00+08:00
-lastmod: 2021-04-19T16:49:13+08:00
+lastmod: 2021-04-23T15:18:03+08:00
 tags: ["life", "theory", "bussiness"]
 categories: ["Startup"]
 draft: true
@@ -22,6 +22,29 @@ featured_image: "images/featured.jpg"
 核心矛盾，既然企业经营者不会接触代码层面的工作，
 自己辛苦钻研的目的何在呢？
 跨越 GAP 的方式是什么呢？
+
+
+## 创业理论 {#创业理论}
+
+
+#### 技术创业 {#技术创业}
+
+<!--list-separator-->
+
+-  如 PingCAP
+
+
+#### 技术选型顾问 {#技术选型顾问}
+
+<!--list-separator-->
+
+-  所有技术的深入了解，业务需求的评测
+
+
+#### 优秀的产品，都是合作的结果 {#优秀的产品-都是合作的结果}
+
+
+#### 优秀的人都散落在哪里？ {#优秀的人都散落在哪里}
 
 
 ## 为什么 {#为什么}

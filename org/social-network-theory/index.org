@@ -1,0 +1,38 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: social-network-theory
+#+export_file_name: index
+
+#+title: 人际网络理论
+#+date: <2021-04-23 五 15:17>
+#+hugo_categories: Theory
+#+hugo_tags: life theory
+#+hugo_draft: true
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg
+
+* 网络
+** 家人
+** 朋友
+** 同事
+** 对不同社交软件的思考
+* 交友
+** 焦虑
+*** 恐惧与人交流
+*** 社交焦虑
+** 识人
+*** 性格维度
+*** 人性认知
+** 沟通
+*** 如何发声
+*** 沟通方式
+* 联结
+** 六度空间
+*** 一度联系人
+*** 关注只是单方面的认知，并没有成为双向关系
+** 社会组织者
+*** 开源会议
+*** 技术论坛
+*** 校友
+*** 篮球活动
+*** 义工
+
