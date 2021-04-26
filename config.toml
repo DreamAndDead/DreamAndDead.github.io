@@ -64,3 +64,8 @@ url = "/index.xml"
 name = "订阅"
 weight = 5
 
+[[menu.main]]
+url = "/about"
+name = "关于"
+weight = 6
+
