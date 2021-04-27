@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-26T21:30:17+08:00
+lastmod: 2021-04-27T15:37:27+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -11,229 +11,273 @@ featured_image: "images/featured.jpg"
 series: ["test"]
 ---
 
-## 博客 {#博客}
+## 理论草稿 {#理论草稿}
 
 
-### 算法 {#算法}
+### 学习理论 {#学习理论}
 
 
-#### 可视化模型 {#可视化模型}
+#### 学习如何学习 {#学习如何学习}
+
+
+#### 归纳，后，演绎 {#归纳-后-演绎}
 
 <!--list-separator-->
 
--  树模型
+-  来自实践，走向实践
+
+
+#### 系统认知，建立关联 {#系统认知-建立关联}
+
+<!--list-separator-->
+
+-  不容易遗忘，由零星回忆起全部的脉络
+
+
+#### 成为 Pro {#成为-pro}
+
+<!--list-separator-->
+
+-  参考大师的作品
+
+<!--list-separator-->
+
+-  分析优秀的作品
+
+<!--list-separator-->
+
+-  模仿
+
+<!--list-separator-->
+
+-  超越
 
     <!--list-separator-->
 
-    -  枚举
-
-<!--list-separator-->
-
--  图模型
+    -  自己知道的，大师不知道的
 
     <!--list-separator-->
 
-    -  八数码
+    -  融合，创新
 
 
-### 编程语言 {#编程语言}
-
-
-#### cpp {#cpp}
-
-
-#### python {#python}
-
-
-### git tricks {#git-tricks}
-
-
-#### gh-pages and master {#gh-pages-and-master}
+#### 过程 {#过程}
 
 <!--list-separator-->
 
--  only merge master
-
-<!--list-separator-->
-
--  graph theory
-
-
-#### git submodule 中项目指定 hash {#git-submodule-中项目指定-hash}
-
-
-### tool {#tool}
-
-
-#### emacs {#emacs}
-
-<!--list-separator-->
-
--  8 space auto be 1 tab in c++ code
-
-<!--list-separator-->
-
--  tab space 的处理
-
-    select region
-
-    <https://www.masteringemacs.org/article/converting-tabs-whitespace>
-
-    <http://ergoemacs.org/emacs/emacs%5Ftabs%5Fspace%5Findentation%5Fsetup.html>
-
-<!--list-separator-->
-
--  key bindings
+-  记录
 
     <!--list-separator-->
 
-    -  研究与配置
+    -  每日积累
 
+        <!--list-separator-->
 
-#### cmake {#cmake}
+        -  选择特定方向
 
-<!--list-separator-->
+            <!--list-separator-->
 
--  指定编译器
+            -  精力在涣散中消逝
 
-    <https://tlanyan.me/cmake-specify-compiler/>
+        <!--list-separator-->
 
-
-#### cli {#cli}
-
-<!--list-separator-->
-
--  fzf
+        -  一定形式承载
 
 <!--list-separator-->
 
--  rg
-
-<!--list-separator-->
-
--  fd
-
-<!--list-separator-->
-
--  silver search
-
-<!--list-separator-->
-
--  bat
-
-<!--list-separator-->
-
--  autojump
-
-<!--list-separator-->
-
--  bash
-
-    loop files
-
-    <https://exceptionshub.com/bash-how-to-loop-over-files-in-directory-and-change-path-and-add-suffix-to-filename.html>
-
-<!--list-separator-->
-
--  find
+-  分享
 
     <!--list-separator-->
 
-    -  -delete, a better way
+    -  让更多人看到
 
 <!--list-separator-->
 
--  sed
+-  交流
 
     <!--list-separator-->
 
-    -  删除匹配行
+    -  得到反馈
+
+    <!--list-separator-->
+
+    -  认知缺点与不足
 
 <!--list-separator-->
 
--  text edit
+-  成长
 
     <!--list-separator-->
 
-    -  文本编辑就是程序员的画笔和颜料，高效的灵活的修改，才能编辑出头脑中的代码
-
-    <!--list-separator-->
-
-    -  正则表达式工具
-
-    <!--list-separator-->
-
-    -  sed
-
-    <!--list-separator-->
-
-    -  grep
-
-    <!--list-separator-->
-
-    -  awk
+    -  根据反馈修正
 
 
-### 数学 {#数学}
-
-
-#### 反证法的正确性 {#反证法的正确性}
+#### 案例 {#案例}
 
 <!--list-separator-->
 
--  充分性
+-  艺术活动
+
+    <!--list-separator-->
+
+    -  绘画，编程都是艺术活动
+
+    <!--list-separator-->
+
+    -  艺术活动，结合的是技术力和创造力
+
+    <!--list-separator-->
+
+    -  技术需要去磨练，比如绘图笔法，编程语言的熟悉使用
+
+        <!--list-separator-->
+
+        -  画家的练习作品是素描，程序员则通过一个个项目
+
+        <!--list-separator-->
+
+        -  编程技术体系
+
+            <!--list-separator-->
+
+            -  数学
+
+            <!--list-separator-->
+
+            -  算法研究与实现
+
+            <!--list-separator-->
+
+            -  项目分析与源码
+
+            <!--list-separator-->
+
+            -  面向对象的范式理解
+
+            <!--list-separator-->
+
+            -  架构设计
+
+    <!--list-separator-->
+
+    -  创作是随心所欲的，甚至觉知不到技术的存在
+
+
+### 知识的流动过程 {#知识的流动过程}
+
+
+#### 事件 {#事件}
+
+
+#### 新闻 {#新闻}
+
+
+#### 研究 {#研究}
+
+
+#### 论文 {#论文}
+
+
+#### 研究 {#研究}
+
+
+#### 教材 {#教材}
+
+
+#### 网络 blog wiki {#网络-blog-wiki}
+
+
+#### 书籍 {#书籍}
+
+
+#### 项目 {#项目}
+
+
+#### 会议 聚会 {#会议-聚会}
+
+
+#### 他人经验分享 {#他人经验分享}
+
+
+#### 人的头脑 {#人的头脑}
+
+
+#### 一度联系人 {#一度联系人}
+
+
+### 大脑使用指南 {#大脑使用指南}
+
+
+#### 理性与感性相切换 {#理性与感性相切换}
 
 <!--list-separator-->
 
--  必要性
+-  一个维度遇到问题，就换一个方面
+
+<!--list-separator-->
+
+-  积极的放松
+
+<!--list-separator-->
+
+-  需要休息
 
 
-## 项目整理 {#项目整理}
+### 什么是道 {#什么是道}
 
 
-### 将项目当作生意来经营 {#将项目当作生意来经营}
+#### 道不是人性 {#道不是人性}
+
+<!--list-separator-->
+
+-  没有人的因素吗
+
+<!--list-separator-->
+
+-  是所有人的宏观现象？还是自然现象？
+
+<!--list-separator-->
+
+-  道中无人，完全受自然规律支配？
 
 
-#### 用创业的心态去经营 {#用创业的心态去经营}
+#### 道是规律？ {#道是规律}
 
 
-#### 推广，变得更好 {#推广-变得更好}
+#### 宿命论，人的性格，决定了自己的道？ {#宿命论-人的性格-决定了自己的道}
 
 
-### lua source guide {#lua-source-guide}
+### 复杂系统 {#复杂系统}
 
 
-#### 润色 {#润色}
+#### 什么是复杂系统 {#什么是复杂系统}
+
+<!--list-separator-->
+
+-  人
+
+<!--list-separator-->
+
+-  公司组织
+
+<!--list-separator-->
+
+-  智能
 
 
-#### submit to awesome lua {#submit-to-awesome-lua}
+#### 如何认知与对抗 {#如何认知与对抗}
 
+<!--list-separator-->
 
-### csapp {#csapp}
+-  建模
 
+<!--list-separator-->
 
-#### check make {#check-make}
+-  良好的设计
 
+<!--list-separator-->
 
-#### merge pr {#merge-pr}
-
-
-#### issues {#issues}
-
-
-### fast style transfer {#fast-style-transfer}
-
-
-### medusa {#medusa}
-
-
-### captcha {#captcha}
-
-
-### joker {#joker}
-
-
-### oreilly generator {#oreilly-generator}
+-  可视化是有力的工具
 
 
 ## 问题 {#问题}
@@ -242,10 +286,11 @@ series: ["test"]
 ### 职业生涯 {#职业生涯}
 
 
-#### 成长历史 {#成长历史}
-
-
 #### 不是学术生涯，而是商业生涯 {#不是学术生涯-而是商业生涯}
+
+<!--list-separator-->
+
+-  7 分工程，3 分学术
 
 
 #### 构建有用的东西 {#构建有用的东西}
@@ -255,17 +300,24 @@ series: ["test"]
 -  如 窦唯 般优秀的创造者
 
 
-#### 由需求驱动 {#由需求驱动}
-
-
 #### 结合对未来的思考 {#结合对未来的思考}
 
 <!--list-separator-->
 
 -  未来趋势
 
+<!--list-separator-->
 
-#### 用自己的特长，解决现实问题 {#用自己的特长-解决现实问题}
+-  追随成功的项目
+
+
+#### 对创业有帮助的 {#对创业有帮助的}
+
+
+#### 由需求驱动 {#由需求驱动}
+
+
+#### 用特长，解决现实问题 {#用特长-解决现实问题}
 
 <!--list-separator-->
 
@@ -273,15 +325,7 @@ series: ["test"]
 
     <!--list-separator-->
 
-    -  github topic
-
-    <!--list-separator-->
-
-    -  大学研究
-
-        <!--list-separator-->
-
-        -  计算摄影
+    -  大学课程与研究
 
     <!--list-separator-->
 
@@ -289,43 +333,35 @@ series: ["test"]
 
         <!--list-separator-->
 
-        -  自动化处理一些事情
-
-        <!--list-separator-->
-
-        -  快速处理信息成电子格式
+        -  看 和 画
 
     <!--list-separator-->
 
-    -  system design
+    -  计算机语音
 
         <!--list-separator-->
 
-        -  复杂系统的认知
+        -  听 和 说
+
+    <!--list-separator-->
+
+    -  系统设计
+
+        <!--list-separator-->
+
+        -  大规模软件系统
 
             <!--list-separator-->
 
-            -  可视化是有力的工具
+            -  数据系统
 
             <!--list-separator-->
 
-            -  良好的设计
+            -  操作系统
 
             <!--list-separator-->
 
-            -  如何对抗
-
-            <!--list-separator-->
-
-            -  建模
-
-            <!--list-separator-->
-
-            -  一个人
-
-            <!--list-separator-->
-
-            -  一个组织
+            -  分布式系统
 
         <!--list-separator-->
 
@@ -338,22 +374,6 @@ series: ["test"]
             <!--list-separator-->
 
             -  运维服务架构
-
-    <!--list-separator-->
-
-    -  大规模软件系统
-
-        <!--list-separator-->
-
-        -  数据系统
-
-        <!--list-separator-->
-
-        -  操作系统
-
-        <!--list-separator-->
-
-        -  分布式系统
 
     <!--list-separator-->
 
@@ -452,26 +472,32 @@ series: ["test"]
 
     -  量子计算
 
+    <!--list-separator-->
+
+    -  结合领域
+
+        <!--list-separator-->
+
+        -  计算摄影
+
+            <!--list-separator-->
+
+            -  数字图像处理，与图片
+
+        <!--list-separator-->
+
+        -  计算广告
+
+            <!--list-separator-->
+
+            -  推荐算法，数据挖掘与广告
+
 <!--list-separator-->
 
 -  T - 领域
 
 
-#### 和学习成长的矛盾 {#和学习成长的矛盾}
-
-<!--list-separator-->
-
--  实力不足，可做的事情有限
-
-<!--list-separator-->
-
--  一直学习，没有可做事的时间
-
-
-#### 追随成功的项目 {#追随成功的项目}
-
-
-#### 下一份工作 {#下一份工作}
+#### 工作准备 {#工作准备}
 
 <!--list-separator-->
 
@@ -515,14 +541,6 @@ series: ["test"]
 
 <!--list-separator-->
 
--  结合创业理论
-
-    <!--list-separator-->
-
-    -  其它实力的成长
-
-<!--list-separator-->
-
 -  公司预选
 
     <!--list-separator-->
@@ -556,15 +574,6 @@ series: ["test"]
     <!--list-separator-->
 
     -  内推群
-
-
-#### 职业选择 {#职业选择}
-
-7 分工程 3 分学术
-
-解决现实问题
-
-对创业准备有帮助的
 
 
 ### 孩子 {#孩子}
@@ -613,337 +622,79 @@ series: ["test"]
 照顾
 
 
-## 兴趣 {#兴趣}
+## 项目整理 {#项目整理}
 
 
-### 税收 {#税收}
+### 将项目当作生意来经营 {#将项目当作生意来经营}
 
 
-#### 个税 {#个税}
+#### 用创业的心态去经营 {#用创业的心态去经营}
 
 
-### 基金 {#基金}
+#### 推广，变得更好 {#推广-变得更好}
 
 
-#### 购买方法 {#购买方法}
+### lua source guide {#lua-source-guide}
 
 
-### 社会 {#社会}
+#### 润色 {#润色}
 
 
-#### 五险一金 {#五险一金}
+#### submit to awesome lua {#submit-to-awesome-lua}
 
 
-### 服装 {#服装}
+### csapp {#csapp}
 
 
-#### 材料的认识 {#材料的认识}
+#### check make {#check-make}
 
 
-### 设计 {#设计}
+#### merge pr {#merge-pr}
 
 
-#### 配色理论 {#配色理论}
+#### issues {#issues}
 
-<https://zhuanlan.zhihu.com/p/52120537>
 
-<https://www.sohu.com/a/352611094%5F286880>
+### fast style transfer {#fast-style-transfer}
 
-<https://www.sohu.com/a/397541366%5F100031423>
 
-<https://zhuanlan.zhihu.com/p/49575075>
+### medusa {#medusa}
 
 
-#### 简笔画 {#简笔画}
+### captcha {#captcha}
 
 
-### 摄影 {#摄影}
+### joker {#joker}
 
 
-#### 相机参数 {#相机参数}
+### oreilly generator {#oreilly-generator}
 
 
-#### 视频 文件 容器 {#视频-文件-容器}
+## 读书笔记 {#读书笔记}
 
 
-### 音乐 {#音乐}
+### 《如何测试商业模式》 {#如何测试商业模式}
 
 
-#### 音乐与乐器 {#音乐与乐器}
+#### 整体架构，整合入创业理论 {#整体架构-整合入创业理论}
 
-<!--list-separator-->
 
--  弦乐器的音高安排
+### 《冥想》 《十分钟冥想》 {#冥想-十分钟冥想}
 
-    <!--list-separator-->
 
-    -  品丝
+#### 如何冥想 {#如何冥想}
 
-    <!--list-separator-->
 
-    -  距离
+### 《定投十年》 {#定投十年}
 
 
-#### 如何记忆音名，唱名 {#如何记忆音名-唱名}
+#### 如何购买基金 {#如何购买基金}
 
 
-#### 和弦的命名方式 {#和弦的命名方式}
+### 《成功，动机与目标》 《拖延症》 {#成功-动机与目标-拖延症}
 
-<!--list-separator-->
 
--  m7 9
-
-<!--list-separator-->
-
--  配合 吉他 理解
-
-<!--list-separator-->
-
--  nicechord
-
-<!--list-separator-->
-
--  guitar pro
-
-
-### 正念 {#正念}
-
-
-#### 冥想 {#冥想}
-
-<!--list-separator-->
-
--  如何冥想
-
-
-### 认知科学 {#认知科学}
-
-
-#### 认知疗法 {#认知疗法}
-
-
-#### GEB {#geb}
-
-
-## 理论 draft {#理论-draft}
-
-
-### 学习理论 {#学习理论}
-
-
-#### 学习如何学习 {#学习如何学习}
-
-
-#### 归纳，再演绎 {#归纳-再演绎}
-
-
-#### 来自实践，走向实践 {#来自实践-走向实践}
-
-
-#### 系统认知，建立关联 {#系统认知-建立关联}
-
-<!--list-separator-->
-
--  不容易遗忘，由零星回忆起全部的脉络
-
-
-#### 专注的方向 {#专注的方向}
-
-
-#### 每日积累 {#每日积累}
-
-<!--list-separator-->
-
--  必须有形式承载
-
-<!--list-separator-->
-
--  人生就是在涣散中消逝
-
-    <!--list-separator-->
-
-    -  没有目的，各个方向
-
-
-#### 如何成为 pro {#如何成为-pro}
-
-
-#### 参考大师的作品 {#参考大师的作品}
-
-
-#### 分析优秀的作品 {#分析优秀的作品}
-
-
-#### 模仿 {#模仿}
-
-
-#### 超越 {#超越}
-
-
-#### 记录，分享，交流，成长 {#记录-分享-交流-成长}
-
-
-#### 认知缺点与不足 {#认知缺点与不足}
-
-
-#### 绘画 编程 都是一种艺术活动 {#绘画-编程-都是一种艺术活动}
-
-<!--list-separator-->
-
--  艺术活动，结合的是技术力和创造力
-
-<!--list-separator-->
-
--  技术需要去磨练，比如绘图笔法，编程语言的熟悉使用
-
-<!--list-separator-->
-
--  而在创作时，是随心所欲的，甚至觉知不到技术的存在
-
-
-#### 就编程而言 {#就编程而言}
-
-<!--list-separator-->
-
--  画家的练习作品，素描，程序员通过项目
-
-<!--list-separator-->
-
--  项目分析与源码
-
-<!--list-separator-->
-
--  算法研究与实现
-
-<!--list-separator-->
-
--  数学
-
-<!--list-separator-->
-
--  面向对象的范式理解
-
-<!--list-separator-->
-
--  高层次的组件设计
-
-
-### 知识的流动过程 {#知识的流动过程}
-
-
-#### 事件 {#事件}
-
-
-#### 新闻 {#新闻}
-
-
-#### 研究 {#研究}
-
-
-#### 论文 {#论文}
-
-
-#### 研究 {#研究}
-
-
-#### 教材 {#教材}
-
-
-#### 网络 blog wiki {#网络-blog-wiki}
-
-
-#### 书籍 {#书籍}
-
-
-#### 项目 {#项目}
-
-
-#### 会议 聚会 {#会议-聚会}
-
-
-#### 他人经验分享 {#他人经验分享}
-
-
-#### 人的头脑 {#人的头脑}
-
-
-#### 一度联系人 {#一度联系人}
-
-
-### 为何要保持写代码 {#为何要保持写代码}
-
-
-#### 一线程序员，写代码为何不应停止 {#一线程序员-写代码为何不应停止}
-
-
-#### 写代码，不是无能的体现 {#写代码-不是无能的体现}
-
-
-### 大脑使用指南 {#大脑使用指南}
-
-
-#### 理性与感性相切换 {#理性与感性相切换}
-
-<!--list-separator-->
-
--  一个维度遇到问题，就换一个方面
-
-<!--list-separator-->
-
--  积极的放松
-
-<!--list-separator-->
-
--  需要休息
-
-
-### 什么是道 {#什么是道}
-
-
-#### 道不是人性 {#道不是人性}
-
-<!--list-separator-->
-
--  没有人的因素吗
-
-<!--list-separator-->
-
--  是所有人的宏观现象？还是自然现象？
-
-<!--list-separator-->
-
--  道中无人，完全受自然规律支配？
-
-
-#### 道是规律？ {#道是规律}
-
-
-#### 宿命论，人的性格，决定了自己的道？ {#宿命论-人的性格-决定了自己的道}
-
-
-### 复杂系统 {#复杂系统}
-
-
-#### 什么是复杂系统 {#什么是复杂系统}
-
-<!--list-separator-->
-
--  人
-
-<!--list-separator-->
-
--  公司组织
-
-<!--list-separator-->
-
--  智能
-
-
-#### 如何认知与对抗 {#如何认知与对抗}
-
-<!--list-separator-->
-
--  良好的设计
+#### 细化目标管理机制 {#细化目标管理机制}
 
 
 ## 支言片语 {#支言片语}
@@ -1373,6 +1124,295 @@ be free 成为了软件开发和使用的宗旨
 ### 在商业 现实的压制下 是无法安心进行学习 研究的 {#在商业-现实的压制下-是无法安心进行学习-研究的}
 
 应该像 page gates 一样 从无财务问题之后 再开始潜心研究也不迟
+
+
+## 兴趣 {#兴趣}
+
+
+### 税收 {#税收}
+
+
+#### 个税 {#个税}
+
+
+### 基金 {#基金}
+
+
+#### 购买方法 {#购买方法}
+
+
+### 社会 {#社会}
+
+
+#### 五险一金 {#五险一金}
+
+
+### 服装 {#服装}
+
+
+#### 材料的认识 {#材料的认识}
+
+
+### 设计 {#设计}
+
+
+#### 配色理论 {#配色理论}
+
+<https://zhuanlan.zhihu.com/p/52120537>
+
+<https://www.sohu.com/a/352611094%5F286880>
+
+<https://www.sohu.com/a/397541366%5F100031423>
+
+<https://zhuanlan.zhihu.com/p/49575075>
+
+
+#### 简笔画 {#简笔画}
+
+
+### 摄影 {#摄影}
+
+
+#### 相机参数 {#相机参数}
+
+
+#### 视频 文件 容器 {#视频-文件-容器}
+
+
+### 音乐 {#音乐}
+
+
+#### 音乐与乐器 {#音乐与乐器}
+
+<!--list-separator-->
+
+-  弦乐器的音高安排
+
+    <!--list-separator-->
+
+    -  品丝
+
+    <!--list-separator-->
+
+    -  距离
+
+
+#### 如何记忆音名，唱名 {#如何记忆音名-唱名}
+
+
+#### 和弦的命名方式 {#和弦的命名方式}
+
+<!--list-separator-->
+
+-  m7 9
+
+<!--list-separator-->
+
+-  配合 吉他 理解
+
+<!--list-separator-->
+
+-  nicechord
+
+<!--list-separator-->
+
+-  guitar pro
+
+
+### 正念 {#正念}
+
+
+#### 冥想 {#冥想}
+
+<!--list-separator-->
+
+-  如何冥想
+
+
+### 认知科学 {#认知科学}
+
+
+#### 认知疗法 {#认知疗法}
+
+
+#### GEB {#geb}
+
+
+## 博客 {#博客}
+
+
+### 算法 {#算法}
+
+
+#### 可视化模型 {#可视化模型}
+
+<!--list-separator-->
+
+-  可视化解题过程
+
+<!--list-separator-->
+
+-  树模型
+
+    <!--list-separator-->
+
+    -  枚举
+
+<!--list-separator-->
+
+-  图模型
+
+    <!--list-separator-->
+
+    -  八数码
+
+
+### 编程语言 {#编程语言}
+
+
+#### cpp {#cpp}
+
+
+#### python {#python}
+
+
+### git tricks {#git-tricks}
+
+
+#### gh-pages and master {#gh-pages-and-master}
+
+<!--list-separator-->
+
+-  only merge master
+
+
+#### git submodule 中项目指定 hash {#git-submodule-中项目指定-hash}
+
+
+### tool {#tool}
+
+
+#### emacs {#emacs}
+
+<!--list-separator-->
+
+-  8 space auto be 1 tab in c++ code
+
+<!--list-separator-->
+
+-  tab space 的处理
+
+    select region
+
+    <https://www.masteringemacs.org/article/converting-tabs-whitespace>
+
+    <http://ergoemacs.org/emacs/emacs%5Ftabs%5Fspace%5Findentation%5Fsetup.html>
+
+<!--list-separator-->
+
+-  key bindings
+
+    <!--list-separator-->
+
+    -  研究与配置
+
+
+#### cmake {#cmake}
+
+<!--list-separator-->
+
+-  指定编译器
+
+    <https://tlanyan.me/cmake-specify-compiler/>
+
+
+#### cli {#cli}
+
+<!--list-separator-->
+
+-  fzf
+
+<!--list-separator-->
+
+-  rg
+
+<!--list-separator-->
+
+-  fd
+
+<!--list-separator-->
+
+-  silver search
+
+<!--list-separator-->
+
+-  bat
+
+<!--list-separator-->
+
+-  autojump
+
+<!--list-separator-->
+
+-  bash
+
+    loop files
+
+    <https://exceptionshub.com/bash-how-to-loop-over-files-in-directory-and-change-path-and-add-suffix-to-filename.html>
+
+<!--list-separator-->
+
+-  find
+
+    <!--list-separator-->
+
+    -  -delete, a better way
+
+<!--list-separator-->
+
+-  sed
+
+    <!--list-separator-->
+
+    -  删除匹配行
+
+<!--list-separator-->
+
+-  text edit
+
+    <!--list-separator-->
+
+    -  文本编辑就是程序员的画笔和颜料，高效的灵活的修改，才能编辑出头脑中的代码
+
+    <!--list-separator-->
+
+    -  正则表达式工具
+
+    <!--list-separator-->
+
+    -  sed
+
+    <!--list-separator-->
+
+    -  grep
+
+    <!--list-separator-->
+
+    -  awk
+
+
+### 数学 {#数学}
+
+
+#### 反证法的正确性 {#反证法的正确性}
+
+<!--list-separator-->
+
+-  充分性
+
+<!--list-separator-->
+
+-  必要性
 
 
 ## License {#license}
