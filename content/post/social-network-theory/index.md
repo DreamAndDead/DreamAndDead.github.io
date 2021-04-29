@@ -2,7 +2,7 @@
 title: "人际网络理论"
 author: ["DreamAndDead"]
 date: 2021-04-23T15:17:00+08:00
-lastmod: 2021-04-26T11:27:13+08:00
+lastmod: 2021-04-28T22:11:04+08:00
 tags: ["life", "theory"]
 categories: ["Theory"]
 draft: true
@@ -46,13 +46,16 @@ featured_image: "images/featured.jpg"
 #### 人性认知 {#人性认知}
 
 
-### 沟通 {#沟通}
+### 发声 {#发声}
 
 
 #### 如何发声 {#如何发声}
 
 
-#### 沟通方式 {#沟通方式}
+### 沟通 {#沟通}
+
+
+#### 人际沟通分析 {#人际沟通分析}
 
 
 ## 消息链 {#消息链}
