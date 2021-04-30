@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-04-28T17:00:56+08:00
+lastmod: 2021-04-29T13:24:35+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -620,54 +620,6 @@ series: ["test"]
 生病就医
 
 照顾
-
-
-## 项目整理 {#项目整理}
-
-
-### 将项目当作生意来经营 {#将项目当作生意来经营}
-
-
-#### 用创业的心态去经营 {#用创业的心态去经营}
-
-
-#### 推广，变得更好 {#推广-变得更好}
-
-
-### lua source guide {#lua-source-guide}
-
-
-#### 润色 {#润色}
-
-
-#### submit to awesome lua {#submit-to-awesome-lua}
-
-
-### csapp {#csapp}
-
-
-#### check make {#check-make}
-
-
-#### merge pr {#merge-pr}
-
-
-#### issues {#issues}
-
-
-### fast style transfer {#fast-style-transfer}
-
-
-### medusa {#medusa}
-
-
-### captcha {#captcha}
-
-
-### joker {#joker}
-
-
-### oreilly generator {#oreilly-generator}
 
 
 ## 读书笔记 {#读书笔记}

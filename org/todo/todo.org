@@ -230,22 +230,6 @@ https://book.douban.com/subject/25741352/
 生病就医
 
 照顾
-* 项目整理
-** 将项目当作生意来经营
-*** 用创业的心态去经营
-*** 推广，变得更好
-** lua source guide
-*** 润色
-*** submit to awesome lua
-** csapp
-*** check make
-*** merge pr
-*** issues
-** fast style transfer
-** medusa
-** captcha
-** joker
-** oreilly generator
 * 读书笔记
 ** 《如何测试商业模式》
 *** 整体架构，整合入创业理论
