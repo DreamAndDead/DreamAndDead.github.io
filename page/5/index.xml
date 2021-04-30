@@ -2310,4 +2310,4 @@ alt="网络示意图"/> &lt;figcaption>
 &lt;pre>&lt;code>export http_proxy=socks5://47.52.20.34:1080
 curl -X GET http://172.168.0.2:80
 curl -X GET http://192.168.0.3:9200
-&lt;/code>&lt;/pre>&lt;p>访问nginx服务与ES服务&lt;/p>- https://dreamanddead.github.io/post/understanding-ssh-tunnel/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;/code>&lt;/pre>&lt;p>访问nginx服务与ES服务&lt;/p>- https://dreamanddead.github.io/post/understanding-ssh-tunnel/ - DreamAndDead 2014-2021</description></item><item><title>About Me</title><link>https://dreamanddead.github.io/post/about/</link><pubDate>Sun, 04 Jun 2017 10:29:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/about/</guid><description>时长N年半 https://dreamanddead.github.io/post/about/ -- https://dreamanddead.github.io/post/about/ - DreamAndDead 2014-2021</description></item></channel></rss>
