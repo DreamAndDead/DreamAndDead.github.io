@@ -1,0 +1,33 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: project-oreilly
+#+export_file_name: index
+
+#+title: O'Reilly Generator
+#+date: <2021-04-29 四 13:56>
+#+hugo_categories: Project
+#+hugo_tags: project
+#+hugo_draft: true
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg
+
+- oreilly generator
+- playoff prediction
+- csapp
+  - check make
+  - merge pr
+  - issues
+- joker
+- captcha 12306
+- fast style transfer
+- medusa
+- lua source guide
+  - 润色
+  - submit to awesome lua
+
+
+<!--more-->
+
+https://dreamanddead.github.io/oreilly-generator/
+
+
+[[file:images/featured.jpg]]

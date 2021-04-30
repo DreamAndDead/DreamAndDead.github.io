@@ -2,9 +2,9 @@
 title: "How to choose license for your project"
 author: ["DreamAndDead"]
 date: 2021-02-25T10:36:00+08:00
-lastmod: 2021-02-25T14:24:57+08:00
+lastmod: 2021-04-30T14:29:33+08:00
 tags: ["copyright", "development"]
-categories: ["Project"]
+categories: ["Programming"]
 draft: true
 comment: false
 ---

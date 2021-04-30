@@ -5,7 +5,7 @@
 
 #+title: How to choose license for your project
 #+date: <2021-02-25 四 10:36>
-#+hugo_categories: Project
+#+hugo_categories: Programming
 #+hugo_tags: copyright development
 #+hugo_draft: true
 #+hugo_custom_front_matter: :featured_image :comment false

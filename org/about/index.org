@@ -1,0 +1,11 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: about
+#+export_file_name: index
+
+#+title: About Me
+#+date: <2017-06-04 日 10:29>
+#+hugo_categories: Self
+#+hugo_tags: self mind
+#+hugo_custom_front_matter: :featured_image images/featured.jpg :comment false
+
