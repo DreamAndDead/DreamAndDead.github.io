@@ -2,7 +2,7 @@
 title: "基础算法之 C++ 基础"
 author: ["DreamAndDead"]
 date: 2021-04-14T18:15:00+08:00
-lastmod: 2021-04-22T13:27:54+08:00
+lastmod: 2021-05-07T17:08:16+08:00
 tags: ["algorithm", "oj", "programing"]
 categories: ["Algorithm"]
 draft: true
@@ -15,6 +15,20 @@ oj 中，不会用到太多
 涉及到算法中的语言知识点
 
 更方便
+
+
+## test indent {#test-indent}
+
+```cpp
+#include <iostream>
+
+using namespace std;
+
+int main() {
+       cout << 1;
+	cout << 2;
+}
+```
 
 
 ## io {#io}

@@ -16,6 +16,24 @@ oj 中，不会用到太多
 
 更方便
 
+
+* test indent
+
+#+begin_src cpp
+#include <iostream>
+
+using namespace std;
+
+int main() {
+       cout << 1;
+        cout << 2;
+}
+#+end_src
+ 
+#+RESULTS:
+: 12
+
+
 * io
 
 ** input
