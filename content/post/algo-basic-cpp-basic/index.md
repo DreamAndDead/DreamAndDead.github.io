@@ -2,7 +2,7 @@
 title: "基础算法之 C++ 基础"
 author: ["DreamAndDead"]
 date: 2021-04-14T18:15:00+08:00
-lastmod: 2021-05-07T17:08:16+08:00
+lastmod: 2021-05-12T10:15:16+08:00
 tags: ["algorithm", "oj", "programing"]
 categories: ["Algorithm"]
 draft: true
