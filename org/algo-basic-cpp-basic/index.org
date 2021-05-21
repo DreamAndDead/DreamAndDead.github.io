@@ -63,6 +63,10 @@ https://blog.csdn.net/oneline_/article/details/80746759
 
 https://www.techiedelight.com/binary-representation-number/
 
+* array
+
+int [][] 和 int ** 的关系？  
+  
 * c stdlib
 
 ** mem

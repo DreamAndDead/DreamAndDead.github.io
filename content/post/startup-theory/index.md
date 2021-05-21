@@ -2,7 +2,7 @@
 title: "创业理论"
 author: ["DreamAndDead"]
 date: 2021-03-24T15:44:00+08:00
-lastmod: 2021-05-12T15:52:13+08:00
+lastmod: 2021-05-21T14:48:05+08:00
 tags: ["life", "theory", "bussiness"]
 categories: ["Startup"]
 draft: true
@@ -14,6 +14,13 @@ featured_image: "images/featured.jpg"
 
 从小循环开始，不断壮大，多方面成长
 从个人到团队
+
+找到一个抄袭点
+直接开始
+
+没有最优的计划
+空想是得不到的
+只能去尝试开始 然后探索 反馈 修正
 
 经营者本身是全知者，是资源的统筹者，
 团结者，领导者，
@@ -220,6 +227,15 @@ featured_image: "images/featured.jpg"
 
 
 ### 挑选想法 {#挑选想法}
+
+
+#### 大厦灯光设计 {#大厦灯光设计}
+
+动效
+布置
+
+编程效果
+多方联动
 
 
 #### 数据可视化 {#数据可视化}

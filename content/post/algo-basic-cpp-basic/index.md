@@ -2,7 +2,7 @@
 title: "基础算法之 C++ 基础"
 author: ["DreamAndDead"]
 date: 2021-04-14T18:15:00+08:00
-lastmod: 2021-05-12T10:15:16+08:00
+lastmod: 2021-05-20T17:06:25+08:00
 tags: ["algorithm", "oj", "programing"]
 categories: ["Algorithm"]
 draft: true
@@ -61,6 +61,11 @@ int main() {
 -   cout 如何输出二进制数
 
 <https://www.techiedelight.com/binary-representation-number/>
+
+
+## array {#array}
+
+int [][] 和 int \*\* 的关系？
 
 
 ## c stdlib {#c-stdlib}
