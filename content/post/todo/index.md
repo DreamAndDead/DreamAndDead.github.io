@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-05-21T14:46:13+08:00
+lastmod: 2021-05-21T15:23:30+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true
@@ -667,6 +667,14 @@ series: ["test"]
 ## 支言片语 {#支言片语}
 
 
+### 编程是一种艺术，和艺术表现相结合 {#编程是一种艺术-和艺术表现相结合}
+
+是游戏？
+
+
+### 美的前提，在于欣赏，在于自己的审美 {#美的前提-在于欣赏-在于自己的审美}
+
+
 ### 任何自己的东西 都是自己的一部分 {#任何自己的东西-都是自己的一部分}
 
 值得更好的对待
@@ -1229,8 +1237,16 @@ be free 成为了软件开发和使用的宗旨
 
 #### python {#python}
 
+<!--list-separator-->
+
+-  overview about intermidiate
+
 
 #### cpp {#cpp}
+
+<!--list-separator-->
+
+-  oj problem
 
 
 ### git tricks {#git-tricks}
@@ -1370,6 +1386,12 @@ be free 成为了软件开发和使用的宗旨
 <!--list-separator-->
 
 -  必要性
+
+
+### 项目 {#项目}
+
+
+#### nba 更新 2021 预测 {#nba-更新-2021-预测}
 
 
 ## License {#license}

@@ -288,6 +288,9 @@ https://book.douban.com/subject/25741352/
 ** 《成功，动机与目标》 《拖延症》
 *** 细化目标管理机制
 * 支言片语
+** 编程是一种艺术，和艺术表现相结合
+   是游戏？
+** 美的前提，在于欣赏，在于自己的审美
 ** 任何自己的东西 都是自己的一部分
 值得更好的对待
 ** 今敏，大师级的创造
@@ -684,7 +687,9 @@ be free 成为了软件开发和使用的宗旨
 ***** 八数码
 ** 编程语言
 *** python
+**** overview about intermidiate
 *** cpp
+**** oj problem
 ** git tricks
 *** gh-pages and master
 **** only merge master
@@ -735,6 +740,8 @@ http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html
 *** 反证法的正确性
 **** 充分性
 **** 必要性
+** 项目
+*** nba 更新 2021 预测
 * License
 
 #+begin_export markdown
