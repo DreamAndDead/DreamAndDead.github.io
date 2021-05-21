@@ -1,4 +1,166 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 22 Apr 2021 13:27:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Comfortable way when testing HTTPS site</title><link>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</link><pubDate>Wed, 11 Apr 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</guid><description>时长N年半 https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ -&lt;p>网站初期一直使用http，近期购买了ssl证书，预期将网站全面升级使用https。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 22 Apr 2021 13:27:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>thinkpad E530c 的升级之路</title><link>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</link><pubDate>Sat, 12 May 2018 20:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</guid><description>时长N年半 https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ -&lt;p>不知不觉，自己的&lt;a href="http://detail.zol.com.cn/361/360255/param.shtml">Thinkpad E530c&lt;/a>入手5年，期间换过数次系统，如今不觉有些老态龙钟，
+硬件资源已远远不足以支持日常使用的需求，速度慢多次卡顿，十分损伤工作效率。&lt;/p>
+&lt;p>决心升级一下跟随多年的“小黑”，焕发新颜。&lt;/p>
+&lt;h1 id="拆机">拆机&lt;/h1>
+&lt;p>拆机之前，&lt;strong>一定要先取下电池！！！&lt;/strong>，不然容易因为短路之类损伤内部元器件，
+后果很严重。&lt;/p>
+&lt;p>拆机只需要一把小型的十字螺丝刀，和一字螺丝刀。&lt;/p>
+&lt;p>拆机只需要拆背面就可以，可以更换的主要零件都在这里，不必将电脑拆到芯片级别。&lt;/p>
+&lt;figure>
+&lt;img src="images/tp-panel.jpg"/>
+&lt;/figure>
+&lt;ul>
+&lt;li>从1,2,拆下电源&lt;/li>
+&lt;li>从5,6,7,松开螺丝，从8处撬开面板&lt;/li>
+&lt;/ul>
+&lt;figure>
+&lt;img src="images/tp-panel-inside.jpg"/>
+&lt;/figure>
+&lt;p>主要零件分布&lt;/p>
+&lt;ul>
+&lt;li>A处风扇&lt;/li>
+&lt;li>B处内存&lt;/li>
+&lt;li>C处是CPU&lt;/li>
+&lt;li>D处是硬盘&lt;/li>
+&lt;li>E处是无线网卡&lt;/li>
+&lt;li>F处是显卡&lt;/li>
+&lt;/ul>
+&lt;h1 id="硬盘">硬盘&lt;/h1>
+&lt;p>一般硬盘IO速率，远远小于内存读写的速度，
+提升硬盘IO速率，缩短与内存读写速率的差距，
+对于性能提升，是非常明显的。
+计划将原有的HDD，更换为SSD。&lt;/p>
+&lt;p>可以安装硬盘的有两个位置，一个是原先的硬盘位，另一个是光驱位。
+一般来讲，硬盘位更稳定，速度更快，所以决定在更换HDD的时候，
+将SSD安装在原有硬盘位，HDD放到光驱位，光驱将废弃不用。&lt;/p>
+&lt;figure>
+&lt;img src="images/tp-panel-inside.jpg"/>
+&lt;/figure>
+&lt;ul>
+&lt;li>从1,2,处，松开螺丝，向外取出硬盘&lt;/li>
+&lt;/ul>
+&lt;figure>
+&lt;img src="images/tp-disk.jpg"/>
+&lt;/figure>
+&lt;p>一般硬盘的侧面与背面，都有4个螺丝孔（1,2是侧面，3,4是背面）。
+在取下原有硬盘之后，将原来的硬盘支架取下来（从1,2螺丝及对面的两颗螺丝），
+换上新硬盘，固定支架，再安装回硬盘位。&lt;/p>
+&lt;p>在更换之后，开机关机秒速，体验很赞。&lt;/p>
+&lt;h1 id="光驱">光驱&lt;/h1>
+&lt;p>根据平时的使用经验，光驱基本使用不到，决定将旧硬盘放置到光驱处。
+有一种顾虑是，这样内部的散热会不好，因为SSD安装了系统，HDD用于附加存储，使用到的概率很小，平时使用应该不是问题。&lt;/p>
+&lt;figure>
+&lt;img src="images/tp-panel.jpg"/>
+&lt;/figure>
+&lt;ul>
+&lt;li>松开3处的螺丝&lt;/li>
+&lt;li>再从4处将光驱拔出来&lt;/li>
+&lt;/ul>
+&lt;p>因为光驱位的接口与硬盘位的接口不同，虽然都为SATA口，但是有一些区别，所以在将硬盘安装到光驱位
+的时候，需要 光驱硬盘支架。&lt;/p>
+&lt;figure>
+&lt;img src="images/tp-disk-cdrom-interface.jpg"/>
+&lt;/figure>
+&lt;p>光驱位接口&lt;/p>
+&lt;figure>
+&lt;img src="images/tp-disk-interface.jpg"/>
+&lt;/figure>
+&lt;p>硬盘位接口&lt;/p>
+&lt;figure>
+&lt;img src="images/tp-disk-cdrom.jpg"/>
+&lt;/figure>
+&lt;p>左边是原来的光驱，右边是光驱硬盘支架。
+首先将硬盘安装到 光驱硬盘支架 上，记得将原有光驱位1处的螺丝与2处的外壳，换到新的 光驱硬盘支架 上。
+将 光驱硬盘支架 装回原来的光驱位即可。&lt;/p>
+&lt;h1 id="风扇">风扇&lt;/h1>
+&lt;p>笔记本原来的风扇不转动，积灰严重，
+可以在网上根据对应型号，购买一个新的。&lt;/p>
+&lt;p>新风扇运转流畅，声音小，散热变得更好。&lt;/p>
+&lt;figure>
+&lt;img src="images/tp-panel-inside.jpg"/>
+&lt;/figure>
+&lt;ul>
+&lt;li>将17处的插口拔下&lt;/li>
+&lt;li>从7,8,9处将螺丝松开，取下风扇&lt;/li>
+&lt;li>换上新风扇&lt;/li>
+&lt;/ul>
+&lt;h1 id="cpu">CPU&lt;/h1>
+&lt;p>平时日常使用，开启Firefox，CPU都要跑满40%，开启关闭标签页时常卡住，
+下一步决定主要更换的是CPU。&lt;/p>
+&lt;p>一般CPU型号，以M（Mobile）结束的，是可以更换的，以U结尾的是焊接在主板上的，不可更换。
+E530c的CPU是i5-3210M，lucky。&lt;/p>
+&lt;p>CPU不是随意更换的，要根据主板型号与功耗，选择合适的。&lt;/p>
+&lt;ul>
+&lt;li>从cpu-upgrade网站，根据主板型号，找到可以适配的所有CPU。E530c的主板型号是&lt;a href="http://www.cpu-upgrade.com/mb-Intel_(chipsets)/HM77_Express.html">HM77&lt;/a>，可升级的最高系列是i7-3840QM。&lt;/li>
+&lt;li>从功耗来讲，原来的CPU是35W，i7-3840QM是45W，功率相同是最好，如果强制为了高配置，而强制换上高功率CPU，可能会散热不足，损坏内部元件，所以一定要保持散热。&lt;/li>
+&lt;/ul>
+&lt;figure>
+&lt;img src="images/tp-panel-inside.jpg"/>
+&lt;/figure>
+&lt;ul>
+&lt;li>CPU在散热片的下面，要先取下风扇，再取下散热片，其次才能取下CPU&lt;/li>
+&lt;li>取下风扇&lt;/li>
+&lt;li>松下10,11,12,13,14,15,16的螺丝，取下散热片&lt;/li>
+&lt;/ul>
+&lt;figure>
+&lt;img src="images/tp-cpu.jpg"/>
+&lt;/figure>
+&lt;ul>
+&lt;li>将1处的一字螺丝，逆时针180度，再取下CPU&lt;/li>
+&lt;li>更换新CPU&lt;/li>
+&lt;li>顺时针180紧上&lt;/li>
+&lt;/ul>
+&lt;p>对于更换CPU，还有重要的一点是，一手市面上只有针对PC的CPU售卖，
+如果要买到笔记本CPU，只能通过非官方的途径，而这些途径得来的CPU并不能保证
+其质量，其中关注最多的就是ES/QS版本的CPU。&lt;/p>
+&lt;p>简单的说，ES/QS是工程的测试版，没有足够的稳定性，理论上不应该流通在市面上。
+具体可参考 &lt;a href="http://ask.zol.com.cn/q/23131.html">CPU ES版、QS版和正式版的区别&lt;/a>&lt;/p>
+&lt;p>因为是linux系统，没有cpuz这样的工具，cpu的信息中也看不出是否是正式版。
+试用的几天，感觉速度还可以。如果有知道方法的人，感谢可以告诉我 :)&lt;/p>
+&lt;pre>&lt;code>$ lscpu
+Architecture: x86_64
+CPU 运行模式： 32-bit, 64-bit
+Byte Order: Little Endian
+CPU(s): 8
+On-line CPU(s) list: 0-7
+每个核的线程数：2
+每个座的核数： 4
+Socket(s): 1
+NUMA 节点： 1
+厂商 ID： GenuineIntel
+CPU 系列： 6
+型号： 58
+Model name: Intel(R) Core(TM) i7-3840QM CPU @ 2.80GHz
+步进： 9
+CPU MHz： 1200.732
+CPU max MHz: 3800.0000
+CPU min MHz: 1200.0000
+BogoMIPS: 5587.10
+虚拟化： VT-x
+L1d 缓存： 32K
+L1i 缓存： 32K
+L2 缓存： 256K
+L3 缓存： 8192K
+NUMA node0 CPU(s): 0-7
+Flags: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm epb tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt dtherm ida arat pln pts
+&lt;/code>&lt;/pre>&lt;h1 id="内存">内存&lt;/h1>
+&lt;p>目前有两个插槽，最初是4G内存，后来加装了一条4G，共8G现在，
+目前还够用。&lt;/p>
+&lt;p>听说这个型号有内存单条8G的限制，还没有验证过，如果是那样，最多升级到16G内存。&lt;/p>
+&lt;figure>
+&lt;img src="images/tp-panel-inside.jpg"/>
+&lt;/figure>
+&lt;ul>
+&lt;li>3,4,5,6是4个卡位，向外掰开，内存就会弹出&lt;/li>
+&lt;li>安装内存时，对准插槽，再按下即可&lt;/li>
+&lt;/ul>
+&lt;h1 id="显示器">显示器&lt;/h1>
+&lt;p>目前屏幕的分辨率为1366×768，本来想更换为1080P ips屏，
+但是根据资料并联系商家，没有相应能适配的屏幕，有些可惜。&lt;/p>
+&lt;p>不过目前一直使用外接显示器，这一点也可以接受。&lt;/p>
+&lt;h1 id="电池">电池&lt;/h1>
+&lt;p>使用电脑的时间这么多年，电池的续航能力也变差了。&lt;/p>
+&lt;p>直接在网上搜索对应型号，买原装的可以，简单有效。&lt;/p>- https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ - DreamAndDead 2014-2021</description></item><item><title>Comfortable way when testing HTTPS site</title><link>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</link><pubDate>Wed, 11 Apr 2018 04:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/</guid><description>时长N年半 https://dreamanddead.github.io/post/comfortable-way-when-testing-https-site/ -&lt;p>网站初期一直使用http，近期购买了ssl证书，预期将网站全面升级使用https。&lt;/p>
 &lt;p>当部署https后，居然出现了这种问题&amp;hellip;&lt;/p>
 &lt;h1 id="测试https">测试HTTPS&lt;/h1>
 &lt;h2 id="部署环境">部署环境&lt;/h2>
