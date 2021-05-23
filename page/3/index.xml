@@ -1,4 +1,278 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 22 Apr 2021 13:27:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>简明 Decision Trees</title><link>https://dreamanddead.github.io/post/decision-trees/</link><pubDate>Wed, 23 Oct 2019 07:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/decision-trees/</guid><description>时长N年半 https://dreamanddead.github.io/post/decision-trees/ -&lt;p>根据直觉来看，决策树是一种非常自然的方法，和人类处理问题的机制很像。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 28 Apr 2021 17:00:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>斗地主中的记牌策略</title><link>https://dreamanddead.github.io/post/how-to-remember-cards/</link><pubDate>Thu, 20 Feb 2020 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/how-to-remember-cards/</guid><description>时长N年半 https://dreamanddead.github.io/post/how-to-remember-cards/ -&lt;p>斗地主是一种规则简单的扑克游戏，虽然每个玩家手牌数量不多（3 人斗地主，一副牌 54 张，农民每人 17 张，地主 20 张），
+但是要精通其中合作，对抗，决策的过程却不易。&lt;/p>
+&lt;p>而新手在打牌过程中，向上进阶的第一步就是记牌。&lt;/p>
+&lt;h1 id="为什么要记牌">为什么要记牌&lt;/h1>
+&lt;p>随着牌局的进行，每个人手上的牌越来越少。如果牌数很少，发现其中的最优决策就更容易。
+记牌就是为了让玩家清楚，在某一个时刻，三个玩家的手上一共还握着什么牌。&lt;/p>
+&lt;p>所以记牌是为了充分利用打算过程中的信息，来做更好的决策，比如一些基础的记牌，&lt;/p>
+&lt;ul>
+&lt;li>记最大的牌。大王，小王，2 出过几张，还剩几张。如果全部打完，A 就是最大的，A 也打完 K 就是最大的，以此类推&lt;/li>
+&lt;li>7 和 10 打出几张。如果 7 10 都已经出完，没有人可以打出顺子&lt;/li>
+&lt;li>自己手上的缺点牌是否打出。缺点牌可能是别人手中的炸弹&lt;/li>
+&lt;li>地主的底牌。地主的底牌如果没有出，则一定还停留在手上&lt;/li>
+&lt;/ul>
+&lt;p>即使是这些基本的记牌，也会给决策过程带来不小的帮助。&lt;/p>
+&lt;p>最理想的记牌就是记住所有每个玩家出过的牌，这一点需要一些技巧，这也是这篇文章要讨论的。&lt;/p>
+&lt;h1 id="记牌-vs-算牌">记牌 vs 算牌&lt;/h1>
+&lt;p>记牌与算牌不同，记牌是记忆当前已经出过的牌，而算牌是根据每个人出过的牌去推测其手上有什么牌。&lt;/p>
+&lt;p>比如开局地主出 &lt;code>3334&lt;/code>，记牌只是单纯的知道当前已经打出了 4 张牌，而算牌需要一些分析过程。&lt;/p>
+&lt;ul>
+&lt;li>地主手上大概率没有 &lt;code>3&lt;/code>，一般不会冒着拆开炸弹的危险&lt;/li>
+&lt;li>大概率没有 &lt;code>4&lt;/code>，如果还有一个 4，可以 33344 出，如果还有两个 4，为什么不出 333444 飞机呢，三个 4 就更不可能了&lt;/li>
+&lt;/ul>
+&lt;p>当然，算牌的分析只是概率，多数情况下并非 100% 的确定一定有，一定没有什么牌，但对于决策过程同样是有帮助的。&lt;/p>
+&lt;p>算牌需要记牌，不然无从加以计算，有时候要不断回忆对手出过的牌，加大算牌的概率。&lt;/p>
+&lt;h1 id="如何记忆一副扑克牌">如何记忆一副扑克牌&lt;/h1>
+&lt;p>在讨论记牌之前，需要先讨论如何记忆一整副扑克牌。&lt;/p>
+&lt;p>听起来难度陡然上升，其实记忆一整副扑克牌是记忆技巧的基本功。&lt;/p>
+&lt;p>所谓的记忆技巧，主要利用了人脑天生对图像敏感的特性。它的过程也很简单，&lt;/p>
+&lt;ol>
+&lt;li>将所有扑克牌进行编码&lt;/li>
+&lt;li>将所有编码对应一种意象&lt;/li>
+&lt;li>记忆意象&lt;/li>
+&lt;li>逆向还原为扑克&lt;/li>
+&lt;/ol>
+&lt;h2 id="扑克编码">扑克编码&lt;/h2>
+&lt;p>每一步要将 54 张牌对应 54 个编码。&lt;/p>
+&lt;p>通常大家使用的编码方式都非常相似，&lt;/p>
+&lt;p>对于 A - 10 的 4 种花色的 40 张牌，对应到数字 10 - 49 这 40 个数字。&lt;/p>
+&lt;p>其中十位数对应花色，黑桃为 1（一个尖头），红桃为 2（两个圆头），梅花为 3（三个圆头），方块为 4（四个尖头）。&lt;/p>
+&lt;p>个位数对应点数，10 对应 0，A 对应 1，2 对应 2，&amp;hellip;，9 对应 9。&lt;/p>
+&lt;p>例如，黑桃 10 对应编码 10，梅花 8 对应编码 38&lt;/p>
+&lt;p>对于 J - K 的 12 张牌，在点数上，J 对应 1，Q 对应 2，K 对应 3&lt;/p>
+&lt;p>花色上，黑桃对应 6，红桃对应 7，梅花对应 8，方块对应 9&lt;/p>
+&lt;p>例如，红桃 Q 为 72，方块 K 为 93。&lt;/p>
+&lt;p>大王对应编码 0
+小王对应编码 1&lt;/p>
+&lt;p>至此 54 张牌编码完成。&lt;/p>
+&lt;h2 id="编码意象">编码意象&lt;/h2>
+&lt;p>将扑克编码之后，需要为每个不同的编码找定一个对应的意象。&lt;/p>
+&lt;p>中国文化博大精深，利用编码的谐音，可以对应出容易记忆的编码，谐音编码不便的条目可以用象形来对应。&lt;/p>
+&lt;p>如以下的编码表，就是我个人在用的编码表。&lt;/p>
+&lt;figure>
+&lt;img src="images/poker.jpg"/>
+&lt;/figure>
+&lt;p>编码表只要适合自己就是最好的，可以根据自己的需求去更改个别码点。&lt;/p>
+&lt;h2 id="记忆意象">记忆意象&lt;/h2>
+&lt;p>对于一副牌，按照牌的先后顺序，对应成意象之后，就需要将这些意象按顺序记忆起来。&lt;/p>
+&lt;p>记忆的方法有很多种，比如&lt;/p>
+&lt;ul>
+&lt;li>链条法，将前后两个意象用一个动作联系起来，一直串联起所有的牌，不便之处在于有些意象关联的太为脆弱，关联容易断裂。&lt;/li>
+&lt;li>定桩法（所谓记忆宫殿），也是诸多记忆大师在使用的方法，就是预先记忆一连串有顺序的地点（或大或小），
+然后将意象放在相应的地点中去。&lt;/li>
+&lt;/ul>
+&lt;p>我个人更喜欢一种类似于讲故事的方法，按顺序将各个意象（人物）悉数托出。&lt;/p>
+&lt;p>在记忆意象的时候，尽量调用多种感观，引起夸张的联想，这样更容易记忆。&lt;/p>
+&lt;h2 id="逆向还原">逆向还原&lt;/h2>
+&lt;p>记忆所有的意象之后，按顺序将意象转换为编码，转换为牌。&lt;/p>
+&lt;p>这样就完成了记忆扑克牌的过程。&lt;/p>
+&lt;p>综合来看，记忆扑克牌涉及数字逻辑和图像想象，是非常不错的训练左右脑的方法。&lt;/p>
+&lt;h1 id="记牌方法">记牌方法&lt;/h1>
+&lt;p>在了解记忆扑克的基础上，再来记忆每个玩家的牌。&lt;/p>
+&lt;h2 id="三家的牌">三家的牌&lt;/h2>
+&lt;p>出牌无论什么风向，你的左右都各有一个玩家，一个上家，一个下家。&lt;/p>
+&lt;pre>&lt;code> 上家 &amp;lt;------ 下家
+\ ^
+\ /
+v /
+自己
+&lt;/code>&lt;/pre>&lt;p>斗地主一共有 3 个玩家，最大手牌个数为 20。&lt;/p>
+&lt;p>如果使用定桩法，需要 3 个不同的记忆桩，如果用故事法则需要 3 个不同的故事，每个玩家最多记忆 20 个意象。&lt;/p>
+&lt;p>为每个人物定一个起始意象，用于和第一张牌做关联，因为最开始的牌容易忘记。
+个人觉得剪刀，石头，布是三个不错的意象，隐含了三家相互制衡的关系。&lt;/p>
+&lt;pre>&lt;code> 剪刀 &amp;lt;------ 布
+\ ^
+\ /
+v /
+石头
+&lt;/code>&lt;/pre>&lt;h2 id="地主底牌">地主底牌&lt;/h2>
+&lt;p>底牌有 3 张，有明确的花色，所有人可见，且都归属于地主手中。&lt;/p>
+&lt;p>3 张底牌对应 3 个不同的意象，和玩家的手牌分开记忆，作为第四个记忆桩/故事。&lt;/p>
+&lt;p>底牌对应的起始意象是金币，表示挖到的，而且很有价值。&lt;/p>
+&lt;p>在打牌时，要时刻注意地主有没有打出过底牌，如果有打出，则再次记忆打出的底牌，作为之前的抵消。&lt;/p>
+&lt;p>一点启示：&lt;/p>
+&lt;p>当自己是地主时，如果可以打底牌，尽量先打底牌。&lt;/p>
+&lt;p>比如手上一对 8，要配上顺子，其中一张 8 是底牌，就用它配顺子先打出，减小对手猜自己牌的机会。&lt;/p>
+&lt;h2 id="关注数量">关注数量&lt;/h2>
+&lt;p>斗地主不同于双升，对于牌的花色没有明确的要求，并且我们记牌的核心主要是为了关注相应点数的牌的数量，并不需要关注花色。&lt;/p>
+&lt;p>再者，如果用传统的记牌方法，打一个顺子/连对，需要瞬间记住太多牌，影响记忆速度。&lt;/p>
+&lt;p>这里讨论一种改进方法，关注数量的记牌方法，而不是花色，关键在于对编码方法做进一步的改进。&lt;/p>
+&lt;p>对于 A - 10，同样用 10 - 49 的编码，但是十位数表示数量，个位数表示点数。&lt;/p>
+&lt;p>对于 J - K，同样用 {6,7,8,9}{1,2,3} 的编码，不过映射方式出现变化。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">方式&lt;/th>
+&lt;th style="text-align:center">牌&lt;/th>
+&lt;th style="text-align:center">编码&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">大王&lt;/td>
+&lt;td style="text-align:center">0&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">小王&lt;/td>
+&lt;td style="text-align:center">1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">10&lt;/td>
+&lt;td style="text-align:center">10&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">9&lt;/td>
+&lt;td style="text-align:center">19&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">J&lt;/td>
+&lt;td style="text-align:center">61&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">Q&lt;/td>
+&lt;td style="text-align:center">62&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">单牌&lt;/td>
+&lt;td style="text-align:center">K&lt;/td>
+&lt;td style="text-align:center">63&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">AA&lt;/td>
+&lt;td style="text-align:center">21&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">10 10&lt;/td>
+&lt;td style="text-align:center">20&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">99&lt;/td>
+&lt;td style="text-align:center">29&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">JJ&lt;/td>
+&lt;td style="text-align:center">71&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">QQ&lt;/td>
+&lt;td style="text-align:center">72&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">对子&lt;/td>
+&lt;td style="text-align:center">KK&lt;/td>
+&lt;td style="text-align:center">73&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">AAA&lt;/td>
+&lt;td style="text-align:center">31&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">10 10 10&lt;/td>
+&lt;td style="text-align:center">30&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">999&lt;/td>
+&lt;td style="text-align:center">39&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">JJJ&lt;/td>
+&lt;td style="text-align:center">81&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">QQQ&lt;/td>
+&lt;td style="text-align:center">82&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">三张&lt;/td>
+&lt;td style="text-align:center">KKK&lt;/td>
+&lt;td style="text-align:center">83&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">AAAA&lt;/td>
+&lt;td style="text-align:center">41&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">10 10 10 10&lt;/td>
+&lt;td style="text-align:center">40&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">9999&lt;/td>
+&lt;td style="text-align:center">49&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">JJJJ&lt;/td>
+&lt;td style="text-align:center">91&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">QQQQ&lt;/td>
+&lt;td style="text-align:center">92&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">四张&lt;/td>
+&lt;td style="text-align:center">KKKK&lt;/td>
+&lt;td style="text-align:center">93&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">顺子&lt;/td>
+&lt;td style="text-align:center">34567&lt;/td>
+&lt;td style="text-align:center">13 rope 17&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">顺子&lt;/td>
+&lt;td style="text-align:center">910JQK&lt;/td>
+&lt;td style="text-align:center">19 rope 63&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">连对&lt;/td>
+&lt;td style="text-align:center">334455&lt;/td>
+&lt;td style="text-align:center">23 24 25&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">连对&lt;/td>
+&lt;td style="text-align:center">1010JJQQKK&lt;/td>
+&lt;td style="text-align:center">20 71 72 73&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">飞机&lt;/td>
+&lt;td style="text-align:center">333444&lt;/td>
+&lt;td style="text-align:center">33 34&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">飞机&lt;/td>
+&lt;td style="text-align:center">101010JJJQQQKKK&lt;/td>
+&lt;td style="text-align:center">30 81 82 83&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">其它&lt;/td>
+&lt;td style="text-align:center">对于带牌的情况，将所带的牌附加记忆，编码规则和上开始相同&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>这里加了些优化，对于顺子，数量至少 5 个，全用单张来记忆有些吃力，
+这里只记忆顺子的起始张 和 终止张，中间加上绳子意象，提高记忆效率。&lt;/p>
+&lt;p>So，觉得记忆效果如何呢？&lt;/p>- https://dreamanddead.github.io/post/how-to-remember-cards/ - DreamAndDead 2014-2021</description></item><item><title>简明 Decision Trees</title><link>https://dreamanddead.github.io/post/decision-trees/</link><pubDate>Wed, 23 Oct 2019 07:52:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/decision-trees/</guid><description>时长N年半 https://dreamanddead.github.io/post/decision-trees/ -&lt;p>根据直觉来看，决策树是一种非常自然的方法，和人类处理问题的机制很像。
 面对问题，在做出一个决策之后，跟随着要考虑子决策，直到决定最终的行动。
 而且这种决策过程在遇到同样问题时可以重复利用，就像先人留下的经验。&lt;/p>
 &lt;p>决策树算法在我看来，更像是一种艺术，其过程没有明确的确定性，而是在一种启发下找寻一种思考的路径。&lt;/p>
@@ -1977,96 +2251,4 @@ src="https://dreamanddead.github.io/img/license.png"
 alt="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
 title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
 />
-&lt;/a>- https://dreamanddead.github.io/post/understanding-euler-angles/ - DreamAndDead 2014-2021</description></item><item><title>a matrix det puzzle</title><link>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</link><pubDate>Mon, 22 Apr 2019 08:39:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/a-matrix-det-puzzle/</guid><description>时长N年半 https://dreamanddead.github.io/post/a-matrix-det-puzzle/ -&lt;p>求解行列式&lt;/p>
-&lt;p>$$
-\newcommand\iddots{\mathinner{
-\kern1mu\raise1pt{.}
-\kern2mu\raise4pt{.}
-\kern2mu\raise7pt{\Rule{0pt}{7pt}{0pt}.}
-\kern1mu
-}}
-$$&lt;/p>
-&lt;p>$$
-D_{2n} = \begin{vmatrix}
-a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
-&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
-b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
-\end{vmatrix}_{2n}
-$$&lt;/p>
-&lt;h1 id="解法1">解法1&lt;/h1>
-&lt;p>将第 $n+1, n+2, \dotsm, 2n$ 行分别加到第 $ n, n-1, \dotsm, 1$ 行，再提取公因式 $(a+b)$，得&lt;/p>
-&lt;p>$$
-D_{2n} = (a+b)^n
-\begin{vmatrix}
-1 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; 1 \\\&lt;br>
-&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; 1 &amp;amp; 1 &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
-b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
-\end{vmatrix}_{2n} =
-(a+b)^n
-\begin{vmatrix}
-1 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; 1 \\\&lt;br>
-&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; 1 &amp;amp; 1 &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; 0 &amp;amp; a-b &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
-0 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a-b
-\end{vmatrix}_{2n} =
-(a+b)^n \cdot (a-b)^n = (a^2 - b^2)^n
-$$&lt;/p>
-&lt;h1 id="解法2">解法2&lt;/h1>
-&lt;p>用递推法，按第一行展开，得&lt;/p>
-&lt;p>$$
-D_{2n} = (-1)^{1+1} \cdot a \cdot
-\begin{vmatrix}
-a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b &amp;amp; 0 \\\&lt;br>
-&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; &amp;amp; \\\&lt;br>
-b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a &amp;amp; \\\&lt;br>
-0 &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
-\end{vmatrix}_{2n-1}
-+
-(-1)^{1+2n} \cdot b \cdot
-\begin{vmatrix}
-0 &amp;amp; a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
-&amp;amp; &amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
-&amp;amp; b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a \\\&lt;br>
-b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; 0
-\end{vmatrix}_{2n-1}
-$$&lt;/p>
-&lt;p>再按最后一行展开&lt;/p>
-&lt;p>$$
-D_{2n} = (-1)^{1+1} \cdot a \cdot (-1)^{2n-1+2n-1} \cdot a \cdot
-\begin{vmatrix}
-a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
-&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
-b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
-\end{vmatrix}_{2n-2}
-+
-(-1)^{1+2n} \cdot b \cdot (-1)^{2n-1+1} \cdot b \cdot
-\begin{vmatrix}
-a &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; b \\\&lt;br>
-&amp;amp; \ddots &amp;amp; &amp;amp; &amp;amp; \iddots &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; a &amp;amp; b &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; &amp;amp; b &amp;amp; a &amp;amp; &amp;amp; \\\&lt;br>
-&amp;amp; \iddots &amp;amp; &amp;amp; &amp;amp; \ddots &amp;amp; \\\&lt;br>
-b &amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; a
-\end{vmatrix}_{2n-2}
-$$&lt;/p>
-&lt;p>化简为递推式&lt;/p>
-&lt;p>$$
-D_{2n} = a^2 D_{2n-2} - b^2 D_{2n-2} = (a^2 - b^2)D_{2n-2} = (a^2 - b^2)^2 D_{2n-4} = \dotsm = (a^2 - b^2)^{n-1}D_2 = (a^2 - b^2)^n
-$$&lt;/p>- https://dreamanddead.github.io/post/a-matrix-det-puzzle/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;/a>- https://dreamanddead.github.io/post/understanding-euler-angles/ - DreamAndDead 2014-2021</description></item></channel></rss>

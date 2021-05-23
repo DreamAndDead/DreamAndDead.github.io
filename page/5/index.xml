@@ -1,4 +1,44 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 22 Apr 2021 13:27:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>thinkpad E530c 的升级之路</title><link>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</link><pubDate>Sat, 12 May 2018 20:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</guid><description>时长N年半 https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ -&lt;p>不知不觉，自己的&lt;a href="http://detail.zol.com.cn/361/360255/param.shtml">Thinkpad E530c&lt;/a>入手5年，期间换过数次系统，如今不觉有些老态龙钟，
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 28 Apr 2021 17:00:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Serve http and https at same time with nginx</title><link>https://dreamanddead.github.io/post/serve-http-https-same-time/</link><pubDate>Thu, 17 May 2018 14:30:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/serve-http-https-same-time/</guid><description>时长N年半 https://dreamanddead.github.io/post/serve-http-https-same-time/ -&lt;p>之前讨论过，&lt;a href="https://dreamanddead.github.io/2018/04/11/comfortable-way-when-testing-https-site.html">网站从http迁移到https时，需要注意些什么&lt;/a>。
+由于旧有的服务依旧在运行，需要同时保留http与https。
+突然有一天，访问http服务，页面上只出现nginx的错误信息：&lt;/p>
+&lt;pre>&lt;code>400 bad request the plain http request was sent to https port
+&lt;/code>&lt;/pre>&lt;p>这让我觉得非常奇怪，按照之前的理解，这样设置应该是没有问题的。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">server&lt;/span> {
+&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">80&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">443&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl&lt;/span> &lt;span style="color:#00688b">on&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.crt&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate_key&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.key&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">.........&lt;/span>
+&lt;span style="color:#cd5555">.........&lt;/span>
+&lt;span style="color:#cd5555">.........&lt;/span>
+&lt;span style="color:#a61717;background-color:#e3d2d2">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>后来按照错误信息进行一番搜索，还是漏掉了一些细节。&lt;/p>
+&lt;h1 id="trouble-shoot">trouble shoot&lt;/h1>
+&lt;p>从 &lt;a href="https://stackoverflow.com/questions/8768946/dealing-with-nginx-400-the-plain-http-request-was-sent-to-https-port-error">stackoverflow&lt;/a> 上搜索得到的结果，
+发现自己对于 ssl 的配置理解还不够充分。&lt;/p>
+&lt;p>一般在nginx配置中，ssl 可能出现在两个地方&lt;/p>
+&lt;ul>
+&lt;li>在 listen 指令之后，作为参数&lt;/li>
+&lt;li>在 server 块下，作为指令，参数为 on/off&lt;/li>
+&lt;/ul>
+&lt;p>对于 ssl 指令，&lt;a href="http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl">官方文档&lt;/a> 已经不推荐使用，而是推荐使用 listen 指令加 ssl 参数的格式。&lt;/p>
+&lt;p>listen 指令的 &lt;a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#listen">ssl 参数&lt;/a> 的作用是，标明 listen 的端口应该运行 ssl 模式。
+同时托管 http 与 https时，推荐&lt;a href="http://nginx.org/en/docs/http/configuring_https_servers.html#single_http_https_server">使用如下配置&lt;/a>：&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-nginx" data-lang="nginx">&lt;span style="color:#8b008b;font-weight:bold">server&lt;/span> {
+&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">80&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">listen&lt;/span> &lt;span style="color:#b452cd">443&lt;/span> &lt;span style="color:#cd5555">ssl&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl&lt;/span> &lt;span style="color:#00688b">off&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.crt&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">ssl_certificate_key&lt;/span> &lt;span style="color:#cd5555">/etc/nginx/ssl/domain.key&lt;/span>;
+&lt;span style="color:#8b008b;font-weight:bold">.........&lt;/span>
+&lt;span style="color:#cd5555">.........&lt;/span>
+&lt;span style="color:#cd5555">.........&lt;/span>
+&lt;span style="color:#a61717;background-color:#e3d2d2">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>所以问题的核心就在于，指令 &lt;code>ssl on&lt;/code>，将所有 listen 的端口，都运行在 ssl 模式，但是对于端口 80，
+这样明显是不对的，也就导致了最开始的报错信息。&lt;/p>
+&lt;pre>&lt;code>400 bad request the plain http request was sent to https port
+&lt;/code>&lt;/pre>&lt;p>这时就推荐使用 listen 加 ssl 参数，更细粒度的控制哪些端口运行在 ssl 模式下。&lt;/p>- https://dreamanddead.github.io/post/serve-http-https-same-time/ - DreamAndDead 2014-2021</description></item><item><title>thinkpad E530c 的升级之路</title><link>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</link><pubDate>Sat, 12 May 2018 20:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/</guid><description>时长N年半 https://dreamanddead.github.io/post/upgrade-thinkpad-e530c/ -&lt;p>不知不觉，自己的&lt;a href="http://detail.zol.com.cn/361/360255/param.shtml">Thinkpad E530c&lt;/a>入手5年，期间换过数次系统，如今不觉有些老态龙钟，
 硬件资源已远远不足以支持日常使用的需求，速度慢多次卡顿，十分损伤工作效率。&lt;/p>
 &lt;p>决心升级一下跟随多年的“小黑”，焕发新颜。&lt;/p>
 &lt;h1 id="拆机">拆机&lt;/h1>
