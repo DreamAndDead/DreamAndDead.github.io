@@ -2,13 +2,15 @@
 title: "如何正确发声"
 author: ["DreamAndDead"]
 date: 2021-04-03T22:01:00+08:00
-lastmod: 2021-05-22T20:51:39+08:00
+lastmod: 2021-05-24T17:52:30+08:00
 tags: ["voice", "self"]
 categories: ["Theory"]
 draft: true
 comment: false
 featured_image: "images/featured.jpg"
 ---
+
+[《嗓音的科学训练与保健》](https://book.douban.com/subject/1288733/)
 
 -   第一印象
     -   人的容貌，形体，声音，构成人的整体形像。
@@ -23,10 +25,6 @@ featured_image: "images/featured.jpg"
 -   重要的
     -   如何讲话，并不着重说话的内容，而是着重说话的方式。
     -   所以提高自己的发声方式是重要的，对个人的气质和信心影响很大。
-
-《嗓音的科学训练与保健》
-
-<https://book.douban.com/subject/1288733/>
 
 
 ## 人声 {#人声}

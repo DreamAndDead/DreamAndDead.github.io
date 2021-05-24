@@ -10,6 +10,9 @@
 #+hugo_draft: true
 #+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg
 
+   
+[[https://book.douban.com/subject/1288733/][《嗓音的科学训练与保健》]]
+
 - 第一印象
   - 人的容貌，形体，声音，构成人的整体形像。
   - 发声决定着自己的气质和与人的印象。
@@ -23,10 +26,6 @@
 - 重要的    
   - 如何讲话，并不着重说话的内容，而是着重说话的方式。
   - 所以提高自己的发声方式是重要的，对个人的气质和信心影响很大。
-   
-《嗓音的科学训练与保健》
-
-https://book.douban.com/subject/1288733/
 
 * 人声
   
