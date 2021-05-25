@@ -936,7 +936,7 @@ $$&lt;/p>
 conda 内部也有 env 的概念（默认是 base），可以针对不同的项目进行环境的分离，并且对一些开发工具有良好的支持（比如 VS Code 中的 Anaconda 插件）。&lt;/p>
 &lt;p>最近在配置 emacs 下的 python 开发环境，相比之下在 Anaconda 方面的插件还没有那么成熟，经过搜索发现，
 存在可以集成 pipenv&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> 和 conda env 的方案&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ pipenv --python=&lt;span style="color:#8b008b;font-weight:bold">$(&lt;/span>conda run which python&lt;span style="color:#8b008b;font-weight:bold">)&lt;/span> --site-packages
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-bash" data-lang="bash">$ pipenv --python=&lt;span style="color:#8b008b;font-weight:bold">$(&lt;/span>conda run which python&lt;span style="color:#8b008b;font-weight:bold">)&lt;/span> --site-packages
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的命令，可以将 conda env 作为 pipenv virtualenv 来使用，集成了所有 Anaconda 集成的开发库！&lt;/p>
 &lt;p>更可贵的是，在使用 conda 升级开发库之后，可以再次重建 virtualenv 获得更新带来的好处。
 并且，virtualenv 环境更容易被其它编码工具支持，比如 emacs :)。&lt;/p>
@@ -1224,11 +1224,11 @@ have been resolved. This makes it possible to swap modifier keys.
 &lt;/code>&lt;/pre>
 &lt;p>keysym = keysym，左侧解析在前，右侧在左侧解析后再解析。&lt;/p>
 &lt;p>所以如果我们载入这样的配置&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">keysym a = b
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">keysym a = b
 keysym b = a
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>发现 a b 两个按键互换了。&lt;/p>
 &lt;p>从某种意义上，这种交换很像 python 中变量的交换。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">a, b = b, a
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-python" data-lang="python">a, b = b, a
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>左侧的 a b 先解析成对象的地址，右侧的 a b 解析为对象的值，然后统一赋值。&lt;/p>
 &lt;p>这样来看的话，keysym 的符号表示更像是一个变量指针。&lt;/p>
 &lt;h2 id="modifier">modifier&lt;/h2>

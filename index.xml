@@ -634,7 +634,7 @@ alt="Figure 1: 不同复杂度的增长速度"/> &lt;figcaption>
 如 &lt;code>Intel(R) Core(TM) i7-3840QM CPU @ 2.80GHz&lt;/code> ，周期时间为 &lt;code>1/2.8G s&lt;/code> 。&lt;/p>
 &lt;p>不同的指令需要不同的周期数，如乘法指令比加法指令消耗更多周期。&lt;/p>
 &lt;p>运行指令数是由程序生成的指令与数据规模共同决定的。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;ctime&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;ctime&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
 &lt;span style="color:#8b008b;font-weight:bold">using&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">namespace&lt;/span> std;
@@ -649,7 +649,7 @@ i++;
 end = clock();
 cout &amp;lt;&amp;lt; &lt;span style="color:#cd5555">&amp;#34;running time: &amp;#34;&lt;/span> &amp;lt;&amp;lt; (&lt;span style="color:#00688b;font-weight:bold">float&lt;/span>)(end-start)*&lt;span style="color:#b452cd">1000.0&lt;/span>/CLOCKS_PER_SEC &amp;lt;&amp;lt; &lt;span style="color:#cd5555">&amp;#34;ms&amp;#34;&lt;/span> &amp;lt;&amp;lt; endl;
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">running time: 1699.55ms
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">running time: 1699.55ms
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>2.8Ghz&lt;/code> 的 cpu 运行 &lt;code>1G&lt;/code> 条基础指令，大约消耗时间 &lt;code>1.68s&lt;/code> 。&lt;/p>
 &lt;p>OJ 平台的运行机器参数是不透明的，粗略用 &lt;code>1G&lt;/code> 指令对应 &lt;code>1.5s&lt;/code> 时间来估计即可。&lt;/p>
 &lt;/li>
@@ -669,7 +669,7 @@ scanf 比 cin 要快 10 倍（粗略估计）。
 &lt;p>程序运行过程中，所有需要的空间都放在内存中。
 内存的最小单位为字节(1 byte = 8 bits)，4G 内存就是 &lt;code>4*1024*1024*1024&lt;/code> bytes 。&lt;/p>
 &lt;p>在 C++ 中，类型直接对应空间，可用 &lt;code>sizeof&lt;/code> 计算相应类型的变量占用的字节数。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
 &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
 printf(&lt;span style="color:#cd5555">&amp;#34;bytes of char = %d&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>, &lt;span style="color:#8b008b;font-weight:bold">sizeof&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">char&lt;/span>));
@@ -683,7 +683,7 @@ printf(&lt;span style="color:#cd5555">&amp;#34;bytes of double = %d&lt;/span>&lt
 printf(&lt;span style="color:#cd5555">&amp;#34;bytes of void* = %d&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>, &lt;span style="color:#8b008b;font-weight:bold">sizeof&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>*));
 printf(&lt;span style="color:#cd5555">&amp;#34;bytes of int[1000] = %d&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>, &lt;span style="color:#8b008b;font-weight:bold">sizeof&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span>[&lt;span style="color:#b452cd">1000&lt;/span>]));
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">bytes of char = 1
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">bytes of char = 1
 bytes of bool = 1
 bytes of short = 2
 bytes of int = 4
@@ -760,7 +760,7 @@ bytes of int[1000] = 4000
 &lt;h3 id="pe">PE&lt;/h3>
 &lt;p>这是一个好信号，说明你离 AC 非常接近，只需要调整一点点格式。&lt;/p>
 &lt;p>多数时候是空行的问题，比如以下两种表述是不同的（常见于 UVA）。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">there is a blank line after each test case
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">there is a blank line after each test case
 vs
 there is a blank line between each test case
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>前者在每个输出之 &lt;strong>后&lt;/strong> 都有空行；
@@ -1328,7 +1328,7 @@ alt="Figure 1: calibre 支持转换 KF8 的选项"/> &lt;figcaption>
 配合官方 kindlegen 工具加工生成 mobi KF8 电子书&lt;sup id="fnref:5">&lt;a href="#fn:5" class="footnote-ref" role="doc-noteref">5&lt;/a>&lt;/sup>。&lt;/p>
 &lt;p>其过程并不复杂。&lt;/p>
 &lt;p>下载 python 脚本 &lt;a href="https://www.mobileread.com/forums/attachment.php?attachmentid=168073&amp;amp;d=1543614967">KindleUnpack-081.zip&lt;/a>，解压如下，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">kindleunpack/
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">kindleunpack/
 ├── COPYING.txt
 ├── DumpMobiHeader_v022.py
 ├── KindleUnpack_lin.json
@@ -1363,7 +1363,7 @@ alt="Figure 1: calibre 支持转换 KF8 的选项"/> &lt;figcaption>
 │   └── scrolltextwidget.py
 └── README.md
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>查看其帮助选项，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ python kindleunpack/lib/kindleunpack.py --help
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ python kindleunpack/lib/kindleunpack.py --help
 KindleUnpack v0.81
 Based on initial mobipocket version Copyright © 2009 Charles M. Hannum &amp;lt;root@ihack.net&amp;gt;
 Extensive Extensions and Improvements Copyright © 2009-2018
@@ -1388,9 +1388,9 @@ F (force to fit to epub2 definitions), default is 2
 -d dump headers and other info to output and extra files
 -r write raw data to the output folder
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>以电子书 &lt;a href="images/%E5%8D%81%E5%88%86%E9%92%9F%E5%86%A5%E6%83%B3.azw3">十分钟冥想.azw3&lt;/a> 为例，解压到 &lt;code>unpack_output&lt;/code> 目录，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ python kindleunpack/lib/kindleunpack.py -i -s ./十分钟冥想.azw3 ./unpack_output/
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ python kindleunpack/lib/kindleunpack.py -i -s ./十分钟冥想.azw3 ./unpack_output/
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>解压内容如下，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ tree ./unpack_output/
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ tree ./unpack_output/
 unpack_output/
 ├── HDImages
 ├── mobi7
@@ -1438,7 +1438,7 @@ unpack_output/
 │   └── part0094.xhtml
 └── toc.ncx
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>下载安装 kindlegen 工具&lt;sup id="fnref:5">&lt;a href="#fn:5" class="footnote-ref" role="doc-noteref">5&lt;/a>&lt;/sup>，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ kindlegen
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ kindlegen
 *************************************************************
 Amazon kindlegen(Linux) V2.9 build 1028-0897292
 A command line e-book compiler
@@ -1469,7 +1469,7 @@ pt: Portuguese
 ru: Russian
 nl: Dutch
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>将解包得到的 epub KF8 转换为 mobi，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ kindlegen unpack_output/mobi8/十分钟冥想.epub -c2 -verbose -o 十分钟冥想.mobi
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ kindlegen unpack_output/mobi8/十分钟冥想.epub -c2 -verbose -o 十分钟冥想.mobi
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>文件生成到 &lt;code>unpack_output/mobi8/十分钟冥想.mobi&lt;/code> 。&lt;/p>
 &lt;p>用 calibre viewer 打开，可以看到 KF8 的标识，说明转换成功。&lt;/p>
 &lt;figure>
@@ -1581,7 +1581,7 @@ title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0
 &lt;li>&lt;code>am &amp;lt; among&lt;/code>&lt;/li>
 &lt;/ul>
 &lt;p>考虑集合 &lt;code>{1, 2, 3, 4}&lt;/code> 的 16 个排列，按字典序排序，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">1 2 3 4
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">1 2 3 4
 1 2 4 3
 1 3 2 4
 1 3 4 2
@@ -1635,9 +1635,9 @@ title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0
 此时只需要将剩余尾部元素反转&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>，就可以得到正序。&lt;/p>
 &lt;p>这一点不容小觑，reverse 的复杂度为 O(N)，而 sort 的复杂度为 O(Nlog(N))。&lt;/p>
 &lt;p>以下 &lt;code>next_perm&lt;/code> 函数是这个过程的代码实现。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+&lt;div class="highlight">&lt;div style="background-color:#eed">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+&lt;pre style="background-color:#eed">&lt;code>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 &lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 &lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 &lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -1677,7 +1677,7 @@ title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0
 &lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;pre style="background-color:#eed">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;algorithm&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
@@ -1709,7 +1709,7 @@ printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#
 &lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">1 2 3 4
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">1 2 3 4
 1 2 4 3
 1 3 2 4
 1 3 4 2
@@ -1737,7 +1737,7 @@ printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#
 &lt;p>有一个好消息， &lt;code>next_perm&lt;/code> 同时可以处理多重集合的情况。&lt;/p>
 &lt;p>比如多重集合 &lt;code>{1, 2, 2, 3, 3, 3, 4}&lt;/code> 的排列 &lt;code>2 4 3 3 3 2 1&lt;/code> ，
 应用 &lt;code>next_perm&lt;/code> 得到 &lt;code>3 1 2 2 3 3 4&lt;/code> 。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">locate
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">locate
 2 4 3 3 3 2 1
 j i k
 swap
@@ -1763,7 +1763,7 @@ j i k
 &lt;h4 id="集合">集合&lt;/h4>
 &lt;p>递归过程中，按照从左到右的位置，每次从未使用的元素中挑选一个，直到排列完成。&lt;/p>
 &lt;p>且每次递归时，按照从小到大的顺序来挑选未使用的元素，如此得到所有排列的字典序。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;algorithm&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
 &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">enum_perm&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> perm[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> ith) {
@@ -1788,7 +1788,7 @@ enum_perm(eles, perm, n, ith+&lt;span style="color:#b452cd">1&lt;/span>);
 enum_perm(eles, perm, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">0&lt;/span>);
 &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#b452cd">0&lt;/span>;
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">1 2 4 7
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">1 2 4 7
 1 2 7 4
 1 4 2 7
 1 4 7 2
@@ -1825,7 +1825,7 @@ enum_perm(eles, perm, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style
 &lt;p>比如 &lt;code>{1, 1, 2, 2, 3, 4}&lt;/code> ，只遍历 &lt;code>1 2 3 4&lt;/code> 即可。&lt;/p>
 &lt;p>在确定元素是否可以使用时，要计算元素是否已经使用完。&lt;/p>
 &lt;p>综合来看，可认为是上述算法的拓展。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;algorithm&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
 &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">enum_perm&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> perm[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> ith) {
@@ -1852,7 +1852,7 @@ enum_perm(eles, perm, n, ith+&lt;span style="color:#b452cd">1&lt;/span>);
 enum_perm(eles, perm, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">0&lt;/span>);
 &lt;span style="color:#8b008b;font-weight:bold">return&lt;/span> &lt;span style="color:#b452cd">0&lt;/span>;
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">1 2 2 7
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">1 2 2 7
 1 2 7 2
 1 7 2 2
 2 1 2 7
@@ -1880,7 +1880,7 @@ enum_perm(eles, perm, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style
 则一个二进制数可以唯一确定一个子集。
 &lt;code>0b11...11&lt;/code> 对应全集， &lt;code>0b00...00&lt;/code> 对应空集。&lt;/p>
 &lt;p>比如集合 &lt;code>{1, 2, 3, 4, 7, 9}&lt;/code> 的子集和其二进制表示，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text"> { 1, 2, 3, 4, 7, 9 }
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text"> { 1, 2, 3, 4, 7, 9 }
 0b 1 1 1 1 1 1
 { 1, 3, 4, 7, 9 }
 0b 1 0 1 1 1 1
@@ -1892,7 +1892,7 @@ enum_perm(eles, perm, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style
 这就是迭代法的原理。
 n 个元素的集合，共有 &lt;code>2^n&lt;/code> 个子集，
 从 0 到 &lt;code>2^n&lt;/code> 迭代整数，每个整数对应一个子集。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;algorithm&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cmath&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
@@ -1910,7 +1910,7 @@ printf(&lt;span style="color:#cd5555">&amp;#34; &amp;#34;&lt;/span>);
 printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>);
 }
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">1
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">1
 2
 1 2
 4
@@ -1944,7 +1944,7 @@ printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#
 &lt;p>一种方法是，依旧从 0 到 &lt;code>2^n&lt;/code> 遍历，判断是否为 &lt;code>0b010011&lt;/code> 的子集，虽然可行但不是最优的方法。&lt;/p>
 &lt;p>另一种方法是，每次从 &lt;code>0b010011&lt;/code> 向下减 1，使用 与 运算屏蔽无关位，这样只需遍历 8 次。&lt;/p>
 &lt;p>以下代码呈现了这个技巧，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;bitset&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
 &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
@@ -1961,7 +1961,7 @@ left = (left - &lt;span style="color:#b452cd">1&lt;/span>) &amp;amp; sub_set;
 right = left ^ sub_set;
 }
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">010011
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">010011
 000000
 010010
 000001
@@ -1988,7 +1988,7 @@ right = left ^ sub_set;
 &lt;blockquote>
 &lt;p>可重集合 {0, 0, 0, &amp;hellip;, 1, 1, 1} 的排列和只含 n 个元素的子集一一对应。&lt;/p>
 &lt;/blockquote>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;algorithm&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
 &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> &lt;span style="color:#008b45">main&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">void&lt;/span>) {
@@ -2002,7 +2002,7 @@ printf(&lt;span style="color:#cd5555">&amp;#34;%d &amp;#34;&lt;/span>, eles[i]);
 printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#cd5555">\n&lt;/span>&lt;span style="color:#cd5555">&amp;#34;&lt;/span>);
 } &lt;span style="color:#8b008b;font-weight:bold">while&lt;/span> (std::next_permutation(mask, mask+n));
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">4 9 11 13
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">4 9 11 13
 2 9 11 13
 2 4 11 13
 2 4 9 13
@@ -2025,7 +2025,7 @@ printf(&lt;span style="color:#cd5555">&amp;#34;&lt;/span>&lt;span style="color:#
 &lt;p>最直观的方式，每次递归，考虑第 i 个元素在不在子集，
 直到最终确定集合。&lt;/p>
 &lt;p>其实和按位表示是一种思想，不过使用递归来实现。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
 &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">enum_subset&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> subset[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> ith) {
 &lt;span style="color:#8b008b;font-weight:bold">if&lt;/span> (ith == n) {
@@ -2045,7 +2045,7 @@ enum_subset(eles, subset, n, ith+&lt;span style="color:#b452cd">1&lt;/span>);
 &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> subset[&lt;span style="color:#b452cd">4&lt;/span>];
 enum_subset(eles, subset, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">0&lt;/span>);
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">9
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">9
 4
 4 9
 2
@@ -2062,7 +2062,7 @@ enum_subset(eles, subset, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span s
 1 2 4 9
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>另一种方法是使用定序的技巧，子集后面的元素必须比前面大，
 这样在递归枚举集合时，可避免出现重复。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="color:#1e889b">#include&lt;/span> &lt;span style="color:#1e889b">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#1e889b">
 &lt;/span>&lt;span style="color:#1e889b">&lt;/span>
 &lt;span style="color:#00688b;font-weight:bold">void&lt;/span> &lt;span style="color:#008b45">enum_subset&lt;/span>(&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> eles[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> subset[], &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> n, &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> ith) {
 &lt;span style="color:#8b008b;font-weight:bold">for&lt;/span> (&lt;span style="color:#00688b;font-weight:bold">int&lt;/span> i = &lt;span style="color:#b452cd">0&lt;/span>; i &amp;lt; ith; i++)
@@ -2080,7 +2080,7 @@ enum_subset(eles, subset, n, ith+&lt;span style="color:#b452cd">1&lt;/span>);
 &lt;span style="color:#00688b;font-weight:bold">int&lt;/span> subset[&lt;span style="color:#b452cd">4&lt;/span>];
 enum_subset(eles, subset, &lt;span style="color:#b452cd">4&lt;/span>, &lt;span style="color:#b452cd">0&lt;/span>);
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">1
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">1
 1 2
 1 2 4
 1 2 4 9
@@ -2157,7 +2157,7 @@ title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0
 &lt;/li>
 &lt;/ol>
 &lt;/section>
-- https://dreamanddead.github.io/post/algo-basic-enum-perm/ - DreamAndDead 2014-2021</description></item><item><title>人生理论之目标管理</title><link>https://dreamanddead.github.io/post/goal-theory/</link><pubDate>Tue, 23 Mar 2021 16:05:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/goal-theory/</guid><description>时长N年半 https://dreamanddead.github.io/post/goal-theory/ -&lt;p>如何更好地度过一生？很多人都没有答案。
+- https://dreamanddead.github.io/post/algo-basic-enum-perm/ - DreamAndDead 2014-2021</description></item><item><title>论自我管理</title><link>https://dreamanddead.github.io/post/goal-theory/</link><pubDate>Tue, 23 Mar 2021 16:05:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/goal-theory/</guid><description>时长N年半 https://dreamanddead.github.io/post/goal-theory/ -&lt;p>如何更好地度过一生？很多人都没有答案。
 曾有多时，感觉工作如坐针毡；
 多少年末，发现自己依旧在原地；
 屡次被噩梦惊醒，惶恐会一直平凡下去。
@@ -2176,7 +2176,7 @@ title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0
 拿假期来说，
 周末两天，可以在工作之余得到放松；
 而长达两个月的寒暑假，人会在其中失去时间观念，觉得时间难以消磨，无聊，乏味。&lt;/p>
-&lt;p>关于自我管理，前人已经总结了多种方法，个人从其中受益匪浅。
+&lt;p>关于自我管理，前人已经总结了多种方法，自己从实践中也受益匪浅。
 从 todo 管理，时间管理，到精力管理，都和自身需求差一些契合。
 todolist 缺少长期连续性，使人沉浸在打勾的快感中；
 时间管理过于关注效率，缺少对个人成长与长期目标的关注；
@@ -2248,7 +2248,7 @@ todolist 缺少长期连续性，使人沉浸在打勾的快感中；
 &lt;/blockquote>
 &lt;p>价值，就是所谓价值认同，价值观。
 每个人的价值观都不同，有人热衷财富，有人追求幸福感，
-有人终生环游世界。&lt;/p>
+有人钟爱环游世界。&lt;/p>
 &lt;p>遵从价值的方向才是最为充实的方向。
 有时听到人说，“这么做没意义，没有价值，简直是浪费时间。”
 这时他就在谈论意义和价值。
@@ -2494,7 +2494,7 @@ Agent 通过做事，逐渐改变状态，慢慢向目标靠近。&lt;/p>
 &lt;li>5 年，反思人生目标&lt;/li>
 &lt;/ul>
 &lt;p>发现偏差时，以“新的自我”去积极修正。&lt;/p>
-&lt;h2 id="致谢">致谢&lt;/h2>
+&lt;h2 id="引用">引用&lt;/h2>
 &lt;p>这一切都开始于阅读《奇特的一生》，
 内心震撼之余，后悔自己浪费了太多时间，
 从而开始接触时间管理。&lt;/p>
@@ -2522,12 +2522,12 @@ title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0
 &lt;/a>
 - https://dreamanddead.github.io/post/goal-theory/ - DreamAndDead 2014-2021</description></item><item><title>Graphviz Examples</title><link>https://dreamanddead.github.io/post/graphviz-examples/</link><pubDate>Mon, 22 Mar 2021 14:48:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/graphviz-examples/</guid><description>时长N年半 https://dreamanddead.github.io/post/graphviz-examples/ -&lt;h2 id="usage">usage&lt;/h2>
 &lt;p>安装相应软件包&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -S graphviz xdot
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -S graphviz xdot
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>新建 &lt;code>test.dot&lt;/code> 文件，保存绘图代码。&lt;/p>
 &lt;p>使用 xdot 实时预览，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ xdot test.dot
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ xdot test.dot
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>绘图结果，生成 png 图片，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ dot -Tpng -o test.png test.dot
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ dot -Tpng -o test.png test.dot
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="graph">graph&lt;/h2>
 &lt;h3 id="undirected">undirected&lt;/h3>
 &lt;pre>&lt;code class="language-dot" data-lang="dot">graph {
@@ -2832,7 +2832,7 @@ alt="Figure 3: 卸载软件包 a 及其依赖，用蓝色标识"/> &lt;figcaptio
 二是 &lt;code>/usr/bin/pacman&lt;/code> ，是 &lt;code>core/pacman&lt;/code> 的一部分。
 文章之后出现的 &lt;code>core/pacman&lt;/code> 表示第一种含义， &lt;code>pacman&lt;/code> 表示第二种含义。&lt;/p>
 &lt;p>&lt;a href="https://man.archlinux.org/man/pacman.8">pacman 的用法&lt;/a>是非常清晰的&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman &amp;lt;operation&amp;gt; [options] [targets]
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman &amp;lt;operation&amp;gt; [options] [targets]
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="operation">operation&lt;/h3>
 &lt;p>不同参数(parameter)对应不同操作(operation)。&lt;/p>
 &lt;p>常用操作如下表如示，&lt;/p>
@@ -2876,45 +2876,45 @@ alt="Figure 3: 卸载软件包 a 及其依赖，用蓝色标识"/> &lt;figcaptio
 &lt;p>查询是最重要的一项。因为在任何操作开始之前，首先要获取足够的信息。&lt;/p>
 &lt;h4 id="列出所有软件包">列出所有软件包&lt;/h4>
 &lt;p>从服务器列出所有可安装包&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -Sl
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -Sl
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>从本地列出所有已安装包&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -Q
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -Q
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="根据名称-描述查找软件包">根据名称/描述查找软件包&lt;/h4>
 &lt;p>从服务器查找&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -Ss
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -Ss
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>从本地查找&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -Qs
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -Qs
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="查询元信息">查询元信息&lt;/h4>
 &lt;p>从服务器查询元信息&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -Si
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -Si
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>从本地查询元信息&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -Qi
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -Qi
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="列出软件包中包含的文件">列出软件包中包含的文件&lt;/h4>
 &lt;p>从服务器列出软件包中包含的文件&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -Fl
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -Fl
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>从本地列出软件包中包含的文件&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -Ql
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -Ql
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="根据文件反向查询">根据文件反向查询&lt;/h4>
 &lt;p>从服务器查询，哪个包包含相应文件名&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -F
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -F
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>从本地查询，哪个包包含相应文件名&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -Qo
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -Qo
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装">安装&lt;/h3>
 &lt;p>软件包的安装是简洁明了的，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -S
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -S
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="卸载">卸载&lt;/h3>
 &lt;p>&lt;code>-s&lt;/code> 表示同时卸载无用依赖，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -Rs
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -Rs
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="更新">更新&lt;/h3>
 &lt;p>如果要更新，就整体全部更新。根据之前的图同步理论，&lt;a href="https://wiki.archlinux.org/index.php/Pacman#Upgrading%5Fpackages">局部更新是非常危险的&lt;/a>。&lt;/p>
 &lt;p>&lt;strong>Arch 发行版的软件包更新非常频繁，建议每次开机都进行更新&lt;/strong> 。&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ pacman -Syu
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -Syu
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="alias">Alias&lt;/h2>
 &lt;p>遇到相应任务再来文档查询非常消耗时间，可以直接将功能集成到 Shell 中。&lt;/p>
 &lt;p>先安装 &lt;a href="https://wiki.archlinux.org/index.php/Fzf#Pacman">fuzzy finder&lt;/a>，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">$ sudo pacman -S fzf
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ sudo pacman -S fzf
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>将以下脚本 append 到 &lt;code>.bashrc&lt;/code> 中，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#658b00">alias&lt;/span> &lt;span style="color:#00688b">pkg_install&lt;/span>=&lt;span style="color:#cd5555">&amp;#34;pacman -Slq | fzf --multi --reverse --preview &amp;#39;cat &amp;lt;(pacman -Si {1}) &amp;lt;(pacman -Fl {1} | awk \&amp;#34;{print \$2}\&amp;#34;)&amp;#39; | xargs -ro sudo pacman -S&amp;#34;&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#658b00">alias&lt;/span> &lt;span style="color:#00688b">pkg_install&lt;/span>=&lt;span style="color:#cd5555">&amp;#34;pacman -Slq | fzf --multi --reverse --preview &amp;#39;cat &amp;lt;(pacman -Si {1}) &amp;lt;(pacman -Fl {1} | awk \&amp;#34;{print \$2}\&amp;#34;)&amp;#39; | xargs -ro sudo pacman -S&amp;#34;&lt;/span>
 &lt;span style="color:#658b00">alias&lt;/span> &lt;span style="color:#00688b">pkg_remove&lt;/span>=&lt;span style="color:#cd5555">&amp;#34;pacman -Qq | fzf --multi --reverse --preview &amp;#39;cat &amp;lt;(pacman -Qi {1}) &amp;lt;(pacman -Ql {1} | awk \&amp;#34;{print \$2}\&amp;#34;)&amp;#39; | xargs -ro sudo pacman -Rs&amp;#34;&lt;/span>
 &lt;span style="color:#658b00">alias&lt;/span> &lt;span style="color:#00688b">pkg_own&lt;/span>=&lt;span style="color:#cd5555">&amp;#34;pacman -F&amp;#34;&lt;/span>
 &lt;span style="color:#658b00">alias&lt;/span> &lt;span style="color:#00688b">pkg_upgrade&lt;/span>=&lt;span style="color:#cd5555">&amp;#34;sudo pacman -Syu&amp;#34;&lt;/span>
