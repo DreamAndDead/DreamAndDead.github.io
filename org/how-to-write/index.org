@@ -1,0 +1,29 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: how-to-write
+#+export_file_name: index
+
+#+title: 如何写作
+#+date:<2021-05-25 二 10:38>
+#+hugo_categories: Life
+#+hugo_tags: life writing art
+#+hugo_draft: true
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg :series '(test)
+
+* 如何写作
+** 厚积薄发
+** 如果觉得混乱，就开始写作
+** 认真梳理，才会发现混乱的东西，其实并不多，多数是重复之语
+** 模糊的想法在写作中慢慢成型
+** 打点，不断打点，最终连点成线
+** 自己的认知总在进步，相应的文章，作品都要随之更新进步
+** 经验
+*** 开句，明段落综义
+*** 段落综义间的过渡关系
+*** 有节制的，向中心靠拢，删除多余内容，不乱跑
+*** 随意自由书写
+*** 后聚类
+*** 整合成一个主题
+*** 去重
+*** 精化
+
