@@ -22,10 +22,10 @@ ignoreFiles = ["d@d-pc.*"]
     lineNumbersInTable = true
     noClasses = true
     style = "perldoc"
-    tabWidth = 4
+    tabWidth = 8
 
 [params]
-subtitle = "技术，科学，系统，智能"
+subtitle = "技术，系统，认知，智能"
 enableReadingTime=true
 disableAutoCollapse=true
 disqusShortname = "dreamanddead"
@@ -37,7 +37,7 @@ enableTwitterCards = true
 # will set 'og:site_name'
 title = "时长N年半"
 # will set 'og:description'
-description = "技术，科学，系统，智能"
+description = "技术，系统，认知，智能"
 
 [taxonomies]
 tag = "tags"

@@ -2,7 +2,7 @@
 title: "如何正确发声"
 author: ["DreamAndDead"]
 date: 2021-04-03T22:01:00+08:00
-lastmod: 2021-05-24T17:52:30+08:00
+lastmod: 2021-05-24T18:10:53+08:00
 tags: ["voice", "self"]
 categories: ["Theory"]
 draft: true

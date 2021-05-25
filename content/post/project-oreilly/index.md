@@ -1,8 +1,8 @@
 ---
 title: "O'Reilly Generator"
 author: ["DreamAndDead"]
-date: 2021-04-29T13:56:00+08:00
-lastmod: 2021-04-30T14:31:03+08:00
+date: 2014-04-29T13:56:00+08:00
+lastmod: 2021-05-24T22:06:16+08:00
 tags: ["project"]
 categories: ["Project"]
 draft: true

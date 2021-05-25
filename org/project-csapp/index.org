@@ -1,0 +1,13 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: project-csapp
+#+export_file_name: index
+
+#+title: CSAPP-3e-Solutions
+#+date: <2014-04-29 四 13:56>
+#+hugo_categories: Project
+#+hugo_tags: project
+#+hugo_draft: true
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg
+
+* csapp
