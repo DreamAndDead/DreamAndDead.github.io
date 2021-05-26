@@ -2,7 +2,7 @@
 title: "关于驾培经历的思考"
 author: ["DreamAndDead"]
 date: 2021-05-25T10:28:00+08:00
-lastmod: 2021-05-25T10:34:16+08:00
+lastmod: 2021-05-26T10:33:52+08:00
 tags: ["lesson", "mind", "life"]
 categories: ["Mind"]
 draft: true
@@ -12,6 +12,13 @@ series: ["test"]
 ---
 
 拿到驾照是去年的事，现在翻到之前的笔记，还是难以忘怀当时的经历和思考。
+
+尝试小说的形式
+
+朋友 Z 去年拿到的驾照。
+
+-   报名
+-
 
 系统参与的角色
 

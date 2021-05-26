@@ -3,12 +3,13 @@
 #+hugo_bundle: about-python-you-should-know
 #+export_file_name: index
 
-#+title: about python you should know
+#+title: intermediate python
 #+date: <2021-04-14 三 18:32>
 #+hugo_categories: Programing
 #+hugo_tags: programing programing-language python
 #+hugo_draft: true
 #+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg :series '(test)
+
 
 perm combine 计算
 

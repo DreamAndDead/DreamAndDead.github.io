@@ -1,8 +1,8 @@
 ---
-title: "about python you should know"
+title: "intermediate python"
 author: ["DreamAndDead"]
 date: 2021-04-14T18:32:00+08:00
-lastmod: 2021-04-19T17:39:34+08:00
+lastmod: 2021-05-25T18:22:49+08:00
 tags: ["programing", "programing-language", "python"]
 categories: ["Programing"]
 draft: true
