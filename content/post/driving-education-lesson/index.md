@@ -2,7 +2,7 @@
 title: "关于驾培经历的思考"
 author: ["DreamAndDead"]
 date: 2021-05-25T10:28:00+08:00
-lastmod: 2021-05-26T10:33:52+08:00
+lastmod: 2021-05-26T22:01:48+08:00
 tags: ["lesson", "mind", "life"]
 categories: ["Mind"]
 draft: true

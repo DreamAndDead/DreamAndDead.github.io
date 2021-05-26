@@ -3,7 +3,7 @@
 #+hugo_bundle: about-python-you-should-know
 #+export_file_name: index
 
-#+title: intermediate python
+#+title: the python
 #+date: <2021-04-14 三 18:32>
 #+hugo_categories: Programing
 #+hugo_tags: programing programing-language python
@@ -11,26 +11,39 @@
 #+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg :series '(test)
 
 
-perm combine 计算
+* basic
+** lib
+*** math
+ perm combine 计算
 
-#+begin_example
-import math
-math.comb(n, k)
-math.perm(n)
-#+end_example
+ #+begin_example
+ import math
+ math.comb(n, k)
+ math.perm(n)
+ #+end_example
 
+** coding guide
 
-**** decorator
-**** other 高级特性
+* intermediate
 
+** function
+** decorator
+** module
+*** distribute
 
+* OOP
+
+** class
+** metaclass
+** pattern
 
 * internal
-
-* high efficiency
+** GIL
+** int with C & C++
+*** ctypes
 
 * hacks
-
-* one line
+** efficiency
 
 * project
+  

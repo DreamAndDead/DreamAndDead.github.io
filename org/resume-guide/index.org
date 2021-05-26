@@ -1,0 +1,16 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: resume-guide
+#+export_file_name: index
+
+#+title: 如何写简历
+#+date: <2021-05-26 三 22:01>
+#+hugo_categories: Life
+#+hugo_tags: mind life self
+#+hugo_draft: true
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg :series '(test)
+
+* 简历原则
+
+
+

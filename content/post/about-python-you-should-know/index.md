@@ -1,8 +1,8 @@
 ---
-title: "intermediate python"
+title: "the python"
 author: ["DreamAndDead"]
 date: 2021-04-14T18:32:00+08:00
-lastmod: 2021-05-25T18:22:49+08:00
+lastmod: 2021-05-26T15:02:07+08:00
 tags: ["programing", "programing-language", "python"]
 categories: ["Programing"]
 draft: true
@@ -10,6 +10,14 @@ comment: false
 featured_image: "images/featured.jpg"
 series: ["test"]
 ---
+
+## basic {#basic}
+
+
+### lib {#lib}
+
+
+#### math {#math}
 
 perm combine 计算
 
@@ -19,25 +27,53 @@ math.comb(n, k)
 math.perm(n)
 ```
 
-<!--list-separator-->
 
--  decorator
+### coding guide {#coding-guide}
 
-<!--list-separator-->
 
--  other 高级特性
+## intermediate {#intermediate}
+
+
+### function {#function}
+
+
+### decorator {#decorator}
+
+
+### module {#module}
+
+
+#### distribute {#distribute}
+
+
+## OOP {#oop}
+
+
+### class {#class}
+
+
+### metaclass {#metaclass}
+
+
+### pattern {#pattern}
 
 
 ## internal {#internal}
 
 
-## high efficiency {#high-efficiency}
+### GIL {#gil}
+
+
+### int with C & C++ {#int-with-c-and-c-plus-plus}
+
+
+#### ctypes {#ctypes}
 
 
 ## hacks {#hacks}
 
 
-## one line {#one-line}
+### efficiency {#efficiency}
 
 
 ## project {#project}

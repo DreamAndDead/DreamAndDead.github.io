@@ -2,7 +2,7 @@
 title: "论自我管理"
 author: ["DreamAndDead"]
 date: 2021-03-23T16:05:00+08:00
-lastmod: 2021-05-25T10:18:57+08:00
+lastmod: 2021-05-26T17:16:16+08:00
 tags: ["life", "mind", "goal", "theory"]
 categories: ["Theory"]
 draft: false
