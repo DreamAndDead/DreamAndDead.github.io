@@ -1,4 +1,136 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Wed, 28 Apr 2021 17:00:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>斗地主中的记牌策略</title><link>https://dreamanddead.github.io/post/how-to-remember-cards/</link><pubDate>Thu, 20 Feb 2020 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/how-to-remember-cards/</guid><description>时长N年半 https://dreamanddead.github.io/post/how-to-remember-cards/ -&lt;p>斗地主是一种规则简单的扑克游戏，虽然每个玩家手牌数量不多（3 人斗地主，一副牌 54 张，农民每人 17 张，地主 20 张），
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Tue, 25 May 2021 09:20:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>keras 如何从中断处继续训练</title><link>https://dreamanddead.github.io/post/resume-training-from-crash/</link><pubDate>Wed, 04 Mar 2020 19:32:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/resume-training-from-crash/</guid><description>时长N年半 https://dreamanddead.github.io/post/resume-training-from-crash/ -&lt;p>深度学习的网络模型层次很深，训练模型的时间也很长，没有强大的算力，调试模型的周期就会
+变得非常之长，工作的效率自然就降了下来。&lt;/p>
+&lt;p>获取算力资源的途径，无论是通过云主机，主机租赁，还是个人组建工作站，都代价不菲。&lt;/p>
+&lt;p>但是有一点是确定的，无论使用哪一种方式，都会遇到意外，比如断电，宕机，训练过程被迫中断。
+如果没有一点准备，就意味着再次从头开始训练，无疑是对效率的又一次打击。&lt;/p>
+&lt;p>所以我们要在训练伊始，就要做好训练被中断的准备，以及如何从中断处继续开始。&lt;/p>
+&lt;p>示例项目地址：&lt;a href="https://github.com/DreamAndDead/resume-training-example">DreamAndDead/resume-training-example&lt;/a>&lt;/p>
+&lt;h1 id="运行前建议">运行前建议&lt;/h1>
+&lt;p>这一节和中断无关，但是对于效率的重要性同样重要。&lt;/p>
+&lt;p>每当提出一个网络模型，在准备训练之前，
+建议先在一个性质相似的小型数据集上运行，观察模型质量，
+比如手写识别使用 &lt;code>mnist&lt;/code>，图片识别使用 &lt;code>cifar10&lt;/code>，
+这样有两个好处，&lt;/p>
+&lt;ol>
+&lt;li>排除代码运行错误&lt;/li>
+&lt;li>对模型的基本性能有粗略的估计&lt;/li>
+&lt;/ol>
+&lt;p>这样就可以提前修复错误，修正质量不佳的模型，免去在大型数据集上浪费时间。&lt;/p>
+&lt;h1 id="训练过程">训练过程&lt;/h1>
+&lt;p>在预防训练中断之前，先来了解完整的训练过程是怎样的。&lt;/p>
+&lt;p>训练模型主要涉及以下三部分，&lt;/p>
+&lt;ol>
+&lt;li>代码，指导训练过程，文件大小可忽略不计&lt;/li>
+&lt;li>训练数据集，文件相对比较多，总体容量比较大&lt;/li>
+&lt;li>训练产出，通常是模型，训练日志，模型精度数据，模型大小一般是 G 级别左右&lt;/li>
+&lt;/ol>
+&lt;p>所谓训练过程即，&lt;strong>通过代码构建训练方式，从训练数据集中，得到模型产出，以及评估模型质量的数据。&lt;/strong>&lt;/p>
+&lt;p>训练开始，需要&lt;/p>
+&lt;ul>
+&lt;li>数据预处理方法，比如图片 &lt;code>reshape&lt;/code>，灰度化，以匹配模型输入&lt;/li>
+&lt;li>标签编码方法，比如 &lt;code>one-hot&lt;/code> 编码&lt;/li>
+&lt;li>训练测试数据的分割方法，通常按比例分割训练数据和测试数据&lt;/li>
+&lt;/ul>
+&lt;p>训练时的状态&lt;/p>
+&lt;ul>
+&lt;li>当前 &lt;code>epoch&lt;/code> 序号&lt;/li>
+&lt;li>当前模型权重&lt;/li>
+&lt;li>训练日志，比如当前模型的 &lt;code>acc, loss, val acc, val loss&lt;/code>&lt;/li>
+&lt;li>当前优化器状态，比如在训练中，使用了随过程 &lt;code>lr&lt;/code> 可变的优化器&lt;/li>
+&lt;/ul>
+&lt;p>训练产出&lt;/p>
+&lt;ul>
+&lt;li>数据预处理方法&lt;/li>
+&lt;li>标签编码方法&lt;/li>
+&lt;li>训练日志&lt;/li>
+&lt;li>最佳模型，按 &lt;code>min(val_loss)&lt;/code> 的方式或者 &lt;code>max(val_acc)&lt;/code> 方式&lt;/li>
+&lt;li>模型质量报告，比如 &lt;code>sklearn.metrics.classification_report&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>我们的目标是，确保整个训练过程最终能得到训练产出。&lt;/p>
+&lt;h2 id="中间状态">中间状态&lt;/h2>
+&lt;p>在训练过程中，何时发生中断是不可知的，为了确保实现我们的目标，即使中断后再次运行，训练效果应该和没有中断一样。
+这就需要在中断时，时刻保存中间状态。&lt;/p>
+&lt;p>&lt;em>这里的中间状态以 &lt;code>epoch&lt;/code> 为单位的，如果在 &lt;code>epoch&lt;/code> 中间中断，则无法恢复到相应的 &lt;code>batch&lt;/code> 继续训练。&lt;/em>&lt;/p>
+&lt;p>以下就从中间状态的角度，对训练过程的每个要素进行审视。&lt;/p>
+&lt;h3 id="数据预处理方法">数据预处理方法&lt;/h3>
+&lt;p>数据预处理方法，通常是处理训练数据的函数，使数据和模型输入保持一致，
+不存在状态，是训练代码的一部分。&lt;/p>
+&lt;p>它不属于中间状态，但是算作最终产出的一部分，因为其它人在使用模型的时候，对于新的数据，
+也需要同样的预处理方法。&lt;/p>
+&lt;p>不需要单独存储，使用者通过 &lt;code>import&lt;/code> 导入即可。&lt;/p>
+&lt;h3 id="标签编码方法">标签编码方法&lt;/h3>
+&lt;p>标签编码方法，这一步在训练一开始就要安排，而且编码表是产出的一部分（因为模型使用者要对模型输出进行解读），
+需要存储，但是不作为中间状态，因为此时模型还未开始训练。&lt;/p>
+&lt;p>如果使用 &lt;code>sklearn&lt;/code> 提供的类进行编码，比如 &lt;code>one-hot encode&lt;/code>，&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">from&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">sklearn.preprocessing&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> LabelBinarizer
+le = LabelBinarizer()
+Y = le.fit_transform(Y)
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以使用对象序列化的方式存储 &lt;code>label encoder&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">pickle&lt;/span>
+pickle.dump(le, &lt;span style="color:#658b00">open&lt;/span>(&lt;span style="color:#cd5555">&amp;#39;le.pkl&amp;#39;&lt;/span>, &lt;span style="color:#cd5555">&amp;#39;wb&amp;#39;&lt;/span>))
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用者可以通过反序列化加载 &lt;code>label encoder&lt;/code>，用于解读模型输出&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">pickle&lt;/span>
+le = pickle.load(&lt;span style="color:#658b00">open&lt;/span>(&lt;span style="color:#cd5555">&amp;#39;le.pkl&amp;#39;&lt;/span>, &lt;span style="color:#cd5555">&amp;#39;rb&amp;#39;&lt;/span>))
+pred = model.predict(X)
+Y = le.inverse_transform(pred)
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="训练测试数据的分割方法">训练测试数据的分割方法&lt;/h3>
+&lt;p>数据分割本身就本着随机的原则，如果训练的过程中发生中断，
+之后再次开始训练，数据就可能重新发生分割。&lt;/p>
+&lt;p>其实再一次的分割，可能和之前分割得到的数据不同，但是同样本着随机的原则。
+所以这一点可以算作中间状态，也可以不算。&lt;/p>
+&lt;p>如果想要进行准确的控制，可以通过 &lt;code>random_state&lt;/code> 来控制。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">from&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">sklearn.model_selection&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> train_test_split
+trainX, testX, trainY, testY = train_test_split(X, Y, test_size=&lt;span style="color:#b452cd">0.2&lt;/span>, random_state=&lt;span style="color:#b452cd">1&lt;/span>)
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="当前-epoch-序号">当前 &lt;code>epoch&lt;/code> 序号&lt;/h3>
+&lt;p>训练是以 &lt;code>epoch&lt;/code> 为单位的，中断发生在哪个 &lt;code>epoch&lt;/code>，这一点绝对是需要记录的中间状态。&lt;/p>
+&lt;p>这一点可以在 &lt;code>keras callback&lt;/code> 中来实现。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">class&lt;/span> &lt;span style="color:#008b45;font-weight:bold">CustomCallback&lt;/span>(keras.callbacks.Callback):
+&lt;span style="color:#8b008b;font-weight:bold">def&lt;/span> &lt;span style="color:#008b45">on_epoch_end&lt;/span>(self, epoch, logs=None):
+&lt;span style="color:#228b22"># save the epoch&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>当从中断处再次运行时，需要加载上次中断的 &lt;code>epoch&lt;/code> 序号，传入训练过程。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-python" data-lang="python">model.fit(initial_epoch=last_epoch+&lt;span style="color:#b452cd">1&lt;/span>) &lt;span style="color:#228b22"># +1，想想为什么&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="当前模型权重-和-当前优化器状态">当前模型权重 和 当前优化器状态&lt;/h3>
+&lt;p>当前模型权重是最重要的中间状态，还有和它一起的优化器状态。&lt;/p>
+&lt;p>为什么将两者放在一起，因为 &lt;code>keras&lt;/code> 提供了单独存储权重的方法，但是没有提供单独存储优化器的方法。
+所以这两者需要&lt;a href="https://keras-cn.readthedocs.io/en/latest/legacy/getting_started/FAQ/#save_model">存储在一起&lt;/a>。&lt;/p>
+&lt;p>存储模型和优化器&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-python" data-lang="python">model.save(path)
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>加载两者&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">keras&lt;/span>
+model = keras.models.load_model(path)
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="训练日志">训练日志&lt;/h3>
+&lt;p>在每个 &lt;code>epoch&lt;/code> 结束，&lt;code>keras&lt;/code> 都会衡量当前模型在训练集和验证集上的表现，比如 &lt;code>acc, loss&lt;/code>。
+这些训练日志，用于在整个训练过程中衡量模型的质量，不仅作为中间状态，还作为最终产出。&lt;/p>
+&lt;p>和 &lt;code>epoch&lt;/code> 序号一样，可以通过 &lt;code>on_epoch_end&lt;/code> 来存储，它可以保存为文本形式，也可以保存为图形。&lt;/p>
+&lt;p>如果要保存图形，最好不依赖 gui 库。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">matplotlib&lt;/span>
+matplotlib.use(&lt;span style="color:#cd5555">&amp;#34;Agg&amp;#34;&lt;/span>)
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="最佳模型">最佳模型&lt;/h3>
+&lt;p>在训练结束后，我们希望得到一个效果最佳的模型作为最终结果。&lt;/p>
+&lt;p>但是要在整体过程中，选择哪一个模型是最佳模型，每个人都有自己的判断标准。
+选取最大 &lt;code>val_acc&lt;/code> 的模型是一种常用的办法。&lt;/p>
+&lt;p>这里要提到一点，如果使用 &lt;code>keras&lt;/code> 提供的 &lt;code>ModelCheckpoint&lt;/code> 来记录 &lt;code>best model&lt;/code>，
+如果发生中断，&lt;code>ModelCheckpoint&lt;/code> 在再次运行时，其中记录的最佳 &lt;code>val_acc&lt;/code> 会被清除为 &lt;code>-inf&lt;/code>。&lt;/p>
+&lt;p>也就是说再次从中断处运行，对于 &lt;code>ModelCheckpoint&lt;/code> 就像是重新开始一样，这一定不是你想要的结果。&lt;/p>
+&lt;p>所以记录最佳模型的过程，最好通过自定义 &lt;code>keras callback&lt;/code> 来做。&lt;/p>
+&lt;h3 id="模型质量报告">模型质量报告&lt;/h3>
+&lt;p>这一点并不必需。&lt;/p>
+&lt;p>在训练结束后，保存相关数据报告，不作为中间状态，用文本存储即可。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-python" data-lang="python">&lt;span style="color:#8b008b;font-weight:bold">from&lt;/span> &lt;span style="color:#008b45;text-decoration:underline">sklearn.metrics&lt;/span> &lt;span style="color:#8b008b;font-weight:bold">import&lt;/span> classification_report
+predictions = model.predict(testX, batch_size=&lt;span style="color:#b452cd">64&lt;/span>)
+report = classification_report(testY.argmax(axis=&lt;span style="color:#b452cd">1&lt;/span>),
+predictions.argmax(axis=&lt;span style="color:#b452cd">1&lt;/span>))
+&lt;span style="color:#8b008b;font-weight:bold">with&lt;/span> &lt;span style="color:#658b00">open&lt;/span>(&lt;span style="color:#cd5555">&amp;#39;report.txt&amp;#39;&lt;/span>, &lt;span style="color:#cd5555">&amp;#39;w&amp;#39;&lt;/span>) &lt;span style="color:#8b008b;font-weight:bold">as&lt;/span> f:
+f.write(report)
+&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="结语">结语&lt;/h1>
+&lt;p>通过这种方式，定可以使训练过程更加健壮，提高工作效率。&lt;/p>
+&lt;p>完整代码可参考 &lt;a href="https://github.com/DreamAndDead/resume-training-example">DreamAndDead/resume-training-example&lt;/a>&lt;/p>
+&lt;h1 id="refs">refs&lt;/h1>
+&lt;ol>
+&lt;li>&lt;a href="https://keras-cn.readthedocs.io/">keras cn docs&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://keras.io/callbacks/">keras callback guide&lt;/a>&lt;/li>
+&lt;li>project &lt;a href="https://github.com/HarborZeng/resume_traning">HarborZeng/resume_traning&lt;/a>&lt;/li>
+&lt;/ol>- https://dreamanddead.github.io/post/resume-training-from-crash/ - DreamAndDead 2014-2021</description></item><item><title>斗地主中的记牌策略</title><link>https://dreamanddead.github.io/post/how-to-remember-cards/</link><pubDate>Thu, 20 Feb 2020 10:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/how-to-remember-cards/</guid><description>时长N年半 https://dreamanddead.github.io/post/how-to-remember-cards/ -&lt;p>斗地主是一种规则简单的扑克游戏，虽然每个玩家手牌数量不多（3 人斗地主，一副牌 54 张，农民每人 17 张，地主 20 张），
 但是要精通其中合作，对抗，决策的过程却不易。&lt;/p>
 &lt;p>而新手在打牌过程中，向上进阶的第一步就是记牌。&lt;/p>
 &lt;h1 id="为什么要记牌">为什么要记牌&lt;/h1>
@@ -2149,106 +2281,4 @@ the result better. They are not discussed here but they&amp;rsquo;re worth a sho
 &lt;p>Luna, F. D. (2003) Introduction to 3D Game Programing with Direct Programming 9.0, Wordware Publishing, Inc. &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section>- https://dreamanddead.github.io/post/deferred-shading/ - DreamAndDead 2014-2021</description></item><item><title>Understanding Euler Angles</title><link>https://dreamanddead.github.io/post/understanding-euler-angles/</link><pubDate>Wed, 24 Apr 2019 09:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/understanding-euler-angles/</guid><description>时长N年半 https://dreamanddead.github.io/post/understanding-euler-angles/ -&lt;p>Rotation is a big part of transformation in 3d programming. Every programmer
-have to understand the underlying math things.&lt;/p>
-&lt;p>I have known about Euler angles for a while, and today we talk about some more details about it.&lt;/p>
-&lt;h1 id="direction-vs-orientation">Direction vs Orientation&lt;/h1>
-&lt;p>Most people can&amp;rsquo;t tell the difference of direction and orientation.
-They two are different concepts.&lt;/p>
-&lt;p>In brief, vectors have got direction and orientation is for objects.&lt;/p>
-&lt;figure>
-&lt;img src="images/aircraft-rotation.png"
-alt="intrinsic rotation of aircraft from wikipedia"/> &lt;figcaption>
-&lt;p>intrinsic rotation of aircraft from wikipedia&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>$\vec{X}$ is a vector and is determined by $\psi$ and $\theta$.&lt;/p>
-&lt;p>$\phi$ means nothing to the vector(a spinning vector?), but is necessary to the plane object.&lt;/p>
-&lt;p>That&amp;rsquo;s the key difference between direction and orientation and
-Euler angles describe the orientation.&lt;/p>
-&lt;h1 id="euler-angles">Euler angles&lt;/h1>
-&lt;p>The Euler angles are three angles introduced by Leonhard Euler to describe the orientation of rigid
-body with respect to a fixed coordinate system.&lt;/p>
-&lt;h2 id="order">Order&lt;/h2>
-&lt;p>There exist 12 possible sequences of rotation axes, divided into 2 groups:&lt;/p>
-&lt;ul>
-&lt;li>Proper Euler angles($z-x-z, x-y-x, y-z-y, z-y-z, x-z-x, y-x-y$)&lt;/li>
-&lt;li>Tait-Bryan angles($x-y-z, y-z-x, z-x-y, x-z-y, z-y-x, y-x-z$)&lt;/li>
-&lt;/ul>
-&lt;p>Proper Euler angles only use 2 axes in rotations($x,y$ or $y,z$ or $x,z$),
-but Tait-Bryan angles use all 3 axes($x,y,z$) in different order.&lt;/p>
-&lt;h2 id="convention">Convention&lt;/h2>
-&lt;p>The three elemental rotations may be extrinsic or intrinsic.&lt;/p>
-&lt;p>&lt;strong>extrinsic&lt;/strong> means the original coordinate system remains motionless as the rotations go.&lt;/p>
-&lt;p>&lt;strong>intrinsic&lt;/strong> means the rotation is always based on the rotating coordinate system which is solidary
-with the moving object.&lt;/p>
-&lt;p>The figures below will provide better understanding.&lt;/p>
-&lt;figure>
-&lt;img src="images/extrinsic-rotation.png"
-alt="extrinsic rotation axes in order $x-y-z$"/> &lt;figcaption>
-&lt;p>extrinsic rotation axes in order $x-y-z$&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;figure>
-&lt;img src="images/intrinsic-rotation.png"
-alt="intrinsic rotation axes in order $z-y&amp;#39;-x&amp;#39;&amp;#39;$ (also well known as yaw,pitch,roll)"/> &lt;figcaption>
-&lt;p>intrinsic rotation axes in order $z-y'-x''$ (also well known as yaw,pitch,roll)&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="conversion-between-extrinsic-and-intrinsic-rotations">Conversion between extrinsic and intrinsic rotations&lt;/h2>
-&lt;p>&lt;em>Any extrinsic rotation is equivalent to an intrinsic rotation by the same angles but with inverted order of elemental rotations, and vice versa.&lt;/em>&lt;/p>
-&lt;p>Take the figure above as an example.
-We have got extrinsic rotation in order $x-y-z$ with angles $\phi,\theta,\psi$
-and intrinsic rotation in inverted order $z-y'-x''$ with angles $\psi,\theta,\phi$.&lt;/p>
-&lt;p>The final rotation results are same as long as the angles($\phi,\theta$ and $\psi$)
-are equivalent.&lt;/p>
-&lt;p>Let&amp;rsquo;s get a proof.&lt;/p>
-&lt;p>First we denote&lt;/p>
-&lt;ul>
-&lt;li>$E_x$ as the transformation matrix rotating around $x$ axis with angle $\phi$&lt;/li>
-&lt;li>$E_y$ as the transformation matrix rotating around $y$ axis with angle $\theta$&lt;/li>
-&lt;li>$E_z$ as the transformation matrix rotating around $z$ axis with angle $\psi$&lt;/li>
-&lt;li>$I_z$ as the transformation matrix rotating around $z$ axis with angle $\psi$&lt;/li>
-&lt;li>$I_{y'}$ as the transformation matrix rotating around $y'$ axis with angle $\theta$&lt;/li>
-&lt;li>$I_{x''}$ as the transformation matrix rotating around $x''$ axis with angle $\phi$&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>All the matrices are relative to original $x-y-z$ coordinate system.&lt;/strong>&lt;/p>
-&lt;p>We need to prove&lt;/p>
-&lt;p>$$
-E_x E_y E_z = I_z I_{y'} I_{x''}
-$$&lt;/p>
-&lt;p>Obviously,&lt;/p>
-&lt;p>$$E_z = I_z$$&lt;/p>
-&lt;p>because they share the same definition.&lt;/p>
-&lt;p>Next, considering $I_{y'}$, rotating around $y'$ in the new $x'-y'-z'$ coordinate system after $I_z$&amp;rsquo;s rotation.&lt;/p>
-&lt;p>If $x'-y'-z'$ coincides with $x-y-z$ then $E_y = I_{y'}$.&lt;/p>
-&lt;p>So we first rotate the $x'-y'-z'$ back and use $E_y$ to do the rotation and resume the $x'-y'-z'$ coordinate system.&lt;/p>
-&lt;p>In equation that&amp;rsquo;s&lt;/p>
-&lt;p>$$
-I_{y'} = I_z^{-1} E_y I_z
-$$&lt;/p>
-&lt;p>In the same idea we get&lt;/p>
-&lt;p>$$
-I_{x''} = (I_z I_{y'})^{-1} E_x (I_z I_{y'})
-$$&lt;/p>
-&lt;p>So&lt;/p>
-&lt;p>$$
-\begin{align}
-I_z I_{y'} I_{x''} &amp;amp;= I_z I_{y'} (I_z I_{y'})^{-1} E_x (I_z I_{y'}) \\\&lt;br>
-&amp;amp;= E_x (I_z I_{y'}) \\\&lt;br>
-&amp;amp;= E_x (I_z I_z^{-1} E_y I_z) \\\&lt;br>
-&amp;amp;= E_x E_y I_z \\\&lt;br>
-&amp;amp;= E_x E_y E_z
-\end{align}
-$$&lt;/p>
-&lt;h1 id="acknowledgement">Acknowledgement&lt;/h1>
-&lt;p>In &lt;a href="https://www.wikiwand.com/en/Euler_angles">wikipedia&lt;/a>, I know more about &lt;a href="https://www.wikiwand.com/en/Euler_angles">euler angles&lt;/a> including extrinsic/intrinsic and Proper/Tait-Bryan.&lt;/p>
-&lt;p>I first see the conversion between extrinsic and intrinsic in &lt;a href="http://www.cnitblog.com/luckydmz/archive/2010/09/07/68674.html">this blog&lt;/a> and that shocked me. There&amp;rsquo;s &lt;a href="https://www.wikiwand.com/en/Davenport_chained_rotations#/Conversion_between_intrinsic_and_extrinsic_rotations">another proof in wikipedia&lt;/a> and a enlightening answer about &lt;a href="https://math.stackexchange.com/a/1155951">relativity&lt;/a>.&lt;/p>
-&lt;h1 id="license">License&lt;/h1>
-&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
-&lt;img
-src="https://dreamanddead.github.io/img/license.png"
-alt="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
-title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
-/>
-&lt;/a>- https://dreamanddead.github.io/post/understanding-euler-angles/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;/section>- https://dreamanddead.github.io/post/deferred-shading/ - DreamAndDead 2014-2021</description></item></channel></rss>
