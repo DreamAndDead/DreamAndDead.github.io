@@ -1,4 +1,98 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Tue, 25 May 2021 09:20:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>SSH X11 Forward</title><link>https://dreamanddead.github.io/post/ssh-x11-forward/</link><pubDate>Thu, 17 May 2018 20:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/ssh-x11-forward/</guid><description>时长N年半 https://dreamanddead.github.io/post/ssh-x11-forward/ -&lt;p>一般情况下，操作远程电脑，ssh+console足矣。突然有一天，隔壁项目组
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Tue, 25 May 2021 09:20:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Deal with time in programming</title><link>https://dreamanddead.github.io/post/time-in-programming/</link><pubDate>Tue, 22 May 2018 08:08:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/time-in-programming/</guid><description>时长N年半 https://dreamanddead.github.io/post/time-in-programming/ -&lt;p>时间无处不在，在编程中也是如此。
+比如程序日志，每一行必定包含时间。
+通常不会对时间特别关注，除非日志时间不对，或者编程使用时间，取不到正确结果。&lt;/p>
+&lt;p>其实在编程中只需明确几个简单的概念，就可以正确的使用时间。&lt;/p>
+&lt;h1 id="unix-epoch-time">UNIX Epoch time&lt;/h1>
+&lt;blockquote>
+&lt;p>UNIX Epoch time是从1970年1月1日（UTC）到目前经过的秒数&lt;/p>
+&lt;/blockquote>
+&lt;p>从某种意义上讲，这个时间是“绝对的”，无论在地球上哪个国家，大家的 UNIX Epoch time 是一样的。&lt;/p>
+&lt;p>它的值确定唯一，这个时间也在程序中广泛使用，比如用作机器间时间同步的 ntp 协议，同步的就是这个时间。
+如果每一台机器上的 UNIX Epoch time 都相同，就是保持了时钟的一致。&lt;/p>
+&lt;p>在 linux 上，可以通过 &lt;code>date&lt;/code> ，来查看时间&lt;/p>
+&lt;pre>&lt;code>####### %s means seconds since 1970-01-01 00:00:00 UTC
+####### %N means nanoseconds (000000000..999999999)
+$ date +&amp;quot;%s.%N&amp;quot;
+1526949060.804222827
+&lt;/code>&lt;/pre>&lt;h1 id="timezone">Timezone&lt;/h1>
+&lt;figure>
+&lt;img src="images/timezone-map.png"
+alt="时区图"/> &lt;figcaption>
+&lt;p>时区图&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>在同一时刻，经度距离较远不同地区，时钟的值是不一样的。比如北京时间的晚上8点，同时是纽约时间的早上7点。
+那么 UNIX Epoch time 是如何确保不同地区的时间是一致的呢？&lt;/p>
+&lt;p>原因在于时区，UNIX Epoch time 强制使用 UTC+0 时区的时间，而本地时间则使用各地区时区的时间。&lt;/p>
+&lt;p>究竟什么是&lt;a href="http://www.timeofdate.com/articles/posts/timezone-introduction.html">时区&lt;/a>？&lt;/p>
+&lt;blockquote>
+&lt;p>时区是一个地区，在这个区域内，大家使用同样的标准时间&lt;/p>
+&lt;/blockquote>
+&lt;p>一个时区内的当地时间，用与世界标准时间 (UTC) 之间的偏移量来定义。这个偏移量可以表示为 UTC- 或 UTC+，后面接上偏移的小时数和分钟数。
+因此时区这个名词常常被用来表示当地时间。比如国内大部分区域使用的就是 UTC+8 时间，在UTC时间的基础上，加8个小时，代表当地时间。&lt;/p>
+&lt;p>为什么全球不使用一个时间，方便统一？&lt;/p>
+&lt;p>其实时区的出现就是为了方便不同地区的人对时间概念认知。日出而作，日落而息是所有地区人们的生活习惯，很多地区根据当地的日出日落来设定时钟的时间。
+而且你肯定不希望，原来你在家里早上8点起床，出差到另外一个地区之后，要变成晚上2点起床。毕竟晚上2点见到太阳
+听起来并不怎么有趣。&lt;/p>
+&lt;p>&lt;a href="http://www.timeofdate.com/articles/posts/timezone-history.html">时区发展的历史&lt;/a>有点复杂，很多细节，但是正因它的出现，
+解决了各地地理差异而带来的时差问题，同时也让各地区的当地时间尽量贴合本地的太阳时间。&lt;/p>
+&lt;h2 id="abbr">Abbr&lt;/h2>
+&lt;p>用 UTC+8 这样的符号称谓当地时间毕竟不便，大部分地区都为各自地区的时区时间
+起一个名称，代表自己的本地时间。
+比如国内将本地时间称为China Standard Time，时区简称CST。&lt;/p>
+&lt;p>按照这样的规律（人们的心理），同一时区会有很多个不同的时区简称，有时还会有重复冲突。
+举例来说，在迈阿密，标准时间是 UTC-5，称作东部标准时间 (EST, Eastern Standard Time)。而在古巴的哈瓦那，同样的 UTC-5 标准时间，就被称为古巴标准时间 (CST, Cuba Standard Time)，而CST和国内的时区简称还是重复的！&lt;/p>
+&lt;p>通常一个地区只关注自己的时间，不加时区简称，但是在世界范围内，如果有相应的重复冲突还是要额外注明。&lt;/p>
+&lt;p>通常遇到最多的简称如，UTC，GMT，CST。&lt;/p>
+&lt;ul>
+&lt;li>UTC 代表&lt;a href="http://www.timeofdate.com/articles/posts/about-utc.html">世界标准时间&lt;/a>，Coordinated Universal Time&lt;/li>
+&lt;li>GMT，时区简称，Greenwich Mean Time，UTC+0&lt;/li>
+&lt;li>CST，时区简称（有重复冲突），China Standard Time，UTC+8&lt;/li>
+&lt;/ul>
+&lt;p>这里有 &lt;a href="https://www.timeanddate.com/time/zones/">时区简称的列表&lt;/a> 和 &lt;a href="https://www.timeanddate.com/time/map/">时区地图&lt;/a>，详细直观，值得一看。&lt;/p>
+&lt;h2 id="in-linux">In linux&lt;/h2>
+&lt;ul>
+&lt;li>系统当前时区可以用 &lt;code>date&lt;/code> 查看&lt;/li>
+&lt;li>时区地区由 &lt;code>/etc/timezone&lt;/code> 保存&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>$ date +&amp;quot;%Z %z&amp;quot;
+CST +0800
+$ cat /etc/timezone
+Asia/Shanghai
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>默认 &lt;code>date&lt;/code> 使用本地时区呈现时间&lt;/li>
+&lt;li>加上 &lt;code>-u&lt;/code>，使用 UTC 呈现时间&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>$ date
+2018年 04月 12日 星期四 16:03:16 CST
+$ date -u
+2018年 04月 12日 星期四 08:03:19 UTC
+&lt;/code>&lt;/pre>&lt;p>保证系统的时区正确是很重要的！这个时区作为所有系统运行程序的默认时区，
+如果这个时区不准确，在程序中就取不到准确的本地时间，程序的日志时间自然也有所偏差。&lt;/p>
+&lt;p>在多数 linux 发行版中，可以通过修改 &lt;code>/etc/localtime&lt;/code> 软链接来设置时区。&lt;/p>
+&lt;pre>&lt;code>$ sudo ln -sf /usr/share/zoneinfo/Africa/Nairobi /etc/localtime
+&lt;/code>&lt;/pre>&lt;p>相比之下，使用 &lt;code>timedatectl&lt;/code> 比较稳妥。&lt;/p>
+&lt;pre>&lt;code>$ timedatectl status
+Local time: 一 2018-05-21 09:01:08 CST
+Universal time: 一 2018-05-21 01:01:08 UTC
+RTC time: 一 2018-05-21 01:01:08
+Time zone: Asia/Shanghai (CST, +0800)
+Network time on: yes
+NTP synchronized: yes
+RTC in local TZ: no
+$ timedatectl set-timezone Asia/Hong_Kong
+$ timedatectl status
+Local time: 一 2018-05-21 09:01:47 HKT
+Universal time: 一 2018-05-21 01:01:47 UTC
+RTC time: 一 2018-05-21 01:01:47
+Time zone: Asia/Hong_Kong (HKT, +0800)
+Network time on: yes
+NTP synchronized: yes
+RTC in local TZ: no
+&lt;/code>&lt;/pre>&lt;p>参考： &lt;a href="https://www.tecmint.com/check-linux-timezone/">如何设置linux timezone&lt;/a>&lt;/p>
+&lt;h1 id="end">End&lt;/h1>
+&lt;p>这里没有具体针对特定编程语言来说明时间，时区的用法，不过本质是不变的。
+相信找到相应接口所针对的时间，可以很快掌握使用。&lt;/p>- https://dreamanddead.github.io/post/time-in-programming/ - DreamAndDead 2014-2021</description></item><item><title>SSH X11 Forward</title><link>https://dreamanddead.github.io/post/ssh-x11-forward/</link><pubDate>Thu, 17 May 2018 20:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/ssh-x11-forward/</guid><description>时长N年半 https://dreamanddead.github.io/post/ssh-x11-forward/ -&lt;p>一般情况下，操作远程电脑，ssh+console足矣。突然有一天，隔壁项目组
 想要检测下，从香港服务器浏览他们的网页，效果是怎么样的。
 背景漆黑语法高亮的控制台好像帮不了忙&amp;hellip;&lt;/p>
 &lt;p>诚然，vnc是一个易用可行的方案，但是这里想探索一下，X Window System本身对远程应用的支持。&lt;/p>

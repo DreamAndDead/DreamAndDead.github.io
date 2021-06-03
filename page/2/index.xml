@@ -1,4 +1,78 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Tue, 25 May 2021 09:20:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>了解 Arch Linux 的包管理系统</title><link>https://dreamanddead.github.io/post/arch-pkg-manager/</link><pubDate>Fri, 19 Mar 2021 17:26:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/arch-pkg-manager/</guid><description>时长N年半 https://dreamanddead.github.io/post/arch-pkg-manager/ -&lt;p>Linux 发行版相比 Windows 系统，富有特色的功能之一即是包管理系统。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Tue, 25 May 2021 09:20:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>如何超越时间的限制</title><link>https://dreamanddead.github.io/post/beyond-time-limit/</link><pubDate>Mon, 22 Mar 2021 13:22:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/beyond-time-limit/</guid><description>时长N年半 https://dreamanddead.github.io/post/beyond-time-limit/ -&lt;p>超越时间限制？听起来是一个荒诞的问题。
+时间是公平的，每个人的一分钟都完全相同。
+时间是单向的，“寸金难买寸光阴”，无可挽回。
+时间是无情的，必定在某个时刻，宣判个人的终点，“你的时间用完了”。&lt;/p>
+&lt;p>然而同有终点，人与人的结局是不同的。
+假若时间是无限延展的壁画，有的人从某个平凡的时刻出现，
+描绘了了数笔，黯然无光的笔触走完，戛然而止；
+有的人若璀璨星尘，永远是画卷中最浓墨重彩的一笔，
+无数人谈论他，感谢他，怀念他。&lt;/p>
+&lt;blockquote>
+&lt;p>有的人死了，他还活着。&lt;/p>
+&lt;/blockquote>
+&lt;p>这便是“超越”的含义。
+超越，便是脱离了时间无情的审判，成就个人生命的永续存在。&lt;/p>
+&lt;p>一个人如何做到这一点？&lt;/p>
+&lt;p>&lt;strong>假如医疗水平高度发展，人可以有无尽的寿命。&lt;/strong>&lt;/p>
+&lt;p>在这种情况下，肉身永续，精神自然永在，个人拥有的时间是无限的。&lt;/p>
+&lt;p>这个一个大胆的假设。
+届时人们对于个人生存的理念，对于自身意义的认知，将大大不同。
+乐观的看，
+原本穷其一生无法完成的研究，有可能一直下去；
+同时，每个人的技艺和心智也会随时间愈发成熟，人类的智慧到达新的高度。
+悲观的想，
+对于无所作为的人，穷困潦倒的人，生命空洞的人，更多的时间反而是煎熬。
+对资源的争夺，对名利的追逐，这些“浪费”时间的事将会一直穷尽下去。&lt;/p>
+&lt;p>现实中已然存在这种假设，那就是股份制公司，经济活动中的法人。
+只要财务情况允许，理论上它的寿命是无限的，可以永续经营下去。
+可口可乐，壳牌是个中翘楚，持续对人类社会发挥积极影响，未来可期。&lt;/p>
+&lt;p>&lt;strong>假如可以穿越时空，&amp;hellip;&lt;/strong>&lt;/p>
+&lt;p>穿越是科幻作品的最爱。&lt;/p>
+&lt;p>在这个设定下，创作者可以肆意发挥想象力。
+《回到未来》认为个人实体可以在时空中双向穿梭，同时尊重因果律，过去的扰动会对未来产生影响；
+《时空恋旅人》设定了一种意念穿越的方式，个人意念可以带着全部记忆，附着在任意时间的自己身上；
+《信条》认为个人实体可以在时间中逆行，不过熵的变化方向相反，并且命运不可改变；
+《蜘蛛侠：平行时空》认为相同时间线下，存在多个并行空间，每个时空都存在一个不同处境的自己。&lt;/p>
+&lt;p>至今没有证据表明，这些假设正确或者错误。
+对于未来，还是保留一些可能性。&lt;/p>
+&lt;p>穿越假设比寿命假设更为夸张。
+可以肯定的是，届时世界一定“混乱”成一锅粥，远远超出本文可想象的范围。&lt;/p>
+&lt;p>上面谈论的都是假设，下面来务实的讨论。&lt;/p>
+&lt;blockquote>
+&lt;p>勤勉的人，每周七个全天；懒惰的人，每周七个早晨&lt;/p>
+&lt;/blockquote>
+&lt;p>时间是浪费不起的，高效利用时间变相等同于延长了个人可用的时间。&lt;/p>
+&lt;p>并行化是一个明显的方式。
+在烧水时准备茶叶；在地铁通勤时读书，在编程时下载文件。
+这些事都是并行不悖的。&lt;/p>
+&lt;p>并行化的理念可以从个人拓展到多人。
+多人之间的合作，不仅可以能力互补，而且充分利用了并行的优势。
+两个人同时做一件事是一个人效率的两倍。
+公司就是其中典范，由雇佣关系结合起来的组织，
+向一个目标齐力奋进，做出个体远不可及的成就。
+比如复杂的 Windows 系统，伟大的波音系列。&lt;/p>
+&lt;p>并行化的理念，已然向前跨越了一大步。
+但真正承载个人意志的，永续存在的，不随时间湮灭的，是作品。&lt;/p>
+&lt;blockquote>
+&lt;p>世上最大的乐趣有两种，一是创造，二是&amp;hellip;&lt;/p>
+&lt;/blockquote>
+&lt;p>作品的概念是宽泛的。
+黑客的程序，
+作曲家的音乐，
+创业者的公司。&lt;/p>
+&lt;p>作品是一个人智慧的凝结，精神的化身，唯一达成“超越”的典范。
+浮力定律的佳话， &lt;code>E = mc^2&lt;/code> 的洞见，i 系列产品的风靡，其创作者永远为后世称道。
+是所谓生命有尽，而作品的存在无尽。&lt;/p>
+&lt;p>“超越”的含义正是在于创作，利用有限的时间，辛勤工作，创造卓越的作品。
+相信后世在为作品惊叹的同时，也会谈论，感谢，怀念那位“始作俑者”。&lt;/p>
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+&lt;img
+src="https://dreamanddead.github.io/img/license.png"
+alt="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
+title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
+/>
+&lt;/a>
+- https://dreamanddead.github.io/post/beyond-time-limit/ - DreamAndDead 2014-2021</description></item><item><title>了解 Arch Linux 的包管理系统</title><link>https://dreamanddead.github.io/post/arch-pkg-manager/</link><pubDate>Fri, 19 Mar 2021 17:26:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/arch-pkg-manager/</guid><description>时长N年半 https://dreamanddead.github.io/post/arch-pkg-manager/ -&lt;p>Linux 发行版相比 Windows 系统，富有特色的功能之一即是包管理系统。&lt;/p>
 &lt;p>不同 Linux 发行版的包管理系统有不同的标准，
 本文关注如何在 Arch Linux 系统发行版进行管理软件包。&lt;/p>
 &lt;h2 id="认识包管理系统">认识包管理系统&lt;/h2>
@@ -866,106 +940,4 @@ Destination Gateway Genmask Flags Metric Ref Use Iface
 &lt;p>当然这只是在明牌的情况下，实际在打牌时，看不到对方的牌，还需要一些猜测，这样会更加困难。&lt;/p>
 &lt;p>其次值得注意的是，我们之所以在残局模式下可以战胜对手，不是因为我们技巧高超，而是因为存在绝对胜利的路径。
 也就是说，我们的手牌是有优势的，对手不论怎么出牌，我们都能赢，因为 minmax 已经搜索了所有可能的局面。&lt;/p>
-&lt;p>这何尝不是一种宿命论。&lt;/p>- https://dreamanddead.github.io/post/crack-final-phase/ - DreamAndDead 2014-2021</description></item><item><title>深度学习攒机总结</title><link>https://dreamanddead.github.io/post/compose-deep-learning-machine/</link><pubDate>Wed, 25 Mar 2020 09:02:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/compose-deep-learning-machine/</guid><description>时长N年半 https://dreamanddead.github.io/post/compose-deep-learning-machine/ -&lt;p>深度学习需要强大的算力做支撑，无奈手边没有这样的机器，租赁和云服务器的方式又略显昂贵，
-免费的云计算服务不是网络不通畅，就是在软件环境上有限制，这大大限制了探索深度学习魅力的自由度。&lt;/p>
-&lt;p>与其花费在租赁和云服务器上，不如自己组装一台算力合适的机器。&lt;/p>
-&lt;h1 id="规划">规划&lt;/h1>
-&lt;h2 id="gpu">GPU&lt;/h2>
-&lt;p>粗略来看，在深度学习方面 GPU 的训练效率是 CPU 的 10 倍，所以选择 GPU 是最重要的第一步。&lt;/p>
-&lt;p>根据这两篇出色的文章，&lt;a href="https://www.cnblogs.com/xiaozhi_5638/p/10923351.html">深度学习如何选择GPU?&lt;/a>，&lt;a href="https://zhuanlan.zhihu.com/p/42749496">更新2080Ti后，深度学习该选什么显卡?&lt;/a>&lt;/p>
-&lt;p>在没有过高的预算情况下，配置了 影弛 RTX 2070 SUPER。&lt;/p>
-&lt;h2 id="主板">主板&lt;/h2>
-&lt;p>选择一个资源丰厚的主板是重要的第二步，因为主板限定了 CPU 的型号，PCIe 通道的数量，以及 m.2 usb3.0 等外接口。&lt;/p>
-&lt;p>最终选择了 x99 主板，华南寨板 x99-f8（没有预算），因为提供了足够的接口，支持 E5 系列 CPU，提供 40 个 PCIe 通道。&lt;/p>
-&lt;p>附：&lt;a href="https://www.chiphell.com/thread-2153551-1-1.html">PCIe 通道解析&lt;/a>&lt;/p>
-&lt;p>当前的单张显卡占据 16 个通道，后期拓展双显卡使用 32 通道，留出一定拓展空间。&lt;/p>
-&lt;h2 id="cpu">CPU&lt;/h2>
-&lt;p>CPU 选择了 E5 V3 2080，服务器系列的 CPU 虽然主频不高，但是核心多，足够稳定（还是预算）&lt;/p>
-&lt;p>附：&lt;a href="https://ark.intel.com/content/www/us/en/ark/products/series/78583/intel-xeon-processor-e5-v3-family.html">E5 性能规格表&lt;/a>&lt;/p>
-&lt;h2 id="内存">内存&lt;/h2>
-&lt;p>本着内存越大越好，频率越高越好的原则，配置了单条 32G 2400MHz 三星内存。&lt;/p>
-&lt;p>重要的是它支持 recc，服务器主板的专享。&lt;/p>
-&lt;p>当前是单条单通道，之后可能拓展到 4 通道。&lt;/p>
-&lt;h2 id="硬盘">硬盘&lt;/h2>
-&lt;p>硬盘选择的范围就比较小，SSD 是必须的，这里配置了 m.2 接口的 Tigo 硬盘。&lt;/p>
-&lt;h2 id="电源">电源&lt;/h2>
-&lt;p>电源要为所有元件供能，且最高瓦数要有拓展之后的盈余。&lt;/p>
-&lt;p>在预算吃紧的情况下，配置了口碑不错的 海韵 850W，留出了大量电力供日后拓展。&lt;/p>
-&lt;h2 id="机箱">机箱&lt;/h2>
-&lt;p>选购了一个精简的塔式机箱，最大可安装 E-ATX 主板，内部空间足够大，且可以藏线，硬盘位多，前后带 3 个风扇散热通畅，后期也可以加装水冷。&lt;/p>
-&lt;h2 id="cpu-散热">CPU 散热&lt;/h2>
-&lt;p>这方面选择配套 x99 主板的散热器就可以，铜管数越多越好。&lt;/p>
-&lt;h2 id="支架">支架&lt;/h2>
-&lt;p>显卡的确很重，而且由于主板是侧装的，显卡的重量很容易将 PCIe 接口压弯，所以最好配置一个显卡支架做支撑，不至于引起更多问题。&lt;/p>
-&lt;h1 id="装机">装机&lt;/h1>
-&lt;p>硬件组装的过程就不赘述了，在装入机箱前，一定要先安装 windows，用 AIDA64 跑满足够小时的压力测试，提前发现硬件组合的问题。&lt;/p>
-&lt;h1 id="系统">系统&lt;/h1>
-&lt;h2 id="os">OS&lt;/h2>
-&lt;p>虽然 Linux 种类繁多，但是还是推荐 ubuntu 18.04，配置快捷不折腾。&lt;/p>
-&lt;p>虽然有 server 版，但是这里建议使用 desktop 版，性能差异并非太大，且提供了图形界面（只占用很少的显存），方便查看和调整其中的数据（尤其是图片）。&lt;/p>
-&lt;p>而且使用了图形界面，所以 NVidia 驱动已经为 &lt;a href="https://docs.nvidia.com/deploy/driver-persistence/">persistence 状态&lt;/a>。&lt;/p>
-&lt;h2 id="remote">Remote&lt;/h2>
-&lt;ul>
-&lt;li>openssh-server，服务器必备，使用 ssh 可远程终端连接&lt;/li>
-&lt;li>nfs-server，用于导出用户根目录，可以挂载到开发机，用心爱的编辑器开发&lt;/li>
-&lt;li>tmux，在 ssh 会话中开启多终端，同时防止 ssh 中断导致训练中断&lt;/li>
-&lt;li>tigervnc，必要时需要远程使用图形界面&lt;/li>
-&lt;/ul>
-&lt;h2 id="env">Env&lt;/h2>
-&lt;p>配置最新的 tensorflow 环境&lt;/p>
-&lt;h3 id="python">Python&lt;/h3>
-&lt;p>建议使用 conda 来提供 python 环境，使用 miniconda，精简，按需添加。&lt;/p>
-&lt;p>官方下载 miniconda 安装脚本，安装后配置&lt;a href="https://mirror.tuna.tsinghua.edu.cn/help/anaconda/">镜像源&lt;/a>。&lt;/p>
-&lt;p>使用 python 3.7 创建基础环境，和其它的库的版本匹配更好。&lt;/p>
-&lt;pre>&lt;code>$ conda create -n deep-learning python==3.7
-&lt;/code>&lt;/pre>&lt;h3 id="nvidia-driver--cuda--cudnn--tensorflow">NVidia driver &amp;amp; Cuda &amp;amp; CuDNN &amp;amp; tensorflow&lt;/h3>
-&lt;p>根据 &lt;a href="https://www.tensorflow.org/install/gpu#install_cuda_with_apt">tensorflow 的官方文档&lt;/a>，提供了安装 nvidia 驱动，cuda，cudnn 的方法&lt;/p>
-&lt;p>对于 18.04 版本，它提供了如下的方法，从官方源安装 driver, cuda, cudnn 这一系列让新手头疼的库。&lt;/p>
-&lt;pre>&lt;code># Add NVIDIA package repositories
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
-sudo dpkg -i cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
-sudo apt-get update
-wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
-sudo apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
-sudo apt-get update
-# Install NVIDIA driver
-sudo apt-get install --no-install-recommends nvidia-driver-440 # 应该是 440，而不是 418!!!!!!
-&lt;/code>&lt;/pre>&lt;p>在驱动安装之后，使用提供的命令，检测显卡的状态，验证驱动是否已经安装好&lt;/p>
-&lt;pre>&lt;code>$ nvidia-smi
-+-----------------------------------------------------------------------------+
-| NVIDIA-SMI 440.64.00 Driver Version: 440.64.00 CUDA Version: 10.2 |
-|-------------------------------+----------------------+----------------------+
-| GPU Name Persistence-M| Bus-Id Disp.A | Volatile Uncorr. ECC |
-| Fan Temp Perf Pwr:Usage/Cap| Memory-Usage | GPU-Util Compute M. |
-|===============================+======================+======================|
-| 0 GeForce RTX 207... On | 00000000:03:00.0 Off | N/A |
-| 34% 30C P2 36W / 215W | 73MiB / 7979MiB | 4% Default |
-+-------------------------------+----------------------+----------------------+
-+-----------------------------------------------------------------------------+
-| Processes: GPU Memory |
-| GPU PID Type Process name Usage |
-|=============================================================================|
-| 0 1220 G /usr/lib/xorg/Xorg 24MiB |
-| 0 1290 G /usr/bin/gnome-shell 49MiB |
-+-----------------------------------------------------------------------------+
-&lt;/code>&lt;/pre>&lt;p>之后再安装 cuda, cudnn 和 TersorRT（可选）&lt;/p>
-&lt;pre>&lt;code># Install development and runtime libraries (~4GB)
-sudo apt-get install --no-install-recommends \
-cuda-10-1 \
-libcudnn7=7.6.4.38-1+cuda10.1 \
-libcudnn7-dev=7.6.4.38-1+cuda10.1
-# Install TensorRT. Requires that libcudnn7 is installed above.
-sudo apt-get install -y --no-install-recommends libnvinfer6=6.0.1-1+cuda10.1 \
-libnvinfer-dev=6.0.1-1+cuda10.1 \
-libnvinfer-plugin6=6.0.1-1+cuda10.1
-&lt;/code>&lt;/pre>&lt;p>官方发布的 tensorflow 2.1.0 在 cuda 10.1，cudnn 7.6 的&lt;a href="https://www.tensorflow.org/install/source#linux">环境&lt;/a>下编译，&lt;/p>
-&lt;p>根据驱动的版本，安装&lt;/p>
-&lt;pre>&lt;code>$ pip install tensorflow-gpu==2.1.0 keras==2.3.1
-&lt;/code>&lt;/pre>&lt;p>至此，python，tensorflow，显卡驱动，cuda，keras 的版本就有了合理的匹配。&lt;/p>
-&lt;p>安装之后，检测 tensorflow &lt;a href="https://stackoverflow.com/questions/38009682/how-to-tell-if-tensorflow-is-using-gpu-acceleration-from-inside-python-shell">是否使用了 gpu&lt;/a>。&lt;/p>
-&lt;p>一切配置检验之后，建议更新所有包到最新版本&lt;/p>
-&lt;pre>&lt;code>$ apt update
-$ apt upgrade
-&lt;/code>&lt;/pre>&lt;h1 id="end">End&lt;/h1>
-&lt;p>试运行一些项目，内存空间充足，显存足够，显卡算力足够，CPU 24 线程并发，开发效率大大的提高了。&lt;/p>- https://dreamanddead.github.io/post/compose-deep-learning-machine/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;p>这何尝不是一种宿命论。&lt;/p>- https://dreamanddead.github.io/post/crack-final-phase/ - DreamAndDead 2014-2021</description></item></channel></rss>
