@@ -1025,10 +1025,13 @@ title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0
 &lt;/li>
 &lt;/ol>
 &lt;/section>
-- https://dreamanddead.github.io/post/algo-basic-before-oj/ - DreamAndDead 2014-2021</description></item><item><title>如何正确地发声</title><link>https://dreamanddead.github.io/post/right-voice/</link><pubDate>Sat, 03 Apr 2021 22:01:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/right-voice/</guid><description>时长N年半 https://dreamanddead.github.io/post/right-voice/ -&lt;p>本文是一篇读书总结，由&lt;a href="https://book.douban.com/subject/1288733/">《嗓音的科学训练与保健》&lt;/a>而来，
+- https://dreamanddead.github.io/post/algo-basic-before-oj/ - DreamAndDead 2014-2021</description></item><item><title>如何科学地发声</title><link>https://dreamanddead.github.io/post/right-voice/</link><pubDate>Sat, 03 Apr 2021 22:01:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/right-voice/</guid><description>时长N年半 https://dreamanddead.github.io/post/right-voice/ -&lt;p>本文是一篇读书总结，由&lt;a href="https://book.douban.com/subject/1288733/">《嗓音的科学训练与保健》&lt;/a>而来，
 学习和研究如何改进发声的方式。&lt;/p>
 &lt;figure>
-&lt;img src="images/cover.jpg"/>
+&lt;img src="images/cover.jpg"
+alt="Figure 1: 封面"/> &lt;figcaption>
+&lt;p>Figure 1: 封面&lt;/p>
+&lt;/figcaption>
 &lt;/figure>
 &lt;p>容貌，形体，声音，构成一个人的整体形像。
 容貌关乎穿着与打扮，形体关乎礼仪修养，
@@ -1116,6 +1119,1045 @@ title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0
 自然放松，保持呼吸通道的打开，每次只用“刚刚够”发音所需的气息，
 节制气息流量，延长气息使用时间，保持稳定的气息压力，避免毫无控制的放掉气息。&lt;/p>
 &lt;p>这是使用呼吸最理想的状态。&lt;/p>
+&lt;h2 id="共鸣">共鸣&lt;/h2>
+&lt;p>简单地说，&lt;a href="https://bideyuanli.com/p/426">共鸣&lt;/a>，是物体因共振而发声的现象，
+本质上是能量的积聚。
+比如大桥被风吹断的现象，是典型的共振现象。
+风其实并不大，只是桥将风的能量存储起来，
+振动幅度越来越大，
+就像推一个人荡秋千一样，只需要在关键的一点，
+轻轻一推，秋千就越荡越高。&lt;/p>
+&lt;p>共鸣在发声中的作用非常大。
+一是可以扩大音量，将声带初始的小的振动，累积成大的振动，
+提高说话的音量。
+二是塑造音色，每个共鸣腔有自己特定的共振频率，
+频率相匹配的振动被加强，
+其它频率的振动相对弱一些。&lt;/p>
+&lt;p>所以共鸣的关键在于共鸣腔体。&lt;/p>
+&lt;figure>
+&lt;img src="images/all.png"
+alt="Figure 2: 主要腔体"/> &lt;figcaption>
+&lt;p>Figure 2: 主要腔体&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="喉腔">喉腔&lt;/h3>
+&lt;p>喉腔是发声的发源地，是共鸣的第一个腔体，
+声带就在喉腔里。&lt;/p>
+&lt;p>喉部肌肉主要有喉内肌和喉外肌。
+喉内肌控制声带，这是说话发声必须要精确控制的。
+喉外肌主要用于控制喉位，比如吃饭时的喉部运动。&lt;/p>
+&lt;p>原则上，科学发声讲究喉部肌肉（外肌）的放松。
+如果喉外肌紧张，阻止了气流的通畅，
+妨碍声带正常工作，减小了喉腔的共鸣空间。
+喉咙使劲往内挤卡，气息使劲向外冲撞，这种方式是非常不可取的。&lt;/p>
+&lt;p>体会喉部放松的感觉，最简单的是闻花香。
+如闻花般深深吸一口气，此时感觉整个呼吸道是通畅的，
+下巴是放松的，喉部是放松的。&lt;/p>
+&lt;h3 id="口腔">口腔&lt;/h3>
+&lt;ul>
+&lt;li>软腭抬起的高度高，口腔容积大，容易得到口腔共鸣效果，音量大&lt;/li>
+&lt;li>针对软腭和腭咽弓肌肉练习，改善口腔内部容积&lt;/li>
+&lt;li>打哈欠
+&lt;ul>
+&lt;li>像打哈欠一样，提高上腭，吸气，保持打哈欠的感觉不变&lt;/li>
+&lt;li>控制喉咙和咽腔保持吸气状态&lt;/li>
+&lt;li>锻炼腭咽弓肌肉的收缩力量&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>软腭升降
+&lt;ul>
+&lt;li>张大嘴巴，倒吸一口凉气，带动软腭一上一下的升降&lt;/li>
+&lt;li>逐渐加大运动幅度，到小舌头也能往上贴紧&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>灵活，状态可随意变化
+&lt;ul>
+&lt;li>颌&lt;/li>
+&lt;li>嘴唇&lt;/li>
+&lt;li>舌头&lt;/li>
+&lt;li>软腭&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>前半部分，硬腭，空间调整有限
+&lt;ul>
+&lt;li>前嘴收小，不至于声音分散，留在内部共振&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>后半部分，软腭，开大一些，容易激起更多共振&lt;/li>
+&lt;/ul>
+&lt;h3 id="头腔共鸣">头腔共鸣&lt;/h3>
+&lt;ul>
+&lt;li>声音要传的远，不在于大嗓门，而在于音色要干净，音束要集中&lt;/li>
+&lt;li>引导声音进入通畅的鼻咽腔，得到高位置的共鸣，这样发声就会省力&lt;/li>
+&lt;li>todo 练习
+&lt;ul>
+&lt;li>P59&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>上
+&lt;ul>
+&lt;li>鼻腔
+&lt;ul>
+&lt;li>高位置的共鸣音色&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>高频，纯净&lt;/li>
+&lt;li>则声音尖而高&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="胸腔">胸腔&lt;/h3>
+&lt;ul>
+&lt;li>下
+&lt;ul>
+&lt;li>胸腔
+&lt;ul>
+&lt;li>气管与支气管&lt;/li>
+&lt;li>放大音量，雄浑宽广的音色&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>低频，深厚&lt;/li>
+&lt;li>则声音低而沉稳&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="咬字">咬字&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>口腔是字音的制造机器&lt;/p>
+&lt;ul>
+&lt;li>口型准备，音才准确&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>汉语一字一音，棱角分明，掷地有声&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>发声经验，分成字音结构&lt;/p>
+&lt;ul>
+&lt;li>字头&lt;/li>
+&lt;li>字腹&lt;/li>
+&lt;li>字尾&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>开始时，口腔肌肉比较紧缩，靠拢&lt;/p>
+&lt;ul>
+&lt;li>短促有用的音素，称为字头&lt;/li>
+&lt;li>21 声母，零声母 i u v 与介母 i u v&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>当口腔阻力完全突破，带出响亮的音素时，
+到了字音延伸发展的高潮阶段&lt;/p>
+&lt;ul>
+&lt;li>内部肌肉松开扩充，内部容积增大&lt;/li>
+&lt;li>这个中心音素称为字腹&lt;/li>
+&lt;li>最能发挥共鸣的关键部分&lt;/li>
+&lt;li>10 个元音 和 两个 -i&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>字音消失前的收尾阶段&lt;/p>
+&lt;ul>
+&lt;li>口腔收拢到闭合而发出的音素&lt;/li>
+&lt;li>有 i u n ng 4 个&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>几乎对应韵头，韵腹，韵尾&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>416 汉字音节&lt;/p>
+&lt;ul>
+&lt;li>22 无字头&lt;/li>
+&lt;li>137 无字尾&lt;/li>
+&lt;li>268 齐全&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>口腔肌肉特点&lt;/p>
+&lt;ul>
+&lt;li>字头，闭紧或收拢&lt;/li>
+&lt;li>字腹，松开扩充&lt;/li>
+&lt;li>字尾，关闭或接近关闭&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>要点&lt;/p>
+&lt;ul>
+&lt;li>字头咬字要重
+&lt;ul>
+&lt;li>口腔力量&lt;/li>
+&lt;li>加强口腔肌肉的摩擦力量，使出字喷弹有力&lt;/li>
+&lt;li>找准口腔内闭拢的部位&lt;/li>
+&lt;li>一定的爆发力&lt;/li>
+&lt;li>不是笨重的加力，使用巧力，摩擦在面积尽可能小的点上&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>字腹吐音要圆
+&lt;ul>
+&lt;li>针对共鸣而言&lt;/li>
+&lt;li>利用元音响亮且时值长的特点，对字腹进行丰满，圆润的塑造&lt;/li>
+&lt;li>不是收紧，而是放松&lt;/li>
+&lt;li>不摩擦，而是通畅的流动&lt;/li>
+&lt;li>充分发挥共振作用&lt;/li>
+&lt;li>字头擦出后，适度打开口腔，抬软腭，稳定喉头，
+提供合适的共鸣空间&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>字尾收韵要轻
+&lt;ul>
+&lt;li>一张一弛，短暂，轻柔&lt;/li>
+&lt;li>气流减弱，音量减小，肌肉放松&lt;/li>
+&lt;li>为下一个字头准备&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>重咬，圆吐，轻收，环环相扣
+&lt;ul>
+&lt;li>话语流动连贯一气，颗粒清楚&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="拼音基础">拼音基础&lt;/h3>
+&lt;p>&lt;a href="https://www.bilibili.com/read/cv5036727/">汉语拼音&lt;/a>，指普通话拼音，在中国大陆常简称为拼音，是一种以拉丁字母作汉字标音的方案。
+汉语拼音是一种辅助汉字读音的工具。&lt;/p>
+&lt;h4 id="声母">声母&lt;/h4>
+&lt;p>声母是韵母前的辅音，跟它构成一个完整音节。
+声母则通常响度低、不能任意延长，
+而韵母响度大、能延长、有音节核心。&lt;/p>
+&lt;figure>
+&lt;img src="images/shengmu.jpg"
+alt="Figure 3: 声母表"/> &lt;figcaption>
+&lt;p>Figure 3: 声母表&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;figure>
+&lt;img src="images/shengmuyinbiao.jpg"
+alt="Figure 4: 声母国际音标对照表"/> &lt;figcaption>
+&lt;p>Figure 4: 声母国际音标对照表&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>零声母是一个汉语语音学的名词。
+汉语由于一般为一个字代表一个音节，其中“前置辅音”称为声母、元音和“后置辅音”一起称为韵母。
+每个字都是由声母和韵母组成，但当一个字只有元音或元音和“后置辅音”，
+而没有“前置辅音”时，即认为这个字的声母为零声母。&lt;/p>
+&lt;h4 id="韵母">韵母&lt;/h4>
+&lt;p>韵母是一个音节中除声母外的部分。
+由一个元音构成的韵母称为单元音韵母，由多个元音构成的称为复元音韵母。
+复韵母由韵头、韵腹、韵尾组成。&lt;/p>
+&lt;p>介音/韵头&lt;/p>
+&lt;p>介音指在汉语音节的构成中位于辅音和主要元音之间的过渡音，都是闭元音。
+介音又叫介母，与韵腹和韵尾并提时则也称韵头。&lt;/p>
+&lt;p>韵腹&lt;/p>
+&lt;p>当一个韵母只含有一个响音，该响音就是韵腹。
+当一个韵母含有两个以上的响音，其中最低的元音是韵腹；
+此韵母里比该韵腹高的元音如果处于韵腹的前面，就是韵头；
+此韵母里的辅音或者比韵腹高的元音如果处于韵腹的后面，就是韵尾。&lt;/p>
+&lt;p>韵尾&lt;/p>
+&lt;p>韵尾(syllable coda)是跟在做韵腹的元音后面的辅音或者元音，
+和前面的元音以及元音前面的辅音组成一个音节，
+和做韵头与韵腹的元音一起组成韵母。&lt;/p>
+&lt;p>汉语方言里常见的韵尾有：-u -i -m、-n、-ŋ、-p、-t、-k、-ʔ等。&lt;/p>
+&lt;p>韵母只有一个元音（如a），或者一个元音带一个鼻辅音（如an）的话，该元音称为韵腹，
+所带的鼻辅音称为韵尾。&lt;/p>
+&lt;p>韵母若由两个元音构成（如ao、ie），开口度较大的元音为韵腹，
+余下的元音若在韵腹前则称为韵头（又称介音），若在韵腹后则称为韵尾。&lt;/p>
+&lt;p>韵母有三个元音（如iou），或者两个元音带一个鼻辅音（如ueng）的话，
+则中间的元音是韵腹，第一个元音是韵头，韵腹后的元音或鼻辅音为韵尾。&lt;/p>
+&lt;p>汉语拼音韵母按照韵母的结构和发音特点，可作不同的分类。&lt;/p>
+&lt;p>按韵母的结构分类：普通话韵母按结构可分为单韵母、复韵母和鼻韵母三类。&lt;/p>
+&lt;p>按韵母的口形分类：韵母可根据韵头分为四类，称为四呼，即开口呼（a、o、e、ê）、齐齿呼（i）、合口呼（u）和撮口呼（ü）。&lt;/p>
+&lt;figure>
+&lt;img src="images/yunmu.jpg"
+alt="Figure 5: 韵母国际音标对照表"/> &lt;figcaption>
+&lt;p>Figure 5: 韵母国际音标对照表&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="字头">字头&lt;/h3>
+&lt;p>讲究唇舌喷弹有力，
+有喷弹力，将整个字音响亮的送出口外&lt;/p>
+&lt;p>念白掷地有声，又不喷出唾液，嘴皮有力&lt;/p>
+&lt;p>8 种状态和用力方法&lt;/p>
+&lt;h4 id="双唇音-喷-唇齿音-擦">双唇音，喷；唇齿音，擦&lt;/h4>
+&lt;ul>
+&lt;li>双唇音 b p ，要强调喷&lt;/li>
+&lt;li>唇齿音 f 要强调 擦&lt;/li>
+&lt;li>b p 双唇闭合&lt;/li>
+&lt;li>f 上齿下唇接触&lt;/li>
+&lt;li>唇肌收紧贴紧牙齿，抓一抓牙齿的感觉&lt;/li>
+&lt;li>喷气冲击双唇，轻快干脆&lt;/li>
+&lt;li>发出清脆短促的唇音&lt;/li>
+&lt;li>f 发音要求相同，唇齿分开动作稍慢，使气流摩擦出声&lt;/li>
+&lt;li>着力点聚集在两唇内侧尽可能小的中间部位，不要将力量
+分布在整个嘴唇&lt;/li>
+&lt;/ul>
+&lt;h4 id="舌尖中音-弹">舌尖中音，弹&lt;/h4>
+&lt;ul>
+&lt;li>d t l 强调弹&lt;/li>
+&lt;li>舌尖有一定的紧张度，中后部放松&lt;/li>
+&lt;li>舌头弹字的面积尽可能小，集中在舌尖中央的点顶住
+上齿牙龈阻气&lt;/li>
+&lt;li>除阻动作果断有力，气流一过舌面，
+舌尖立即敲响舌尖音，并离开上牙龈&lt;/li>
+&lt;/ul>
+&lt;h4 id="鼻音-导">鼻音，导&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>声母 m n 强调导&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>其它声母不使用声带，而鼻辅音使用声带&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>将声音送入鼻孔再跟后面的韵母拼出字&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>软腭下降，鼻腔通畅&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>将带音气流导入鼻腔才拼合韵母出字&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>鼻音要略长些，坚实些，有明显的拼接过程&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>练习鼻音，体会用气带声和解除喉腔口腔的紧张感&lt;/li>
+&lt;li>练 m ma mi 哼鸣就是这个道理&lt;/li>
+&lt;/ul>
+&lt;h4 id="舌根音-啃">舌根音，啃&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>g k h&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>舌头略微后缩，舌根前部隆起与软腭硬腭交界处接触&lt;/p>
+&lt;ul>
+&lt;li>h 不完全关闭&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>圆滑而快速的彼此跳开，气流冲出&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>成阻部位在后腔，不易发的清晰&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>收紧舌根肌肉，在比较小的面积上用力顶住上腭 啃 字&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>软腭，小舌头要适当抬起&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>h 容易产生漏气现象，练习时要将舌与腭靠近，使口腔通道变窄&lt;/p>
+&lt;ul>
+&lt;li>控制气流冲击力度，减少呵气时间，节约气息&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>练习啃字，对锻炼软腭开合的力度与灵活度，加强口腔后部共鸣的效果有帮助&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="舌面音-挤">舌面音，挤&lt;/h4>
+&lt;ul>
+&lt;li>j q x 强调挤&lt;/li>
+&lt;li>舌尖下垂，轻抵下门齿背的下部，保持不离开&lt;/li>
+&lt;li>舌面向上隆起，与硬腭前部有力的挤贴，以阻住气流&lt;/li>
+&lt;li>x 不完全贴紧&lt;/li>
+&lt;li>咬字时，舌前部轻轻离开硬腭，形成窄缝，
+气流从舌面形成的窄缝中摩擦冲出&lt;/li>
+&lt;/ul>
+&lt;h4 id="舌尖后音-翘舌擦">舌尖后音，翘舌擦&lt;/h4>
+&lt;ul>
+&lt;li>zh ch sh r&lt;/li>
+&lt;li>zh ch 舌头后缩，舌尖翘起顶住硬腭与上齿交界处，
+阻气，慢慢打开，气流从缝隙中冲出，摩擦出声&lt;/li>
+&lt;li>sh r 同上，舌尖与硬腭留一窄缝，气流从中间挤出，摩擦成声&lt;/li>
+&lt;/ul>
+&lt;h4 id="舌尖前音-平舌擦">舌尖前音，平舌擦&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>z c s&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>z c 舌尖平伸，顶在上齿龈后阻气，
+舌尖稍微离开齿龈，在缝隙间擦气发出声音&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>s 保持 z c 舌头离开齿龈时的状态，气流摩擦出声&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>成阻面积要小，舌尖用力要集中&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>口腔松开，两齿间保持一定的距离&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>险阻之后，马上加上韵母，不要加入呼读音 -i&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="零声母-聚拢">零声母，聚拢&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>a o e i u v&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>以 i u v 起头的复韵母，独立形成的音节，将 i u v 划为字头，
+因为后续有更响亮的元音&lt;/p>
+&lt;ul>
+&lt;li>i
+&lt;ul>
+&lt;li>呀 ia&lt;/li>
+&lt;li>也 ie&lt;/li>
+&lt;li>要 iao&lt;/li>
+&lt;li>有 iou&lt;/li>
+&lt;li>烟 ian&lt;/li>
+&lt;li>样 iang&lt;/li>
+&lt;li>用 iong&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>u
+&lt;ul>
+&lt;li>哇 ua&lt;/li>
+&lt;li>我 uo&lt;/li>
+&lt;li>外 uai&lt;/li>
+&lt;li>为 uei&lt;/li>
+&lt;li>万 uan&lt;/li>
+&lt;li>文 uen&lt;/li>
+&lt;li>王 uang&lt;/li>
+&lt;li>翁 ueng&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>v
+&lt;ul>
+&lt;li>月 ve&lt;/li>
+&lt;li>圆 van&lt;/li>
+&lt;li>云 ven&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>这类字音，缺乏口腔局部闭塞而爆破摩擦出的辅音，
+出字时往面上分布的感觉多&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>要字头清楚，就要强调聚拢，&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>加大出字时，齐口 i 合口 u 撮口 v 的肌肉收缩力度，
+造成气流在收缩部分“点”的瞬间摩擦&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点到为止，让人感觉不到摩擦气，否则会僵硬&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>造形时，口腔内相关部位稍稍用力缩窄，减少口腔内的容积，
+来加强字头的感觉&lt;/p>
+&lt;ul>
+&lt;li>i 舌面前部和前硬腭部&lt;/li>
+&lt;li>u 双唇部&lt;/li>
+&lt;li>v 舌面前部和前硬腭部，加上双唇部&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>另一类，称为无字头音节，因为后面没有更强的元音
+&lt;ul>
+&lt;li>a o e i u v 单独构成的字&lt;/li>
+&lt;li>a o e 起头的复韵母
+&lt;ul>
+&lt;li>ai&lt;/li>
+&lt;li>an&lt;/li>
+&lt;li>ang&lt;/li>
+&lt;li>ao&lt;/li>
+&lt;li>ou&lt;/li>
+&lt;li>en&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>这类发音，发出前，声门有一点稍微阻塞的动作
+&lt;ul>
+&lt;li>敏捷的闭塞一下，声门就马上放松，让元音通畅流出&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>再一类，i u v 不作为零声母，而是介母（连接声母与主要韵母的媒介）
+&lt;ul>
+&lt;li>拼音中为韵头，也作为字头来发音&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>前面紧挨着闭塞的辅音，可以在相应辅音摩擦部位聚拢声音的“点”，
+尽可能发的短促，清晰。&lt;/li>
+&lt;/ul>
+&lt;h3 id="字腹">字腹&lt;/h3>
+&lt;p>9 要求&lt;/p>
+&lt;h4 id="a-音字腹高位发">a 音字腹高位发&lt;/h4>
+&lt;ul>
+&lt;li>韵母，字腹为 a 的音节
+&lt;ul>
+&lt;li>a&lt;/li>
+&lt;li>ia&lt;/li>
+&lt;li>ua&lt;/li>
+&lt;li>ai&lt;/li>
+&lt;li>uai&lt;/li>
+&lt;li>ao&lt;/li>
+&lt;li>iao&lt;/li>
+&lt;li>an&lt;/li>
+&lt;li>ian&lt;/li>
+&lt;li>uan&lt;/li>
+&lt;li>van&lt;/li>
+&lt;li>ang&lt;/li>
+&lt;li>iang&lt;/li>
+&lt;li>uang&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>a 音最易打开腔体，带进更多的胸声&lt;/li>
+&lt;li>耗气量大，音色难以集中&lt;/li>
+&lt;li>努力寻找高位置的共鸣音色，尽可能在鼻梁和眉心碰响&lt;/li>
+&lt;li>口腔前不要太大，内部可张圆一些&lt;/li>
+&lt;li>训练
+&lt;ul>
+&lt;li>用 i 带动 a，ia，架，恰，夏，减少漏气的毛病&lt;/li>
+&lt;li>多读和 m n 相接的字，如 骂 那，借助鼻音声母的引导作用，
+将音响送进头腔，改变声音位置低的习惯&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="o-音字腹稍靠前">o 音字腹稍靠前&lt;/h4>
+&lt;ul>
+&lt;li>韵母
+&lt;ul>
+&lt;li>o&lt;/li>
+&lt;li>uo&lt;/li>
+&lt;li>ou&lt;/li>
+&lt;li>iou&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>发音着力点比 a 靠后，促使软腭向上收缩，
+形成拱形的口腔状态，通畅的胸腔共鸣&lt;/li>
+&lt;li>但 o 音要略微收拢嘴唇，挡住了部分气流，
+音色会暗闷&lt;/li>
+&lt;li>训练声音的着力位置稍靠前，使 o 音通畅的送出口腔外
+&lt;ul>
+&lt;li>使 a i 带动 o 的方式&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="e-音字腹抬软腭">e 音字腹抬软腭&lt;/h4>
+&lt;ul>
+&lt;li>韵母
+&lt;ul>
+&lt;li>e&lt;/li>
+&lt;li>en&lt;/li>
+&lt;li>uen&lt;/li>
+&lt;li>eng&lt;/li>
+&lt;li>ueng&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>e 发音着力点与 o 类似，但软腭没有 o 那样抬高，
+因此口腔比较窄小，影响音量和音色&lt;/li>
+&lt;li>训练
+&lt;ul>
+&lt;li>发声时稍稍抬高软腭，使口腔的空间增大&lt;/li>
+&lt;li>使用 g k h 带动，借助舌根啃字的弹性力量，
+带动软腭成拱形&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="e-音字腹忌扁横">e 音字腹忌扁横&lt;/h4>
+&lt;ul>
+&lt;li>韵母
+&lt;ul>
+&lt;li>诶&lt;/li>
+&lt;li>ie ve ei uei&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>即有接近 a 的张嘴动作，又有接近 i 的较高着力位置&lt;/li>
+&lt;li>容易得到头腔音色&lt;/li>
+&lt;li>但是发音时舌头略拱起，软腭也略下降，口腔空间变小，
+容易出现扁平，僵硬的毛病&lt;/li>
+&lt;li>补救方法
+&lt;ul>
+&lt;li>把上下牙齿拉开一点&lt;/li>
+&lt;li>舌头适当放平&lt;/li>
+&lt;li>使舌面与上腭之间的空隙变圆&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>训练
+&lt;ul>
+&lt;li>以 ng 带动 e 的方法&lt;/li>
+&lt;li>加强软腭与舌面抬落开合的力量&lt;/li>
+&lt;li>扩充口腔后部的共鸣空间&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="i-音字腹略变圆">i 音字腹略变圆&lt;/h4>
+&lt;ul>
+&lt;li>韵母
+&lt;ul>
+&lt;li>i&lt;/li>
+&lt;li>in ing&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>i 音着力位置高，声带容易闭紧，容易出发高位置音色&lt;/li>
+&lt;li>但口腔通道窄，音量比较小&lt;/li>
+&lt;li>过分追求音量，容易导致尖锐刺耳&lt;/li>
+&lt;li>改进
+&lt;ul>
+&lt;li>不要把舌头抬的过高&lt;/li>
+&lt;li>软腭不要太低&lt;/li>
+&lt;li>适当放松口腔肌肉&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>训练&lt;/li>
+&lt;/ul>
+&lt;h4 id="u-音字腹往前送">u 音字腹往前送&lt;/h4>
+&lt;ul>
+&lt;li>韵母
+&lt;ul>
+&lt;li>u&lt;/li>
+&lt;li>ong&lt;/li>
+&lt;li>iong&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>特点
+&lt;ul>
+&lt;li>喉位较低，软腭较高&lt;/li>
+&lt;li>咽喉易形成较长的共鸣通道&lt;/li>
+&lt;li>经常用于训练喉结稳定，和松开喉咙&lt;/li>
+&lt;li>嘴唇收敛为圆孔，口腔容积变窄，声音着力点后移
+&lt;ul>
+&lt;li>容易色彩暗淡&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>改进
+&lt;ul>
+&lt;li>把声音往前送&lt;/li>
+&lt;li>双唇不用太圆太小，也别过分向前伸展&lt;/li>
+&lt;li>双唇肌肉力么绷紧贴着牙齿&lt;/li>
+&lt;li>不要两肋鼓起&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>训练&lt;/li>
+&lt;/ul>
+&lt;h4 id="v-音字腹莫阻气">v 音字腹莫阻气&lt;/h4>
+&lt;ul>
+&lt;li>韵母
+&lt;ul>
+&lt;li>v&lt;/li>
+&lt;li>vn&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>特点
+&lt;ul>
+&lt;li>口腔特点和 i 接近&lt;/li>
+&lt;li>i 音口腔肌肉前松后紧，口唇处轻轻展开，
+舌腭处紧张靠拢&lt;/li>
+&lt;li>v 音相反，前紧后松，口唇处紧张聚拢，
+舌腭处轻松靠近&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>训练
+&lt;ul>
+&lt;li>口唇过于缩小前撮，会阻住气流，减弱声音的亮度&lt;/li>
+&lt;li>不影响造型的前提下，放松唇肌，开大唇孔，
+使声音通畅的送出口唇&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="i-音字腹微带笑">-i 音字腹微带笑&lt;/h4>
+&lt;ul>
+&lt;li>韵母
+&lt;ul>
+&lt;li>zhi chi shi ri zi ci si&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>特点
+&lt;ul>
+&lt;li>由于发音时，舌面与上腭比较近，容易产生摩擦声&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>改进
+&lt;ul>
+&lt;li>发音时微微带点笑意，嘴角向两边略翘起&lt;/li>
+&lt;li>舌面两侧也微微翘起，舌中部凹下&lt;/li>
+&lt;li>加大舌中与上腭之间的距离，减小声音的摩擦&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>训练&lt;/li>
+&lt;/ul>
+&lt;h4 id="er-音节松开嘴">er 音节松开嘴&lt;/h4>
+&lt;ul>
+&lt;li>自成音节
+&lt;ul>
+&lt;li>而 尔&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>在某些韵母后面，儿化音&lt;/li>
+&lt;li>特点
+&lt;ul>
+&lt;li>保持 e 音的嘴唇开席和发音状态下，
+一出 e 音将舌头后缩，舌尖上抬稍卷，
+与硬腭中前部相对&lt;/li>
+&lt;li>发音时舌头后缩悬空，阻住部分气流，
+引起声音减弱&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>改进
+&lt;ul>
+&lt;li>嘴巴松开点，张大点，
+以弥补一些口腔空间&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="字尾">字尾&lt;/h3>
+&lt;h4 id="无字尾音柔和收">无字尾音柔和收&lt;/h4>
+&lt;ul>
+&lt;li>软收音，收音线条流畅，尾音柔和&lt;/li>
+&lt;li>以韵腹结尾的字音
+&lt;ul>
+&lt;li>a o e i u v&lt;/li>
+&lt;li>ia ie ua uo ve&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>柔和收
+&lt;ul>
+&lt;li>字音结束前，气息减弱变柔和，音量渐渐收小&lt;/li>
+&lt;li>在终结的瞬间，解除口腔肌肉紧张状态&lt;/li>
+&lt;li>注意迁就照顾下一个字音的字头，使下一个字音可以连续出字&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="元音字尾流畅收">元音字尾流畅收&lt;/h4>
+&lt;ul>
+&lt;li>软收音，收音线条流畅，尾音柔和&lt;/li>
+&lt;li>以开口度较小的元音韵尾结束的字音&lt;/li>
+&lt;li>字音延长时，口型由大到小，归入口型较小的元音位置上&lt;/li>
+&lt;li>字腹有适度夸张，延长，一边转入字尾一边收弱声音
+&lt;ul>
+&lt;li>时间短，线条流畅&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>口半闭收齐齿音&lt;/p>
+&lt;ul>
+&lt;li>ai ei uai ui&lt;/li>
+&lt;li>字腹闭合时，舌体要稍向前滑送&lt;/li>
+&lt;li>口腔渐变为半闭状态，使 i 的成分逐渐增多&lt;/li>
+&lt;li>归入比 i 略开的位置即可停止&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>唇拢圆收合口音&lt;/p>
+&lt;ul>
+&lt;li>ou iu ao iao&lt;/li>
+&lt;li>收音时，双唇逐渐向中间收拢，敛圆&lt;/li>
+&lt;li>呈合口或稍合口状态，轻轻归至 u 音或接近 u 音&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="鼻音字尾堵塞收">鼻音字尾堵塞收&lt;/h4>
+&lt;ul>
+&lt;li>硬收音，收音棱角分明，尾音堵塞&lt;/li>
+&lt;li>以鼻辅音韵尾结束的字音&lt;/li>
+&lt;li>n 前鼻音 抵腭&lt;/li>
+&lt;li>ng 后鼻音 穿鼻&lt;/li>
+&lt;li>收韵，在字腹延长阶段，逐渐带上鼻腔音色&lt;/li>
+&lt;li>收音时以舌头堵塞口腔，使尾音进入鼻腔
+&lt;ul>
+&lt;li>前鼻音在前面堵塞，舌尖接触硬腭阻气&lt;/li>
+&lt;li>后鼻音在后面堵塞，舌根接触软腭阻气&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>日常受语速影响，常常忽略堵塞动作
+&lt;ul>
+&lt;li>直接将元音鼻化&lt;/li>
+&lt;li>清楚的前提下，是允许的&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>收前鼻韵舌尖塞&lt;/p>
+&lt;ul>
+&lt;li>an en ian in uan un vn van&lt;/li>
+&lt;li>舌尖前半部，抵住上齿龈与硬腭连接处&lt;/li>
+&lt;li>鼻音不用特别长&lt;/li>
+&lt;li>在收尾前的一刹间，将气息导向鼻腔前方&lt;/li>
+&lt;li>舌尖堵塞气流和前鼻音发音动作同时进行&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>收后鼻韵舌根塞&lt;/p>
+&lt;ul>
+&lt;li>ang eng ong iang ing iong uang ueng&lt;/li>
+&lt;li>主要元音，要带上鼻腔音色&lt;/li>
+&lt;li>气息一半从鼻出，一半从口出&lt;/li>
+&lt;li>最后以舌根接触软腭，将口中气流阻塞，
+全部从鼻出，归入 ng&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="练习">练习&lt;/h2>
+&lt;h3 id="气息">气息&lt;/h3>
+&lt;h4 id="用笑发声">用笑发声&lt;/h4>
+&lt;p>这个练习在于体会呼吸肌的动作。&lt;/p>
+&lt;ul>
+&lt;li>深吸气，保持软腭，咽喉自然扩充&lt;/li>
+&lt;li>用膈肌的弹跳力量，发出短促有力的“哈哈”笑声&lt;/li>
+&lt;li>弹跳的力量集中在“点”上，轻巧快速地弹动&lt;/li>
+&lt;/ul>
+&lt;h4 id="吹纸片">吹纸片&lt;/h4>
+&lt;p>这个练习在于找到膈肌和腹肌联合用力呼吸的感觉。&lt;/p>
+&lt;ul>
+&lt;li>拈起一长条纸片&lt;/li>
+&lt;li>深吸一口气，感觉气息下沉到腹腔，肚皮胀起来&lt;/li>
+&lt;li>对着一角持续轻轻吹气，纸片会有规律的颤动&lt;/li>
+&lt;li>保持均匀的气流，维持尽可能长的吹气时间，肚皮逐渐向腰间瘪进去&lt;/li>
+&lt;li>坚持 25s 以上&lt;/li>
+&lt;li>反复多次练习，追求更多的气息储备，和更长的吹气时间&lt;/li>
+&lt;/ul>
+&lt;h4 id="绕口令">绕口令&lt;/h4>
+&lt;p>这个练习在于体会腹肌节制气息的控制能力。&lt;/p>
+&lt;ul>
+&lt;li>深吸一口气，保持腹部充实的感觉&lt;/li>
+&lt;li>轻快而有弹性的读绕口令&lt;/li>
+&lt;li>尽可能一口气读到 100 字以上，中间不换气，不停顿&lt;/li>
+&lt;li>感觉无力之时，再坚持多读几个字&lt;/li>
+&lt;/ul>
+&lt;p>在有氧运动后，有些气喘时，做这个练习效果更好。&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">吃葡萄不吐葡萄皮，不吃葡萄倒吐葡萄皮。
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">八百标兵奔北坡，炮兵并排北边跑
+炮兵怕把标兵碰，标兵怕碰炮兵炮。
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">白石塔，白石搭，白石搭石塔，白塔白石搭。
+搭好白石塔，白塔白又大。
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">板凳宽，扁担长，扁担要绑在板凳上，
+板凳不让扁担绑在板凳上，
+扁担偏要板凳让扁担绑在板凳上。
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">打南边来了个哑巴，腰里别了个喇叭；打北边来了个喇嘛，手里提了个獭犸。
+提着獭犸的喇嘛要拿獭犸换别着喇叭的哑巴的喇叭；
+别着喇叭的哑巴不愿拿喇叭换提着獭犸的喇嘛的獭犸。
+不知是别着喇叭的哑巴打了提着獭犸的喇嘛一喇叭；
+还是提着獭犸的喇嘛打了别着喇叭的哑巴一獭犸。
+喇嘛回家炖獭犸；哑巴嘀嘀哒哒吹喇叭
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="共鸣">共鸣&lt;/h3>
+&lt;h4 id="喉腔">喉腔&lt;/h4>
+&lt;p>将注意力远离喉咙，外肌自然放松&lt;/p>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>todo&lt;/p>
+&lt;ul>
+&lt;li>todo 练习
+&lt;ul>
+&lt;li>P54&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="口腔">口腔&lt;/h4>
+&lt;ul>
+&lt;li>P50 朗读训练
+&lt;ul>
+&lt;li>提起软腭，保持不塌下来&lt;/li>
+&lt;li>朗读，培养软腭提高的能力和习惯&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="咬字">咬字&lt;/h3>
+&lt;p>口腔体操，锻炼口腔肌肉的力量&lt;/p>
+&lt;h4 id="张嘴训练">张嘴训练&lt;/h4>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>抬头张嘴&lt;/p>
+&lt;p>这个练习训练牙关的打开和舌头，下巴的放松。&lt;/p>
+&lt;ul>
+&lt;li>右手掌根贴紧上胸部，伸直手指固定下巴&lt;/li>
+&lt;li>放松牙关，用抬头的力量带动口腔上盖自然往上，同时深吸气&lt;/li>
+&lt;li>用低头的力量带动口腔上盖往下合拢，缓缓呼气&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>哈欠张嘴&lt;/p>
+&lt;p>训练软腭的上举扩张。&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>自然地打哈欠，使上腭抬起，口咽舒展&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在深吸气的作用下充分扩张的状态&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>保持这种状态，张大嘴不动&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>气息不进不出，但感觉上气息还在缓缓的吸进去&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>直到坚持不住&lt;/p>
+&lt;p>反复多次练习&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>惊吓张嘴&lt;/p>
+&lt;p>同样训练软腭的力量&lt;/p>
+&lt;ul>
+&lt;li>倒吸一口凉气&lt;/li>
+&lt;li>腭咽弓及小舌头会在一瞬间猛然向上收紧&lt;/li>
+&lt;li>再放松回位&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="唇肌练习">唇肌练习&lt;/h4>
+&lt;p>锻炼嘴唇的活动能力，使双唇灵活敏捷，增加字音喷发力。&lt;/p>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>咧&lt;/p>
+&lt;ul>
+&lt;li>唇齿贴紧&lt;/li>
+&lt;li>双唇向中间撮拢，感觉唇肌向前伸长拉细，
+力量向两唇的中心点集中&lt;/li>
+&lt;li>然后，嘴角两边用力，拉伸展开，
+力量均匀分页在两唇相碰的一条横线上&lt;/li>
+&lt;li>反复多次练习&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>撇&lt;/p>
+&lt;ul>
+&lt;li>唇齿贴紧&lt;/li>
+&lt;li>撮拢噘起双唇，唇肌向前伸长拉细&lt;/li>
+&lt;li>分别和左，右，上，下四个方向撇伸，交替进行&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>转&lt;/p>
+&lt;ul>
+&lt;li>唇齿贴紧&lt;/li>
+&lt;li>撮拢噘起双唇&lt;/li>
+&lt;li>用力向左连续转 3 圈，向右连续转 3 圈&lt;/li>
+&lt;li>交替进行&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="舌肌练习">舌肌练习&lt;/h4>
+&lt;p>锻炼舌肌的弹性力量和放松能力。&lt;/p>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>舔&lt;/p>
+&lt;p>向上&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>舌尖抵上齿龈&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>逐渐向上卷起，向硬腭软腭深处舔进去&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>越深越好，试图舔到小舌头&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>反复多次&lt;/p>
+&lt;p>向下&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>舌尖抵下齿龈&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>逐渐向下卷起，向舌底根部舔进去&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>同时，舌面中部凹下，两边缘紧擦着上大牙向外拱出来&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>顶&lt;/p>
+&lt;ul>
+&lt;li>舌尖用力分别顶左右腮帮，越用力越好&lt;/li>
+&lt;li>用力顶上下内唇&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>伸&lt;/p>
+&lt;ul>
+&lt;li>抬头张嘴&lt;/li>
+&lt;li>只用舌根的力量，伸出舌头，舌根抬高贴紧腭舌弓，舌面下垂，用鼻子吸气，&lt;/li>
+&lt;li>闭嘴时，舌头缩回口腔，口鼻同时呼气&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="喷弹发音">喷弹发音&lt;/h4>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>喷发唇阻音&lt;/p>
+&lt;ul>
+&lt;li>闭拢双唇，向内侧中央尽可能小的面积喷气发音&lt;/li>
+&lt;li>由慢到快，连续快速发出短促有力又清晰的 b b b b &amp;hellip;.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>
+&lt;p>喷发舌阻音&lt;/p>
+&lt;ul>
+&lt;li>微张嘴，以舌尖中央尽可能小的点上用力&lt;/li>
+&lt;li>由慢到快，连续快速发出短促有力又清晰的 d d d d &amp;hellip;.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
 &lt;h2 id="license">License&lt;/h2>
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
 &lt;img
