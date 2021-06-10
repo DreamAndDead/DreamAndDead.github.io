@@ -2,7 +2,7 @@
 title: "blog's todo"
 author: ["DreamAndDead"]
 date: 2021-02-23T17:10:00+08:00
-lastmod: 2021-05-25T22:11:05+08:00
+lastmod: 2021-06-10T11:14:54+08:00
 tags: ["test"]
 categories: ["test"]
 draft: true

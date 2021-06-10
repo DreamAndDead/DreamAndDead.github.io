@@ -1,0 +1,28 @@
+#+setupfile: ../setup.org
+
+#+hugo_bundle: music-style
+#+export_file_name: index
+
+#+title: 初识音乐风格
+#+date: <2021-06-10 四 11:08>
+#+hugo_categories: Music
+#+hugo_tags: music art
+#+hugo_draft: true
+#+hugo_custom_front_matter: :comment false :featured_image images/featured.jpg
+
+- 对音乐的兴趣始于
+- 情感相关
+- 神秘
+- 感性与理性
+- 高德纳 爱因思坦
+
+
+#+caption: 音乐风格分类汇总
+[[file:images/style.jpg]]
+
+* License
+
+#+begin_export markdown
+{{< license >}}
+#+end_export
+
