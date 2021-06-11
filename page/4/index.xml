@@ -1,4 +1,125 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Tue, 25 May 2021 09:20:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Deferred Shading Method in DirectX9</title><link>https://dreamanddead.github.io/post/deferred-shading/</link><pubDate>Fri, 26 Apr 2019 14:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/deferred-shading/</guid><description>时长N年半 https://dreamanddead.github.io/post/deferred-shading/ -&lt;p>In the latest work, we need the engine to support large number of lights.
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 10 Jun 2021 11:08:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Trigonometric Function Illustrations</title><link>https://dreamanddead.github.io/post/triangle-math/</link><pubDate>Wed, 15 May 2019 08:09:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/triangle-math/</guid><description>时长N年半 https://dreamanddead.github.io/post/triangle-math/ -&lt;p>三角函数是非常重要的一类周期函数，所有周期函数都可以分解为对应的三角函数的组合。&lt;/p>
+&lt;p>在中学数学中，学习最多是 正弦$sin$，余弦$cos$，正切$tan$ 函数，
+之后了解还有 正割$sec$，余割$csc$，余切$cot$ 函数。&lt;/p>
+&lt;p>其中最让我困惑不解在于它们的命名，什么是正？什么是余？&lt;/p>
+&lt;h1 id="基础图示">基础图示&lt;/h1>
+&lt;figure>
+&lt;img src="images/figure-in-textbook.png"
+alt="单位圆中的三角函数值"/> &lt;figcaption>
+&lt;p>单位圆中的三角函数值&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>在图示中，三角函数对应的值可以照如下的表格来计算。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">翻译&lt;/th>
+&lt;th style="text-align:center">缩写&lt;/th>
+&lt;th style="text-align:center">英文&lt;/th>
+&lt;th style="text-align:center">公式&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">正弦&lt;/td>
+&lt;td style="text-align:center">sin&lt;/td>
+&lt;td style="text-align:center">sine&lt;/td>
+&lt;td style="text-align:center">$\dfrac{CD}{OD}$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余弦&lt;/td>
+&lt;td style="text-align:center">cos&lt;/td>
+&lt;td style="text-align:center">cosine&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OC}{OD}$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">正切&lt;/td>
+&lt;td style="text-align:center">tan&lt;/td>
+&lt;td style="text-align:center">tangent&lt;/td>
+&lt;td style="text-align:center">$\dfrac{AB}{OA}$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余切&lt;/td>
+&lt;td style="text-align:center">cot&lt;/td>
+&lt;td style="text-align:center">cotangent&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OA}{AB}$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">正割&lt;/td>
+&lt;td style="text-align:center">sec&lt;/td>
+&lt;td style="text-align:center">secant&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OD}{OC}$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余割&lt;/td>
+&lt;td style="text-align:center">csc&lt;/td>
+&lt;td style="text-align:center">cosecant&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OD}{CD}$&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>又因为图中是一个单位圆，$OD\ =\ OA\ =\ 1$，所以有三条边的长度对应三个三角函数值。&lt;/p>
+&lt;p>观察对应的公式，我们会发现，正弦和余割互为倒数，余弦和正割互为倒数。
+为什么不是正弦和正割对应，余弦和余割对应呢？&lt;/p>
+&lt;p>而且图中只能表示出三个函数值，不能表现出六个函数值吗？&lt;/p>
+&lt;h1 id="改进图示">改进图示&lt;/h1>
+&lt;p>经过一个偶然的机会，看到了关于三角函数更加合理的解释。&lt;/p>
+&lt;figure>
+&lt;img src="images/triangle-functions.png"
+alt="单位圆中的三角函数值"/> &lt;figcaption>
+&lt;p>单位圆中的三角函数值&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">翻译&lt;/th>
+&lt;th style="text-align:center">缩写&lt;/th>
+&lt;th style="text-align:center">英文&lt;/th>
+&lt;th style="text-align:center">公式&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">正弦&lt;/td>
+&lt;td style="text-align:center">sin&lt;/td>
+&lt;td style="text-align:center">sine&lt;/td>
+&lt;td style="text-align:center">$\dfrac{CD}{OD}=CD$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余弦&lt;/td>
+&lt;td style="text-align:center">cos&lt;/td>
+&lt;td style="text-align:center">cosine&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OC}{OD}=\dfrac{FG}{OF}=FG$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">正切&lt;/td>
+&lt;td style="text-align:center">tan&lt;/td>
+&lt;td style="text-align:center">tangent&lt;/td>
+&lt;td style="text-align:center">$\dfrac{AB}{OA}=AB$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余切&lt;/td>
+&lt;td style="text-align:center">cot&lt;/td>
+&lt;td style="text-align:center">cotangent&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OA}{AB}=\dfrac{AE}{OA}=AE$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">正割&lt;/td>
+&lt;td style="text-align:center">sec&lt;/td>
+&lt;td style="text-align:center">secant&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OD}{OC}=\dfrac{OB}{OA}=OB$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">余割&lt;/td>
+&lt;td style="text-align:center">csc&lt;/td>
+&lt;td style="text-align:center">cosecant&lt;/td>
+&lt;td style="text-align:center">$\dfrac{OD}{CD}=\dfrac{OE}{OA}=OE$&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>所以，三角函数重要的是比例关系，这张图就清晰的表达了一点。&lt;/p>
+&lt;p>co means complementary 表示余角。所以也就有了弦，切，割的正，余值，以及图中优雅的对应关系。&lt;/p>- https://dreamanddead.github.io/post/triangle-math/ - DreamAndDead 2014-2021</description></item><item><title>Deferred Shading Method in DirectX9</title><link>https://dreamanddead.github.io/post/deferred-shading/</link><pubDate>Fri, 26 Apr 2019 14:20:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/deferred-shading/</guid><description>时长N年半 https://dreamanddead.github.io/post/deferred-shading/ -&lt;p>In the latest work, we need the engine to support large number of lights.
 As we all know, the classic way built in DirectX9 is not a reasonable method to do that because of
 efficiency, so deferred shading way becomes the choice.&lt;/p>
 &lt;p>Adding new features in an existent system is never an easy thing. You&amp;rsquo;ll encounter tons of ceilings
@@ -1242,163 +1363,4 @@ at sun.rmi.transport.proxy.RMIMasterSocketFactory.createSocket(Unknown Source) ~
 &lt;p>推而广之，在 jmeter 的所有节点，无论 master/slave，都显示设置自己的 IP 地址。&lt;/p>
 &lt;p>&lt;a href="https://github.com/apache/jmeter/blob/v4_0/bin/system.properties">system.properties&lt;/a> 最后一行添加&lt;/p>
 &lt;pre>&lt;code>java.rmi.server.hostname=&amp;lt;IP addr&amp;gt;
-&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ - DreamAndDead 2014-2021</description></item><item><title>使用Jmeter进行分布式测试</title><link>https://dreamanddead.github.io/post/jmeter-distributed-testing/</link><pubDate>Thu, 24 May 2018 19:10:00 +0000</pubDate><guid>https://dreamanddead.github.io/post/jmeter-distributed-testing/</guid><description>时长N年半 https://dreamanddead.github.io/post/jmeter-distributed-testing/ -&lt;p>业务发展初期，关注的更多是功能，直至使用量增加到一定量级，就要考虑高并发，程序性能等问题，
-因此性能测试就成为重要的一环。&lt;/p>
-&lt;p>Loadrunner 是性能测试工具领域的王者，但是闭源无法自由（free）使用。相较之下，开源的 Jmeter 算是一个
-不错的选择。&lt;/p>
-&lt;p>性能测试要达到一定的量级，仅仅靠单机是不够的，必须协调多方资源，模拟高数量级的并发。Jmeter 提供的
-分布式测试方案刚好满足这一点，这也是本文的由来。&lt;/p>
-&lt;h1 id="install">Install&lt;/h1>
-&lt;p>Jmeter 使用 Java 编写，要求本机必须存在 Java 环境，推荐使用 8 版本。&lt;/p>
-&lt;pre>&lt;code>$ sudo apt install openjdk-8-jdk
-&lt;/code>&lt;/pre>&lt;p>官方推荐使用 Jmeter 的最新版本，新版本会修复旧有的 bug 并且有新的 feature。
-目前最新版本是 4.0，&lt;a href="https://jmeter.apache.org/download_jmeter.cgi">直接下载 Binaries 压缩包&lt;/a>即可。&lt;/p>
-&lt;p>解压之后，目录结构如下&lt;/p>
-&lt;pre>&lt;code>apache-jmeter-4.0
-├── backups
-├── bin
-├── docs
-├── extras
-├── lib
-├── LICENSE
-├── licenses
-├── NOTICE
-├── printable_docs
-└── README.md
-&lt;/code>&lt;/pre>&lt;p>主要程序都在 bin/ 目录下，在这里我们主要使用&lt;/p>
-&lt;pre>&lt;code>./bin/jmeter
-./bin/jmeter-server
-&lt;/code>&lt;/pre>&lt;h1 id="gui-or-not">GUI or not&lt;/h1>
-&lt;p>Jmeter 运行有两种模式，GUI和非GUI。&lt;/p>
-&lt;p>GUI由于可视化，方便构建 jmx（Jmeter测试计划文件，本质是 xml）。
-而在运行大量测试的时候，GUI会成为资源的负担。
-官方推荐使用 GUI 模式来构建测试计划，并进行很小的并发量来调试测试计划，
-使用非 GUI 模式来运行大并发量的测试计划。&lt;/p>
-&lt;h1 id="distributed">Distributed&lt;/h1>
-&lt;p>Jmeter 可以从单机进行测试，但是毕竟单机的资源有限，所发起的并发自然是有限的，
-这里我们主要讨论分布式测试。&lt;/p>
-&lt;p>分布式协同多个主机，同时发起测试，并发量随着主机的增加而增加。
-由 Master 发起测试，并将 jmx 传输到所有的 Slave，每个 Slave 都会执行 jmx（Slave 个数决定并发量的翻倍数），
-并将相关数据反馈回 Master，由 Master 整合数据，呈现报表。&lt;/p>
-&lt;figure>
-&lt;img src="images/jmeter-distributed-testing-structure.png"
-alt="Jmeter分布式测试模型"/> &lt;figcaption>
-&lt;p>Jmeter分布式测试模型&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>从程序的角度来看，&lt;code>./bin/jmeter&lt;/code>于 Master 运行，发起测试。
-&lt;code>./bin/jmeter-server&lt;/code>于 Slave 运行，从 Master 获取 jmx，并对目标发起测试。&lt;/p>
-&lt;p>jmeter client 运行于 Master 节点，jmeter server 运行于 Slave 节点，这点概念有些反直觉，我在和同事
-交流的时候就经常搞混。所以一开始就要明确概念，推荐 Master/Slave 概念，清晰且符合直觉。&lt;/p>
-&lt;h2 id="deploy">Deploy&lt;/h2>
-&lt;p>部署 Jmeter 分布式并不复杂，关键要了解怎么样的测试效率是最高的。&lt;/p>
-&lt;ul>
-&lt;li>Master/Slave/Target 最好在一个内网内&lt;/li>
-&lt;li>如果 Target 在外网，就要保证网络出口的带宽要足够&lt;/li>
-&lt;/ul>
-&lt;p>进行测试前，所有的 Master/Slave 节点都要已经安装了 Jmeter，参考 &lt;a href="#install">Install&lt;/a> 一节。
-所有的 Slave 运行 &lt;code>./bin/jmeter-server&lt;/code>，监听来自 Master 发起的测试。&lt;/p>
-&lt;p>在运行 &lt;code>jmeter-server&lt;/code> 之前，部分配置可能是必要的。&lt;/p>
-&lt;p>&lt;strong>关闭rmi ssl&lt;/strong>&lt;/p>
-&lt;p>Jmeter默认将 rmi ssl 打开，在 Master/Slave 的通信中使用安全传输，如果都在内网的话，就不必配置 ssl 证书了，
-提高效率并节省时间。&lt;/p>
-&lt;p>在 Master/Slave 节点的 &lt;code>./bin/jmeter.properties&lt;/code> 文件中，&lt;a href="https://github.com/apache/jmeter/blob/trunk/bin/jmeter.properties#L330">修改相应配置&lt;/a>&lt;/p>
-&lt;pre>&lt;code># 修改server.rmi.ssl.disable=false为
-server.rmi.ssl.disable=true
-&lt;/code>&lt;/pre>&lt;p>&lt;strong>关闭防火墙&lt;/strong>&lt;/p>
-&lt;p>关闭 Master/Slave 节点上的防火墙，防止对通信中的干扰。&lt;/p>
-&lt;pre>&lt;code>$ sudo service ufw stop
-&lt;/code>&lt;/pre>&lt;p>&lt;strong>设置IP&lt;/strong>&lt;/p>
-&lt;p>在 Master/Slave 节点的 &lt;code>./bin/system.properties&lt;/code> 中，最后一行添加&lt;/p>
-&lt;pre>&lt;code>java.rmi.server.hostname=&amp;lt;当前节点的IP&amp;gt;
-&lt;/code>&lt;/pre>&lt;p>为什么这么做，具体参考 &lt;a href="https://dreamanddead.github.io/2018/05/25/jmeter-distributed-testing-trouble-shooting.html">jmeter-distributed-testing-trouble-shooting&lt;/a>，实力踩坑。&lt;/p>
-&lt;h1 id="run">Run&lt;/h1>
-&lt;p>在 Master 节点启动测试前，先&lt;a href="https://github.com/apache/jmeter/blob/trunk/bin/jmeter.properties#L254">将 Slave 列表加入 Master 配置列表&lt;/a>中。
-比如&lt;/p>
-&lt;pre>&lt;code>remote_hosts=10.28.2.2, 10.28.2.200, 10.28.3.9
-&lt;/code>&lt;/pre>&lt;p>由非 GUI 模式发起测试&lt;/p>
-&lt;pre>&lt;code>$ rm -rf test.jtl report_test
-$ jmeter -n -t ./test.jmx -r -l test.jtl -e -o report_test
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>&lt;code>-n&lt;/code> means no GUI&lt;/li>
-&lt;li>&lt;code>-t&lt;/code> 指定 jmx&lt;/li>
-&lt;li>&lt;code>-r&lt;/code> 将使用配置文件中 remote_hosts 作为 Slave 节点&lt;/li>
-&lt;li>&lt;code>-l&lt;/code> 指定日志文件&lt;/li>
-&lt;li>&lt;code>-e&lt;/code> 测试结束后生成统计报表&lt;/li>
-&lt;li>&lt;code>-o&lt;/code> 指定数据报表路径。将所有请求的响应作了统计分析，生成网页，非常详细&lt;/li>
-&lt;/ul>
-&lt;h1 id="metric">Metric&lt;/h1>
-&lt;p>上述测试，只能在测试结束之后，分析响应时间的分布，错误率之类的信息，并不能得到任何
-实时性的数据。&lt;/p>
-&lt;p>实时性的数据是有用的，可以从两个角度来分类&lt;/p>
-&lt;ul>
-&lt;li>一类是jmeter的数据，如当前线程数，当前发送请求数，当前响应时间分布等&lt;/li>
-&lt;li>一类是被测试主机的性能数据，如cpu使用率，内存使用量等&lt;/li>
-&lt;/ul>
-&lt;p>这样可以将相同时间的数据建立关联关系，有助于找出被测试目标的性能瓶颈可能出现在哪里。&lt;/p>
-&lt;p>在实践过程中，推荐使用 influxdb + grafana 的结合，因为&lt;/p>
-&lt;ul>
-&lt;li>多数应用的 metric 都可以用 influxdb 来收集（包括 jmeter cadvisor gitlab 等）&lt;/li>
-&lt;li>grafana 前端优雅好用，完美支持 influxdb 作为后端&lt;/li>
-&lt;/ul>
-&lt;p>Jmeter 本身的 metric 可以用自身的 Backend Listener 来产生，并传输至 influxdb 中。
-Jmeter 有两种 Backend Listener&lt;/p>
-&lt;ul>
-&lt;li>Graphite&lt;/li>
-&lt;li>Influxdb&lt;/li>
-&lt;/ul>
-&lt;p>本质上来讲，两种 Listener 产生的数据信息量都是一样的，不过对于数据的组织形式有所不同。
-Graphite本身是一个自带前后端的数据可视化工具，但是自己觉得不是特别好用，好在 Influxdb
-内部提供对 Graphite 的数据适配，可以采集 Graphite 格式的数据，:thumbsup:。&lt;/p>
-&lt;h1 id="example">Example&lt;/h1>
-&lt;p>在这个示例中，将详细描述上述工具是如何协作的。示例项目在 &lt;a href="https://github.com/DreamAndDead/jmeter-distributed-testing-example">https://github.com/DreamAndDead/jmeter-distributed-testing-example&lt;/a>&lt;/p>
-&lt;h2 id="plan">Plan&lt;/h2>
-&lt;p>测试针对的目标是 gitlab ，gitlab 提供了丰富的 RESTful 接口供资源操作，通过 Jmeter 分布式，
-对部分接口进行压力测试。&lt;/p>
-&lt;figure>
-&lt;img src="images/jmeter-distributed-test.png"
-alt="example test architecture"/> &lt;figcaption>
-&lt;p>example test architecture&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;ul>
-&lt;li>Master 编辑测试计划，发起分布式测试&lt;/li>
-&lt;li>Slave 对 gitlab 发起测试，同时将实时数据传送至 influxdb&lt;/li>
-&lt;li>gitlab 以 docker 运行，提供 api 供 Slave 测试，同时将内部 metric 发送予 influxdb&lt;/li>
-&lt;li>cadvisor 从 gitlab docker 中采集数据，发送至 influxdb&lt;/li>
-&lt;li>influxdb 收集所有 metric 数据&lt;/li>
-&lt;li>grafana 以 influxdb 作为后端，呈现所有 metric 数据&lt;/li>
-&lt;/ul>
-&lt;p>示例主要在于说明整个测试的结构，使用的测试计划非常简单，而且还有一些内网地址，可以根据需要，
-做相应的调整。&lt;/p>
-&lt;h3 id="master">Master&lt;/h3>
-&lt;p>目前的结构是，Master/Slave/Target/Collector 都在一个内网内。这里 Master 并不需要特别的设置，
-只需要确保已经安装配置了 Jmeter 并与 Slave 的连通性即可。&lt;/p>
-&lt;h3 id="slave">Slave&lt;/h3>
-&lt;p>同 Master，需要正确安装配置 Jmeter 并确保与 Master/Target/Collector 的连通性即可。&lt;/p>
-&lt;h3 id="gitlab">gitlab&lt;/h3>
-&lt;p>gitlab 占用资源比较多，用 docker 限定了资源上限，考察其在资源有限时的表现。&lt;/p>
-&lt;p>具体启动参考&lt;a href="https://github.com/DreamAndDead/jmeter-distributed-testing-example/blob/master/setup/target">示例项目&lt;/a>。&lt;/p>
-&lt;h3 id="cadvisor">cadvisor&lt;/h3>
-&lt;p>与 gitlab docker 运行在同一主机，收集所有与 docker container 相关的数据。&lt;/p>
-&lt;p>具体启动参考&lt;a href="https://github.com/DreamAndDead/jmeter-distributed-testing-example/blob/master/setup/target">示例项目&lt;/a>。&lt;/p>
-&lt;h3 id="influxdb">influxdb&lt;/h3>
-&lt;p>influxdb 在这里收集3方面数据，而且使用了3种数据采集的方式。&lt;/p>
-&lt;p>数据的采集需要相关应用的支持，3方面的联通可参考&lt;a href="https://github.com/DreamAndDead/jmeter-distributed-testing-example/blob/master/setup/collector/readme.md">示例项目的说明&lt;/a>。&lt;/p>
-&lt;h3 id="grafana">grafana&lt;/h3>
-&lt;p>作为数据前端，从 influxdb 读取并呈现数据，重点在于如何取数据，这就要灵活判断相应的数据结构是什么。&lt;/p>
-&lt;p>&lt;a href="https://github.com/DreamAndDead/jmeter-distributed-testing-example/blob/master/setup/collector/readme.md#config-grafana">参考示例项目文档&lt;/a>。&lt;/p>
-&lt;h2 id="run-1">Run&lt;/h2>
-&lt;p>在控制所有 Slave 的 Master，执行&lt;/p>
-&lt;pre>&lt;code>$ ./bin/jmeter -n -t ./gitlab.jmx -r -l test.jtl -e -o report_test
-&lt;/code>&lt;/pre>&lt;p>结束之后，在report_test的文件夹下，生成html报表，用浏览器访问查看报表。&lt;/p>
-&lt;h1 id="pitfalls">Pitfalls&lt;/h1>
-&lt;p>大部分情况下，分布式测试都运作的很流畅。近期同事发现了一个细节问题，自己明明联通了5台 Slave，却只在
-grafana 看到了一台机器的并发量，其它的好像没有执行。&lt;/p>
-&lt;p>到相应 Slave 节点，查看 &lt;code>jmeter-server.log&lt;/code> 文件，发现读取文件 csv 不存在。&lt;/p>
-&lt;p>原来是因为测试计划中，设定从一个 csv 文件中，读取所有用户的信息，并循环执行创建操作，
-但是 Master 在执行测试计划时，只分发 jmx 文件，Slave 由于找不到相应数据文件而失败。&lt;/p>
-&lt;p>所以部署相关的数据文件需要我们自己想办法解决。并且！有时数据文件一模一样也不行，毕竟 Slave 执行的过程是相同的，
-一样的文件必然导致其创建相同的用户，引发冲突，还要为每个 Slave 准备一份数据文件！:no_mouth:。&lt;/p>
-&lt;h1 id="end">End&lt;/h1>
-&lt;p>Jmeter 是一款很赞的软件，thanks apache。&lt;/p>- https://dreamanddead.github.io/post/jmeter-distributed-testing/ - DreamAndDead 2014-2021</description></item></channel></rss>
+&lt;/code>&lt;/pre>- https://dreamanddead.github.io/post/jmeter-distributed-testing-trouble-shooting/ - DreamAndDead 2014-2021</description></item></channel></rss>

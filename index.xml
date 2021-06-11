@@ -1,4 +1,37 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Tue, 25 May 2021 09:20:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>自我管理实践</title><link>https://dreamanddead.github.io/post/goal-practice/</link><pubDate>Tue, 25 May 2021 09:20:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/goal-practice/</guid><description>时长N年半 https://dreamanddead.github.io/post/goal-practice/ -&lt;p>在 &lt;a href="https://dreamanddead.github.io/post/goal-theory/">论自我管理&lt;/a> 一文中，谈到了自我总结的一种理论，
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>时长N年半</title><link>https://dreamanddead.github.io/</link><description>Recent content on 时长N年半</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>DreamAndDead 2014-2021</copyright><lastBuildDate>Thu, 10 Jun 2021 11:08:00 +0800</lastBuildDate><atom:link href="https://dreamanddead.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>音乐风格一图</title><link>https://dreamanddead.github.io/post/music-style/</link><pubDate>Thu, 10 Jun 2021 11:08:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/music-style/</guid><description>时长N年半 https://dreamanddead.github.io/post/music-style/ -&lt;p>音乐是一个宏大的世界，
+这个世界于我而言一度非常神秘。
+为什么有些旋律一听钟情？
+多种乐器的声音是如何和谐编配的？
+为何不同的声响会调动不同的情感？&lt;/p>
+&lt;p>音乐代表了一种感性感知，与理性思考是相对的，
+两者可以相互调和。
+高德纳工作之余喜欢写管风琴乐谱，
+爱因思坦思考之余拉小提琴，
+应该是有一定道理的。
+由一点启发，准备深入了解音乐这个主题。&lt;/p>
+&lt;p>风格是一个很笼统，偏感性的词。
+人们往往会说“很有风格”，“风格类似”，
+但具体什么原因，为什么会有这种感觉，
+用话语文字很难描述出来。&lt;/p>
+&lt;p>音乐也有不同的风格。
+一天在整理资料时，发现如下一张图（来源已不可考），
+很符合自己凡事先从系统性视角开始学习的方法，
+作为音乐主题的开篇，贴在这里，供大家参考。&lt;/p>
+&lt;figure>
+&lt;img src="images/style.jpg"
+alt="Figure 1: 音乐风格分类汇总"/> &lt;figcaption>
+&lt;p>Figure 1: 音乐风格分类汇总&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="license">License&lt;/h2>
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+&lt;img
+src="https://dreamanddead.github.io/img/license.png"
+alt="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
+title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
+/>
+&lt;/a>
+- https://dreamanddead.github.io/post/music-style/ - DreamAndDead 2014-2021</description></item><item><title>自我管理实践</title><link>https://dreamanddead.github.io/post/goal-practice/</link><pubDate>Tue, 25 May 2021 09:20:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/goal-practice/</guid><description>时长N年半 https://dreamanddead.github.io/post/goal-practice/ -&lt;p>在 &lt;a href="https://dreamanddead.github.io/post/goal-theory/">论自我管理&lt;/a> 一文中，谈到了自我总结的一种理论，
 用于在工作，生活中做自我管理。&lt;/p>
 &lt;p>理论的核心是简单的，
 将目标从上到下的分解为事项，可以保持日常行为与目标的一致；
@@ -3863,171 +3896,4 @@ alt="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 �
 title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
 />
 &lt;/a>
-- https://dreamanddead.github.io/post/goal-theory/ - DreamAndDead 2014-2021</description></item><item><title>Graphviz Examples</title><link>https://dreamanddead.github.io/post/graphviz-examples/</link><pubDate>Mon, 22 Mar 2021 14:48:00 +0800</pubDate><guid>https://dreamanddead.github.io/post/graphviz-examples/</guid><description>时长N年半 https://dreamanddead.github.io/post/graphviz-examples/ -&lt;h2 id="usage">usage&lt;/h2>
-&lt;p>安装相应软件包&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ pacman -S graphviz xdot
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>新建 &lt;code>test.dot&lt;/code> 文件，保存绘图代码。&lt;/p>
-&lt;p>使用 xdot 实时预览，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ xdot test.dot
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>绘图结果，生成 png 图片，&lt;/p>
-&lt;div class="highlight">&lt;pre style="background-color:#eed">&lt;code class="language-text" data-lang="text">$ dot -Tpng -o test.png test.dot
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="graph">graph&lt;/h2>
-&lt;h3 id="undirected">undirected&lt;/h3>
-&lt;pre>&lt;code class="language-dot" data-lang="dot">graph {
-label=&amp;quot;Undirected Graph&amp;quot;;
-rankdir=LR;
-{ rank=same; a, c, d };
-splines=line;
-a -- b -- c -- e -- a;
-a -- c -- d;
-}
-&lt;/code>&lt;/pre>&lt;figure>
-&lt;img src="images/undirected-graph.png"/>
-&lt;/figure>
-&lt;h3 id="directed">directed&lt;/h3>
-&lt;pre>&lt;code class="language-dot" data-lang="dot">digraph {
-a -&amp;gt; b;
-b -&amp;gt; c;
-c -&amp;gt; d;
-d -&amp;gt; a;
-}
-&lt;/code>&lt;/pre>&lt;figure>
-&lt;img src="images/directed-graph.png"/>
-&lt;/figure>
-&lt;h3 id="subgraph">subgraph&lt;/h3>
-&lt;h4 id="asynomous">asynomous&lt;/h4>
-&lt;pre>&lt;code class="language-dot" data-lang="dot">digraph G {
-main -&amp;gt; init -&amp;gt; make_string;
-main -&amp;gt; {parse, cleanup};
-main -&amp;gt; printf;
-parse -&amp;gt; execute -&amp;gt; {make_string, compare, printf};
-}
-&lt;/code>&lt;/pre>&lt;figure>
-&lt;img src="images/subgraph.png"/>
-&lt;/figure>
-&lt;h4 id="named">named&lt;/h4>
-&lt;p>Subgraph name must start with prefix &lt;code>cluster&lt;/code>.&lt;/p>
-&lt;pre>&lt;code class="language-dot" data-lang="dot">digraph {
-subgraph cluster_0 {
-label=&amp;quot;Subgraph A&amp;quot;;
-a -&amp;gt; b;
-b -&amp;gt; c;
-c -&amp;gt; d;
-}
-subgraph cluster_1 {
-label=&amp;quot;Subgraph B&amp;quot;;
-a -&amp;gt; f;
-f -&amp;gt; c;
-}
-}
-&lt;/code>&lt;/pre>&lt;figure>
-&lt;img src="images/subgraph-named.png"/>
-&lt;/figure>
-&lt;h2 id="edge">edge&lt;/h2>
-&lt;h3 id="label">label&lt;/h3>
-&lt;pre>&lt;code class="language-dot" data-lang="dot">digraph {
-a -&amp;gt; b[label=&amp;quot;0.2&amp;quot;];
-a -&amp;gt; c[label=&amp;quot;0.4&amp;quot;];
-c -&amp;gt; b[label=&amp;quot;0.6&amp;quot;];
-c -&amp;gt; e[label=&amp;quot;0.6&amp;quot;];
-e -&amp;gt; e[label=&amp;quot;0.1&amp;quot;];
-e -&amp;gt; b[label=&amp;quot;0.7&amp;quot;];
-}
-&lt;/code>&lt;/pre>&lt;figure>
-&lt;img src="images/edge-label.png"/>
-&lt;/figure>
-&lt;h3 id="straight-line">straight line&lt;/h3>
-&lt;pre>&lt;code class="language-dot" data-lang="dot">graph {
-splines=line;
-subgraph cluster_0 {
-label=&amp;quot;Subgraph A&amp;quot;;
-a; b; c
-}
-subgraph cluster_1 {
-label=&amp;quot;Subgraph B&amp;quot;;
-d; e;
-}
-a -- e;
-a -- d;
-b -- d;
-b -- e;
-c -- d;
-c -- e;
-}
-&lt;/code>&lt;/pre>&lt;figure>
-&lt;img src="images/edge-straight.png"/>
-&lt;/figure>
-&lt;h2 id="table">table&lt;/h2>
-&lt;pre>&lt;code class="language-dot" data-lang="dot">digraph {
-format[label=&amp;lt;
-&amp;lt;table border=&amp;quot;1&amp;quot; cellspacing=&amp;quot;4&amp;quot;&amp;gt;
-&amp;lt;tr&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;资产&amp;lt;/td&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt; = &amp;lt;/td&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt; 负债 &amp;lt;/td&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt; + &amp;lt;/td&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;所有者权益&amp;lt;/td&amp;gt;
-&amp;lt;/tr&amp;gt;
-&amp;lt;tr&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;现金&amp;lt;/td&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; colspan=&amp;quot;3&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;&amp;lt;/td&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;资本&amp;lt;/td&amp;gt;
-&amp;lt;/tr&amp;gt;
-&amp;lt;tr&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;+400,000&amp;lt;/td&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; colspan=&amp;quot;3&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;&amp;lt;/td&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;+400,000&amp;lt;/td&amp;gt;
-&amp;lt;/tr&amp;gt;
-&amp;lt;/table&amp;gt;
-&amp;gt;, shape=none]
-}
-&lt;/code>&lt;/pre>&lt;figure>
-&lt;img src="images/table.png"/>
-&lt;/figure>
-&lt;pre>&lt;code class="language-dot" data-lang="dot">digraph {
-format[label=&amp;lt;
-&amp;lt;table border=&amp;quot;0&amp;quot; cellspacing=&amp;quot;4&amp;quot;&amp;gt;
-&amp;lt;tr&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; colspan=&amp;quot;2&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;现金&amp;lt;/td&amp;gt;
-&amp;lt;/tr&amp;gt;
-&amp;lt;hr/&amp;gt;
-&amp;lt;tr&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;左边&amp;lt;/td&amp;gt;
-&amp;lt;vr/&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;右边&amp;lt;/td&amp;gt;
-&amp;lt;/tr&amp;gt;
-&amp;lt;tr&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;现金增加&amp;lt;/td&amp;gt;
-&amp;lt;vr/&amp;gt;
-&amp;lt;td border=&amp;quot;0&amp;quot; bgcolor=&amp;quot;white&amp;quot;&amp;gt;现金减少&amp;lt;/td&amp;gt;
-&amp;lt;/tr&amp;gt;
-&amp;lt;/table&amp;gt;
-&amp;gt;, shape=none]
-}
-&lt;/code>&lt;/pre>&lt;figure>
-&lt;img src="images/table-hr-vr.png"/>
-&lt;/figure>
-&lt;h2 id="resources">Resources&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="https://www.graphviz.org/pdf/dotguide.pdf">dot guide&lt;/a>, official manual, precise and clear&lt;/li>
-&lt;li>other links
-&lt;ul>
-&lt;li>&lt;a href="https://blog.csdn.net/youwen21/article/details/98397993">https://blog.csdn.net/youwen21/article/details/98397993&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://www.cnblogs.com/shuqin/p/11897207.html">https://www.cnblogs.com/shuqin/p/11897207.html&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://stackoverflow.com/questions/10147619/how-can-i-reverse-the-direction-of-every-edge-in-a-graphviz-dot-language-graph">https://stackoverflow.com/questions/10147619/how-can-i-reverse-the-direction-of-every-edge-in-a-graphviz-dot-language-graph&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://stackoverflow.com/questions/43599738/graphviz-alignment-of-subgraph">https://stackoverflow.com/questions/43599738/graphviz-alignment-of-subgraph&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://renenyffenegger.ch/notes/tools/Graphviz/examples/index">https://renenyffenegger.ch/notes/tools/Graphviz/examples/index&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://graphs.grevian.org/reference">https://graphs.grevian.org/reference&lt;/a>&lt;/li>
-&lt;li>&lt;a href="http://graphviz.org/doc/info/attrs.html">http://graphviz.org/doc/info/attrs.html&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="license">License&lt;/h2>
-&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
-&lt;img
-src="https://dreamanddead.github.io/img/license.png"
-alt="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
-title="作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可"
-/>
-&lt;/a>
-- https://dreamanddead.github.io/post/graphviz-examples/ - DreamAndDead 2014-2021</description></item></channel></rss>
+- https://dreamanddead.github.io/post/goal-theory/ - DreamAndDead 2014-2021</description></item></channel></rss>
