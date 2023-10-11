@@ -1,0 +1,4 @@
+baseURL = 'https://dreamanddead.github.io/'
+languageCode = 'en-us'
+title = 'Personal blog'
+theme = 'hugo-PaperMod'
