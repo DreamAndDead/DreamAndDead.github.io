@@ -2,17 +2,14 @@
 type: draft
 created: 2024-04-20T19:55
 ---
+# world state
 
-# 距离判断
-
-将距离分为 3 6 9 等
-3m 内为近距离
-中
-远
-
-不同的程度，进行不同的行为选择
+## 距离 dist to player
 
 将距离离散化，表示为状态
+分为 3 6 9 等
+3m 内为近距离，中远类似
+可设置距离的范围大小
 
 ## 计时机制
 
@@ -172,27 +169,23 @@ top goal 是每个角色的逻辑
 决定当下使用哪个 act
 每个 act 的完成，需要 sub goal 组合进行配合
 
-- [x] htn ai 算法 🔼 ⏳ 2024-04-28 ✅ 2024-04-29
-- [ ] htn 算法是如何与 sekiro ai 结合的 ⏳ 2024-04-29
-- [ ] 研究 flunt htn 的实现 🔼
-- [ ] 研究 ue htn plugin 的实现 🔼
-- [x] ue htn 插件 ⏳ 2024-04-28 ✅ 2024-04-28
-
 - MoveToSomewhere
-  - ApproachSettingDirection
   - ApproachTarget
+  - ApproachSettingDirection
 - CommonAttack
+  - ComboAttackTunableSpin
+  - ComboRepeat
+  - ComboFinal
+    - 最后一个 combo，其中无法再连接其它 combo
   - EndureAttack (SetEnableEndureCancel)
+    - 说明这次攻击是带霸体的？
   - AttackImmediateAction (SetEnableImmediateAction)
   - AttackNonCancel
   - AttackTunableSpin
   - Attack
   - ComboAttack_SuccessAngle180
-  - ComboAttackTunableSpin
   - ComboAttack
-  - ComboFinal
   - ComboRepeat_SuccessAngle180
-  - ComboRepeat
   - ComboTunable_SuccessAngle180
   - GuardBreakAttack
   - NonspinningAttack
@@ -241,26 +234,43 @@ goal:Replanning()
 变招计划与主动计划并行执行
 不断搜索可能导致变招的信号，必要时将主动计划中断
 
+交锋计划
+ai主动弹开玩家，主动中断
+ai 的攻击被玩家弹开，被迫中断
+检测身上是否有用于交锋的sp
+- [ ] 交锋的 sp 来源于哪里？
 
-主动计划，交锋计划
-内部分成不同的 act
-一个 act 代表一种行动选择
+变招计划
+- 主动观察的 sp 变化导致的中断
+	- 一般会选择 replan
+- 读指令导致的中断
+	- 玩家的攻击快命中，ai 进行一个 parry timing 的中断，通知 ai 主动进行 parry
+		- parry
+			- 在招架到达一定次数
+			- `if self:GetRandam_Int(1, 100) <= Get_ConsecutiveGuardCount(self) * endure_percent_per_guard then`
+		- 招架
+			- 玩家处于 不可断连招 内
+- 被远程攻击命中，导致行为中断
+	- 受击动作
+- lose sight of 玩家，导致行为中断
+	- sideway move
+
+
+主动计划
+act 代表一种行动选择
 每个 act 有不同的权重
 act 添加 subgoal，表示实际 act 要怎么做
-
 每个 subgoal 有不同的启动条件，和tae event block中的设定相关
+每个 act 代表一个 compound task
+代表一种综合性的行为
 
 wait cancel timing  subgoal
-在上个 attack 被 parry or guard 中断之后，当前的 subgoal 就中止
-被迫 term，因为当前在播放的动画id已经和动作设定的 id 不符合
-
-因为被弹开 被招架的动作 行为并不是代码中计划的 subgoal
-
+在上个 attack 被玩家 parry or guard 中断之后，当前的 subgoal 就中止
+被弹开 被招架的动作 行为并不是代码中计划的 subgoal
+当前在播放的动画id已经和动作设定的 id 不符合
 topgoal 决定再次进行 replan，从头开始选择 act
 如果此时下个 act 不符合启动条件，当前动画的 event block cancel 条件，就无法 update
 此时需要一个 psudo subgoal  wait cancel timing  进行占位，避免 topgoal 因为 update 结束而replan
-
-未被忍杀后恢复，开始replan
 
 
 如果 findpath 不通，说明距离为无限，无法开启下一个 attack goal，即使是 9999 

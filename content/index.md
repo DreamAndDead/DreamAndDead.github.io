@@ -1,9 +1,14 @@
 ---
-title: Welcome to Quartz
+title: 自然写作
 ---
 
-This is a blank Quartz installation.
+每次想提笔写点东西，总有很多心智负担。
+标题定在那里，想着构思内容，心里总是有些空洞。
 
-test new insert.
+为什么会这样？我想是自己太过功利。将一篇文章，当作一个既定时刻要完成的目标，要脱离了它与现实的关系。
+文章最重要的在于它的内容，是你的思考，你的经验，你的心得，都来自于现实经历。没有现实支撑，自然无法写作。
 
-See the [documentation](https://quartz.jzhao.xyz) for how to get started.
+换这个角度看，文章应该是随着积累涌现出来的。
+- 平日记录下的[笔记卡片](card)，不断关联在一起
+- 由小到大积累[成文](post)
+- 文章的关联，积蓄，未来或许[成书](book)也说不定呢

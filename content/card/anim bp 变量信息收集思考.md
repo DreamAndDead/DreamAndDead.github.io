@@ -1,6 +1,7 @@
 ---
 type: card
 created: 2024-04-08T17:16
+draft: true
 tags:
 - ue
 - als

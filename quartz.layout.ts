@@ -29,7 +29,14 @@ export const defaultContentPageLayout: PageLayout = {
     Component.Backlinks(),
   ],
   right: [
-    Component.Graph(),
+    Component.Graph({
+      localGraph: {
+        showTags: false,
+      },
+      globalGraph: {
+        showTags: false,
+      },
+    }),
     Component.DesktopOnly(Component.Explorer()),
   ],
 }
@@ -44,7 +51,14 @@ export const defaultListPageLayout: PageLayout = {
     Component.Darkmode(),
   ],
   right: [
-    Component.Graph(),
+    Component.Graph({
+      localGraph: {
+        showTags: false,
+      },
+      globalGraph: {
+        showTags: false,
+      },
+    }),
     Component.DesktopOnly(Component.Explorer()),
   ],
 }

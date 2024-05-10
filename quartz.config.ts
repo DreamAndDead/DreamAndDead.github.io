@@ -14,7 +14,7 @@ const config: QuartzConfig = {
     analytics: null,
     locale: "en-US",
     baseUrl: "dreamanddead.github.io",
-    ignorePatterns: ["private", "templates", ".obsidian", "diaries", "draft", "excalidraw", "tasks", ".trash"],
+    ignorePatterns: ["private", "template", ".obsidian", "diary", "draft", "excalidraw", "task", "query", ".trash"],
     defaultDateType: "modified",
     theme: {
       fontOrigin: "googleFonts",
