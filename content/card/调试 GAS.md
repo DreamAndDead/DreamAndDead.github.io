@@ -1,7 +1,7 @@
 ---
-type: card
 created: 2024-04-17T15:06
 tags:
+- card
 - ue
 - gas
 - debug
@@ -11,9 +11,7 @@ tags:
 
 将原本print screen的信息，收集起来用插件面板来呈现
 
-安装方式
-- github source 安装 [gas attach editor plugin](https://github.com/Monocluar/GASAttachEditor)
-- 通过 [epic marketplace](https://www.unrealengine.com/marketplace/en-US/product/gasattacheditor)安装
+安装 [gas attach editor plugin](https://github.com/Monocluar/GASAttachEditor)
 
 启用后，通过 tools-debug-debug gas 打开面板
 

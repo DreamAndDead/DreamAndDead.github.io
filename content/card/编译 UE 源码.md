@@ -36,13 +36,12 @@ tags:
 	2. dotnet 编译 ubt
 	1. 生成 sln 工程文件
 	2. 至此已经 100g
-4. rider 打开 UE5.sln，选择合适的 preset
+4. 打开 UE5.sln，选择合适的 preset
 	1. UE5
 	2. development
 	3. editor
 	4. win64
-	5. ![[Pasted image 20240428133453.png]]
 5. 编译
 	1. 6202 actions
 	2. 2小时编译完成
-	3. 最终占用 210g 空间
+	3. 最终占用 220g 空间

@@ -1,9 +1,9 @@
 ---
-type: card
 created: 2024-04-23T18:59
 tags: 
+- card
 - ue
-- angelscript
+- as
 ---
 
 在 angelscript 的原版实现中，在子类的构造函数通过 super 调用父类的构造函数
