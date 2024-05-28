@@ -1,7 +1,7 @@
 ---
-type: card
 created: 2024-04-06T22:28
 tags:
+- card
 - ue 
 ---
 
