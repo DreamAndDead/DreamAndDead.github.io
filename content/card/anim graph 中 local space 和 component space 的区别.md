@@ -1,7 +1,8 @@
 ---
-type: card
+draft: true
 created: 2024-03-27T20:04
 tags:
+- card
 - ue
 - animation
 ---

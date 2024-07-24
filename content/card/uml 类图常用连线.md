@@ -1,6 +1,5 @@
 ---
 created: 2024-05-19T16:09
-draft: true
 tags: 
 - card
 - draw
@@ -33,7 +32,7 @@ classDiagram
 
 一个类，内部包含其它类的实例
 
-不存在强的生命周期约束
+不存在强的生命周期约束，没有强独占性
 
 学生本身是独立存在的，但是班级主动和学生产生了聚合关系
 
@@ -45,16 +44,6 @@ classDiagram
 classDiagram
     Class o-- Student
 ```
-
-没有强独占性，Car 和 Engine 的关系，不影响 EngineInspection 和Engine 的关系
-
-```mermaid
-classDiagram
-    Car o-- Engine
-    Car o-- Wheel
-    EngineInspection o-- Engine
-```
-
 
 # 组合 composition
 
@@ -87,7 +76,3 @@ classDiagram
 classDiagram
     Parent <|-- Child
 ```
-
-
-参考链接
-- https://www.visual-paradigm.com/guide/uml-unified-modeling-language/uml-aggregation-vs-composition/

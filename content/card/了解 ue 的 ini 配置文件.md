@@ -7,6 +7,7 @@ tags:
 - config
 ---
 
+在引擎启动的时候加载，初始化 CDO 的值
 # category
 
 ue 将所有配置项归为如下几类
@@ -158,9 +159,6 @@ extern CORE_API FString GGameplayTagsIni;
 
 
 
-
-
-
-
+# 参考
 
 [config files in ue](https://dev.epicgames.com/documentation/en-us/unreal-engine/configuration-files-in-unreal-engine?application_version=5.3)

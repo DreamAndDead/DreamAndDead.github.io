@@ -1,54 +1,62 @@
 ---
-type: card
 created: 2024-03-28T16:58
+draft: true
 tags:
+- card
 - ue
 - animation
 ---
 
-![[Pasted image 20240328165901.png]]
+![[Pasted image 20240601145848.png]]
 
-two bone ik 节点在两根骨骼之间实现 ik 解算，常用在腿脚
+![[Pasted image 20240531130503.png]]
 
-原理，将 ik bone 尽力到达 effector 的位置（可选 旋转），反向计算 ik bone 向上两根骨骼的 transform
+two bone ik 是一种 ik 解算器，对 3 joint chain （中间有 2 个 bone）进行 ik 解算，常用于腿部
 
-对于腿部来说，ik bone 通常是 foot，向上的 calf thigh 参与了计算并被修改
-thigh 称为 root，ik bone 称为 end
+# 参数
 
-由于计算的结果有无限种可能，引入限制变量 joint target
-root - joint - end 组成一个平面，最终计算 calf的位置必须在这个平面上（会有两个结果，选择离 joint target 最近的结果）
-
-运算的核心是余弦定理
-
-已知 root calf end 三角形 3 边的长度，就可以确定角度，继而在 root joint end 平面上确定calf 的位置
+以下举例以腿部 ik 为示例
 
 ![[two bone ik]]
 
-![[Pasted image 20240331180747.png]]
-
-![[Pasted image 20240331180927.png]]
-
-![[Pasted image 20240331181058.png]]
 - enable debug draw
-	- 在 preview 中画出调试辅助线
+	- ![[Pasted image 20240601133711.png]]
+	- 在 preview 窗口，绘制关键点和连线
+		- 上图隐藏了 mesh
 - ik bone
-- allow stretching
-	- 当 effector 到 root 的距离，超过骨骼总长度（whole length of the limb）时，是否允许拉伸骨骼
+	- 选择 end bone
+		- 对于腿部为 foot bone
+	- 自动寻找 parent bone 和 parent parent bone，加入运算
+		- 即 thigh - calf - foot
+- allow stretching ^85f568
+	- 是否允许拉伸 bone
+	- 默认关闭
+		- 默认 bone 的长度是不变的，和人体保持一致
+	- 不拉伸的 ratio 为 1
+	- 如果拉伸，则同比对 two bone 进行拉伸
 - start stretch ratio
-	- 当距离到达总长度的这个 ratio 时，就可以开始拉伸
-	- 一般为 1，表示腿伸展到直线的极限时，才开始拉伸
-	- 如果设置为 0.5 在一半距离时就可以开始拉伸，此时 joint 的位置影响很大
-	- ![[UE4Editor_wm9IUBR9vd.gif]]
+	- 开启 [[#^85f568]] 后可用
+	- 开始拉伸的 ratio
+	- 建议 >= 1
 - max stretch scale
-	- 最大伸展比例
-	- 在 root 到 effector 的距离超过骨骼长度的倍数时，不再继续伸展
-	- ![[UE4Editor_bt0oIcjWMm.gif]]
-	- 此时所有bone都在 root - effector 的直线上
+	- 开启 [[#^85f568]] 后可用
+	- 最大可拉伸的 ratio
+	- 大于 1 才有效果
+- maintain effector rel rot
+	- 比如 end 是 foot bone
+	- 如果是 false，在变动 foot bone 的 transform 时，保持脚在 mesh space 下不变
+		- ![[UnrealEditor_ylq3tRnclk.gif]]
+	- 如果是 true，在变动 foot bone 的 transform 时，脚也受到影响
+		- ![[UnrealEditor_y0GTfzlhwE.gif]]
 - allow twist
-	- 默认启用，由 ik 解算器来计算 bone chain 的旋转
-	- 如果关闭，需要在 twist axis 中手动设置
-- [ ] twist axis 如何理解
-- [ ] maintain effector rel rot 意义何在
+	- 默认启用
+	- 自动计算 bone chain 的旋转
+- [ ] twist axis
+	- 关闭 allow twist 可设置
+- effector
+	- ik bone 要移动到的目标位置
+	- 如果 ik bone 可以移动到 effector 位置，则两者位置重合
+	- 有可能有情况，effector 与 thigh 过近 or 过远，导致 ik bone 无法移动到 effector 位置
 - effector location space
 	- world space
 		- 只能从pin接收位置
@@ -57,19 +65,38 @@ root - joint - end 组成一个平面，最终计算 calf的位置必须在这�
 	- parent bone space
 		- 选择一个 effector target 作为 parent bone，loc在这个空间进行计算
 	- bone space
-		- 选择一个 effector target 作为 bone，loc在这个空间进行计算
-		- 通常为 0 0 0 和vb 一起使用
-- effctor target
-	- 选择一个bone
-- effector location
-	- effector的位置，以 space 来计算
-- take rotation from effector space ^2b59fe
-	- 只有 space 为 parent bone and bone 时才有
-	- 将 target bone 的 rotation 传递给 ik bone?
-	- 这样 ik bone 就和目标在 loc rot 完全一致
-- joint target 设置，同 effector，不过没有 [[#^2b59fe]]，joint 只需要一个位置即可参与运算
+		- 选择一个 effector target 作为 bone，loc 在这个空间进行计算
+		- 通常为 0 0 0 和 vb 一起使用
+- take rotation from effector space
+	- 只有 space 为 parent bone，bone 时才有
+	- end bone use effector's rotation
+- joint target 
+	- 在 foot 位置确定的情况下，thigh 保持不动，calf 有无限个可能的位置
+		- 呈现一个圆形
+	- joint target 是一个位置，和 thigh, effector 一起，三点构成一个平面
+	- calf 就落在这个平面上
+		- 在平面上其实有两个位置
+		- 选择离 joint target 最近的一个
+- joint target location space
+	- joint target loc 所在的空间
 
+# 拉伸算法
 
-- [ ] 在实践中应如何选择 joint 参数？
-	- https://zhuanlan.zhihu.com/p/457339033
-- [ ] 更新对骨骼和joint的理解，再来更新本篇
+```cpp
+const double ScaleRange = MaxStretchScale - StartStretchRatio;
+if (ScaleRange > DOUBLE_KINDA_SMALL_NUMBER && MaxLimbLength > DOUBLE_KINDA_SMALL_NUMBER)
+{
+	const double ReachRatio = DesiredLength / MaxLimbLength;
+	// start stretch ratio 定义了 scale range 的起点
+	// 如果 < 1，即使还在骨骼可到达的范围内，也进行拉伸，效果非常奇怪
+	const double ScalingFactor = (MaxStretchScale - 1.0) * FMath::Clamp((ReachRatio - StartStretchRatio) / ScaleRange, 0.0, 1.0);
+	// 只有 max stretch scale > 1 才能进行拉伸
+	if (ScalingFactor > DOUBLE_KINDA_SMALL_NUMBER)
+	{
+		LowerLimbLength *= (1.0 + ScalingFactor);
+		UpperLimbLength *= (1.0 + ScalingFactor);
+		MaxLimbLength *= (1.0 + ScalingFactor);
+	}
+}
+```
+

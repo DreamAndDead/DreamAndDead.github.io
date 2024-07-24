@@ -1,7 +1,7 @@
 ---
-type: card
 created: 2024-03-24T13:02
 tags:
+- card
 - ue
 - build
 - compile
@@ -36,7 +36,7 @@ tags:
 	2. dotnet 编译 ubt
 	1. 生成 sln 工程文件
 	2. 至此已经 100g
-4. 打开 UE5.sln，选择合适的 preset
+4. IDE 打开 UE5.sln，选择合适的 preset
 	1. UE5
 	2. development
 	3. editor
