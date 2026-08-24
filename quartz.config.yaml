@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./runtime/quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: Quartz 5
+  pageTitle: Quartz
   pageTitleSuffix: ""
   enableSPA: true
   enablePopovers: true
@@ -8,8 +8,11 @@ configuration:
   locale: en-US
   baseUrl: dreamanddead.github.io
   ignorePatterns:
-    - private
-    - templates
+    - draft
+    - diary
+    - template
+    - excalidraw
+    - ai
     - .obsidian
   theme:
     fontOrigin: googleFonts
@@ -203,7 +206,7 @@ plugins:
     enabled: true
     options:
       links:
-        GitHub: https://github.com/sosiristseng
+        GitHub: https://github.com/dreamanddead
     layout:
       position: footer
       priority: 50
