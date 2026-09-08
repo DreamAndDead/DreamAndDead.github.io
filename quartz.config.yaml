@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=./runtime/quartz/plugins/quartz-plugins.schema.json
 configuration:
   pageTitle: Quartz
-  pageTitleSuffix: ""
+  pageTitleSuffix: "All about things I know"
   enableSPA: true
   enablePopovers: true
   analytics: null

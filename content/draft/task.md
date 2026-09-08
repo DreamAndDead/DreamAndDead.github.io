@@ -2,21 +2,19 @@
 tags:
   - task
 ---
+# todo
 
+- [ ] castle wall trick and theory category
+- [ ] balatro game analysis
 # plan
 
 - book: the nature of code
 - box2d physics engine
 	- 一个篮球投篮的游戏
 	- 带旋转
-- play, record and comment
-  - brilliant point
-  - what makes fun
-  - record as short video
-- 2d physics engine from start
-- 3d soft renderer from start
-- 制作游戏开发工具，看开发者们需要什么
-- 
+- 2d physics engine custom build
+- 3d soft renderer custom build
+
 # idea
 
 纯粹的消消乐改变为单词连线消消乐：每一个方块里面是一个字母，连线之后，如果是一个单词，就将其消除。
